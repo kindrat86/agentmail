@@ -18,6 +18,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import urlparse, parse_qs
 from . import core
 from . import billing
+from . import x402
 
 # ─── Hosted-mode config (env-driven; all optional, off by default) ──────────
 # Self-host default: no auth, no rate limit, no audit log — identical behaviour
@@ -209,6 +210,56 @@ class Handler(BaseHTTPRequestHandler):
         n = int(self.headers.get("Content-Length", 0) or 0)
         return json.loads(self.rfile.read(n)) if n else {}
 
+    def _x402_or_key_gate(self, audit_action: str, audit_subject: dict | None = None,
+                         x402_description: str = "") -> str | None:
+        """Gate for paid endpoints: accept API key, x402 payment, or free tier.
+        Returns identity on success, or None (writes error/402 response) on failure.
+
+        Order of precedence:
+          1. Valid API key (admin or billing) → proceed
+          2. x402 payment header (if x402 enabled) → verify, proceed
+          3. Free tier (if no auth required) → proceed
+          4. Otherwise → 402 Payment Required (if x402) or 401"""
+        # First, try normal auth (key-based)
+        ok, identity, err = self._authorize()
+        if ok:
+            ok2, err2 = _check_rate(identity)
+            if not ok2:
+                _json(self, 429, {"error": err2})
+                return None
+            if audit_action:
+                _audit({"action": audit_action, "caller": identity, "subject": audit_subject or {}})
+            return identity
+        # Auth failed. If x402 is enabled, offer per-call payment instead.
+        if x402.is_enabled() and err in ("invalid_api_key", "free_tier_exhausted", ""):
+            payment_header = self.headers.get("X-PAYMENT", "")
+            req = x402.build_payment_requirements(self.command, self.path, x402_description)
+            if payment_header:
+                valid, reason = x402.verify_payment(payment_header, req)
+                if valid:
+                    if audit_action:
+                        _audit({"action": audit_action, "caller": "x402:" + x402._PAY_TO[:10],
+                                "subject": audit_subject or {}, "paid": True})
+                    return "x402:" + x402._PAY_TO[:10]
+                _json(self, 402, {"error": "payment_invalid", "reason": reason,
+                                  "payment_requirements": req})
+                return None
+            # No payment + no key → 402 with requirements
+            self.send_response(402)
+            body = json.dumps({"error": "payment_required",
+                               "payment_requirements": req}).encode()
+            self.send_header("Content-Type", "application/json")
+            self.send_header("Content-Length", str(len(body)))
+            self.end_headers()
+            self.wfile.write(body)
+            return None
+        # x402 disabled, auth failed — return the original error
+        code = 401 if err == "invalid_api_key" else 429
+        hint = (f" — upgrade at {_PUBLIC_URL}/pricing"
+                if err in ("free_tier_exhausted", "monthly_limit_exceeded") else "")
+        _json(self, code, {"error": err, "upgrade_url": _PUBLIC_URL + "/pricing"} if hint else {"error": err})
+        return None
+
     def _gate(self, audit_action: str | None = None,
               audit_subject: dict | None = None) -> str | None:
         """Auth + rate-limit gate. Returns identity on success, or None (and
@@ -235,7 +286,8 @@ class Handler(BaseHTTPRequestHandler):
         p = urlparse(self.path)
         if p.path == "/health":
             return _json(self, 200, {"ok": True, "service": "agentmail",
-                                     "sms": _SMS, "compliance": _COMPLIANCE})
+                                     "sms": _SMS, "compliance": _COMPLIANCE,
+                                     "x402": x402.status()})
         # Root — landing for devs who hit the base URL. Points to everything.
         if p.path == "/" or p.path == "":
             return _json(self, 200, {
@@ -279,13 +331,12 @@ class Handler(BaseHTTPRequestHandler):
             except Exception as e:
                 _json(self, 500, {"error": str(e)})
             return
-        # sanctions GET has its own audit-gated path (must come BEFORE the
-        # generic gate below, otherwise it would double-count rate credits).
+        # sanctions GET — paid endpoint (accepts API key OR x402 payment)
         if p.path == "/sanctions" or p.path.startswith("/sanctions?"):
             q = parse_qs(p.query)
             subject = {"name": q.get("name", [""])[0], "wallet": q.get("wallet", [""])[0],
                        "country": q.get("country", [""])[0]}
-            if self._gate("sanctions_check", subject) is None:
+            if self._x402_or_key_gate("sanctions_check", subject, "OFAC sanctions screen") is None:
                 return
             return _json(self, 200, core.sanctions_check(
                 name=subject["name"], wallet=subject["wallet"], country=subject["country"]))
