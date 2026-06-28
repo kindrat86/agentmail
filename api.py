@@ -29,6 +29,7 @@ _RATE_LIMIT = int(os.environ.get("AGENTMAIL_RATE_LIMIT", "0") or 0)
 # free-tier daily cap for unauthenticated callers (by IP). 0 = no anon access when auth required.
 _FREE_TIER_DAILY = int(os.environ.get("AGENTMAIL_FREE_TIER_DAILY", "100") or 100)
 _AUDIT_LOG = os.environ.get("AGENTMAIL_AUDIT_LOG", "")  # path to append-only JSONL
+_PUBLIC_URL = os.environ.get("AGENTMAIL_PUBLIC_URL", "https://agentmail-api.fly.dev")
 
 # ─── Rate-limit + free-tier counters (in-memory, process-local) ─────────────
 _rl_window: dict[str, deque] = defaultdict(deque)   # identity -> [timestamps] within 1h
@@ -215,7 +216,11 @@ class Handler(BaseHTTPRequestHandler):
         ok, identity, err = self._authorize()
         if not ok:
             code = 401 if err == "invalid_api_key" else 429
-            _json(self, code, {"error": err})
+            # Point exhausted users at the upgrade page.
+            hint = (f" — upgrade at {_PUBLIC_URL}/pricing"
+                    if err in ("free_tier_exhausted", "monthly_limit_exceeded")
+                    else "")
+            _json(self, code, {"error": err, "upgrade_url": _PUBLIC_URL + "/pricing"} if hint else {"error": err})
             return None
         ok, err = _check_rate(identity)
         if not ok:
@@ -231,6 +236,22 @@ class Handler(BaseHTTPRequestHandler):
         if p.path == "/health":
             return _json(self, 200, {"ok": True, "service": "agentmail",
                                      "sms": _SMS, "compliance": _COMPLIANCE})
+        # Root — landing for devs who hit the base URL. Points to everything.
+        if p.path == "/" or p.path == "":
+            return _json(self, 200, {
+                "service": "agentmail",
+                "tagline": "OFAC sanctions screening for AI agents",
+                "endpoints": {
+                    "screen": "/sanctions?name=&wallet=&country=",
+                    "risk": "POST /risk",
+                    "kya": "POST /kya",
+                    "health": "/health",
+                },
+                "self_host": "pip install sanctions-mcp",
+                "hosted_pricing": f"{_PUBLIC_URL}/pricing",
+                "github": "https://github.com/kindrat86/agentmail",
+                "free_tier": "50 checks/day by IP, no key needed",
+            })
         # MCP server card — lets MCP registries (Smithery) skip auto-scan
         if p.path == "/.well-known/mcp/server-card.json":
             return _json(self, 200, _SERVER_CARD)
