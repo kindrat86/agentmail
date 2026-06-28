@@ -7,7 +7,7 @@ WORKDIR /home/agentmail/app
 
 # Install the package + mcp extra
 COPY pyproject.toml README.md LICENSE ./
-COPY __init__.py core.py api.py cli.py mailtm.py otp.py mcp_server.py ./
+COPY __init__.py core.py api.py cli.py mailtm.py otp.py mcp_server.py billing.py ./
 COPY compliance/ ./compliance/
 COPY sms/ ./sms/
 
