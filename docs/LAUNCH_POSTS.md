@@ -44,15 +44,18 @@ degraded rather than silently passing everything.
 Three surfaces, same core: MCP server (10 tools, for Claude Code / Cursor /
 Hermes), HTTP API, CLI. Free and open source (MIT). Self-host in 30 seconds:
 
-    pip install agentmail[mcp]
+    pip install sanctions-mcp
     python -m agentmail.cli sanctions --wallet 0x098B716B8Aaf21512996dC57EB0615e2383E2f96
     → flagged: OFAC_SDN wallet_exact, confidence 1.0
+
+Or try the hosted API with no signup (50 free checks/day):
+    curl "https://agentmail-api.fly.dev/sanctions?wallet=0x098B716B8Aaf21512996dC57EB0615e2383E2f96"
 
 Repo: https://github.com/kindrat86/agentmail
 
 The thing I want to be honest about: agents paying agents is still early, and
-the self-host version is free — so the business model is the eventual hosted
-API (uptime, freshness, audit log) rather than the data itself. I'm more
+the self-host version is free — so the business model is the hosted API
+(uptime, freshness, audit log) rather than the data itself. I'm more
 interested in whether this is useful to people building agentic-commerce stuff
 right now. Happy to answer questions.
 ```
@@ -82,8 +85,11 @@ agentmail — MCP server + HTTP API + CLI. Screens against real OFAC data:
 No API key, no signup, MIT-licensed, self-host. 24h disk cache, degrades
 gracefully if offline.
 
-    pip install agentmail[mcp]
+    pip install sanctions-mcp
     # add to your MCP client config, done
+
+Or try the hosted API (50 free checks/day, no signup):
+    curl "https://agentmail-api.fly.dev/sanctions?wallet=0x098B716B8Aaf21512996dC57EB0615e2383E2f96"
 
 Repo: https://github.com/kindrat86/agentmail
 
