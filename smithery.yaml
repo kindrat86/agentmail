@@ -1,0 +1,38 @@
+# Smithery configuration file.
+# Docs: https://smithery.ai/docs/config#smitheryyaml
+#
+# After committing this file, register the server at https://smithery.ai/new
+# (sign in with GitHub, paste the repo URL https://github.com/kindrat86/agentmail).
+
+name: agentmail
+description: Compliance & verification toolkit for AI agents — OFAC sanctions screen, Know-Your-Agent, transaction risk score, plus disposable email/SMS verification inboxes.
+
+# How Smithery launches the MCP server on stdio.
+startCommand:
+  type: stdio
+  configSchema:
+    # Optional runtime config. agentmail works with no config (osint provider
+    # pulls free OFAC data, no key). These env knobs are surfaced to the user.
+    type: object
+    properties:
+      AGENTMAIL_COMPLIANCE_PROVIDER:
+        type: string
+        default: osint
+        description: "Compliance backend: 'osint' (real OFAC data, free, default) or 'mock' (offline tests)."
+      AGENTMAIL_SMS_PROVIDER:
+        type: string
+        default: mock
+        description: "SMS backend: 'mock' (no key), 'fivesim' (needs AGENTMAIL_FIVESIM_KEY), or 'twilio'."
+      AGENTMAIL_FIVESIM_KEY:
+        type: string
+        description: "5sim.net API key — only needed if SMS provider is 'fivesim'."
+    required: []
+  # Launch via uv: install the package with the [mcp] extra, run the MCP module.
+  commandFunction: |-
+    () => ({ command: "uv", args: ["run", "--with", "agentmail[mcp]", "python", "-m", "agentmail.mcp_server"] })
+
+# Dependencies Smithery installs before running.
+dependencies:
+  python:
+    - uv
+    - agentmail[mcp]
