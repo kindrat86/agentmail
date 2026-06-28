@@ -13,7 +13,7 @@
 #
 # Region fra (Frankfurt) is EU-central; swap to your preference.
 
-app = "agentmail"
+app = "agentmail-api"
 primary_region = "fra"
 
 [build]
