@@ -1,0 +1,50 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+*.egg
+.eggs/
+build/
+dist/
+develop-eggs/
+.installed.cfg
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.manifest
+*.spec
+pip-wheel-metadata/
+
+# Virtual envs
+venv/
+.venv/
+env/
+ENV/
+.python-version
+
+# State / caches (agentmail runtime)
+.agentmail/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Secrets
+.env
+.env.*
+*.pem
+*.key
+secrets/
+
+# OS
+Thumbs.db

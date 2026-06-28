@@ -1,0 +1,54 @@
+[build-system]
+requires = ["setuptools>=64", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "agentmail"
+version = "0.4.0"
+description = "Compliance & verification toolkit for AI agents — OFAC sanctions screen, KYA, transaction risk, disposable email/SMS inboxes. MCP + HTTP + CLI."
+readme = "README.md"
+license = { file = "LICENSE" }
+requires-python = ">=3.11"
+authors = [
+    { name = "Maryan Kindrat" },
+]
+keywords = ["mcp", "ai-agents", "compliance", "ofac", "sanctions", "kya", "risk", "agent-economy", "verification", "otp"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Security",
+]
+dependencies = [
+    # requests is used by mailtm.py client; mcp is the MCP server front-end.
+    "requests>=2.28",
+    # mcp is optional for HTTP/CLI-only users, but required for the MCP server.
+    # Kept as a dep so `pip install agentmail` gives the full MCP experience.
+    # If you only want HTTP/CLI, pip install agentmail then ignore mcp import errors.
+]
+
+[project.optional-dependencies]
+mcp = ["mcp>=0.9"]
+all = ["mcp>=0.9", "requests>=2.28"]
+dev = ["pytest>=7", "mcp>=0.9"]
+
+[project.scripts]
+agentmail = "agentmail.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/kindrat86/agentmail"
+Repository = "https://github.com/kindrat86/agentmail"
+Issues = "https://github.com/kindrat86/agentmail/issues"
+
+[tool.setuptools]
+# The package is the agentmail/ directory; treat the repo root as the package.
+packages = ["agentmail", "agentmail.sms", "agentmail.compliance"]
+
+[tool.setuptools.package-dir]
+agentmail = "."
+"agentmail.sms" = "sms"
+"agentmail.compliance" = "compliance"
