@@ -1,5 +1,9 @@
 # agentmail — compliance & verification toolkit for AI agents
 
+[![PyPI](https://img.shields.io/pypi/v/sanctions-mcp.svg)](https://pypi.org/project/sanctions-mcp/)
+[![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-blue.svg)](https://pypi.org/project/sanctions-mcp/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
 > Your agent is about to send USDC to a stranger. **Is that stranger sanctioned?**
 > 782 OFAC crypto wallets · 19,086 sanctioned names · 16 embargoed jurisdictions.
 > No API key. No signup. 30-second setup. Free & open source.
