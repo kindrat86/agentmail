@@ -29,9 +29,7 @@ agent ──about to pay──▶  sanctions_check(wallet)  ──▶ clean? pro
 ## Quick start (30 seconds)
 
 ```bash
-git clone https://github.com/kindrat86/agentmail.git
-cd agentmail
-pip install -e .
+pip install sanctions-mcp
 ```
 
 ### Option A — use it from an MCP client (Claude Code / Cursor)
@@ -49,6 +47,8 @@ pip install -e .
 ```
 
 Now your agent can call `sanctions_check`, `risk_score`, `kya_verify`, `dispute_open`, `create_inbox`, `fetch_code`, `create_number`, `fetch_sms`, `release_number`, `list_inboxes`.
+
+> **Note:** the PyPI package is `sanctions-mcp` (the name `agentmail` was taken). The Python import name is still `agentmail`.
 
 ### Option B — use it as an HTTP API
 

@@ -3,9 +3,9 @@ requires = ["setuptools>=64", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "agentmail"
+name = "sanctions-mcp"
 version = "0.4.0"
-description = "Compliance & verification toolkit for AI agents — OFAC sanctions screen, KYA, transaction risk, disposable email/SMS inboxes. MCP + HTTP + CLI."
+description = "OFAC sanctions screen, KYA, and transaction risk for AI agents — MCP + HTTP + CLI. Real OFAC data, no API key. (package: agentmail)"
 readme = "README.md"
 license = { file = "LICENSE" }
 requires-python = ">=3.11"
