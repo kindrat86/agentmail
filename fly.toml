@@ -1,0 +1,46 @@
+# Fly.io deployment config for agentmail hosted API
+# Docs: https://fly.io/docs/apps/launch
+#
+# Quick start:
+#   flyctl auth login
+#   flyctl apps create agentmail
+#   flyctl secrets set AGENTMAIL_REQUIRE_AUTH=true
+#   flyctl secrets set AGENTMAIL_API_KEYS=$(python -c "import secrets; print('sk_live_'+secrets.token_hex(24))")
+#   flyctl secrets set AGENTMAIL_RATE_LIMIT=600 AGENTMAIL_FREE_TIER_DAILY=100
+#   flyctl secrets set AGENTMAIL_AUDIT_LOG=/data/audit.jsonl
+#   flyctl volumes create agentmail_data --region fra
+#   flyctl deploy
+#
+# Region fra (Frankfurt) is EU-central; swap to your preference.
+
+app = "agentmail"
+primary_region = "fra"
+
+[build]
+  dockerfile = "Dockerfile"
+
+[http_service]
+  internal_port = 8000
+  force_https = true
+  auto_stop_machines = true      # scale to zero when idle (saves money)
+  auto_start_machines = true
+  min_machines_running = 0
+
+  [http_service.concurrency]
+    type = "requests"
+    hard_limit = 250
+    soft_limit = 200
+
+# Persistent volume for the OFAC cache + dispute registry + audit log
+[mounts]
+  source = "agentmail_data"
+  destination = "/data"
+
+[env]
+  AGENTMAIL_HOME = "/data"
+  HOST = "0.0.0.0"
+  PORT = "8000"
+
+[[vm]]
+  size = "shared-cpu-1x"   # ~$1.94/mo; ample for a stdlib HTTP server + in-memory lists
+  memory = "512mb"
