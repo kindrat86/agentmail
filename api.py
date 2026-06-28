@@ -17,6 +17,7 @@ from collections import defaultdict, deque
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import urlparse, parse_qs
 from . import core
+from . import billing
 
 # ─── Hosted-mode config (env-driven; all optional, off by default) ──────────
 # Self-host default: no auth, no rate limit, no audit log — identical behaviour
@@ -34,6 +35,67 @@ _rl_window: dict[str, deque] = defaultdict(deque)   # identity -> [timestamps] w
 _free_used: dict[str, deque] = defaultdict(deque)   # ip -> [timestamps] within 24h
 _rl_lock = __import__("threading").Lock()
 
+_SERVER_CARD = {
+    "version": "1.0",
+    "name": "agentmail",
+    "description": "Compliance & verification toolkit for AI agents — OFAC sanctions screen, KYA, transaction risk, plus disposable email/SMS verification inboxes.",
+    "schema_version": "1.0",
+    "tools": [
+        {
+            "name": "sanctions_check",
+            "description": "Screen a counterparty against OFAC/EU/UN/UK sanctions lists. Cheapest check, call first. At least one of name / wallet / country required. Returns matches with list, match_type, and confidence, plus a clean boolean.",
+            "input_schema": {
+                "type": "object",
+                "properties": {
+                    "name": {"type": "string", "description": "Name to screen"},
+                    "wallet": {"type": "string", "description": "Crypto wallet address"},
+                    "country": {"type": "string", "description": "ISO-2 country code"}
+                }
+            }
+        },
+        {
+            "name": "risk_score",
+            "description": "Score a transaction's fraud risk BEFORE authorizing payment. Recommendation is one of allow/review/decline. rail in: x402, ap2, acp, tap. category in: digital_goods, services, physical.",
+            "input_schema": {
+                "type": "object",
+                "properties": {
+                    "counterparty_id": {"type": "string"},
+                    "amount": {"type": "string"},
+                    "currency": {"type": "string", "default": "USDC"},
+                    "rail": {"type": "string", "default": "x402"},
+                    "category": {"type": "string", "default": "digital_goods"}
+                },
+                "required": ["counterparty_id", "amount"]
+            }
+        },
+        {
+            "name": "kya_verify",
+            "description": "Verify an AI agent's identity before transacting with it (Know Your Agent). evidence keys: wallet_address, wallet_age_days, domain, pubkey, owner_email, declared_country.",
+            "input_schema": {
+                "type": "object",
+                "properties": {
+                    "agent_id": {"type": "string"},
+                    "evidence": {"type": "object"}
+                },
+                "required": ["agent_id"]
+            }
+        },
+        {
+            "name": "dispute_open",
+            "description": "Open a dispute when an agent-paid transaction went bad (non-delivery, fraud). Records with a 7-day auto-escalation window.",
+            "input_schema": {
+                "type": "object",
+                "properties": {
+                    "transaction_id": {"type": "string"},
+                    "reason": {"type": "string"},
+                    "evidence": {"type": "object"}
+                },
+                "required": ["transaction_id", "reason"]
+            }
+        },
+    ],
+}
+
 # provider active in this server process (resolved once)
 try:
     _SMS = core.sms_status()
@@ -43,6 +105,12 @@ try:
     _COMPLIANCE = core.compliance_status()
 except Exception as _e:
     _COMPLIANCE = {"provider": core.COMPLIANCE_PROVIDER_NAME, "ready": False, "detail": str(_e)}
+
+# Initialize billing database (SQLite) — safe no-op if already exists
+try:
+    billing.init_db()
+except Exception:
+    pass
 
 
 def _audit(event: dict) -> None:
@@ -106,7 +174,9 @@ class Handler(BaseHTTPRequestHandler):
         return xff.split(",")[0].strip() if xff else self.client_address[0]
 
     def _authorize(self) -> tuple[bool, str, str]:
-        """Return (ok, identity, error). identity = api-key or 'anon:<ip>'."""
+        """Return (ok, identity, error). identity = api-key or 'anon:<ip>'.
+        Keys from AGENTMAIL_API_KEYS (admin) bypass tier limits.
+        Keys from billing DB are checked for tier + monthly usage."""
         ip = self._client_ip()
         # Authenticated path: Bearer token or X-API-Key header.
         key = self.headers.get("X-API-Key", "") or ""
@@ -115,9 +185,17 @@ class Handler(BaseHTTPRequestHandler):
             if auth.lower().startswith("bearer "):
                 key = auth[7:].strip()
         if key:
+            # Admin keys (env) — unlimited
             if key in _API_KEYS:
                 return True, key, ""
-            return False, "", "invalid_api_key"
+            # Billing DB keys — check tier + usage
+            usage = billing.record_usage(key)
+            if usage.get("blocked"):
+                reason = usage.get("reason", "invalid_key")
+                if reason == "invalid_key":
+                    return False, "", "invalid_api_key"
+                return False, "", reason  # monthly_limit_exceeded
+            return True, key, ""
         # Anonymous path: only allowed if auth not required, within free-tier cap.
         if _REQUIRE_AUTH:
             ok, reason = _check_free_tier(ip)
@@ -153,6 +231,33 @@ class Handler(BaseHTTPRequestHandler):
         if p.path == "/health":
             return _json(self, 200, {"ok": True, "service": "agentmail",
                                      "sms": _SMS, "compliance": _COMPLIANCE})
+        # MCP server card — lets MCP registries (Smithery) skip auto-scan
+        if p.path == "/.well-known/mcp/server-card.json":
+            return _json(self, 200, _SERVER_CARD)
+        # Pricing page (public)
+        if p.path == "/pricing":
+            return self._pricing_page()
+        # Billing status (public, for monitoring)
+        if p.path == "/billing/status":
+            return _json(self, 200, billing.billing_status())
+        # Stripe webhook (no auth, verified by signature)
+        if p.path == "/webhooks/stripe":
+            return self._stripe_webhook()
+        # Success page — shows the API key after checkout
+        if p.path.startswith("/keys/"):
+            session_id = p.path.split("/keys/", 1)[1]
+            return self._key_success_page(session_id)
+        # Checkout redirects from pricing page (/checkout/dev, /checkout/team)
+        if p.path.startswith("/checkout/"):
+            plan = p.path.split("/checkout/", 1)[1].split("?")[0]
+            try:
+                result = billing.create_checkout_session(plan)
+                self.send_response(302)
+                self.send_header("Location", result["url"])
+                self.end_headers()
+            except Exception as e:
+                _json(self, 500, {"error": str(e)})
+            return
         # sanctions GET has its own audit-gated path (must come BEFORE the
         # generic gate below, otherwise it would double-count rate credits).
         if p.path == "/sanctions" or p.path.startswith("/sanctions?"):
@@ -199,6 +304,19 @@ class Handler(BaseHTTPRequestHandler):
 
     def do_POST(self):
         p = urlparse(self.path)
+        # Checkout start — public, no auth gate (billing is self-serve)
+        if p.path == "/checkout/start":
+            b = self._body()
+            plan = b.get("plan", "dev")
+            try:
+                result = billing.create_checkout_session(plan)
+                _json(self, 200, result)
+            except Exception as e:
+                _json(self, 500, {"error": str(e)})
+            return
+        # Stripe webhook — public, verified by signature
+        if p.path == "/webhooks/stripe":
+            return self._stripe_webhook()
         # generic gate first (no-op when auth disabled); inbox/number creation
         # and compliance screens all live behind the same gate.
         b: dict = {}
@@ -259,6 +377,128 @@ class Handler(BaseHTTPRequestHandler):
             except KeyError as e:
                 return _json(self, 404, {"error": str(e)})
         return _json(self, 404, {"error": "not found"})
+
+    # ─── Billing pages ──────────────────────────────────────────────────
+    def _send_html(self, status: int, html: str):
+        body = html.encode()
+        self.send_response(status)
+        self.send_header("Content-Type", "text/html; charset=utf-8")
+        self.send_header("Content-Length", str(len(body)))
+        self.end_headers()
+        self.wfile.write(body)
+
+    def _pricing_page(self):
+        """Minimal pricing page — the only web surface an agentmail dev sees."""
+        st = billing.billing_status()
+        html = f"""<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>agentmail — Pricing</title>
+<style>
+  body {{ font-family: -apple-system, system-ui, sans-serif; max-width: 720px;
+         margin: 60px auto; padding: 0 20px; color: #1a1a1a; line-height: 1.6; }}
+  h1 {{ font-size: 1.8em; }}
+  .tiers {{ display: flex; gap: 20px; margin: 32px 0; flex-wrap: wrap; }}
+  .tier {{ border: 1px solid #e0e0e0; border-radius: 12px; padding: 24px; flex: 1; min-width: 200px; }}
+  .tier h3 {{ margin: 0 0 8px; font-size: 1.1em; }}
+  .price {{ font-size: 2em; font-weight: 700; margin: 8px 0; }}
+  .price small {{ font-size: 0.5em; font-weight: 400; color: #666; }}
+  ul {{ padding-left: 18px; color: #444; }}
+  li {{ margin: 4px 0; }}
+  a.btn {{ display: inline-block; margin-top: 12px; padding: 10px 20px;
+          background: #635bff; color: #fff !important; text-decoration: none;
+          border-radius: 8px; font-weight: 600; }}
+  code {{ background: #f5f5f5; padding: 2px 6px; border-radius: 4px; font-size: 0.9em; }}
+  .free {{ background: #f9fafb; }}
+</style></head><body>
+<h1>agentmail — Pricing</h1>
+<p>OFAC sanctions screening for AI agents. Free to start, paid tiers for production volume.</p>
+<div class="tiers">
+  <div class="tier free">
+    <h3>Free</h3>
+    <div class="price">$0<small>/mo</small></div>
+    <ul>
+      <li>50 checks/day (by IP)</li>
+      <li>No signup required</li>
+      <li>sanctions_check only</li>
+    </ul>
+  </div>
+  <div class="tier">
+    <h3>Dev</h3>
+    <div class="price">$19<small>/mo</small></div>
+    <ul>
+      <li>10,000 checks/month</li>
+      <li>API key + all tools</li>
+      <li>risk_score + kya_verify</li>
+      <li>Audit log access</li>
+    </ul>
+    <a class="btn" href="/checkout/dev">Get Dev key →</a>
+  </div>
+  <div class="tier">
+    <h3>Team</h3>
+    <div class="price">$99<small>/mo</small></div>
+    <ul>
+      <li>100,000 checks/month</li>
+      <li>API key + all tools</li>
+      <li>Priority support</li>
+      <li>Custom risk rules</li>
+    </ul>
+    <a class="btn" href="/checkout/team">Get Team key →</a>
+  </div>
+</div>
+<p style="color:#666;font-size:0.9em;margin-top:32px">
+  Self-host is free forever: <code>pip install sanctions-mcp</code> ·
+  <a href="https://github.com/kindrat86/agentmail">GitHub</a> ·
+  <a href="https://agentmail-api.fly.dev/health">API status</a>
+</p>
+</body></html>"""
+        self._send_html(200, html)
+
+    def _key_success_page(self, session_id: str):
+        """Shows the API key after successful Stripe checkout."""
+        record = billing.get_key_by_session(session_id)
+        if not record:
+            html = """<!DOCTYPE html><html><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1"></head>
+<body style="font-family:system-ui;max-width:600px;margin:80px auto;padding:20px;text-align:center">
+<h2>⏳ Processing your payment...</h2>
+<p>If you just completed checkout, your API key is being generated. 
+Refresh this page in a few seconds.</p>
+<p style="color:#888">If this persists, contact via <a href="https://github.com/kindrat86/agentmail/issues">GitHub Issues</a>.</p>
+</body></html>"""
+            return self._send_html(200, html)
+        key = record["key"]
+        html = f"""<!DOCTYPE html><html><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1"></head>
+<body style="font-family:system-ui;max-width:600px;margin:60px auto;padding:20px">
+<h1>✅ Your API key is ready</h1>
+<p>Tier: <strong>{record["tier"].title()}</strong></p>
+<div style="background:#f5f5f5;padding:16px;border-radius:8px;font-family:monospace;
+font-size:1.1em;word-break:break-all;margin:16px 0;border:2px solid #635bff">
+{key}
+</div>
+<p>Copy this key. Use it as the <code>X-API-Key</code> header:</p>
+<pre style="background:#1a1a1a;color:#0f0;padding:16px;border-radius:8px;overflow-x:auto">
+curl -H "X-API-Key: {key}" \\
+  "https://agentmail-api.fly.dev/sanctions?wallet=0x098B716B8Aaf21512996dC57EB0615e2383E2f96"</pre>
+<p style="color:#888;font-size:0.9em">
+  ⚠️ Save this key now — it won't be shown again.<br>
+  Manage billing at <a href="https://billing.stripe.com">Stripe Customer Portal</a>
+</p>
+</body></html>"""
+        self._send_html(200, html)
+
+    def _stripe_webhook(self):
+        """Receive and process Stripe webhook events."""
+        n = int(self.headers.get("Content-Length", 0) or 0)
+        payload = self.rfile.read(n) if n else b""
+        sig = self.headers.get("Stripe-Signature", "")
+        try:
+            result = billing.handle_webhook(payload, sig)
+            status = 200 if result.get("handled") else 400
+            _json(self, status, result)
+        except Exception as e:
+            _json(self, 500, {"error": str(e)})
 
 
 def main():

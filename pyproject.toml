@@ -26,6 +26,9 @@ classifiers = [
 dependencies = [
     # requests is used by mailtm.py client; mcp is the MCP server front-end.
     "requests>=2.28",
+    # stripe for the hosted billing layer (API-key-as-product).
+    # Optional: self-host users don't need it, but it's a core dep for hosted.
+    "stripe>=8.0",
     # mcp is optional for HTTP/CLI-only users, but required for the MCP server.
     # Kept as a dep so `pip install agentmail` gives the full MCP experience.
     # If you only want HTTP/CLI, pip install agentmail then ignore mcp import errors.
