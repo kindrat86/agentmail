@@ -131,7 +131,17 @@ Both share an `otp.py` extraction brain (regex for codes + magic links) so email
 
 **Self-host is fully functional and free** — that's what this repo is. Run the MCP server locally or the HTTP API on your own box, screen against real OFAC data, never pay a cent.
 
-**Hosted API** (roadmap) is for when you don't want to keep a server up, keep lists fresh, or keep a 24/7 uptime: a managed endpoint with API-key auth, rate limits, and an audit log of every screen (the thing regulators/investors ask for). Dev tier ~$19/mo. This README updates when it ships.
+**Hosted API** is live at **https://agentmail-api.fly.dev** — a managed endpoint with API-key auth, rate limits, and an audit log of every screen (the thing regulators/investors ask for). Free tier: 50 checks/day, no signup (by IP). For higher volume, [open an issue](https://github.com/kindrat86/agentmail/issues) for an API key.
+
+```bash
+# Try the hosted API right now — no key needed:
+curl "https://agentmail-api.fly.dev/sanctions?wallet=0x098B716B8Aaf21512996dC57EB0615e2383E2f96"
+# → {"matches":[{"list":"OFAC_SDN",...}],"clean":false}
+
+# With an API key:
+curl -H "X-API-Key: sk_live_..." "https://agentmail-api.fly.dev/risk" \
+  -d '{"counterparty_id":"0xabc...","amount":"5000","rail":"x402"}'
+```
 
 ---
 
