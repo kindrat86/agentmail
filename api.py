@@ -1549,7 +1549,7 @@ footer .bottom{margin-top:40px;padding-top:24px;border-top:1px solid var(--line)
         <li><span class="ck">&#10003;</span> API key + audit log</li>
         <li><span class="ck">&#10003;</span> Priority support</li>
       </ul>
-      <a href="/checkout/dev" class="btn btn-primary">Start free trial &rarr;</a>
+      <a href="/checkout/dev" class="btn btn-primary">Get your API key &rarr;</a>
       <p class="guar">First month free. Cancel anytime. <b class="red">First 50 devs locked in at $19/mo forever.</b> If we miss a sanctioned wallet, we cover the first $10K of your legal fees.</p>
     </div>
     <div class="pcard reveal">
@@ -1563,7 +1563,7 @@ footer .bottom{margin-top:40px;padding-top:24px;border-top:1px solid var(--line)
         <li><span class="ck">&#10003;</span> Priority support + SLA</li>
         <li><span class="ck">&#10003;</span> Custom risk rules</li>
       </ul>
-      <a href="/checkout/pro" class="btn btn-ghost">Subscribe</a>
+      <a href="/checkout/team" class="btn btn-ghost">Get your API key &rarr;</a>
       <p class="guar">Same $10K guarantee. Priority SLA. Custom risk rules for production teams.</p>
     </div>
   </div>
