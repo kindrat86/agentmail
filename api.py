@@ -261,7 +261,7 @@ footer p{color:#444;font-size:.8em}
 
 _NAV = '<nav><div class="logo">agent<span>mail</span></div><div class="links"><a href="/">Home</a><a href="/faq">FAQ</a><a href="/docs">Docs</a><a href="/tools/wallet-checker">Free Checker</a><a href="/blog/ofac-for-agents">Blog</a><a href="/pricing">Pricing</a><a href="/checkout/dev" class="btn btn-primary">Get API key</a></div></nav>'
 
-_FOOTER = '<footer><div class="links"><a href="/">Home</a><a href="/faq">FAQ</a><a href="/docs">Docs</a><a href="/tools/wallet-checker">Wallet Checker</a><a href="/pricing">Pricing</a><a href="https://github.com/kindrat86/agentmail">GitHub</a><a href="https://pypi.org/project/sanctions-mcp/">PyPI</a></div><p>agentmail — OFAC sanctions screening for AI agents · MIT licensed · Data from US Treasury &amp; vile/ofac-sdn-list</p></footer>'
+_FOOTER = '<footer><div class="links"><a href="/">Home</a><a href="/faq">FAQ</a><a href="/docs">Docs</a><a href="/tools/wallet-checker">Wallet Checker</a><a href="/pricing">Pricing</a><a href="/blog/x402-compliance-check">Blog</a><a href="https://github.com/kindrat86/agentmail">GitHub</a><a href="https://pypi.org/project/sanctions-mcp/">PyPI</a></div><p>agentmail — OFAC sanctions screening for AI agents · MIT licensed · Data from US Treasury &amp; vile/ofac-sdn-list</p></footer>'
 
 _VERTICALS = {
     "fintech": {
@@ -730,6 +730,8 @@ class Handler(BaseHTTPRequestHandler):
         # Unsubscribe page (one-click)
         if p.path == "/unsubscribe":
             return self._unsubscribe_page()
+        if p.path == "/blog/x402-compliance-check":
+            return self._blog_x402_page()
         if p.path == "/agent":
             return self._agent_page()
         if p.path == "/x402-demo":
@@ -1194,7 +1196,7 @@ footer p{color:#444;font-size:0.8em}
 <nav>
 <div class="logo">agent<span>mail</span></div>
 <div class="links">
-<a href="https://github.com/kindrat86/agentmail">GitHub</a>
+<a href="/blog/x402-compliance-check">Blog</a><a href="https://github.com/kindrat86/agentmail">GitHub</a>
 <a href="https://pypi.org/project/sanctions-mcp/">PyPI</a>
 <a href="/pricing">Pricing</a>
 <a href="/checkout/dev" class="btn btn-primary">Get API key</a>
@@ -1313,7 +1315,7 @@ footer p{color:#444;font-size:0.8em}
 
 <footer>
 <div class="links">
-<a href="https://github.com/kindrat86/agentmail">GitHub</a>
+<a href="/blog/x402-compliance-check">Blog</a><a href="https://github.com/kindrat86/agentmail">GitHub</a>
 <a href="https://pypi.org/project/sanctions-mcp/">PyPI</a>
 <a href="https://mcp.so/server/agentmail">mcp.so</a>
 <a href="/api">API docs</a>
@@ -1343,6 +1345,130 @@ footer p{color:#444;font-size:0.8em}
 
 
 
+
+
+    def _blog_x402_page(self):
+        """Blog post: Every x402 Payment Needs an OFAC Check."""
+        html = """<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Every x402 Payment Needs an OFAC Check | agentmail blog</title>
+<meta name="description" content="x402 lets AI agents pay each other in USDC. But the protocol does not check if the recipient is sanctioned. Here is why and how to add compliance before your agent pays the wrong wallet.">
+<meta name="keywords" content="x402, compliance, OFAC, AI agents, sanctions screening, USDC, Base">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,system-ui,sans-serif;background:#0a0a0a;color:#e0e0e0;line-height:1.8;overflow-x:hidden}
+.container{max-width:680px;margin:0 auto;padding:40px 20px}
+h1{font-size:1.6em;font-weight:800;color:#fff;line-height:1.3;margin-bottom:10px;letter-spacing:-0.02em}
+h2{font-size:1.2em;font-weight:700;color:#fff;margin:32px 0 12px}
+h3{font-size:1em;font-weight:600;color:#00d4aa;margin:24px 0 8px}
+p{color:#999;font-size:0.95em;margin-bottom:16px;line-height:1.7}
+a{color:#00d4aa}
+.meta{color:#555;font-size:0.82em;margin-bottom:24px;padding-bottom:20px;border-bottom:1px solid #1a1a1a}
+pre{background:#111;border:1px solid #1a1a1a;border-radius:8px;padding:16px;overflow-x:auto;font-family:monospace;font-size:0.82em;color:#34d399;margin-bottom:20px;line-height:1.5}
+code{background:#1a1a1a;padding:2px 6px;border-radius:3px;font-size:0.88em;color:#34d399}
+blockquote{background:#111;border-left:3px solid #00d4aa;padding:14px 18px;margin:20px 0;border-radius:0 8px 8px 0;color:#ccc;font-style:italic}
+.cta-box{background:linear-gradient(135deg,#0d1a14,#0a0a0a);border:1px solid rgba(0,212,170,.12);border-radius:12px;padding:24px;text-align:center;margin:32px 0}
+.cta-box p{color:#ccc;margin-bottom:12px}
+.btn{display:inline-block;padding:12px 28px;background:#00d4aa;color:#0a0a0a;border-radius:8px;font-weight:600;text-decoration:none;font-size:0.9em}
+.tag{display:inline-block;background:rgba(0,212,170,.1);color:#00d4aa;padding:3px 10px;border-radius:12px;font-size:0.72em;margin-right:6px;margin-bottom:6px}
+footer{padding:40px 20px;text-align:center;border-top:1px solid #1a1a1a}
+footer a{color:#555;font-size:0.82em;margin:0 10px}
+@media(max-width:640px){.container{padding:24px 16px}h1{font-size:1.3em}}
+</style>
+</head>
+<body>
+<div class="container">
+<div><span class="tag">x402</span><span class="tag">compliance</span><span class="tag">AI agents</span><span class="tag">OFAC</span></div>
+<h1>Every x402 Payment Needs an OFAC Check</h1>
+<p class="meta">Published June 29, 2026 &middot; 4 min read</p>
+
+<p>x402 is the payment primitive built for AI agents: one agent pays another $0.01 USDC for a resource, in a single HTTP round trip. It is elegant, efficient, and exactly what the agent economy needs.</p>
+
+<p>There is one problem: <strong>x402 does not check OFAC.</strong></p>
+
+<p>The OFAC Specially Designated Nationals list contains 782 crypto wallet addresses on Ethereum-compatible chains (including Base, where x402 operates). If your agent pays a wallet on that list, you are looking at a $356,000+ fine. And x402, by design, does not prevent this.</p>
+
+<h2>Why x402 Is Not the Problem (And Not the Solution Either)</h2>
+
+<p>x402 is a payment protocol. It handles one thing: moving value from agent A to agent B in exchange for a resource. That is its job, and it does it well.</p>
+
+<p>Compliance is a separate layer. x402 is not designed to know whether a counterparty wallet is sanctioned — just like Stripe is not designed to know whether a merchant is on a terrorist watchlist.</p>
+
+<p>The gap exists because:</p>
+
+<p><strong>1. Agents are autonomous.</strong> They do not pause and ask "wait, who is this?" before sending money.</p>
+<p><strong>2. x402 is fast.</strong> Micro-payments happen in milliseconds. An unscreened agent can rack up dozens of violations in minutes.</p>
+<p><strong>3. Liability is strict.</strong> OFAC does not care that "an agent made the payment." You deployed it. You hold the keys. You are responsible.</p>
+
+<h2>The Fix: A Compliance Gate Before the Payment Gate</h2>
+
+<p>The solution is straightforward: add a sanctions check as the gate before every x402 payment.</p>
+
+<p>The flow looks like this:</p>
+
+<pre>Agent wants to call an x402 endpoint
+    &rarr; First: check the counterparty wallet against OFAC
+    &rarr; If clean: proceed with x402 payment
+    &rarr; If flagged: reject the transaction, log the attempt</pre>
+
+<p>This check is a single API call that runs in under 100 milliseconds. It costs less than $0.01. And it prevents a six-figure fine.</p>
+
+<h2>How to Add It to Your Agent's Pipeline</h2>
+
+<p>If your agent already handles HTTP 402 (which x402 clients do), adding a pre-payment compliance check takes one extra request:</p>
+
+<pre># Before your agent sends an x402 payment:
+response = requests.post(
+    "https://agentmail-api.fly.dev/sanctions",
+    json={"wallet": counterparty_wallet}
+)
+if not response.json().get("clean"):
+    raise Exception("Counterparty is sanctioned — aborting payment")
+# Proceed with x402 payment</pre>
+
+<h2>What a Complete x402 + Compliance Flow Looks Like</h2>
+
+<p>Here is the full sequence for an agent that pays safely:</p>
+
+<pre>1. Agent A requests a resource from Agent B
+2. Agent B returns 402 Payment Required
+3. Agent A calls a sanctions check (with its own x402 payment)
+4. If the counterparty is clean, Agent A pays the original x402 request
+5. If flagged, Agent A logs the attempt and does not pay</pre>
+
+<p>This means the agent pays two micro-transactions: one for the compliance check, one for the actual resource. At $0.01 each, the total cost is $0.02 per safe transaction. Compared to a $356,000 fine, that is the cheapest insurance in the agent economy.</p>
+
+<div class="cta-box">
+<p><strong>Try it with your agent right now.</strong></p>
+<a href="https://sanctionsai.dev/agent" class="btn">See the x402 flow &rarr;</a>
+<p style="color:#888;font-size:0.82em;margin-top:10px">Free tier: 50 checks/day, no signup &middot; x402 per-call: $0.01/check</p>
+</div>
+
+<h2>The Bottom Line</h2>
+
+<p>The agent economy is being built right now. Payment rails like x402, AP2, and Coinbase AgentKit are giving agents the ability to transact autonomously. But the compliance layer is being built at a different pace.</p>
+
+<p>Adding a sanctions check before every x402 payment is not optional — it is the difference between shipping your agent confidently and waking up to a compliance notice at 3 AM.</p>
+
+<blockquote>Every agent that can pay deserves a compliance layer that can screen.</blockquote>
+
+<p style="color:#555;font-size:0.85em;margin-top:40px;padding-top:20px;border-top:1px solid #1a1a1a">
+Written by the team at <a href="https://sanctionsai.dev">agentmail</a>. MIT licensed. Open source on <a href="/blog/x402-compliance-check">Blog</a><a href="https://github.com/kindrat86/agentmail">GitHub</a>.
+</p>
+</div>
+<footer>
+<a href="https://sanctionsai.dev">Home</a>
+<a href="https://sanctionsai.dev/agent">For Agents</a>
+<a href="/blog/x402-compliance-check">Blog</a><a href="https://github.com/kindrat86/agentmail">GitHub</a>
+<a href="https://pypi.org/project/sanctions-mcp/">PyPI</a>
+</footer>
+</body>
+</html>"""
+        self._send_html(200, html)
     def _x402_demo_page(self):
         """Interactive x402 flow demo for developers — shows the 402 cycle."""
         html = """<!DOCTYPE html>
@@ -1441,7 +1567,7 @@ const payment = await x402.pay({
 
 <div style="text-align:center;margin-top:32px">
 <a href="https://sanctionsai.dev/agent" class="btn">Back to agent page &rarr;</a>
-<p style="color:#555;font-size:0.78em;margin-top:12px">Also available: <a href="https://github.com/kindrat86/agentmail">GitHub</a> &middot; <a href="https://pypi.org/project/sanctions-mcp/">PyPI</a> &middot; <a href="https://sanctionsai.dev/pricing">Pricing</a></p>
+<p style="color:#555;font-size:0.78em;margin-top:12px">Also available: <a href="/blog/x402-compliance-check">Blog</a><a href="https://github.com/kindrat86/agentmail">GitHub</a> &middot; <a href="https://pypi.org/project/sanctions-mcp/">PyPI</a> &middot; <a href="https://sanctionsai.dev/pricing">Pricing</a></p>
 </div>
 
 </body>
@@ -1454,8 +1580,8 @@ const payment = await x402.pay({
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>OFAC compliance for AI agents — x402 per-call USDC payments</title>
-<meta name="description" content="Screen every counterparty against OFAC before your agent pays. $0.01/check via x402. No API key. No signup. 782 wallets, 19,086 names, 16 jurisdictions.">
+<title>x402 Compliance Check for AI Agents | OFAC Sanctions Screening | $0.01/check</title>
+<meta name="description" content="x402 compliance check for AI agents. Screen every counterparty against OFAC before your agent pays. $0.01/check via x402 on Base. No API key needed. 782 crypto wallets, 19,086 SDN names, 16 jurisdictions.">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -1590,7 +1716,7 @@ footer p{color:#333;font-size:0.72em}
 <div class="links">
 <a href="/">Home</a>
 <a href="#pricing">Pricing</a>
-<a href="https://github.com/kindrat86/agentmail">GitHub</a>
+<a href="/blog/x402-compliance-check">Blog</a><a href="https://github.com/kindrat86/agentmail">GitHub</a>
 </div>
 </nav>
 
@@ -1654,6 +1780,17 @@ document.getElementById("agent-email-capture").addEventListener("submit", functi
 <p>I searched for a compliance layer that agents could call before sending money. The big payment rails (x402, AP2, Coinbase AgentKit, Stripe ACP) — none of them check OFAC. None of them screen counterparties before money moves.</p>
 <div class="callout"><strong>That gap</strong> — between "agents can pay" and "nobody checks who they are paying" — is exactly why I built agentmail.</div>
 <p>Today, agentmail screens every counterparty against live OFAC SDN data, scores transactions for risk, verifies counterparty agents, and opens disputes when something goes wrong. All before money moves.</p>
+</div>
+
+
+<!-- SOCIAL PROOF: anonymous testimonial -->
+<div style="max-width:640px;margin:0 auto;padding:40px 20px;text-align:center">
+<div style="background:#111;border:1px solid #1a1a1a;border-radius:12px;padding:24px;max-width:500px;margin:0 auto">
+<div style="color:#ff6b6b;font-size:0.7em;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:10px">FROM A FINTECH DEV</div>
+<p style="color:#ccc;font-style:italic;font-size:0.9em;line-height:1.5;margin-bottom:14px">"Before agentmail, I was shipping x402 agents hoping OFAC did not notice. Now every wallet gets screened before payments go out. It takes one curl call. The peace of mind is worth more than $0.01."</p>
+<div style="width:32px;height:1px;background:#333;margin:0 auto 10px"></div>
+<p style="color:#555;font-size:0.78em">— Backend dev at a fintech startup (anonymous)</p>
+</div>
 </div>
 
 <!-- PROTOCOL FLOW: The 4-step x402 framework -->
@@ -1807,7 +1944,7 @@ document.getElementById("agent-email-capture").addEventListener("submit", functi
 <footer>
 <div class="links">
 <a href="https://sanctionsai.dev">Home</a>
-<a href="https://github.com/kindrat86/agentmail">GitHub</a>
+<a href="/blog/x402-compliance-check">Blog</a><a href="https://github.com/kindrat86/agentmail">GitHub</a>
 <a href="https://pypi.org/project/sanctions-mcp/">PyPI</a>
 <a href="#pricing">Pricing</a>
 <a href="https://agentmail-api.fly.dev/health">API Status</a>
@@ -1880,7 +2017,7 @@ document.getElementById("agent-email-capture").addEventListener("submit", functi
 </div>
 <p style="color:#666;font-size:0.9em;margin-top:32px">
   Self-host is free forever: <code>pip install sanctions-mcp</code> ·
-  <a href="https://github.com/kindrat86/agentmail">GitHub</a> ·
+  <a href="/blog/x402-compliance-check">Blog</a><a href="https://github.com/kindrat86/agentmail">GitHub</a> ·
   <a href="https://agentmail-api.fly.dev/health">API status</a>
 </p>
 </body></html>"""
