@@ -169,10 +169,25 @@ def _json(handler, status, obj):
 # ─── Marketing site (sanctionsai.dev) — shared dark theme + SEO data ──────────
 _SITE = "https://sanctionsai.dev"
 
-_VERTICAL_KEYS = frozenset(
+_VERTICAL_KEYS = frozenset((
+    "crypto",
+    "defi",
+    "defi-protocol",
+    "dex",
+    "ecommerce",
+    "fintech",
+    "gaming",
+    "healthcare",
+    "insurance",
+    "lending",
+    "marketplace",
+    "nft",
+    "payments",
     "real-estate",
+    "remittance",
+    "trading",
 ))
-_COMPETITOR_KEYS = frozenset(
+_COMPETITOR_KEYS = frozenset((
     "blockdaemon",
     "chainalysis",
     "charmverse",
@@ -182,7 +197,7 @@ _COMPETITOR_KEYS = frozenset(
     "sumsub",
     "trm-labs",
 ))
-_BLOG_SLUGS = frozenset(
+_BLOG_SLUGS = frozenset((
     "know-your-agent",
     "ofac-for-agents",
     "openai-agents-sdk-compliance",
