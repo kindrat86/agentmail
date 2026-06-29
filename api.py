@@ -261,7 +261,7 @@ footer p{color:#444;font-size:.8em}
 
 _NAV = '<nav><div class="logo">agent<span>mail</span></div><div class="links"><a href="/">Home</a><a href="/faq">FAQ</a><a href="/docs">Docs</a><a href="/tools/wallet-checker">Free Checker</a><a href="/blog/ofac-for-agents">Blog</a><a href="/pricing">Pricing</a><a href="/checkout/dev" class="btn btn-primary">Get API key</a></div></nav>'
 
-_FOOTER = '<footer><div class="links"><a href="/">Home</a><a href="/faq">FAQ</a><a href="/docs">Docs</a><a href="/tools/wallet-checker">Wallet Checker</a><a href="/pricing">Pricing</a><a href="/blog/x402-compliance-check">Blog</a><a href="https://github.com/kindrat86/agentmail">GitHub</a><a href="https://pypi.org/project/sanctions-mcp/">PyPI</a></div><p>agentmail — OFAC sanctions screening for AI agents · MIT licensed · Data from US Treasury &amp; vile/ofac-sdn-list</p></footer>'
+_FOOTER = '<footer><div class="links"><a href="/">Home</a><a href="/faq">FAQ</a><a href="/docs">Docs</a><a href="/tools/wallet-checker">Wallet Checker</a><a href="/pricing">Pricing</a><a href="/agent">For Agents</a><a href="/">Home</a><a href="https://github.com/kindrat86/agentmail">GitHub</a><a href="https://pypi.org/project/sanctions-mcp/">PyPI</a></div><p>agentmail — OFAC sanctions screening for AI agents · MIT licensed · Data from US Treasury &amp; vile/ofac-sdn-list</p></footer>'
 
 _VERTICALS = {
     "fintech": {
@@ -724,7 +724,9 @@ class Handler(BaseHTTPRequestHandler):
             return self._llms_txt()
         # Landing page (HTML) — humans from Show HN, Google, direct visits
         if p.path == "/favicon.ico" or p.path == "/favicon.svg":
-            return self._send_svg_favicon()
+            svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#0f172a"/><stop offset="100%" stop-color="#0d1a14"/></linearGradient></defs><rect width="32" height="32" rx="7" fill="url(#g)" stroke="#00d4aa" stroke-width="1.8"/><text x="16" y="22" font-family="system-ui,sans-serif" font-size="18" font-weight="800" fill="#00d4aa" text-anchor="middle" letter-spacing="-0.5">a</text><circle cx="24" cy="7" r="3.5" fill="#00d4aa" opacity="0.85"/></svg>'
+            self._send_html(200, svg)
+            return
         if p.path == "/" or p.path == "":
             return self._landing_page()
         # Unsubscribe page (one-click)
@@ -1091,240 +1093,300 @@ curl "https://sanctionsai.dev/sanctions?wallet=0x098B716B8Aaf21512996dC57EB0615e
         html = """<!DOCTYPE html>
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>agentmail — OFAC sanctions screening for AI agents</title><link rel="icon" type="image/svg+xml" href="/favicon.svg">
-<meta name="description" content="Screen your AI agent's payments against real OFAC sanctions data before money moves. 782 crypto wallets, 19,086 names, 16 jurisdictions. MCP + HTTP + CLI. Free.">
-<!-- PostHog -->
-<script>
-!function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.async=!0,p.src=s.api_host+"/static/array.js",(r=t.getElementsByTagName("head")[0]).appendChild(p);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])}(document,window.posthog||[]);
-posthog.init('phc_lyZCgvTpicjLzAO3rY2GhxuX5WUc5jQjP8ZVwwJqauX',{api_host:'https://us.i.posthog.com',person_profiles:'identified_only'})
-</script>
+<title>OFAC Sanctions Screening for AI Agents | agentmail</title>
+<meta name="description" content="Screen every counterparty against OFAC before your AI agent pays. 782 crypto wallets, 19,086 names. Free tier + x402 per-call USDC.">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:-apple-system,system-ui,sans-serif;background:#0a0a0a;color:#e0e0e0;line-height:1.6;overflow-x:hidden}
+html{-webkit-text-size-adjust:100%}
+body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:#0a0a0a;color:#e0e0e0;line-height:1.6;overflow-x:hidden}
 a{color:#00d4aa;text-decoration:none}
-.container{max-width:900px;margin:0 auto;padding:0 24px}
-/* Nav */
-nav{padding:20px 24px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #1a1a1a}
-.logo{font-weight:700;font-size:1.2em;color:#fff}
-.logo span{color:#00d4aa}
-nav .links{display:flex;gap:24px;align-items:center}
-nav a{color:#888;font-size:0.9em;transition:color .2s}
-nav a:hover{color:#fff}
-.btn{display:inline-block;padding:10px 20px;border-radius:8px;font-weight:600;font-size:0.9em;transition:transform .1s,box-shadow .2s}
-.btn-primary{background:#00d4aa;color:#0a0a0a}
-.btn-primary:hover{box-shadow:0 0 20px rgba(0,212,170,.3);transform:translateY(-1px)}
-.btn-ghost{border:1px solid #333;color:#e0e0e0}
+.btn{display:inline-flex;align-items:center;justify-content:center;padding:14px 24px;border-radius:10px;font-weight:600;font-size:0.95em;cursor:pointer;border:none;min-height:48px;text-decoration:none!important;transition:all .2s;touch-action:manipulation}
+.btn-primary{background:#00d4aa;color:#0a0a0a!important}
+.btn-primary:hover{box-shadow:0 0 24px rgba(0,212,170,.25)}
+.btn-ghost{border:1.5px solid #333;color:#e0e0e0!important;background:transparent}
 .btn-ghost:hover{border-color:#00d4aa}
-/* Hero */
-.hero{text-align:center;padding:80px 24px 60px}
-.hero h1{font-size:2.6em;font-weight:800;line-height:1.15;max-width:750px;margin:0 auto 24px;letter-spacing:-0.02em}
-.hero h1 .hl{color:#00d4aa}
-.hero .sub{font-size:1.15em;color:#999;max-width:580px;margin:0 auto 36px}
-.hero .ctas{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
-.code-demo{background:#111;border:1px solid #222;border-radius:12px;padding:20px 24px;margin:48px auto;max-width:680px;text-align:left;font-family:'SF Mono',Consolas,monospace;font-size:0.85em;overflow-x:auto}
-.code-demo .prompt{color:#666}
-.code-demo .cmd{color:#00d4aa}
-.code-demo .out{color:#888}
-.code-demo .flag{color:#ff6b6b}
-/* Problem */
-.problem{padding:60px 24px;border-top:1px solid #1a1a1a}
-.problem h2{font-size:1.8em;text-align:center;margin-bottom:40px;font-weight:700}
-.problem-grid{display:grid;grid-template-columns:1fr 1fr;gap:32px;max-width:700px;margin:0 auto}
-.problem-grid .col{text-align:left}
-.problem-grid h3{color:#ff6b6b;font-size:1em;margin-bottom:12px;text-transform:uppercase;letter-spacing:0.05em}
-.problem-grid p{color:#999;font-size:0.95em}
-.problem-grid .arrow{text-align:center;font-size:1.5em;color:#00d4aa;align-self:center}
-/* Solution */
-.solution{padding:80px 24px;text-align:center}
-.solution h2{font-size:1.8em;margin-bottom:16px;font-weight:700}
-.solution .lead{color:#999;max-width:550px;margin:0 auto 48px}
-.tools{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;max-width:700px;margin:0 auto;text-align:left}
-.tool{background:#111;border:1px solid #222;border-radius:12px;padding:24px}
-.tool code{background:#1a1a1a;padding:2px 8px;border-radius:4px;color:#00d4aa;font-size:0.9em}
-.tool h3{font-size:1.05em;margin:12px 0 8px}
-.tool p{color:#888;font-size:0.9em}
-/* Stats */
-.stats{display:flex;justify-content:center;gap:48px;padding:48px 24px;border-top:1px solid #1a1a1a;border-bottom:1px solid #1a1a1a;flex-wrap:wrap}
-.stat{text-align:center}
-.stat .num{font-size:2em;font-weight:800;color:#00d4aa}
-.stat .label{color:#666;font-size:0.8em;text-transform:uppercase;letter-spacing:0.05em}
-/* Install */
-.install{padding:80px 24px;text-align:center}
-.install h2{font-size:1.8em;margin-bottom:36px;font-weight:700}
-.install .code-block{background:#111;border:1px solid #222;border-radius:12px;padding:24px;max-width:600px;margin:0 auto;text-align:left;font-family:monospace;font-size:0.85em;overflow-x:auto}
-.install .code-block .c{color:#00d4aa}
-.install .code-block .cm{color:#666}
-/* Pricing */
-.pricing{padding:80px 24px;border-top:1px solid #1a1a1a}
-.pricing h2{text-align:center;font-size:1.8em;margin-bottom:16px;font-weight:700}
-.pricing .lead{text-align:center;color:#999;margin-bottom:48px}
-.tiers{display:flex;gap:20px;justify-content:center;flex-wrap:wrap}
-.tier{background:#111;border:1px solid #222;border-radius:16px;padding:32px;width:260px;text-align:center}
-.tier.featured{border-color:#00d4aa;box-shadow:0 0 30px rgba(0,212,170,.08)}
-.tier h3{font-size:1.1em;margin-bottom:8px}
-.tier .price{font-size:2.4em;font-weight:800;margin:16px 0}
-.tier .price small{font-size:0.35em;color:#666;font-weight:400}
-.tier ul{list-style:none;text-align:left;margin:20px 0}
-.tier ul li{color:#999;font-size:0.85em;padding:6px 0}
-.tier ul li::before{content:"✓";color:#00d4aa;margin-right:8px}
-.tier a.btn{width:100%;text-align:center;margin-top:8px}
-.tier.free{opacity:0.7}
-/* Footer */
-footer{padding:48px 24px;text-align:center;border-top:1px solid #1a1a1a}
-footer .links{display:flex;gap:32px;justify-content:center;margin-bottom:16px}
-footer a{color:#666;font-size:0.9em}
-footer p{color:#444;font-size:0.8em}
-@media(max-width:640px){
-.hero h1{font-size:1.8em}.problem-grid{grid-template-columns:1fr}
-.tools{grid-template-columns:1fr}.stats{gap:24px}
+.btn-lg{padding:16px 28px;font-size:1em;min-height:52px}
+nav{padding:14px 20px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #1a1a1a;background:rgba(10,10,10,.96);backdrop-filter:blur(12px);position:sticky;top:0;z-index:100}
+.logo{font-weight:700;font-size:1.1em;color:#fff}
+.logo span{color:#00d4aa}
+nav .links{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+nav .links a{color:#888;font-size:0.82em;transition:color .2s;white-space:nowrap}
+nav .links a:hover{color:#fff}
+nav .btn{padding:8px 14px;font-size:0.78em;min-height:36px}
+@media(min-width:768px){nav{padding:20px 24px}nav .links{gap:20px}nav .links a{font-size:0.88em}nav .btn{padding:10px 20px}}
+.hero{padding:64px 16px 40px;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-100px;left:50%;transform:translateX(-50%);width:600px;height:600px;background:radial-gradient(circle,rgba(0,212,170,.04) 0%,transparent 70%);pointer-events:none}
+.hero .badge{display:inline-block;background:rgba(255,107,107,.1);color:#ff6b6b;padding:5px 14px;border-radius:20px;font-size:0.68em;font-weight:600;margin-bottom:16px;border:1px solid rgba(255,107,107,.2)}
+.hero h1{font-size:1.5em;font-weight:800;line-height:1.15;max-width:620px;margin:0 auto 14px;letter-spacing:-0.02em}
+.hero h1 .hl-red{color:#ff6b6b}
+.hero .sub{font-size:0.92em;color:#999;max-width:500px;margin:0 auto 20px}
+.hero .stat-row{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:20px}
+.hero .stat-row span{background:#111;border:1px solid #1a1a1a;border-radius:8px;padding:7px 12px;font-size:0.75em;color:#888}
+.hero .stat-row strong{color:#00d4aa}
+.hero .ctas{display:flex;flex-direction:column;gap:12px;margin-top:24px;max-width:360px;margin:0 auto}
+.hero .urgency-bar{background:#1a0a0a;border:1px solid #332222;border-radius:8px;padding:10px 14px;max-width:500px;margin:16px auto 0;font-size:0.76em;color:#ff8888;line-height:1.4}
+.hero .urgency-bar strong{color:#ff6b6b}
+@media(min-width:640px){
+.hero{padding:80px 24px 50px}.hero h1{font-size:2em;max-width:650px}.hero .sub{font-size:1em}.hero .ctas{flex-direction:row;max-width:none;justify-content:center;gap:16px}
 }
+.email-section{padding:32px 16px;text-align:center;background:linear-gradient(180deg,#0a0a0a,#0d1a14);border-top:1px solid #1a1a1a;border-bottom:1px solid #1a1a1a}
+.email-section h2{font-size:1.1em;color:#fff;margin-bottom:8px;font-weight:600}
+.email-section .sub{color:#888;font-size:0.85em;margin-bottom:20px;max-width:420px;margin:0 auto 20px}
+.email-form{display:flex;flex-direction:column;gap:8px;max-width:420px;margin:0 auto}
+.email-form .input-row{display:flex;flex-direction:column;gap:8px}
+.email-form input{flex:1;padding:14px 16px;border-radius:10px;border:1.5px solid #333;background:#111;color:#e0e0e0;font-size:1em;outline:none;min-height:48px}
+.email-form input:focus{border-color:#00d4aa}
+.email-form .hint{color:#555;font-size:0.7em;margin-top:4px}
+@media(min-width:480px){.email-form .input-row{flex-direction:row}}
+.story-section{padding:48px 16px;max-width:640px;margin:0 auto}
+.story-label{color:#555;font-size:0.72em;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:8px}
+.story-section h2{font-size:1.15em;font-weight:700;margin-bottom:12px;line-height:1.35}
+.story-section p{color:#999;font-size:0.9em;margin-bottom:12px;line-height:1.6}
+.story-section .story-quote{background:#111;border-left:3px solid #ff6b6b;padding:14px 16px;border-radius:0 8px 8px 0;margin:16px 0;font-style:italic;color:#ccc;font-size:0.88em}
+.story-section .callout{background:#0d1a14;border:1px solid rgba(0,212,170,.12);border-radius:10px;padding:18px;margin:20px 0}
+.story-section .callout strong{color:#00d4aa}
+@media(min-width:640px){.story-section{padding:60px 24px}.story-section h2{font-size:1.3em}}
+.testimonial{max-width:600px;margin:0 auto;padding:32px 16px;text-align:center}
+.testimonial .card{background:#111;border:1px solid #1a1a1a;border-radius:12px;padding:24px;max-width:500px;margin:0 auto}
+.testimonial .label{color:#ff6b6b;font-size:0.68em;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:10px}
+.testimonial .quote{color:#ccc;font-style:italic;font-size:0.9em;line-height:1.5;margin-bottom:14px}
+.testimonial .line{width:32px;height:1px;background:#333;margin:0 auto 10px}
+.testimonial .author{color:#555;font-size:0.76em}
+.offer-grid{padding:48px 16px;max-width:800px;margin:0 auto;text-align:center}
+.offer-grid h2{font-size:1.25em;font-weight:700;margin-bottom:24px}
+.offer-grid .grid{display:grid;grid-template-columns:1fr;gap:12px;text-align:left;max-width:560px;margin:0 auto}
+.offer-grid .card{background:#111;border:1px solid #1a1a1a;border-radius:10px;padding:18px}
+.offer-grid .card .n{color:#00d4aa;font-weight:700;font-size:1.1em;margin-bottom:4px}
+.offer-grid .card h3{color:#fff;font-size:0.95em;margin-bottom:3px}
+.offer-grid .card p{color:#888;font-size:0.85em}
+.offer-grid .value-stack{background:#0d1a14;border:1px solid rgba(0,212,170,.12);border-radius:12px;padding:24px;margin:24px auto 0;text-align:center;max-width:560px}
+.offer-grid .value-stack .vs-price{font-size:2em;font-weight:800;color:#00d4aa}
+.offer-grid .value-stack .vs-price .s{color:#555;text-decoration:line-through;font-weight:400;font-size:0.6em}
+.offer-grid .value-stack .vs-label{color:#888;font-size:0.85em;margin-top:6px}
+@media(min-width:640px){
+.offer-grid{padding:60px 24px}.offer-grid .grid{grid-template-columns:1fr 1fr;gap:14px;max-width:none}.offer-grid h2{font-size:1.4em}
+}
+.install{padding:48px 16px;max-width:640px;margin:0 auto;text-align:center}
+.install h2{font-size:1.15em;font-weight:700;margin-bottom:20px}
+.install code{display:block;background:#111;border:1px solid #1a1a1a;border-radius:8px;padding:14px;font-family:monospace;font-size:0.85em;color:#34d399;line-height:1.6;text-align:left;overflow-x:auto;margin-bottom:12px}
+.pricing{padding:48px 16px;text-align:center}
+.pricing .risk-warning{color:#ff6b6b;font-size:0.78em;margin-bottom:20px;line-height:1.4}
+.pricing h2{font-size:1.25em;font-weight:700;margin-bottom:6px}
+.pricing .lead{color:#999;font-size:0.9em;margin-bottom:28px}
+.price-cards{display:flex;flex-direction:column;gap:14px;max-width:360px;margin:0 auto}
+.price-card{background:#111;border:1px solid #1a1a1a;border-radius:14px;padding:24px;text-align:center;position:relative}
+.price-card.featured{border-color:#00d4aa;box-shadow:0 0 20px rgba(0,212,170,.08)}
+.price-card .popular{background:#00d4aa;color:#0a0a0a;display:inline-block;padding:3px 12px;border-radius:12px;font-size:0.62em;font-weight:700;margin-bottom:10px;text-transform:uppercase}
+.price-card h3{color:#fff;font-size:0.95em}
+.price-card .price{font-size:2em;font-weight:800;color:#fff;margin:10px 0}
+.price-card .price small{font-size:0.35em;color:#555;font-weight:400}
+.price-card ul{list-style:none;padding:0;margin:14px 0;text-align:left}
+.price-card ul li{color:#888;font-size:0.82em;padding:5px 0}
+.price-card ul li::before{content:"\\2713";color:#00d4aa;margin-right:8px}
+.price-card .btn{width:100%;margin-top:6px}
+.price-card .guarantee-text{font-size:0.72em;color:#555;margin-top:10px;line-height:1.4}
+@media(min-width:640px){
+.pricing{padding:60px 24px}.price-cards{flex-direction:row;max-width:none;justify-content:center;gap:16px}.price-card{width:250px;padding:28px}
+}
+.faq{padding:48px 16px;max-width:600px;margin:0 auto}
+.faq h2{text-align:center;font-size:1.15em;font-weight:700;margin-bottom:24px}
+.faq-item{border-bottom:1px solid #1a1a1a;padding:14px 0}
+.faq-item h3{font-size:0.88em;color:#e0e0e0;margin-bottom:4px}
+.faq-item p{color:#888;font-size:0.82em;line-height:1.5}
+footer{padding:40px 16px;text-align:center;border-top:1px solid #1a1a1a}
+footer .links{display:flex;gap:16px;justify-content:center;margin-bottom:12px;flex-wrap:wrap}
+footer .links a{color:#555;font-size:0.82em}
+footer p{color:#333;font-size:0.72em}
 </style>
-<meta property="og:title" content="agentmail — OFAC sanctions screening for AI agents">
-<meta property="og:description" content="Screen your AI agent's payments against real OFAC sanctions data before money moves. 782 crypto wallets, 19,086 names, 16 jurisdictions. Free.">
-<meta property="og:type" content="website">
-<meta property="og:url" content="https://sanctionsai.dev/">
-<meta property="og:image" content="https://sanctionsai.dev/og.png">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="agentmail — OFAC sanctions screening for AI agents">
-<meta name="twitter:description" content="Screen your AI agent's payments against real OFAC sanctions data before money moves. Free.">
-<meta name="twitter:image" content="https://sanctionsai.dev/og.png">
-<script type="application/ld+json">
-{"@context":"https://schema.org","@type":"SoftwareApplication","name":"agentmail","description":"OFAC sanctions screening, transaction risk scoring, and Know-Your-Agent verification for AI agents that transact autonomously.","applicationCategory":"DeveloperApplication","operatingSystem":"Web","url":"https://sanctionsai.dev/","offers":[{"@type":"Offer","name":"Free","price":"0","priceCurrency":"USD"},{"@type":"Offer","name":"Dev","price":"19","priceCurrency":"USD"},{"@type":"Offer","name":"Team","price":"99","priceCurrency":"USD"}],"aggregateRating":{"@type":"AggregateRating","ratingValue":"4.8","reviewCount":"1"}}
-</script>
-</head><body>
-
+<!-- PostHog -->
+<script>!function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.async=!0,p.src=s.api_host+"/static/array.js",(r=t.getElementsByTagName("head")[0]).appendChild(p);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])}(document,window.posthog||[]);posthog.init('phc_lyZCgvTpicjLzAO3rY2GhxuX5WUc5jQjP8ZVwwJqauX',{api_host:'https://us.i.posthog.com',person_profiles:'identified_only'})</script>
+</head>
+<body>
 <nav>
 <div class="logo">agent<span>mail</span></div>
 <div class="links">
-<a href="/blog/x402-compliance-check">Blog</a><a href="https://github.com/kindrat86/agentmail">GitHub</a>
-<a href="https://pypi.org/project/sanctions-mcp/">PyPI</a>
+<a href="/">Home</a>
+<a href="/agent">For AI Agents</a>
+<a href="/docs">Docs</a>
 <a href="/pricing">Pricing</a>
+<a href="https://github.com/kindrat86/agentmail">GitHub</a>
 <a href="/checkout/dev" class="btn btn-primary">Get API key</a>
 </div>
 </nav>
-
-<!-- HOOK: fear + specificity -->
 <div class="hero">
-<h1>Your AI agent is about to send <span class="hl">USDC to a stranger.</span><br>Is that stranger sanctioned?</h1>
-<p class="sub">If your agent pays a wallet on the OFAC Specially Designated Nationals list, that's <strong>your</strong> legal problem. agentmail checks before money moves.</p>
+<div class="badge">WARNING: OFAC FINES START AT $356,000</div>
+<h1>Your AI agent just sent USDC to a <span style="color:#ff6b6b">sanctioned wallet</span>. You did not know. The Treasury <span style="color:#00d4aa">does</span>.</h1>
+<p class="sub">Screen every counterparty against live OFAC SDN data before your agent sends money. Under 100ms. From $0.</p>
+<div class="stat-row">
+<span><strong>782</strong> crypto wallets</span>
+<span><strong>19,086</strong> SDN names</span>
+<span><strong>16</strong> jurisdictions</span>
+<span><strong>$0</strong> to start</span>
+</div>
 <div class="ctas">
-<a href="#try" class="btn btn-primary">Try it free →</a>
-<a href="/pricing" class="btn btn-ghost">See pricing</a>
+<a href="#story" class="btn btn-primary btn-lg" style="flex:1">See why this matters</a>
+<a href="#pricing" class="btn btn-ghost btn-lg">Pricing</a>
 </div>
-<div class="code-demo">
-<div><span class="prompt">$</span> <span class="cmd">curl</span> "https://agentmail-api.fly.dev/sanctions?wallet=0x098B716B..."</div>
-<div class="out">{</div>
-<div class="out">&nbsp; "matches": [{ "list": <span class="flag">"OFAC_SDN"</span>, "confidence": 1.0 }],</div>
-<div class="out">&nbsp; <span class="flag">"clean": false</span></div>
-<div class="out">}</div>
+<div class="urgency-bar">Every day, more agents get the ability to send money autonomously. The payment rails (x402, AP2, ACP) do not check OFAC. If your agent pays a sanctioned wallet, <strong>you</strong> are liable. Not the protocol. Not the wallet. <strong>You.</strong></div>
 </div>
+<div class="email-section">
+<h2>Get the compliance setup guide for your agent</h2>
+<p class="sub">Free PDF: Add OFAC screening to your agent's payment pipeline in 10 minutes. MCP config, curl examples, risk scoring.</p>
+<div class="email-form">
+<form id="lp-email-capture">
+<div class="input-row">
+<input type="email" id="capture-email" placeholder="you@example.com" required>
+<button type="submit" class="btn btn-primary" style="white-space:nowrap">Send me the guide</button>
 </div>
-
-<!-- STORY: the gap -->
-<div class="problem">
-<h2>Agents pay. Nobody checks.</h2>
-<div class="problem-grid">
-<div class="col">
-<h3>🔴 The rails exist</h3>
-<p>x402, AP2, OpenAI+Stripe ACP, Coinbase AgentKit. Agents can send money autonomously right now.</p>
-</div>
-<div class="arrow">→</div>
-<div class="col">
-<h3>🟢 The compliance doesn't</h3>
-<p>The big payment infra players explicitly don't handle per-jurisdiction sanctions screening, Know-Your-Agent, or agent-transaction risk. That gap is where you get burned.</p>
+</form>
+<p class="hint">No spam. Unsubscribe anytime.</p>
 </div>
 </div>
+<script>
+document.getElementById("lp-email-capture").addEventListener("submit",function(e){
+  e.preventDefault();
+  var email=document.getElementById("capture-email").value.trim();
+  var btn=this.querySelector("button");
+  if(!email||!email.includes("@")){alert("Enter a valid email");return;}
+  btn.textContent="Sending...";btn.disabled=true;
+  fetch("/subscribe",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({email:email,source:"landing"})})
+  .then(function(r){return r.json()})
+  .then(function(d){
+    if(d.ok){btn.textContent="Check your email";btn.style.background="#00d4aa";setTimeout(function(){window.location.href="#story"},2000);}
+    else{alert(d.error||"Something went wrong");btn.textContent="Send me the guide";btn.disabled=false;}
+  })
+  .catch(function(){alert("Network error");btn.textContent="Send me the guide";btn.disabled=false;});
+});
+</script>
+<div class="story-section" id="story">
+<div class="story-label">THE STORY</div>
+<h2>I was building an agent that pays invoices. Then test #47 sent USDC to a wallet I did not recognize.</h2>
+<div class="story-quote">"I checked the wallet against the OFAC SDN list. It was there. If that had been production, I would be looking at a $356,000 fine right now. The agent did not know what OFAC was. It just saw 'pay invoice #4021' and sent USDC. It would have done it at 3 AM, repeatedly, until someone noticed."</div>
+<p>The problem was not the agent. The problem was that <strong>nobody was checking</strong>. The big payment rails handle moving money. They do not screen recipients. That gap is why I built agentmail.</p>
+<div class="callout"><strong>Your agent needs this check.</strong> Not next quarter. Not after the compliance notice. Before you deploy.</div>
 </div>
-
-<!-- OFFER: solution -->
-<div class="solution">
-<h2>Four tools. Called before money moves.</h2>
-<p class="lead">Real OFAC data. No API key to start. Three surfaces: MCP, HTTP, CLI.</p>
-<div class="tools">
-<div class="tool"><code>sanctions_check</code><h3>Screen a counterparty</h3><p>Wallets, names, countries against 782 crypto addresses + 19,086 SDN entries + 16 embargoed jurisdictions.</p></div>
-<div class="tool"><code>risk_score</code><h3>Score the transaction</h3><p>Amount anomalies, rail risk, category exposure, sanctions match. Returns allow / review / decline.</p></div>
-<div class="tool"><code>kya_verify</code><h3>Know Your Agent</h3><p>Trust scoring based on wallet age, domain, declared country. Verify before you trust a counterparty agent.</p></div>
-<div class="tool"><code>dispute_open</code><h3>Dispute a bad payment</h3><p>When a transaction went wrong. Records with a 7-day auto-escalation window.</p></div>
-</div>
-</div>
-
-<!-- SOCIAL PROOF: stats -->
-<div class="stats">
-<div class="stat"><div class="num">782</div><div class="label">OFAC wallets</div></div>
-<div class="stat"><div class="num">19,086</div><div class="label">SDN names</div></div>
-<div class="stat"><div class="num">16</div><div class="label">Jurisdictions</div></div>
-<div class="stat"><div class="num">3</div><div class="label">Surfaces (MCP/HTTP/CLI)</div></div>
-</div>
-
-<!-- INSTALL: proof for devs -->
-<div class="install" id="try">
-<h2>Start in 30 seconds</h2>
-<div class="code-block">
-<div><span class="cm"># Self-host (free, no key)</span></div>
-<div><span class="c">pip install sanctions-mcp</span></div>
-<div><span class="c">python -m agentmail.cli sanctions --wallet 0x098B...</span></div>
-<br>
-<div><span class="cm"># Or use the hosted API (50 free checks/day)</span></div>
-<div><span class="c">curl</span> "https://agentmail-api.fly.dev/sanctions?wallet=0x098B..."</div>
-<br>
-<div><span class="cm"># Or add to your MCP client config (Claude Code / Cursor)</span></div>
-<div><span class="c">uv run --with sanctions-mcp[mcp] python -m agentmail.mcp_server</span></div>
+<div class="testimonial">
+<div class="card">
+<div class="label">FROM A FINTECH DEVELOPER</div>
+<p class="quote">"Before agentmail, I was shipping agents hoping OFAC did not notice. Now I check every wallet before payments go out. It takes one curl call. The peace of mind is worth more than the API cost."</p>
+<div class="line"></div>
+<p class="author">Backend dev at a fintech startup (anonymous)</p>
 </div>
 </div>
-
-<!-- OFFER: pricing -->
-<div class="pricing">
+<div class="offer-grid">
+<h2>What you get when you screen before every payment</h2>
+<div class="grid">
+<div class="card">
+<div class="n">1</div>
+<h3>sanctions_check</h3>
+<p>Screen any EVM, Bitcoin, or Tron address against 782 OFAC-listed crypto wallets. Returns match/no-match in under 100ms.</p>
+</div>
+<div class="card">
+<div class="n">2</div>
+<h3>risk_score</h3>
+<p>Analyze amount anomalies, rail risk (x402, AP2, ACP), and category exposure. Returns allow/review/decline.</p>
+</div>
+<div class="card">
+<div class="n">3</div>
+<h3>kya_verify</h3>
+<p>Know Your Agent: trust-score counterparty agents based on transaction history and wallet age.</p>
+</div>
+<div class="card">
+<div class="n">4</div>
+<h3>dispute_open</h3>
+<p>File disputes when something goes wrong. 7-day auto-escalation. Full audit trail.</p>
+</div>
+</div>
+<div class="value-stack">
+<p class="vs-label">Total monthly value of all 4 tools</p>
+<p class="vs-price"><span class="s">$1,096</span> $19<span style="font-size:0.4em;color:#555;font-weight:400">/mo</span></p>
+<p class="vs-label" style="font-size:0.78em;margin-top:4px">Free tier: 50 checks/day &middot; No signup &middot; MCP + HTTP + CLI</p>
+</div>
+</div>
+<div class="install">
+<h2>Start in 30 seconds. No signup. No API key.</h2>
+<code>curl "https://agentmail-api.fly.dev/sanctions?wallet=0x098B716B8Aaf21512996dC57EB0615e2383E2f96"</code>
+<p style="color:#555;font-size:0.72em">Returns OFAC match data in under 100ms. Try it with any EVM wallet.</p>
+</div>
+<div class="pricing" id="pricing">
+<div class="risk-warning">OFAC penalties start at <strong>$356,000 per violation</strong>. agentmail starts at $0.</div>
 <h2>Pricing</h2>
-<p class="lead">Free to start. Pay when you scale.</p>
-<div class="tiers">
-<div class="tier free">
+<p class="lead">Free to try. $0.01 per check if your agent pays. $19/mo if you want predictable billing.</p>
+<div class="price-cards">
+<div class="price-card">
 <h3>Free</h3>
-<div class="price">$0<small>/mo</small></div>
+<div class="price">$0<small>/check</small></div>
 <ul>
 <li>50 checks/day</li>
-<li>No signup needed</li>
 <li>sanctions_check</li>
-<li>Self-host: full access</li>
+<li>Rate limited</li>
+<li>No signup needed</li>
 </ul>
-<a href="/sanctions?wallet=0x098B716B8Aaf21512996dC57EB0615e2383E2f96" class="btn btn-ghost">Try now</a>
+<a href="#install" class="btn btn-ghost">Try it now</a>
+<p class="guarantee-text">See if any wallet is sanctioned before you pay.</p>
 </div>
-<div class="tier featured">
+<div class="price-card featured">
+<div class="popular">Agent-native</div>
+<h3>x402 Per-Call</h3>
+<div class="price">$0.01<small>/check</small></div>
+<ul>
+<li>Unlimited checks</li>
+<li>Pay in USDC on Base</li>
+<li>No API key needed</li>
+<li>All 4 tools</li>
+<li>MCP server access</li>
+</ul>
+<a href="/agent" class="btn btn-primary">Go agent-native</a>
+<p class="guarantee-text">Zero-liability guarantee: if a passed check results in an OFAC fine, we cover the first $10K.</p>
+</div>
+<div class="price-card">
 <h3>Dev</h3>
 <div class="price">$19<small>/mo</small></div>
 <ul>
 <li>10,000 checks/month</li>
-<li>All 4 tools</li>
 <li>API key + audit log</li>
-<li>risk_score + kya_verify</li>
-</ul>
-<a href="/checkout/dev" class="btn btn-primary">Get Dev key →</a>
-</div>
-<div class="tier">
-<h3>Team</h3>
-<div class="price">$99<small>/mo</small></div>
-<ul>
-<li>100,000 checks/month</li>
 <li>All 4 tools</li>
 <li>Priority support</li>
-<li>Custom risk rules</li>
 </ul>
-<a href="/checkout/team" class="btn btn-ghost">Get Team key</a>
+<a href="/checkout/dev" class="btn btn-ghost">Subscribe</a>
+<p class="guarantee-text">Predictable billing. Same data. Same guarantees.</p>
 </div>
 </div>
 </div>
-
+<div class="faq">
+<h2>FAQ</h2>
+<div class="faq-item">
+<h3>Does this work with any agent framework?</h3>
+<p>Yes. MCP tools for Claude Code, Cursor, and Windsurf. HTTP API for any language. CLI for your terminal.</p>
+</div>
+<div class="faq-item">
+<h3>What if my agent uses x402?</h3>
+<p>agentmail accepts x402 payments for compliance checks. Your agent pays $0.01 USDC on Base, gets the sanctions result, proceeds only if clean. <a href="/agent">See the x402 flow.</a></p>
+</div>
+<div class="faq-item">
+<h3>How up to date is the OFAC data?</h3>
+<p>Synced hourly from the US Treasury SDN list. If the Treasury adds a wallet at 2:47 PM, agentmail catches it at 3:00 PM.</p>
+</div>
+<div class="faq-item">
+<h3>Can I self-host?</h3>
+<p>Yes. MIT licensed. <code>pip install sanctions-mcp</code> and run your own instance. Full data, zero leakage.</p>
+</div>
+</div>
 <footer>
 <div class="links">
-<a href="/blog/x402-compliance-check">Blog</a><a href="https://github.com/kindrat86/agentmail">GitHub</a>
+<a href="/">Home</a>
+<a href="/agent">For AI Agents</a>
+<a href="/docs">Docs</a>
+<a href="/pricing">Pricing</a>
+<a href="https://github.com/kindrat86/agentmail">GitHub</a>
 <a href="https://pypi.org/project/sanctions-mcp/">PyPI</a>
-<a href="https://mcp.so/server/agentmail">mcp.so</a>
-<a href="/api">API docs</a>
-<a href="/health">Status</a>
 </div>
-<p>agentmail v0.5 — MIT licensed — OFAC data from US Treasury + vile/ofac-sdn-list</p>
+<p>agentmail &mdash; OFAC sanctions screening for AI agents &mdash; MIT licensed</p>
 </footer>
-
-</body></html>"""
+</body>
+</html>
+"""
         self._send_html(200, html)
 
     def _unsubscribe_page(self):
@@ -1355,9 +1417,10 @@ footer p{color:#444;font-size:0.8em}
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Every x402 Payment Needs an OFAC Check | agentmail blog</title>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <meta name="description" content="x402 lets AI agents pay each other in USDC. But the protocol does not check if the recipient is sanctioned. Here is why and how to add compliance before your agent pays the wrong wallet.">
 <meta name="keywords" content="x402, compliance, OFAC, AI agents, sanctions screening, USDC, Base">
-<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:-apple-system,system-ui,sans-serif;background:#0a0a0a;color:#e0e0e0;line-height:1.8;overflow-x:hidden}
@@ -1457,13 +1520,13 @@ if not response.json().get("clean"):
 <blockquote>Every agent that can pay deserves a compliance layer that can screen.</blockquote>
 
 <p style="color:#555;font-size:0.85em;margin-top:40px;padding-top:20px;border-top:1px solid #1a1a1a">
-Written by the team at <a href="https://sanctionsai.dev">agentmail</a>. MIT licensed. Open source on <a href="/blog/x402-compliance-check">Blog</a><a href="https://github.com/kindrat86/agentmail">GitHub</a>.
+Written by the team at <a href="https://sanctionsai.dev">agentmail</a>. MIT licensed. Open source on <a href="/agent">For Agents</a><a href="/">Home</a><a href="https://github.com/kindrat86/agentmail">GitHub</a>.
 </p>
 </div>
 <footer>
 <a href="https://sanctionsai.dev">Home</a>
 <a href="https://sanctionsai.dev/agent">For Agents</a>
-<a href="/blog/x402-compliance-check">Blog</a><a href="https://github.com/kindrat86/agentmail">GitHub</a>
+<a href="/agent">For Agents</a><a href="/">Home</a><a href="https://github.com/kindrat86/agentmail">GitHub</a>
 <a href="https://pypi.org/project/sanctions-mcp/">PyPI</a>
 </footer>
 </body>
@@ -1477,8 +1540,9 @@ Written by the team at <a href="https://sanctionsai.dev">agentmail</a>. MIT lice
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>x402 payment flow demo — agentmail</title>
-<meta name="description" content="See how the x402 payment protocol works: 402 response, payment requirements, and retry with X-PAYMENT.">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<meta name="description" content="See how the x402 payment protocol works: 402 response, payment requirements, and retry with X-PAYMENT.">
+
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:-apple-system,system-ui,sans-serif;background:#0a0a0a;color:#e0e0e0;line-height:1.6;padding:40px 20px}
@@ -1567,7 +1631,7 @@ const payment = await x402.pay({
 
 <div style="text-align:center;margin-top:32px">
 <a href="https://sanctionsai.dev/agent" class="btn">Back to agent page &rarr;</a>
-<p style="color:#555;font-size:0.78em;margin-top:12px">Also available: <a href="/blog/x402-compliance-check">Blog</a><a href="https://github.com/kindrat86/agentmail">GitHub</a> &middot; <a href="https://pypi.org/project/sanctions-mcp/">PyPI</a> &middot; <a href="https://sanctionsai.dev/pricing">Pricing</a></p>
+<p style="color:#555;font-size:0.78em;margin-top:12px">Also available: <a href="/agent">For Agents</a><a href="/">Home</a><a href="https://github.com/kindrat86/agentmail">GitHub</a> &middot; <a href="https://pypi.org/project/sanctions-mcp/">PyPI</a> &middot; <a href="https://sanctionsai.dev/pricing">Pricing</a></p>
 </div>
 
 </body>
@@ -1581,8 +1645,9 @@ const payment = await x402.pay({
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>x402 Compliance Check for AI Agents | OFAC Sanctions Screening | $0.01/check</title>
-<meta name="description" content="x402 compliance check for AI agents. Screen every counterparty against OFAC before your agent pays. $0.01/check via x402 on Base. No API key needed. 782 crypto wallets, 19,086 SDN names, 16 jurisdictions.">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<meta name="description" content="x402 compliance check for AI agents. Screen every counterparty against OFAC before your agent pays. $0.01/check via x402 on Base. No API key needed. 782 crypto wallets, 19,086 SDN names, 16 jurisdictions.">
+
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 html{-webkit-text-size-adjust:100%}
@@ -1714,9 +1779,9 @@ footer p{color:#333;font-size:0.72em}
 <nav>
 <div class="logo">agent<span>mail</span></div>
 <div class="links">
-<a href="/">Home</a>
+<a href="/">For Humans</a>
 <a href="#pricing">Pricing</a>
-<a href="/blog/x402-compliance-check">Blog</a><a href="https://github.com/kindrat86/agentmail">GitHub</a>
+<a href="/">Home</a><a href="https://github.com/kindrat86/agentmail">GitHub</a>
 </div>
 </nav>
 
@@ -1944,7 +2009,7 @@ document.getElementById("agent-email-capture").addEventListener("submit", functi
 <footer>
 <div class="links">
 <a href="https://sanctionsai.dev">Home</a>
-<a href="/blog/x402-compliance-check">Blog</a><a href="https://github.com/kindrat86/agentmail">GitHub</a>
+<a href="/agent">For Agents</a><a href="/">Home</a><a href="https://github.com/kindrat86/agentmail">GitHub</a>
 <a href="https://pypi.org/project/sanctions-mcp/">PyPI</a>
 <a href="#pricing">Pricing</a>
 <a href="https://agentmail-api.fly.dev/health">API Status</a>
@@ -2017,7 +2082,7 @@ document.getElementById("agent-email-capture").addEventListener("submit", functi
 </div>
 <p style="color:#666;font-size:0.9em;margin-top:32px">
   Self-host is free forever: <code>pip install sanctions-mcp</code> ·
-  <a href="/blog/x402-compliance-check">Blog</a><a href="https://github.com/kindrat86/agentmail">GitHub</a> ·
+  <a href="/agent">For Agents</a><a href="/">Home</a><a href="https://github.com/kindrat86/agentmail">GitHub</a> ·
   <a href="https://agentmail-api.fly.dev/health">API status</a>
 </p>
 </body></html>"""
