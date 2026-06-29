@@ -1174,8 +1174,8 @@ nav .btn{padding:6px 12px;font-size:0.72em;min-height:32px;border-radius:8px}
 /* INSTALL (FREE TIER) - mobile first */
 .install{padding:40px 16px;max-width:600px;margin:0 auto;text-align:center}
 .install h2{font-size:1.05em;font-weight:700;margin-bottom:16px}
-.install .email-form{display:flex;flex-direction:column;gap:8px;max-width:380px;margin:0 auto}
-.install .email-form .input-row{display:flex;flex-direction:column;gap:8px}
+.install .email-form{display:flex;flex-direction:column;gap:8px;max-width:400px;margin:0 auto}
+.install .email-form .input-row{display:flex;flex-direction:column;gap:8px;align-items:stretch}
 .install .email-form input{flex:1;padding:14px 16px;border-radius:10px;border:1.5px solid #333;background:#111;color:#e0e0e0;font-size:1em;outline:none;min-height:48px;transition:border-color .2s}
 .install .email-form input:focus{border-color:#00d4aa;box-shadow:0 0 0 3px rgba(0,212,170,.1)}
 .install .email-form .hint{color:#555;font-size:0.68em;margin-top:4px}
