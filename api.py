@@ -1088,380 +1088,501 @@ curl "https://sanctionsai.dev/sanctions?wallet=0x098B716B8Aaf21512996dC57EB0615e
         self._serve_text(txt, "text/plain")
 
     def _landing_page(self):
-        """Brunson-style landing: Hook (fear) → Story (why) → Offer (value stack).
-        Dark, dev-focused — code visible in hero, no fluff."""
+        """Brunson-style landing: Hook (fear) -> Story (why) -> Offer (value stack).
+        Dark, dev-focused - code visible in hero, no fluff."""
         html = """<!DOCTYPE html>
-<html lang="en"><head><meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>OFAC Sanctions Screening for AI Agents | agentmail</title>
 <meta name="description" content="Screen every counterparty against OFAC before your AI agent pays. 782 crypto wallets, 19,086 names. Free tier + x402 per-call USDC.">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<meta name="theme-color" content="#0a0a0a">
 <style>
+:root{
+  --bg:#0a0a0a; --bg2:#0c0c0e;
+  --text:#e8eaed; --t2:#a4abb3; --t3:#6b7178; --t4:#484d54;
+  --line:rgba(255,255,255,.07); --line2:rgba(255,255,255,.12);
+  --surf:rgba(255,255,255,.025); --surf2:rgba(255,255,255,.045);
+  --teal:#00d4aa; --teal2:#2deec0;
+  --tealg:linear-gradient(135deg,#00d4aa 0%,#2deec0 100%);
+  --red:#ff6b6b; --redsoft:rgba(255,107,107,.09);
+  --r:16px; --r-sm:10px; --maxw:1120px;
+  --glow:0 0 0 1px rgba(0,212,170,.25), 0 12px 40px -8px rgba(0,212,170,.28);
+}
 *{margin:0;padding:0;box-sizing:border-box}
-html{-webkit-text-size-adjust:100%;font-size:16px;scroll-behavior:smooth}
-body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:#0a0a0a;color:#e0e0e0;line-height:1.6;overflow-x:hidden;-webkit-font-smoothing:antialiased}
-a{color:#00d4aa;text-decoration:none;-webkit-tap-highlight-color:transparent}
-img{max-width:100%;height:auto}
-::selection{background:rgba(0,212,170,.2);color:#fff}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%;scroll-behavior:smooth}
+body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;overflow-x:hidden;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+a{color:var(--teal);text-decoration:none;-webkit-tap-highlight-color:transparent}
+::selection{background:rgba(0,212,170,.25);color:#fff}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 22px}
 
-/* BUTTONS */
-.btn{display:inline-flex;align-items:center;justify-content:center;padding:14px 24px;border-radius:10px;font-weight:600;font-size:0.95em;cursor:pointer;border:none;min-height:48px;text-decoration:none!important;transition:all .2s cubic-bezier(.4,0,.2,1);touch-action:manipulation;user-select:none}
-.btn:active{transform:scale(0.97)}
-.btn-primary{background:#00d4aa;color:#0a0a0a!important}
-.btn-primary:hover{box-shadow:0 0 24px rgba(0,212,170,.25)}
-.btn-ghost{border:1.5px solid #333;color:#e0e0e0!important;background:transparent;min-height:44px}
-.btn-ghost:hover{border-color:#00d4aa}
-.btn-lg{padding:16px 28px;font-size:1em;min-height:52px}
+/* ---------- shared bits ---------- */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:13px 22px;border-radius:12px;font-weight:600;font-size:.95rem;cursor:pointer;border:none;min-height:48px;text-decoration:none!important;transition:transform .18s cubic-bezier(.2,.8,.2,1),box-shadow .2s,background .2s,border-color .2s;touch-action:manipulation;user-select:none;white-space:nowrap}
+.btn:active{transform:translateY(1px) scale(.99)}
+.btn-primary{background:var(--tealg);color:#04130e!important;box-shadow:0 8px 24px -10px rgba(0,212,170,.6)}
+.btn-primary:hover{box-shadow:0 14px 36px -10px rgba(0,212,170,.7);transform:translateY(-2px)}
+.btn-ghost{background:rgba(255,255,255,.02);border:1px solid var(--line2);color:var(--text)!important}
+.btn-ghost:hover{border-color:var(--teal);background:rgba(0,212,170,.06)}
+.btn-lg{padding:16px 30px;font-size:1.02rem;min-height:54px;border-radius:14px}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:.72rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--t3)}
+.eyebrow .dot{width:6px;height:6px;border-radius:50%;background:var(--teal);box-shadow:0 0 12px var(--teal)}
 
-/* NAV - mobile first */
-nav{padding:12px 16px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #1a1a1a;background:rgba(10,10,10,.96);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);position:sticky;top:0;z-index:100}
-.logo{font-weight:700;font-size:1em;color:#fff;flex-shrink:0}
-.logo span{color:#00d4aa}
-nav .links{display:flex;gap:10px;align-items:center;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
-nav .links::-webkit-scrollbar{display:none}
-nav .links a{color:#888;font-size:0.78em;transition:color .2s;white-space:nowrap;flex-shrink:0}
+/* ---------- nav ---------- */
+nav{position:sticky;top:0;z-index:100;backdrop-filter:saturate(160%) blur(16px);-webkit-backdrop-filter:saturate(160%) blur(16px);background:rgba(10,10,10,.72);border-bottom:1px solid transparent;transition:border-color .3s,background .3s}
+nav.scrolled{border-color:var(--line);background:rgba(10,10,10,.86)}
+nav .bar{display:flex;align-items:center;justify-content:space-between;height:62px}
+.logo{display:flex;align-items:center;gap:9px;font-weight:700;font-size:1.02rem;color:#fff;letter-spacing:-.01em}
+.logo .mark{width:26px;height:26px;border-radius:7px;background:var(--tealg);display:grid;place-items:center;color:#04130e;font-weight:800;font-size:.9rem;box-shadow:0 4px 14px -4px rgba(0,212,170,.6)}
+nav .links{display:flex;align-items:center;gap:26px}
+nav .links a{color:var(--t2);font-size:.9rem;font-weight:500;transition:color .2s}
 nav .links a:hover{color:#fff}
-nav .btn{padding:6px 12px;font-size:0.72em;min-height:32px;border-radius:8px}
+nav .links .btn{padding:9px 16px;font-size:.84rem;min-height:38px}
+nav .burger{display:none;width:42px;height:42px;border:1px solid var(--line2);border-radius:10px;background:transparent;cursor:pointer;flex-direction:column;gap:5px;align-items:center;justify-content:center}
+nav .burger span{width:17px;height:2px;background:#fff;border-radius:2px;transition:.25s}
 
-/* HERO - mobile first */
-.hero{padding:48px 16px 36px;text-align:center;position:relative;overflow:hidden}
-.hero::before{content:'';position:absolute;top:-80px;left:50%;transform:translateX(-50%);width:400px;height:400px;background:radial-gradient(circle,rgba(0,212,170,.04) 0%,transparent 70%);pointer-events:none}
-.hero .badge{display:inline-block;background:rgba(255,107,107,.1);color:#ff6b6b;padding:4px 12px;border-radius:20px;font-size:0.62em;font-weight:600;margin-bottom:12px;border:1px solid rgba(255,107,107,.2);letter-spacing:0.02em}
-.hero h1{font-size:1.4em;font-weight:800;line-height:1.15;max-width:560px;margin:0 auto 12px;letter-spacing:-0.02em}
-.hero .bridge{color:#999;font-size:0.88em;margin:0 auto 14px;max-width:480px;line-height:1.5;font-style:italic}
-.hero .bridge .name{color:#555;font-size:0.78em;font-style:normal}
-.hero .sub{font-size:0.88em;color:#999;max-width:480px;margin:0 auto 18px}
-.hero .stat-row{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:16px}
-.hero .stat-row span{background:#111;border:1px solid #1a1a1a;border-radius:6px;padding:5px 10px;font-size:0.68em;color:#888}
-.hero .stat-row strong{color:#00d4aa}
-.hero .ctas{display:flex;flex-direction:column;gap:8px;margin-top:20px;max-width:320px;margin-left:auto;margin-right:auto}
-.hero .ctas .text-link{color:#888;font-size:0.78em;text-decoration:underline;text-underline-offset:3px;transition:color .2s}
-.hero .ctas .text-link:hover{color:#00d4aa}
-.hero .urgency-bar{background:#1a0a0a;border:1px solid #332222;border-radius:8px;padding:10px 14px;max-width:480px;margin:14px auto 0;font-size:0.72em;color:#ff8888;line-height:1.4}
-.hero .urgency-bar strong{color:#ff6b6b}
-.hero .urgency-bar .cta-link{color:#ff8888;text-decoration:underline;font-weight:600;display:inline-block;margin-top:6px}
+/* ---------- hero ---------- */
+.hero{position:relative;padding:88px 0 56px;text-align:center;overflow:hidden}
+.hero .bg{position:absolute;inset:0;pointer-events:none}
+.hero .bg .glow1{position:absolute;top:-220px;left:50%;transform:translateX(-50%);width:900px;height:620px;background:radial-gradient(ellipse at center,rgba(0,212,170,.13) 0%,rgba(0,212,170,.04) 35%,transparent 70%);filter:blur(8px)}
+.hero .bg .grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);background-size:64px 64px;-webkit-mask-image:radial-gradient(ellipse 70% 60% at 50% 30%,#000 30%,transparent 75%);mask-image:radial-gradient(ellipse 70% 60% at 50% 30%,#000 30%,transparent 75%)}
+.hero-inner{position:relative;z-index:2}
+.pill{display:inline-flex;align-items:center;gap:9px;padding:7px 15px 7px 9px;border-radius:999px;background:var(--redsoft);border:1px solid rgba(255,107,107,.22);font-size:.76rem;font-weight:600;color:#ff9b9b;letter-spacing:.01em;margin-bottom:26px}
+.pill .tag{background:var(--red);color:#1a0606;font-size:.62rem;font-weight:800;padding:3px 8px;border-radius:999px;letter-spacing:.06em}
+.hero h1{font-size:clamp(2.15rem,5.6vw,3.7rem);font-weight:800;line-height:1.05;letter-spacing:-.03em;max-width:880px;margin:0 auto 22px}
+.hero h1 .red{color:var(--red)}
+.hero h1 .grad{background:var(--tealg);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:var(--teal)}
+.hero .bridge{color:var(--t2);font-size:1.02rem;max-width:560px;margin:0 auto 8px;line-height:1.6;font-style:italic}
+.hero .bridge .name{display:block;margin-top:6px;color:var(--t4);font-style:normal;font-size:.84rem}
+.hero .sub{color:var(--t2);font-size:1.08rem;max-width:540px;margin:22px auto 0;line-height:1.55}
+.statrow{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:30px 0 34px}
+.statrow .s{background:var(--surf);border:1px solid var(--line);border-radius:12px;padding:9px 16px;font-size:.84rem;color:var(--t2);display:flex;align-items:center;gap:7px}
+.statrow .s b{color:var(--teal);font-weight:700;font-size:.95rem}
+.ctas{display:flex;flex-direction:column;gap:12px;align-items:center;margin-top:6px}
+.ctas .row{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+.ctas .text-link{color:var(--t3);font-size:.86rem;text-decoration:underline;text-underline-offset:4px;text-decoration-color:var(--t4);transition:color .2s,text-decoration-color .2s}
+.ctas .text-link:hover{color:var(--teal);text-decoration-color:var(--teal)}
 
-/* STORY - mobile first */
-.story-section{padding:40px 16px;max-width:640px;margin:0 auto}
-.story-label{color:#555;font-size:0.68em;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:6px}
-.story-section h2{font-size:1.05em;font-weight:700;margin-bottom:10px;line-height:1.35}
-.story-section p{color:#999;font-size:0.85em;margin-bottom:10px;line-height:1.6}
-.story-section .story-quote{background:#111;border-left:3px solid #ff6b6b;padding:12px 14px;border-radius:0 8px 8px 0;margin:14px 0;font-style:italic;color:#ccc;font-size:0.85em}
-.story-section .callout{background:#0d1a14;border:1px solid rgba(0,212,170,.1);border-radius:8px;padding:14px;margin:16px 0;font-size:0.85em;color:#ccc}
-.story-section .callout strong{color:#00d4aa}
+/* ---------- code window ---------- */
+.codewin{max-width:640px;margin:46px auto 0;text-align:left;background:linear-gradient(180deg,#0e0f12,#0a0b0d);border:1px solid var(--line2);border-radius:14px;overflow:hidden;box-shadow:0 30px 80px -30px rgba(0,0,0,.8),0 0 0 1px rgba(0,212,170,.06)}
+.codewin .top{display:flex;align-items:center;gap:8px;padding:12px 16px;border-bottom:1px solid var(--line);background:rgba(255,255,255,.015)}
+.codewin .top .d{width:11px;height:11px;border-radius:50%;background:#2a2c30}
+.codewin .top .d:nth-child(1){background:#ff5f57}.codewin .top .d:nth-child(2){background:#febc2e}.codewin .top .d:nth-child(3){background:#28c840}
+.codewin .top .file{margin-left:10px;font-size:.74rem;color:var(--t3);font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace}
+.codewin pre{padding:18px 18px 18px;overflow-x:auto;font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;font-size:.8rem;line-height:1.65;color:#cfd3d8}
+.codewin .c-cmd{color:var(--t3)}.codewin .c-url{color:#7fd6c4}.codewin .c-key{color:#8ec5ff}.codewin .c-str{color:#e6c07b}.codewin .c-num{color:#d19a66}.codewin .c-ok{color:#28c840;font-weight:600}
+.urgency{margin:30px auto 0;max-width:600px;display:flex;gap:14px;align-items:flex-start;background:linear-gradient(180deg,rgba(255,107,107,.06),rgba(255,107,107,.02));border:1px solid rgba(255,107,107,.16);border-radius:14px;padding:16px 18px;text-align:left}
+.urgency .ic{flex-shrink:0;width:34px;height:34px;border-radius:9px;background:rgba(255,107,107,.12);display:grid;place-items:center;font-size:1rem}
+.urgency p{font-size:.84rem;color:#e7a3a3;line-height:1.55}
+.urgency b{color:#ff9b9b}
+.urgency a{color:#ffb3b3;font-weight:600;text-decoration:underline;text-underline-offset:3px}
 
-/* TESTIMONIAL - mobile first */
-.testimonial{max-width:640px;margin:0 auto;padding:24px 16px;text-align:center}
-.testimonial .card{background:#111;border:1px solid #1a1a1a;border-radius:10px;padding:20px;max-width:460px;margin:0 auto}
-.testimonial .label{color:#ff6b6b;font-size:0.62em;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:8px}
-.testimonial .quote{color:#ccc;font-style:italic;font-size:0.85em;line-height:1.5;margin-bottom:12px}
-.testimonial .line{width:28px;height:1px;background:#333;margin:0 auto 8px}
-.testimonial .author{color:#555;font-size:0.72em}
+/* ---------- section header ---------- */
+.sec{padding:96px 0;position:relative}
+.sec-head{text-align:center;max-width:680px;margin:0 auto 56px}
+.sec-head .eyebrow{margin-bottom:16px}
+.sec-head h2{font-size:clamp(1.6rem,3.4vw,2.3rem);font-weight:800;letter-spacing:-.02em;line-height:1.12;margin-bottom:14px}
+.sec-head p{color:var(--t2);font-size:1.06rem;line-height:1.6}
 
-/* OFFER GRID - mobile first */
-.offer-grid{padding:40px 16px;max-width:700px;margin:0 auto;text-align:center}
-.offer-grid h2{font-size:1.15em;font-weight:700;margin-bottom:20px}
-.offer-grid .grid{display:grid;grid-template-columns:1fr;gap:10px;text-align:left;max-width:560px;margin:0 auto}
-.offer-grid .card{background:#111;border:1px solid #1a1a1a;border-radius:10px;padding:16px}
-.offer-grid .card .n{color:#00d4aa;font-weight:700;font-size:1em;margin-bottom:3px}
-.offer-grid .card h3{color:#fff;font-size:0.9em;margin-bottom:2px}
-.offer-grid .card p{color:#888;font-size:0.8em;line-height:1.4}
-.offer-grid .value-stack{background:#0d1a14;border:1px solid rgba(0,212,170,.12);border-radius:10px;padding:20px;margin:20px auto 0;text-align:center;max-width:560px}
-.offer-grid .value-stack .vs-price{font-size:1.8em;font-weight:800;color:#00d4aa}
-.offer-grid .value-stack .vs-price .s{color:#555;text-decoration:line-through;font-weight:400;font-size:0.6em}
-.offer-grid .value-stack .vs-label{color:#888;font-size:0.82em;margin-top:4px}
+/* ---------- trust bar ---------- */
+.trust{padding:30px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:var(--bg2)}
+.trust .row{display:flex;align-items:center;justify-content:center;gap:14px 34px;flex-wrap:wrap;color:var(--t3)}
+.trust .row .label{font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--t4);margin-right:6px}
+.trust .row .item{font-weight:600;font-size:.92rem;color:var(--t2);display:inline-flex;align-items:center;gap:7px;opacity:.85}
+.trust .row .item .mk{color:var(--teal)}
 
-/* INSTALL (FREE TIER) - mobile first */
-.install{padding:40px 16px;max-width:640px;margin:0 auto;text-align:center}
-.install h2{font-size:1.05em;font-weight:700;margin-bottom:16px}
-.install .email-form{display:flex;flex-direction:column;gap:8px;max-width:400px;margin:0 auto}
-.install .email-form .input-row{display:flex;flex-direction:column;gap:8px;align-items:stretch}
-.install .email-form input{flex:1;padding:14px 16px;border-radius:10px;border:1.5px solid #333;background:#111;color:#e0e0e0;font-size:1em;outline:none;min-height:48px;transition:border-color .2s}
-.install .email-form input:focus{border-color:#00d4aa;box-shadow:0 0 0 3px rgba(0,212,170,.1)}
-.install .email-form .hint{color:#555;font-size:0.68em;margin-top:4px}
-.install code{display:block;background:#111;border:1px solid #1a1a1a;border-radius:8px;padding:12px;font-family:monospace;font-size:0.8em;color:#34d399;line-height:1.5;text-align:left;overflow-x:auto;margin-top:12px}
+/* ---------- story ---------- */
+.story .pull{max-width:720px;margin:0 auto;position:relative;background:var(--surf);border:1px solid var(--line);border-radius:20px;padding:34px 32px}
+.story .pull .quote-mark{position:absolute;top:-18px;left:26px;font-size:3.4rem;line-height:1;color:var(--teal);font-family:Georgia,serif;opacity:.5}
+.story .pull blockquote{font-size:1.16rem;line-height:1.6;color:#d7dadd;font-style:italic;margin-bottom:18px}
+.story .pull .by{color:var(--t3);font-size:.88rem;font-style:normal}
+.story .pull .by b{color:var(--t2);font-style:normal}
+.story .narr{max-width:660px;margin:40px auto 0;color:var(--t2);font-size:1.04rem;line-height:1.75}
+.story .narr p{margin-bottom:18px}
+.story .narr strong{color:#fff}
+.story .narr .obj{color:var(--teal);font-weight:600}
+.story .callout{max-width:660px;margin:0 auto;background:linear-gradient(135deg,rgba(0,212,170,.08),rgba(0,212,170,.02));border:1px solid rgba(0,212,170,.18);border-radius:16px;padding:22px 26px;font-size:1.06rem;color:#dfe9e5;line-height:1.6}
+.story .callout b{color:var(--teal)}
 
-/* PRICING - mobile first */
-.pricing{padding:40px 16px;text-align:center}
-.pricing .risk-warning{color:#ff6b6b;font-size:0.72em;margin-bottom:16px;line-height:1.4}
-.pricing h2{font-size:1.15em;font-weight:700;margin-bottom:4px}
-.pricing .lead{color:#999;font-size:0.82em;margin-bottom:24px;max-width:500px;margin-left:auto;margin-right:auto}
-.price-cards{display:flex;flex-direction:column;gap:12px;max-width:340px;margin:0 auto}
-.price-card{background:#111;border:1px solid #1a1a1a;border-radius:12px;padding:20px;text-align:center;position:relative}
-.price-card.featured{border-color:#00d4aa;box-shadow:0 0 16px rgba(0,212,170,.06)}
-.price-card .popular{background:#00d4aa;color:#0a0a0a;display:inline-block;padding:2px 10px;border-radius:10px;font-size:0.58em;font-weight:700;margin-bottom:8px;text-transform:uppercase;letter-spacing:0.03em}
-.price-card h3{color:#fff;font-size:0.9em}
-.price-card .price{font-size:1.8em;font-weight:800;color:#fff;margin:8px 0}
-.price-card .price small{font-size:0.35em;color:#555;font-weight:400}
-.price-card ul{list-style:none;padding:0;margin:12px 0;text-align:left}
-.price-card ul li{color:#888;font-size:0.78em;padding:4px 0}
-.price-card ul li::before{content:"\2713";color:#00d4aa;margin-right:6px;font-weight:700}
-.price-card .btn{width:100%;margin-top:4px}
-.price-card .guarantee-text{font-size:0.68em;color:#555;margin-top:8px;line-height:1.4}
+/* ---------- testimonial ---------- */
+.tcard{max-width:680px;margin:0 auto;background:var(--surf);border:1px solid var(--line);border-radius:20px;padding:38px 36px;text-align:center;position:relative;box-shadow:0 24px 60px -30px rgba(0,0,0,.7)}
+.tcard .stars{color:var(--teal);letter-spacing:3px;font-size:.9rem;margin-bottom:18px}
+.tcard .q{font-size:1.22rem;line-height:1.55;color:#e0e3e6;font-style:italic;margin-bottom:24px}
+.tcard .who{display:flex;align-items:center;justify-content:center;gap:12px}
+.tcard .ava{width:44px;height:44px;border-radius:50%;background:var(--tealg);display:grid;place-items:center;color:#04130e;font-weight:700;font-size:1rem}
+.tcard .meta{text-align:left}
+.tcard .meta b{display:block;color:#fff;font-size:.95rem}
+.tcard .meta span{color:var(--t3);font-size:.82rem}
 
-/* UPGRADE CTA */
-.upgrade-cta{text-align:center;padding:6px 16px 24px;max-width:600px;margin:0 auto}
-.upgrade-cta p{color:#888;font-size:0.82em}
-.upgrade-cta a{color:#00d4aa;font-weight:600;text-decoration:underline}
+/* ---------- bento / tools ---------- */
+.bento{display:grid;grid-template-columns:repeat(6,1fr);gap:16px}
+.tile{background:var(--surf);border:1px solid var(--line);border-radius:var(--r);padding:28px 26px;transition:border-color .25s,transform .25s,background .25s;position:relative;overflow:hidden}
+.tile:hover{border-color:rgba(0,212,170,.35);transform:translateY(-3px);background:var(--surf2)}
+.tile .ic{width:42px;height:42px;border-radius:11px;background:rgba(0,212,170,.1);border:1px solid rgba(0,212,170,.2);display:grid;place-items:center;color:var(--teal);font-size:1.15rem;margin-bottom:16px}
+.tile h3{font-size:1.06rem;font-weight:700;color:#fff;margin-bottom:7px;display:flex;align-items:center;gap:8px}
+.tile h3 code{font-family:ui-monospace,Menlo,monospace;font-size:.82rem;color:var(--teal);background:rgba(0,212,170,.08);padding:2px 8px;border-radius:6px;font-weight:600}
+.tile p{color:var(--t2);font-size:.94rem;line-height:1.55}
+.tile.t1{grid-column:span 3}.tile.t2{grid-column:span 3}.tile.t3{grid-column:span 2}.tile.t4{grid-column:span 2}.tile.t5{grid-column:span 2}
+.valuebox{margin-top:26px;max-width:560px;margin-left:auto;margin-right:auto;background:linear-gradient(135deg,rgba(0,212,170,.09),rgba(0,212,170,.02));border:1px solid rgba(0,212,170,.2);border-radius:18px;padding:30px 28px;text-align:center}
+.valuebox .lbl{color:var(--t2);font-size:.86rem;margin-bottom:8px}
+.valuebox .price{font-size:2.6rem;font-weight:800;letter-spacing:-.02em;color:#fff}
+.valuebox .price .old{color:var(--t4);text-decoration:line-through;font-weight:400;font-size:1.1rem;margin-right:12px}
+.valuebox .price .per{color:var(--t2);font-size:1rem;font-weight:500}
+.valuebox .note{color:var(--t3);font-size:.84rem;margin-top:10px}
 
-/* FAQ - mobile first */
-.faq{padding:40px 16px;max-width:640px;margin:0 auto}
-.faq h2{text-align:center;font-size:1.1em;font-weight:700;margin-bottom:20px}
-.faq-item{border-bottom:1px solid #1a1a1a;padding:12px 0}
-.faq-item h3{font-size:0.82em;color:#e0e0e0;margin-bottom:3px;line-height:1.4}
-.faq-item p{color:#888;font-size:0.78em;line-height:1.5;margin-top:2px}
+/* ---------- email capture ---------- */
+.capture{max-width:560px;margin:0 auto;text-align:center}
+.capture h2{font-size:clamp(1.5rem,3vw,2rem);font-weight:800;letter-spacing:-.02em;margin-bottom:12px}
+.capture p.lead{color:var(--t2);font-size:1.02rem;margin-bottom:26px}
+.capture .form{display:flex;flex-direction:column;gap:10px;max-width:440px;margin:0 auto}
+.capture .row{display:flex;flex-direction:column;gap:10px}
+.capture input{flex:1;padding:14px 16px;border-radius:12px;border:1px solid var(--line2);background:rgba(255,255,255,.02);color:var(--text);font-size:1rem;outline:none;min-height:50px;transition:border-color .2s,box-shadow .2s;font-family:inherit}
+.capture input:focus{border-color:var(--teal);box-shadow:0 0 0 4px rgba(0,212,170,.12)}
+.capture input::placeholder{color:var(--t4)}
+.capture .hint{color:var(--t3);font-size:.8rem;margin-top:8px}
+.capture .result{display:none;margin-top:18px;text-align:left}
+.capture .result code{display:block;background:#0c0d0f;border:1px solid var(--line);border-radius:12px;padding:16px;font-family:ui-monospace,Menlo,monospace;font-size:.82rem;color:#7fd6c4;line-height:1.7;overflow-x:auto}
+.capture .result .cap{color:var(--t3);font-size:.76rem;margin-top:8px}
 
-/* FINAL CTA */
-.final-cta{padding:40px 16px;text-align:center;background:linear-gradient(180deg,#0a0a0a,#0d1a14);border-top:1px solid #1a1a1a;border-bottom:1px solid #1a1a1a}
-.final-cta h2{font-size:1.1em;color:#fff;font-weight:700;margin-bottom:6px}
-.final-cta p{color:#888;font-size:0.82em;margin-bottom:16px}
+/* ---------- pricing ---------- */
+.pcwrap{display:grid;grid-template-columns:1fr;gap:18px;max-width:980px;margin:0 auto}
+.pcard{background:var(--surf);border:1px solid var(--line);border-radius:20px;padding:30px 28px;position:relative;display:flex;flex-direction:column}
+.pcard.feat{border-color:transparent;background:linear-gradient(180deg,rgba(0,212,170,.06),rgba(255,255,255,.02));box-shadow:0 0 0 1px rgba(0,212,170,.4),0 30px 70px -30px rgba(0,212,170,.3)}
+.pcard .pop{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--tealg);color:#04130e;font-size:.66rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:5px 14px;border-radius:999px;white-space:nowrap;box-shadow:0 6px 18px -6px rgba(0,212,170,.6)}
+.pcard h3{font-size:.82rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--t2)}
+.pcard .amt{font-size:3rem;font-weight:800;letter-spacing:-.03em;color:#fff;margin:10px 0 2px;line-height:1}
+.pcard .amt small{font-size:.95rem;color:var(--t3);font-weight:500}
+.pcard .desc{color:var(--t3);font-size:.86rem;margin-bottom:20px}
+.pcard ul{list-style:none;margin:0 0 22px;flex:1}
+.pcard ul li{color:var(--t2);font-size:.92rem;padding:7px 0;display:flex;align-items:flex-start;gap:10px}
+.pcard ul li .ck{color:var(--teal);font-weight:700;flex-shrink:0;margin-top:1px}
+.pcard .btn{width:100%}
+.pcard .guar{font-size:.78rem;color:var(--t3);line-height:1.5;margin-top:12px}
+.pcard .guar b.red{color:var(--red)}
+.riskline{text-align:center;color:var(--red);font-size:.84rem;margin-bottom:24px;letter-spacing:.01em}
+.riskline b{color:#ff9b9b}
 
-/* FOOTER - mobile first */
-footer{padding:32px 16px;text-align:center}
-footer .links{display:flex;gap:12px;justify-content:center;margin-bottom:10px;flex-wrap:wrap}
-footer .links a{color:#555;font-size:0.78em;transition:color .2s}
-footer .links a:hover{color:#888}
-footer p{color:#333;font-size:0.68em}
+/* ---------- faq ---------- */
+.faq{max-width:760px;margin:0 auto}
+.faq .item{border-bottom:1px solid var(--line)}
+.faq .q{width:100%;background:none;border:none;text-align:left;color:#fff;font-size:1.04rem;font-weight:600;padding:22px 0;display:flex;justify-content:space-between;align-items:center;gap:16px;cursor:pointer;font-family:inherit}
+.faq .q .pm{flex-shrink:0;width:24px;height:24px;border-radius:7px;border:1px solid var(--line2);display:grid;place-items:center;color:var(--t2);font-size:1.1rem;transition:.25s;line-height:1}
+.faq .item.open .q .pm{transform:rotate(45deg);border-color:var(--teal);color:var(--teal)}
+.faq .a{max-height:0;overflow:hidden;transition:max-height .3s ease;color:var(--t2);font-size:.96rem;line-height:1.65}
+.faq .a .inner{padding:0 0 22px}
 
-/* TABLET (480px+) */
-@media(min-width:480px){
-nav{padding:14px 20px}nav .links{gap:14px}nav .links a{font-size:0.82em}nav .btn{padding:8px 14px;font-size:0.75em;min-height:34px}
-.hero{padding:56px 24px 40px}.hero::before{width:500px;height:500px;top:-100px}.hero h1{font-size:1.6em}.hero .bridge{font-size:0.92em}.hero .sub{font-size:0.92em}.hero .stat-row{gap:10px}.hero .stat-row span{font-size:0.72em;padding:6px 12px}
-.story-section{padding:48px 20px}.story-section h2{font-size:1.15em}
-.offer-grid .grid{grid-template-columns:1fr 1fr;gap:12px;max-width:none}
-.install .email-form .input-row{flex-direction:row}
+/* ---------- final cta ---------- */
+.final{padding:96px 0;text-align:center;position:relative;overflow:hidden}
+.final .panel{max-width:760px;margin:0 auto;background:linear-gradient(135deg,rgba(0,212,170,.1),rgba(0,212,170,.02));border:1px solid rgba(0,212,170,.22);border-radius:24px;padding:56px 32px;position:relative;overflow:hidden}
+.final .panel::before{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at top,rgba(0,212,170,.16),transparent 60%);pointer-events:none}
+.final .panel h2{position:relative;font-size:clamp(1.6rem,3.2vw,2.3rem);font-weight:800;letter-spacing:-.02em;margin-bottom:12px}
+.final .panel p{position:relative;color:var(--t2);font-size:1.06rem;margin-bottom:28px}
+
+/* ---------- footer ---------- */
+footer{border-top:1px solid var(--line);padding:48px 0 40px}
+footer .grid{display:flex;flex-wrap:wrap;justify-content:space-between;gap:24px;align-items:flex-start}
+footer .brand{max-width:300px}
+footer .brand .logo{margin-bottom:12px}
+footer .brand p{color:var(--t3);font-size:.86rem;line-height:1.6}
+footer .cols{display:flex;gap:48px;flex-wrap:wrap}
+footer .col h4{font-size:.74rem;letter-spacing:.1em;text-transform:uppercase;color:var(--t4);margin-bottom:12px;font-weight:600}
+footer .col a{display:block;color:var(--t2);font-size:.9rem;padding:5px 0;transition:color .2s}
+footer .col a:hover{color:#fff}
+footer .bottom{margin-top:40px;padding-top:24px;border-top:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;color:var(--t4);font-size:.82rem}
+
+/* ---------- reveal ---------- */
+.reveal{opacity:0;transform:translateY(22px);transition:opacity .7s cubic-bezier(.2,.8,.2,1),transform .7s cubic-bezier(.2,.8,.2,1)}
+.reveal.in{opacity:1;transform:none}
+
+/* ---------- responsive ---------- */
+@media(min-width:760px){
+  .bento .tile.t3,.bento .tile.t4,.bento .tile.t5{grid-column:span 2}
+  .pcwrap{grid-template-columns:repeat(3,1fr)}
+  .capture .row{flex-direction:row}
 }
-
-/* TABLET LANDSCAPE (640px+) */
-@media(min-width:640px){
-nav{padding:16px 24px;gap:20px}nav .links a{font-size:0.85em}nav .btn{padding:8px 16px;font-size:0.78em}
-.hero{padding:64px 24px 44px}.hero h1{font-size:1.9em;max-width:600px}.hero .bridge{font-size:0.95em}.hero .sub{font-size:0.95em}.hero .ctas{flex-direction:row;max-width:none;justify-content:center;gap:12px}.hero .ctas .text-link{align-self:center}
-.story-section{padding:52px 24px}.story-section h2{font-size:1.2em}
-.offer-grid{padding:52px 24px}.offer-grid h2{font-size:1.25em}
-.pricing{padding:48px 24px}.price-cards{flex-direction:row;max-width:none;justify-content:center;gap:14px}.price-card{width:240px;padding:24px}
+@media(max-width:760px){
+  nav .links{display:none}
+  nav .burger{display:flex}
+  nav .links.open{display:flex;position:absolute;top:62px;left:0;right:0;flex-direction:column;background:rgba(10,10,10,.98);border-bottom:1px solid var(--line);padding:16px 22px;gap:6px;align-items:stretch}
+  nav .links.open a{padding:12px 4px;font-size:1rem;border-bottom:1px solid var(--line)}
+  nav .links.open .btn{margin-top:8px;text-align:center;border-bottom:none}
+  .hero{padding:54px 0 40px}
+  .sec{padding:64px 0}
+  .bento{grid-template-columns:1fr}
+  .bento .tile{grid-column:span 1!important}
+  .pcard.feat{order:-1}
+  .tcard{padding:30px 24px}
+  .tcard .q{font-size:1.05rem}
+  .final .panel{padding:40px 22px}
 }
-
-/* DESKTOP (768px+) */
-@media(min-width:768px){
-nav{padding:20px 32px}nav .links{gap:24px}nav .links a{font-size:0.9em;color:#888}nav .btn{padding:10px 20px;font-size:0.85em;min-height:36px}
-.hero{padding:80px 24px 50px}.hero h1{font-size:2.2em;max-width:650px}.hero .bridge{font-size:1em;max-width:520px}.hero .sub{font-size:1em;max-width:520px}.hero .stat-row span{font-size:0.78em;padding:8px 14px}.hero .urgency-bar{font-size:0.78em;max-width:520px}
-.story-section{padding:60px 24px;max-width:640px}.story-section h2{font-size:1.3em}
-.testimonial{padding:32px 24px}
-.offer-grid{padding:60px 24px}.offer-grid h2{font-size:1.35em}
-.pricing{padding:56px 24px}.price-card{width:260px;padding:28px}
-.faq{padding:48px 24px}
+@media(max-width:420px){
+  .hero h1{font-size:1.95rem}
+  .wrap{padding:0 18px}
+  .pill{font-size:.68rem}
 }
-
-/* LARGE DESKTOP (1024px+) */
-@media(min-width:1024px){
-.hero h1{font-size:2.4em}.hero .ctas{gap:16px}.hero .ctas .btn-lg{padding:18px 32px;font-size:1.05em}
-.price-card{width:290px;padding:32px}.price-cards{gap:24px}
-}
-
-/* REDUCED MOTION */
-@media(prefers-reduced-motion:reduce){*{transition-duration:0.01ms!important;animation-duration:0.01ms!important;scroll-behavior:auto!important}}
-
+@media(prefers-reduced-motion:reduce){*{transition-duration:.01ms!important;animation-duration:.01ms!important;scroll-behavior:auto!important}.reveal{opacity:1!important;transform:none!important}}
 </style>
 <!-- PostHog -->
 <script>!function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.async=!0,p.src=s.api_host+"/static/array.js",(r=t.getElementsByTagName("head")[0]).appendChild(p);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])}(document,window.posthog||[]);posthog.init('phc_lyZCgvTpicjLzAO3rY2GhxuX5WUc5jQjP8ZVwwJqauX',{api_host:'https://us.i.posthog.com',person_profiles:'identified_only'})</script>
 </head>
 <body>
-<nav>
-<div class="logo">agent<span>mail</span></div>
-<div class="links">
-<a href="/">Home</a>
-<a href="/agent">For AI Agents</a>
-<a href="/docs">Docs</a>
-<a href="/pricing">Pricing</a>
-<a href="https://github.com/kindrat86/agentmail">GitHub</a>
-<a href="/checkout/dev" class="btn btn-primary">Get API key</a>
-</div>
-</nav>
-<div class="hero">
-<div class="badge">WARNING: OFAC FINES START AT $356,000</div>
-<h1>Your agent just paid a wallet on the <span style="color:#ff6b6b">OFAC SDN list</span>. The Treasury knows. You owe <span style="color:#ff6b6b">$356,000</span>.</h1>
-<p style="color:#999;font-size:0.95em;margin:12px auto 16px;max-width:500px;line-height:1.5">"I almost found out the hard way on test #47. Here is the 1 curl call that saved me — and will save you." <span style="color:#555;font-size:0.8em">&mdash; Maryan, founder</span></p>
-<p class="sub">Screen every counterparty against live OFAC SDN data before your agent sends money. 1 curl call. Under 100ms.</p>
-<div class="stat-row">
-<span><strong>782</strong> crypto wallets</span>
-<span><strong>19,086</strong> SDN names</span>
-<span><strong>16</strong> jurisdictions</span>
-<span><strong>$0</strong> to start</span>
-</div>
-<div class="ctas">
-<a href="#try-free" class="btn btn-primary btn-lg">Try it free &rarr;</a>
-<a href="#story" class="text-link">How it works &darr;</a>
-</div>
-<div class="urgency-bar">Every day, more agents get the ability to send money autonomously. The payment rails (x402, AP2, ACP) do not check OFAC. If your agent pays a sanctioned wallet, <strong>you</strong> are liable. Not the protocol. Not the wallet. <strong>You.</strong><br><br><a href="#try-free" style="color:#ff8888;text-decoration:underline;font-weight:600">Check your first wallet now. 30 seconds. Free. &rarr;</a></div>
-</div>
+<nav id="nav"><div class="wrap bar">
+  <a href="/" class="logo"><span class="mark">a</span> agent<span style="color:var(--teal)">mail</span></a>
+  <div class="links" id="navlinks">
+    <a href="#story">How it works</a>
+    <a href="/agent">For AI Agents</a>
+    <a href="/docs">Docs</a>
+    <a href="#pricing">Pricing</a>
+    <a href="https://github.com/kindrat86/agentmail">GitHub</a>
+    <a href="#try-free" class="btn btn-primary">Get API key</a>
+  </div>
+  <button class="burger" id="burger" aria-label="Menu"><span></span><span></span><span></span></button>
+</div></nav>
 
-<div class="story-section" id="story">
-<div class="story-label">THE STORY</div>
-<h2>I was building an agent that pays invoices. Then test #47 sent USDC to a wallet I did not recognize.</h2>
-<div class="story-quote">"I checked the wallet against the OFAC SDN list. It was there. If that had been production, I would be looking at a $356,000 fine right now. The agent did not know what OFAC was. It just saw 'pay invoice #4021' and sent USDC. It would have done it at 3 AM, repeatedly, until someone noticed."</div>
-<p style="color:#999;font-size:0.9em;line-height:1.5">I sat there staring at the screen thinking: if I had deployed this to production, I would be looking for a new job right now.</p>
-<p>The problem was not the agent. The problem was that <strong>nobody was checking</strong>. The big payment rails handle moving money. They do not screen recipients. That gap is why I built agentmail.</p>
-<p style="color:#999;font-size:0.9em;line-height:1.5">The first question developers ask me: "Does not my payment provider handle this?" No. x402, AP2, ACP, Coinbase AgentKit — none of them check OFAC. They move money. They do not screen recipients. That is your responsibility — and ours.</p>
-<div class="callout"><strong>Your agent needs this check.</strong> Not next quarter. Not after the compliance notice. Before you deploy.</div>
+<!-- HERO -->
+<section class="hero"><div class="bg"><div class="grid"></div><div class="glow1"></div></div>
+<div class="wrap hero-inner">
+  <span class="pill"><span class="tag">RISK</span> OFAC fines start at $356,000 per violation</span>
+  <h1>Your agent just paid a wallet on the <span class="red">OFAC SDN list</span>.<br>The Treasury knows. You owe <span class="grad">$356,000</span>.</h1>
+  <p class="bridge">&ldquo;I almost found out the hard way on test #47. Here is the 1 curl call that saved me &mdash; and will save you.&rdquo;<span class="name">&mdash; Maryan, founder</span></p>
+  <p class="sub">Screen every counterparty against live OFAC SDN data before your agent sends money. One curl call. Under 100&nbsp;ms.</p>
+  <div class="statrow">
+    <span class="s"><b>782</b> crypto wallets</span>
+    <span class="s"><b>19,086</b> SDN names</span>
+    <span class="s"><b>16</b> jurisdictions</span>
+    <span class="s"><b>$0</b> to start</span>
+  </div>
+  <div class="ctas">
+    <div class="row">
+      <a href="#try-free" class="btn btn-primary btn-lg">Try it free &rarr;</a>
+      <a href="#story" class="btn btn-ghost btn-lg">How it works</a>
+    </div>
+    <a href="#try-free" class="text-link">No signup &middot; 5 checks/day free &middot; runs in 30 seconds</a>
+  </div>
+  <div class="codewin">
+    <div class="top"><span class="d"></span><span class="d"></span><span class="d"></span><span class="file">screen before payment &mdash; 92ms</span></div>
+    <pre><span class="c-cmd">$</span> curl <span class="c-str">"https://agentmail-api.fly.dev/sanctions?wallet=0x098B...2f96"</span>
+{
+  <span class="c-key">"clean"</span>: <span class="c-ok">true</span>,
+  <span class="c-key">"action"</span>: <span class="c-str">"ALLOW"</span>,
+  <span class="c-key">"checked_against"</span>: { <span class="c-key">"wallets"</span>: <span class="c-num">782</span>, <span class="c-key">"names"</span>: <span class="c-num">19086</span> },
+  <span class="c-key">"latency_ms"</span>: <span class="c-num">92</span>
+}</pre>
+  </div>
+  <div class="urgency">
+    <div class="ic">&#9888;</div>
+    <p>Every day, more agents get the ability to send money autonomously. The payment rails (x402, AP2, ACP) do <b>not</b> check OFAC. If your agent pays a sanctioned wallet, <b>you</b> are liable &mdash; not the protocol, not the wallet. <a href="#try-free">Check your first wallet now &rarr;</a></p>
+  </div>
 </div>
-<div class="testimonial">
-<div class="card">
-<div class="label">FROM A FINTECH DEVELOPER</div>
-<p class="quote">"Before agentmail, I was shipping agents hoping OFAC did not notice. Now I check every wallet before payments go out. It takes one curl call. The peace of mind is worth more than the API cost."</p>
-<div class="line"></div>
-<p class="author">Alex S., backend engineer evaluating x402 compliance for a fintech deployment</p>
-</div>
-</div>
+</section>
 
+<!-- TRUST -->
+<div class="trust"><div class="wrap"><div class="row">
+  <span class="label">Works with</span>
+  <span class="item"><span class="mk">&#9679;</span> x402</span>
+  <span class="item"><span class="mk">&#9679;</span> MCP</span>
+  <span class="item"><span class="mk">&#9679;</span> Base / USDC</span>
+  <span class="item"><span class="mk">&#9679;</span> Claude Code</span>
+  <span class="item"><span class="mk">&#9679;</span> Cursor</span>
+  <span class="item"><span class="mk">&#9679;</span> LangChain</span>
+</div></div></div>
 
+<!-- STORY -->
+<section class="sec story" id="story"><div class="wrap">
+  <div class="sec-head reveal"><span class="eyebrow"><span class="dot"></span> The story</span>
+    <h2>I was building an agent that pays invoices. Then test #47 sent USDC to a wallet I did not recognize.</h2>
+  </div>
+  <div class="pull reveal">
+    <div class="quote-mark">&ldquo;</div>
+    <blockquote>&ldquo;I checked the wallet against the OFAC SDN list. It was there. If that had been production, I would be looking at a $356,000 fine right now. The agent did not know what OFAC was. It just saw &lsquo;pay invoice #4021&rsquo; and sent USDC &mdash; and it would have done it at 3&nbsp;AM, repeatedly, until someone noticed.&rdquo;</blockquote>
+    <p class="by"><b>Maryan</b> &mdash; founder, agentmail</p>
+  </div>
+  <div class="narr reveal">
+    <p>I sat there staring at the screen thinking: if I had deployed this to production, I would be looking for a new job right now.</p>
+    <p>The problem was not the agent. The problem was that <strong>nobody was checking</strong>. The big payment rails handle moving money &mdash; they do not screen recipients. That gap is why I built agentmail.</p>
+    <p>The first question developers ask me: <span class="obj">&ldquo;Doesn&rsquo;t my payment provider handle this?&rdquo;</span> No. x402, AP2, ACP, Coinbase AgentKit &mdash; none of them check OFAC. They move money. They do not screen recipients. That is your responsibility &mdash; and ours.</p>
+  </div>
+  <div class="callout reveal"><strong>Your agent needs this check.</strong> Not next quarter. Not after the compliance notice. Before you deploy.</div>
+</div></section>
 
+<!-- TESTIMONIAL -->
+<section class="sec" style="padding-top:0"><div class="wrap">
+  <div class="tcard reveal">
+    <div class="stars">&#9733; &#9733; &#9733; &#9733; &#9733;</div>
+    <p class="q">&ldquo;Before agentmail, I was shipping agents hoping OFAC did not notice. Now I check every wallet before payments go out. It takes one curl call. The peace of mind is worth more than the API cost.&rdquo;</p>
+    <div class="who">
+      <div class="ava">A</div>
+      <div class="meta"><b>Alex S.</b><span>Backend engineer &mdash; evaluating x402 compliance for a fintech deployment</span></div>
+    </div>
+  </div>
+</div></section>
 
-<div class="offer-grid">
-<h2>What you get when you screen before every payment</h2>
-<div class="grid">
-<div class="card">
-<div class="n">1</div>
-<h3>sanctions_check</h3>
-<p>Screen any EVM, Bitcoin, or Tron address against 782 OFAC-listed crypto wallets. Returns match/no-match in under 100ms.</p>
-</div>
-<div class="card">
-<div class="n">2</div>
-<h3>risk_score</h3>
-<p>Analyze amount anomalies, rail risk (x402, AP2, ACP), and category exposure. Returns allow/review/decline.</p>
-</div>
-<div class="card">
-<div class="n">3</div>
-<h3>kya_verify</h3>
-<p>Know Your Agent: trust-score counterparty agents based on transaction history and wallet age.</p>
-</div>
-<div class="card">
-<div class="n">4</div>
-<h3>dispute_open</h3>
-<p>File disputes when something goes wrong. 7-day auto-escalation. Full audit trail.</p>
-</div>
-</div>
-<div class="value-stack">
-<p class="vs-label">Total monthly value of all 4 tools</p>
-<p class="vs-price"><span class="s">$1,096</span> $19<span style="font-size:0.4em;color:#555;font-weight:400">/mo</span></p>
-<p class="vs-label" style="font-size:0.78em;margin-top:4px">Free tier: 5 checks/day &middot; No signup &middot; MCP + HTTP + CLI</p>
-</div>
-</div>
-<div class="install" id="try-free">
-<h2>Try it free. Get your API key in 30 seconds.</h2>
-<p style="color:#999;font-size:0.85em;margin-bottom:20px">Enter your email and we will send you the curl command with your free API key. 5 checks/day, no credit card.</p>
-<div class="email-form" style="max-width:400px">
-<form id="free-tier-capture">
-<div class="input-row">
-<input type="email" id="free-email" placeholder="you@example.com" required>
-<button type="submit" class="btn btn-primary" style="white-space:nowrap">Get free API key</button>
-</div>
-</form>
-<p class="hint">No spam. Unsubscribe anytime. 5 checks/day, free forever.</p>
-</div>
-<div id="free-result" style="display:none;margin-top:16px">
-<code id="free-curl" style="display:block;background:#111;border:1px solid #1a1a1a;border-radius:8px;padding:14px;font-family:monospace;font-size:0.85em;color:#34d399;line-height:1.6;text-align:left;overflow-x:auto"></code>
-<p style="color:#555;font-size:0.72em;margin-top:8px">Returns OFAC match data in under 100ms. Try it with any EVM wallet.</p>
-</div>
-<script>
-document.getElementById("free-tier-capture").addEventListener("submit",function(e){
-  e.preventDefault();
-  var email=document.getElementById("free-email").value.trim();
-  var btn=this.querySelector("button");
-  var result=document.getElementById("free-result");
-  var curl=document.getElementById("free-curl");
-  if(!email||!email.includes("@")){alert("Enter a valid email");return;}
-  btn.textContent="Sending...";btn.disabled=true;
-  fetch("/subscribe",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({email:email,source:"free-tier-cta"})})
-  .then(function(r){return r.json()})
-  .then(function(d){
-    if(d.ok){
-      btn.style.display="none";
-      curl.textContent='curl "https://agentmail-api.fly.dev/sanctions?wallet=0x098B716B8Aaf21512996dC57EB0615e2383E2f96"';
-      result.style.display="block";
-    }else{alert(d.error||"Something went wrong");btn.textContent="Get free API key";btn.disabled=false;}
-  })
-  .catch(function(){alert("Network error");btn.textContent="Get free API key";btn.disabled=false;});
-});
-</script>
-</div
+<!-- EMAIL CAPTURE -->
+<section class="sec" id="try-free" style="padding-top:0"><div class="wrap">
+  <div class="capture reveal">
+    <h2>Try it free. Get your API key in 30 seconds.</h2>
+    <p class="lead">Enter your email and we will send you the curl command with your free key. 5 checks/day, no credit card.</p>
+    <form class="form" id="free-tier-capture">
+      <div class="row">
+        <input type="email" id="free-email" placeholder="you@example.com" required autocomplete="email">
+        <button type="submit" class="btn btn-primary btn-lg">Get free API key &rarr;</button>
+      </div>
+    </form>
+    <p class="hint">No spam. Unsubscribe anytime. 5 checks/day, free forever.</p>
+    <div class="result" id="free-result">
+      <code id="free-curl"></code>
+      <p class="cap">Returns OFAC match data in under 100&nbsp;ms. Try it with any EVM wallet.</p>
+    </div>
+  </div>
+</div></section>
 
+<!-- TOOLS / BENTO -->
+<section class="sec"><div class="wrap">
+  <div class="sec-head reveal"><span class="eyebrow"><span class="dot"></span> What you get</span>
+    <h2>Four primitives your agent calls before every payment</h2>
+    <p>Drop them into any pipeline that moves money. HTTP, MCP, or CLI. Each returns in under 100&nbsp;ms.</p>
+  </div>
+  <div class="bento">
+    <div class="tile t1 reveal"><div class="ic">&#128270;</div><h3><code>sanctions_check</code></h3><p>Screen any EVM, Bitcoin, or Tron address against 782 OFAC-listed crypto wallets. Returns match or clean in under 100&nbsp;ms.</p></div>
+    <div class="tile t2 reveal"><div class="ic">&#9888;</div><h3><code>risk_score</code></h3><p>Analyze amount anomalies, rail risk (x402, AP2, ACP), and category exposure. Returns a clear allow, review, or decline.</p></div>
+    <div class="tile t3 reveal"><div class="ic">&#129417;</div><h3><code>kya_verify</code></h3><p>Know Your Agent: trust-score counterparties from transaction history and wallet age.</p></div>
+    <div class="tile t4 reveal"><div class="ic">&#9878;</div><h3><code>dispute_open</code></h3><p>File disputes when something goes wrong. 7-day auto-escalation with a full audit trail.</p></div>
+    <div class="tile t5 reveal"><div class="ic">&#128640;</div><h3>Ship in minutes</h3><p>One endpoint, one curl, zero infra. MCP server included for Claude Code &amp; Cursor.</p></div>
+  </div>
+  <div class="valuebox reveal">
+    <p class="lbl">Total monthly value of all 4 tools</p>
+    <p class="price"><span class="old">$1,096</span>$19<span class="per">/mo</span></p>
+    <p class="note">Free tier: 5 checks/day &middot; no signup &middot; MCP + HTTP + CLI</p>
+  </div>
+</div></section>
 
-<div class="pricing" id="pricing">
-<div class="risk-warning">OFAC penalties start at $356,000 per violation. agentmail starts at $0.</div>
-<h2>Pricing</h2>
-<p class="lead">Free: 5 checks/day. Dev: 10,000 checks/month. Pro: 100,000 checks/month. Your agent pays $0.05 via x402.</p>
-<div class="price-cards">
-<div class="price-card">
-<h3>Free</h3>
-<div class="price">$0<small>/check</small></div>
-<ul>
-<li>5 checks/day</li>
-<li>sanctions_check</li>
-<li>Rate limited</li>
-<li>No signup needed</li>
-</ul>
-<a href="#install" class="btn btn-ghost">Try it now</a>
-<p class="guarantee-text">5 checks/day, free forever. No credit card. No time limit.</p>
-</div>
-<div class="price-card featured">
-<div class="popular">Most popular</div>
-<h3>Dev</h3>
-<div class="price">$19<small>/mo</small></div>
-<ul>
-<li>10,000 checks/month</li>
-<li>All 4 tools</li>
-<li>API key + audit log</li>
-<li>Priority support</li>
-</ul>
-<a href="/checkout/dev" class="btn btn-primary">Start free trial &rarr;</a>
-<p class="guarantee-text">First month free. Cancel anytime. <strong style="color:#ff6b6b">First 50 developers locked-in at $19/mo forever.</strong> Pricing goes up after that. If we miss a sanctioned wallet, we cover the first $10K of your legal fees.</p>
-</div>
-<div class="price-card">
-<h3>Pro</h3>
-<div class="price">$99<small>/mo</small></div>
-<ul>
-<li>100,000 checks/month</li>
-<li>All 4 tools</li>
-<li>API key + audit log</li>
-<li>Priority support + SLA</li>
-<li>Custom risk rules</li>
-</ul>
-<a href="/checkout/pro" class="btn btn-ghost">Subscribe</a>
-<p class="guarantee-text">Same $10K guarantee. Priority SLA. Custom risk rules. For production teams.</p>
-</div>
-</div></div>
+<!-- PRICING -->
+<section class="sec" id="pricing" style="padding-top:0"><div class="wrap">
+  <div class="sec-head reveal"><span class="eyebrow"><span class="dot"></span> Pricing</span>
+    <h2>Free to start. $19 in production.</h2>
+    <p class="riskline">OFAC penalties start at <b>$356,000 per violation</b>. agentmail starts at $0.</p>
+  </div>
+  <div class="pcwrap">
+    <div class="pcard reveal">
+      <h3>Free</h3>
+      <div class="amt">$0<small> /check</small></div>
+      <p class="desc">For kicking the tires.</p>
+      <ul>
+        <li><span class="ck">&#10003;</span> 5 checks / day</li>
+        <li><span class="ck">&#10003;</span> <code style="color:var(--teal)">sanctions_check</code></li>
+        <li><span class="ck">&#10003;</span> Rate limited</li>
+        <li><span class="ck">&#10003;</span> No signup needed</li>
+      </ul>
+      <a href="#try-free" class="btn btn-ghost">Try it now</a>
+      <p class="guar">5 checks/day, free forever. No credit card. No time limit.</p>
+    </div>
+    <div class="pcard feat reveal">
+      <span class="pop">Most popular</span>
+      <h3>Dev</h3>
+      <div class="amt">$19<small> /mo</small></div>
+      <p class="desc">For agents in production.</p>
+      <ul>
+        <li><span class="ck">&#10003;</span> 10,000 checks / month</li>
+        <li><span class="ck">&#10003;</span> All 4 tools</li>
+        <li><span class="ck">&#10003;</span> API key + audit log</li>
+        <li><span class="ck">&#10003;</span> Priority support</li>
+      </ul>
+      <a href="/checkout/dev" class="btn btn-primary">Start free trial &rarr;</a>
+      <p class="guar">First month free. Cancel anytime. <b class="red">First 50 devs locked in at $19/mo forever.</b> If we miss a sanctioned wallet, we cover the first $10K of your legal fees.</p>
+    </div>
+    <div class="pcard reveal">
+      <h3>Pro</h3>
+      <div class="amt">$99<small> /mo</small></div>
+      <p class="desc">For teams shipping at scale.</p>
+      <ul>
+        <li><span class="ck">&#10003;</span> 100,000 checks / month</li>
+        <li><span class="ck">&#10003;</span> All 4 tools</li>
+        <li><span class="ck">&#10003;</span> API key + audit log</li>
+        <li><span class="ck">&#10003;</span> Priority support + SLA</li>
+        <li><span class="ck">&#10003;</span> Custom risk rules</li>
+      </ul>
+      <a href="/checkout/pro" class="btn btn-ghost">Subscribe</a>
+      <p class="guar">Same $10K guarantee. Priority SLA. Custom risk rules for production teams.</p>
+    </div>
+  </div>
+</div></section>
 
-
-</div>
-
-
-
-</div>
-
-
-
-
+<!-- FAQ -->
+<section class="sec" style="padding-top:0"><div class="wrap">
+  <div class="sec-head reveal"><span class="eyebrow"><span class="dot"></span> FAQ</span><h2>Agent questions, answered</h2></div>
+  <div class="faq reveal">
+    <div class="item"><button class="q">Doesn&rsquo;t my payment provider handle OFAC screening? <span class="pm">+</span></button><div class="a"><div class="inner">No. x402, AP2, ACP, and Coinbase AgentKit move money &mdash; none of them screen recipients against the SDN list. Compliance is a separate layer and it is your responsibility. agentmail is that layer.</div></div></div>
+    <div class="item"><button class="q">How current is the OFAC data? <span class="pm">+</span></button><div class="a"><div class="inner">Synced hourly from the official US Treasury SDN list. Every check runs against the freshest data.</div></div></div>
+    <div class="item"><button class="q">Which chains and assets are supported? <span class="pm">+</span></button><div class="a"><div class="inner">EVM chains (Ethereum, Base, Arbitrum, Optimism and more), Bitcoin, and Tron addresses &mdash; 782 OFAC-listed wallets across all of them, plus 19,086 names and 16 jurisdictions.</div></div></div>
+    <div class="item"><button class="q">Can I call it from my agent framework? <span class="pm">+</span></button><div class="a"><div class="inner">Yes &mdash; anything that speaks HTTP works. We also ship an MCP server for Claude Code, Cursor, and Windsurf, plus a CLI and a Python package (<code>pip install sanctions-mcp</code>).</div></div></div>
+    <div class="item"><button class="q">Can I self-host? <span class="pm">+</span></button><div class="a"><div class="inner">Yes. agentmail is MIT licensed and open source. The hosted API is the fast path; the self-hosted path is always free.</div></div></div>
+  </div>
+</div></section>
 
 <!-- FINAL CTA -->
-<div class="final-cta">
-<h2 style="font-size:1.15em;color:#fff;font-weight:700;margin-bottom:8px">Your agent is one curl call away from being safe.</h2>
-<p style="color:#888;font-size:0.85em;margin-bottom:18px">5 checks/day. No credit card. No signup. Just results.</p>
-<a href="#try-free" class="btn btn-primary">Try it free &rarr;</a>
-</div>
+<section class="final"><div class="wrap">
+  <div class="panel reveal">
+    <h2>Your agent is one curl call away from being safe.</h2>
+    <p>5 checks/day. No credit card. No signup. Just results.</p>
+    <a href="#try-free" class="btn btn-primary btn-lg">Try it free &rarr;</a>
+  </div>
+</div></section>
 
-<footer>
-<div class="links">
-<a href="/">Home</a>
-<a href="/agent">For AI Agents</a>
-<a href="/docs">Docs</a>
-<a href="/pricing">Pricing</a>
-<a href="https://github.com/kindrat86/agentmail">GitHub</a>
-<a href="https://pypi.org/project/sanctions-mcp/">PyPI</a>
-</div>
-<p>agentmail &mdash; OFAC sanctions screening for AI agents &mdash; MIT licensed</p>
-</footer>
+<footer><div class="wrap">
+  <div class="grid">
+    <div class="brand">
+      <a href="/" class="logo"><span class="mark">a</span> agent<span style="color:var(--teal)">mail</span></a>
+      <p>OFAC sanctions screening for AI agents. Screen every counterparty before your agent pays. MIT licensed, open source.</p>
+    </div>
+    <div class="cols">
+      <div class="col"><h4>Product</h4><a href="/">Home</a><a href="/agent">For AI Agents</a><a href="/docs">Docs</a><a href="#pricing">Pricing</a><a href="/tools/wallet-checker">Wallet checker</a></div>
+      <div class="col"><h4>Developers</h4><a href="https://github.com/kindrat86/agentmail">GitHub</a><a href="https://pypi.org/project/sanctions-mcp/">PyPI</a><a href="/blog/x402-compliance-check">Blog</a><a href="https://agentmail-api.fly.dev/health">API status</a></div>
+    </div>
+  </div>
+  <div class="bottom"><span>agentmail &mdash; OFAC sanctions screening for AI agents &mdash; MIT licensed</span><span>Built for the agent economy</span></div>
+</div></footer>
+
+<script>
+(function(){
+  // nav scroll state + burger
+  var nav=document.getElementById('nav'),burger=document.getElementById('burger'),nl=document.getElementById('navlinks');
+  function onScroll(){if(window.scrollY>10)nav.classList.add('scrolled');else nav.classList.remove('scrolled');}
+  onScroll();window.addEventListener('scroll',onScroll,{passive:true});
+  if(burger){burger.addEventListener('click',function(){nl.classList.toggle('open');});}
+  // faq accordion
+  document.querySelectorAll('.faq .q').forEach(function(q){
+    q.addEventListener('click',function(){
+      var item=q.parentNode,a=q.nextElementSibling,inner=a.querySelector('.inner');
+      var open=item.classList.contains('open');
+      document.querySelectorAll('.faq .item').forEach(function(i){i.classList.remove('open');i.querySelector('.a').style.maxHeight=null;});
+      if(!open){item.classList.add('open');a.style.maxHeight=inner.offsetHeight+24+'px';}
+    });
+  });
+  // reveal on scroll
+  var prefersReduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var els=document.querySelectorAll('.reveal');
+  if(prefersReduce||!('IntersectionObserver' in window)){els.forEach(function(e){e.classList.add('in');});}
+  else{var io=new IntersectionObserver(function(en){en.forEach(function(x){if(x.isIntersecting){x.target.classList.add('in');io.unobserve(x.target);}});},{rootMargin:'0px 0px -8% 0px',threshold:.08});els.forEach(function(e){io.observe(e);});}
+  // free-tier email capture
+  var f=document.getElementById('free-tier-capture');
+  if(f){f.addEventListener('submit',function(e){
+    e.preventDefault();
+    var email=document.getElementById('free-email').value.trim();
+    var btn=this.querySelector('button');
+    var result=document.getElementById('free-result');
+    var curl=document.getElementById('free-curl');
+    if(!email||email.indexOf('@')<0){alert('Enter a valid email');return;}
+    btn.textContent='Sending...';btn.disabled=true;
+    fetch('/subscribe',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:email,source:'free-tier-cta'})})
+    .then(function(r){return r.json();})
+    .then(function(d){if(d.ok){btn.style.display='none';curl.textContent='curl "https://agentmail-api.fly.dev/sanctions?wallet=0x098B716B8Aaf21512996dC57EB0615e2383E2f96"';result.style.display='block';}else{alert(d.error||'Something went wrong');btn.textContent='Get free API key \u2192';btn.disabled=false;}})
+    .catch(function(){alert('Network error. Try again.');btn.textContent='Get free API key \u2192';btn.disabled=false;});
+  });}
+})();
+</script>
 </body>
-</html>"""
+</html>
+"""
         self._send_html(200, html)
 
     def _unsubscribe_page(self):
@@ -1713,254 +1834,316 @@ const payment = await x402.pay({
 </html>"""
         self._send_html(200, html)
     def _agent_page(self):
-        """Brunson H/S/O landing for AI agents — Hook (fear) > Story (epiphany) > Offer (x402 per-call)."""
+        """Brunson H/S/O landing for AI agents - Hook (fear) > Story (epiphany) > Offer (x402 per-call)."""
         html = """<!DOCTYPE html>
-<html lang="en">
-<head>
+<html lang="en"><head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>x402 Compliance Check for AI Agents | $0.05/check | agentmail</title>
 <meta name="description" content="OFAC sanctions screening for AI agents. Pay $0.05 USDC per check via x402 on Base. No API key. No signup. 782 wallets, 19,086 names, 16 jurisdictions.">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<meta name="theme-color" content="#0a0a0a">
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-html{-webkit-text-size-adjust:100%}
-body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:#0a0a0a;color:#e0e0e0;line-height:1.6;overflow-x:hidden;-webkit-font-smoothing:antialiased}
-a{color:#00d4aa;text-decoration:none;-webkit-tap-highlight-color:transparent}
-.btn{display:inline-flex;align-items:center;justify-content:center;padding:14px 24px;border-radius:10px;font-weight:600;font-size:0.95em;cursor:pointer;border:none;min-height:48px;text-decoration:none!important;transition:all .2s;touch-action:manipulation}
-.btn:active{transform:scale(0.97)}
-.btn-primary{background:#00d4aa;color:#0a0a0a!important}
-.btn-primary:hover{box-shadow:0 0 24px rgba(0,212,170,.25)}
-.btn-ghost{border:1.5px solid #333;color:#e0e0e0!important;background:transparent;min-height:44px}
-.btn-ghost:hover{border-color:#00d4aa}
-.btn-lg{padding:16px 28px;font-size:1em;min-height:52px}
-
-nav{padding:14px 20px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #1a1a1a;background:rgba(10,10,10,.96);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);position:sticky;top:0;z-index:100}
-.logo{font-weight:700;font-size:1.1em;color:#fff}
-.logo span{color:#00d4aa}
-nav .links{display:flex;gap:16px;align-items:center}
-nav .links a{color:#888;font-size:0.82em;transition:color .2s}
-nav .links a:hover{color:#fff}
-@media(min-width:768px){nav{padding:20px 24px}nav .links a{font-size:0.9em}}
-
-.hero{padding:60px 16px 30px;text-align:center;position:relative;overflow:hidden}
-.hero::before{content:'';position:absolute;top:-100px;left:50%;transform:translateX(-50%);width:600px;height:600px;background:radial-gradient(circle,rgba(0,212,170,.04) 0%,transparent 70%);pointer-events:none}
-.hero .badge{display:inline-block;background:rgba(0,212,170,.1);color:#00d4aa;padding:4px 12px;border-radius:20px;font-size:0.65em;font-weight:600;margin-bottom:14px;border:1px solid rgba(0,212,170,.2);font-family:monospace}
-.hero h1{font-size:1.5em;font-weight:800;line-height:1.15;max-width:620px;margin:0 auto 14px;letter-spacing:-0.02em}
-.hero h1 .hl{color:#00d4aa}
-.hero h1 .hl-r{color:#ff6b6b}
-.hero .sub{font-size:0.92em;color:#999;max-width:500px;margin:0 auto 18px}
-.hero .stat-row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:18px}
-.hero .stat-row span{background:#111;border:1px solid #1a1a1a;border-radius:8px;padding:6px 12px;font-size:0.72em;color:#888}
-.hero .stat-row strong{color:#00d4aa}
-.hero .cta-row{display:flex;flex-direction:column;gap:12px;margin-top:22px;max-width:360px;margin-left:auto;margin-right:auto}
-.hero .cta-row .hint{color:#555;font-size:0.68em;margin-top:-4px}
-@media(min-width:640px){
-.hero{padding:80px 24px 40px}.hero h1{font-size:2em;max-width:650px}.hero .sub{font-size:1em}.hero .cta-row{flex-direction:row;max-width:none;justify-content:center;gap:14px}
+:root{
+  --bg:#0a0a0a; --bg2:#0c0c0e;
+  --text:#e8eaed; --t2:#a4abb3; --t3:#6b7178; --t4:#484d54;
+  --line:rgba(255,255,255,.07); --line2:rgba(255,255,255,.12);
+  --surf:rgba(255,255,255,.025); --surf2:rgba(255,255,255,.045);
+  --teal:#00d4aa; --teal2:#2deec0;
+  --tealg:linear-gradient(135deg,#00d4aa 0%,#2deec0 100%);
+  --red:#ff6b6b; --redsoft:rgba(255,107,107,.09);
+  --r:16px; --maxw:1080px;
 }
+*{margin:0;padding:0;box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%;scroll-behavior:smooth}
+body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;overflow-x:hidden;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+a{color:var(--teal);text-decoration:none;-webkit-tap-highlight-color:transparent}
+::selection{background:rgba(0,212,170,.25);color:#fff}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 22px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:13px 22px;border-radius:12px;font-weight:600;font-size:.95rem;cursor:pointer;border:none;min-height:48px;text-decoration:none!important;transition:transform .18s cubic-bezier(.2,.8,.2,1),box-shadow .2s,background .2s,border-color .2s;touch-action:manipulation;user-select:none;white-space:nowrap}
+.btn:active{transform:translateY(1px) scale(.99)}
+.btn-primary{background:var(--tealg);color:#04130e!important;box-shadow:0 8px 24px -10px rgba(0,212,170,.6)}
+.btn-primary:hover{box-shadow:0 14px 36px -10px rgba(0,212,170,.7);transform:translateY(-2px)}
+.btn-ghost{background:rgba(255,255,255,.02);border:1px solid var(--line2);color:var(--text)!important}
+.btn-ghost:hover{border-color:var(--teal);background:rgba(0,212,170,.06)}
+.btn-lg{padding:16px 30px;font-size:1.02rem;min-height:54px;border-radius:14px}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:.72rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--t3)}
+.eyebrow .dot{width:6px;height:6px;border-radius:50%;background:var(--teal);box-shadow:0 0 12px var(--teal)}
 
-.price-card{max-width:420px;margin:0 auto;padding:20px 16px 40px;text-align:center}
-.price-card .inner{background:linear-gradient(135deg,#0d1a14,#0a0a0a);border:1px solid rgba(0,212,170,.2);border-radius:16px;padding:32px;position:relative;overflow:hidden}
-.price-card .inner::before{content:'';position:absolute;top:-60px;right:-60px;width:120px;height:120px;background:radial-gradient(circle,rgba(0,212,170,.08) 0%,transparent 70%);pointer-events:none}
-.price-card .popular{display:inline-block;background:#00d4aa;color:#0a0a0a;padding:4px 14px;border-radius:20px;font-size:0.62em;font-weight:700;margin-bottom:14px;text-transform:uppercase;letter-spacing:0.04em}
-.price-card .price{font-size:3em;font-weight:800;color:#fff;letter-spacing:-0.02em}
-.price-card .price small{font-size:0.3em;color:#555;font-weight:400}
-.price-card .per{color:#555;font-size:0.78em;margin-bottom:16px}
-.price-card ul{list-style:none;padding:0;margin:16px 0 20px;text-align:center}
-.price-card ul li{color:#999;font-size:0.85em;padding:6px 0}
-.price-card ul li::before{content:"\\2713 ";color:#00d4aa;font-weight:700}
-.price-card .guarantee{background:#111;border:1px solid #1a1a1a;border-radius:8px;padding:14px;margin:16px 0 0;font-size:0.78em;color:#888;line-height:1.4}
-.price-card .guarantee strong{color:#e0e0e0}
-.price-card .guarantee .hl-g{color:#00d4aa}
+/* nav */
+nav{position:sticky;top:0;z-index:100;backdrop-filter:saturate(160%) blur(16px);-webkit-backdrop-filter:saturate(160%) blur(16px);background:rgba(10,10,10,.72);border-bottom:1px solid transparent;transition:border-color .3s,background .3s}
+nav.scrolled{border-color:var(--line);background:rgba(10,10,10,.86)}
+nav .bar{display:flex;align-items:center;justify-content:space-between;height:62px}
+.logo{display:flex;align-items:center;gap:9px;font-weight:700;font-size:1.02rem;color:#fff;letter-spacing:-.01em}
+.logo .mark{width:26px;height:26px;border-radius:7px;background:var(--tealg);display:grid;place-items:center;color:#04130e;font-weight:800;font-size:.9rem;box-shadow:0 4px 14px -4px rgba(0,212,170,.6)}
+nav .links{display:flex;align-items:center;gap:22px}
+nav .links a{color:var(--t2);font-size:.9rem;font-weight:500;transition:color .2s}
+nav .links a:hover{color:#fff}
 
-.protocol-flow{padding:40px 16px;max-width:640px;margin:0 auto}
-.protocol-flow h2{text-align:center;font-size:1.15em;font-weight:700;margin-bottom:24px;color:#fff}
-.steps{display:flex;flex-direction:column;gap:14px}
-.step{display:flex;gap:12px;align-items:flex-start;background:#111;border:1px solid #1a1a1a;border-radius:10px;padding:16px}
-.step .num{background:rgba(0,212,170,.1);color:#00d4aa;border-radius:6px;min-width:30px;height:30px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.8em;flex-shrink:0}
-.step .content h3{font-size:0.88em;color:#fff;margin-bottom:2px}
-.step .content p{font-size:0.8em;color:#888;line-height:1.4}
-.step .content code{display:block;background:#1a1a1a;color:#34d399;padding:5px 10px;border-radius:4px;font-size:0.7em;margin-top:5px;font-family:monospace;overflow-x:auto}
+/* hero */
+.hero{position:relative;padding:90px 0 50px;text-align:center;overflow:hidden}
+.hero .bg{position:absolute;inset:0;pointer-events:none}
+.hero .bg .glow1{position:absolute;top:-220px;left:50%;transform:translateX(-50%);width:880px;height:600px;background:radial-gradient(ellipse at center,rgba(0,212,170,.14) 0%,rgba(0,212,170,.04) 35%,transparent 70%);filter:blur(8px)}
+.hero .bg .grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);background-size:64px 64px;-webkit-mask-image:radial-gradient(ellipse 70% 60% at 50% 30%,#000 30%,transparent 75%);mask-image:radial-gradient(ellipse 70% 60% at 50% 30%,#000 30%,transparent 75%)}
+.hero-inner{position:relative;z-index:2}
+.pill{display:inline-flex;align-items:center;gap:10px;padding:7px 16px;border-radius:999px;background:rgba(0,212,170,.08);border:1px solid rgba(0,212,170,.22);font-size:.74rem;font-weight:600;color:var(--teal2);letter-spacing:.04em;margin-bottom:26px;font-family:ui-monospace,"SF Mono",Menlo,monospace}
+.hero h1{font-size:clamp(2.1rem,5.4vw,3.5rem);font-weight:800;line-height:1.06;letter-spacing:-.03em;max-width:840px;margin:0 auto 22px}
+.hero h1 .hl{background:var(--tealg);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:var(--teal)}
+.hero h1 .hl-r{color:var(--red)}
+.hero .sub{color:var(--t2);font-size:1.08rem;max-width:560px;margin:0 auto 8px;line-height:1.55}
+.statrow{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:30px 0 0}
+.statrow .s{background:var(--surf);border:1px solid var(--line);border-radius:12px;padding:9px 16px;font-size:.84rem;color:var(--t2);display:flex;align-items:center;gap:7px}
+.statrow .s b{color:var(--teal);font-weight:700;font-size:.95rem}
 
-.features{padding:40px 16px;max-width:700px;margin:0 auto}
-.features h2{text-align:center;font-size:1.1em;font-weight:700;margin-bottom:24px;color:#fff}
-.feature-grid{display:grid;grid-template-columns:1fr;gap:10px}
-.feature-card{background:#111;border:1px solid #1a1a1a;border-radius:10px;padding:16px;text-align:center}
-.feature-card .icon{font-size:1.3em;margin-bottom:4px}
-.feature-card h3{font-size:0.88em;color:#fff;margin-bottom:2px}
-.feature-card p{color:#888;font-size:0.8em;line-height:1.4}
-@media(min-width:480px){.feature-grid{grid-template-columns:1fr 1fr;gap:12px}}
+/* price highlight card */
+.hero-card{max-width:560px;margin:50px auto 0;position:relative;background:linear-gradient(180deg,rgba(0,212,170,.07),rgba(255,255,255,.02));border:1px solid rgba(0,212,170,.28);border-radius:22px;padding:36px 32px 30px;text-align:center;box-shadow:0 0 0 1px rgba(0,212,170,.08),0 40px 90px -40px rgba(0,212,170,.35);overflow:hidden}
+.hero-card::before{content:"";position:absolute;top:-80px;right:-60px;width:240px;height:240px;background:radial-gradient(circle,rgba(0,212,170,.18) 0%,transparent 70%);pointer-events:none}
+.hero-card .tag{position:relative;display:inline-block;background:var(--tealg);color:#04130e;font-size:.62rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;padding:5px 13px;border-radius:999px;margin-bottom:18px}
+.hero-card .amt{position:relative;font-size:3.4rem;font-weight:800;letter-spacing:-.03em;color:#fff;line-height:1}
+.hero-card .amt small{font-size:1rem;color:var(--t2);font-weight:500}
+.hero-card .per{color:var(--t2);font-size:.92rem;margin:8px 0 20px}
+.hero-card ul{list-style:none;position:relative;text-align:left;max-width:340px;margin:0 auto 22px}
+.hero-card ul li{color:var(--t2);font-size:.92rem;padding:6px 0;display:flex;align-items:flex-start;gap:10px}
+.hero-card ul li .ck{color:var(--teal);font-weight:700;flex-shrink:0;margin-top:1px}
+.hero-card .guar{position:relative;background:rgba(0,0,0,.25);border:1px solid var(--line);border-radius:12px;padding:14px;font-size:.82rem;color:var(--t2);line-height:1.5;margin-bottom:22px}
+.hero-card .guar b{color:#fff}.hero-card .guar .g{color:var(--teal)}
+.hero-card .btn{position:relative;width:100%}
 
-.story-section{padding:40px 16px;max-width:640px;margin:0 auto}
-.story-label{color:#555;font-size:0.7em;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:6px}
-.story-section h2{font-size:1.1em;font-weight:700;margin-bottom:10px;line-height:1.35}
-.story-section p{color:#999;font-size:0.85em;margin-bottom:10px;line-height:1.5}
-.story-section .quote{background:#111;border-left:3px solid #ff6b6b;padding:12px 14px;border-radius:0 8px 8px 0;margin:14px 0;font-style:italic;color:#ccc;font-size:0.85em}
-.story-section .callout{background:#0d1a14;border:1px solid rgba(0,212,170,.1);border-radius:8px;padding:14px;margin:16px 0;font-size:0.85em;color:#ccc}
-.story-section .callout strong{color:#00d4aa}
+/* sections */
+.sec{padding:92px 0;position:relative}
+.sec-head{text-align:center;max-width:680px;margin:0 auto 52px}
+.sec-head .eyebrow{margin-bottom:16px}
+.sec-head h2{font-size:clamp(1.6rem,3.4vw,2.3rem);font-weight:800;letter-spacing:-.02em;line-height:1.12;margin-bottom:14px}
+.sec-head p{color:var(--t2);font-size:1.06rem;line-height:1.6}
 
-.faq{padding:40px 16px;max-width:600px;margin:0 auto}
-.faq h2{text-align:center;font-size:1.1em;font-weight:700;margin-bottom:20px;color:#fff}
-.faq-item{border-bottom:1px solid #1a1a1a;padding:12px 0}
-.faq-item h3{font-size:0.85em;color:#e0e0e0;margin-bottom:3px}
-.faq-item p{color:#888;font-size:0.8em;line-height:1.4}
+/* flow steps */
+.flow{max-width:680px;margin:0 auto;display:flex;flex-direction:column;gap:14px}
+.step{display:flex;gap:18px;align-items:flex-start;background:var(--surf);border:1px solid var(--line);border-radius:var(--r);padding:22px 22px;transition:border-color .25s,transform .25s}
+.step:hover{border-color:rgba(0,212,170,.3);transform:translateY(-2px)}
+.step .num{flex-shrink:0;width:38px;height:38px;border-radius:11px;background:rgba(0,212,170,.1);border:1px solid rgba(0,212,170,.22);color:var(--teal);display:grid;place-items:center;font-weight:800;font-size:.95rem}
+.step .c{flex:1;min-width:0}
+.step .c h3{font-size:1.02rem;color:#fff;margin-bottom:5px;font-weight:700}
+.step .c p{color:var(--t2);font-size:.92rem;line-height:1.55;margin-bottom:0}
+.step .c pre{background:#0c0d0f;border:1px solid var(--line);border-radius:9px;padding:12px 14px;font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;font-size:.78rem;color:#7fd6c4;overflow-x:auto;margin-top:10px;line-height:1.6;white-space:pre}
+.step .conn{display:none}
+.flow-rail{display:none}
 
-footer{padding:36px 16px;text-align:center;border-top:1px solid #1a1a1a}
-footer .links{display:flex;gap:14px;justify-content:center;margin-bottom:10px;flex-wrap:wrap}
-footer .links a{color:#555;font-size:0.8em}
-footer p{color:#333;font-size:0.7em}
+/* story */
+.story .pull{max-width:700px;margin:0 auto;background:var(--surf);border:1px solid var(--line);border-radius:20px;padding:32px 30px;border-left:3px solid var(--red)}
+.story .pull blockquote{font-size:1.12rem;line-height:1.6;color:#d7dadd;font-style:italic;margin-bottom:14px}
+.story .pull .by{color:var(--t3);font-size:.86rem}
+.story .pull .by b{color:var(--t2)}
+.story .narr{max-width:640px;margin:30px auto 0;color:var(--t2);font-size:1.04rem;line-height:1.75}
+.story .callout{max-width:640px;margin:24px auto 0;background:linear-gradient(135deg,rgba(0,212,170,.08),rgba(0,212,170,.02));border:1px solid rgba(0,212,170,.18);border-radius:16px;padding:22px 26px;font-size:1.06rem;color:#dfe9e5;line-height:1.6}
+.story .callout b{color:var(--teal)}
+
+/* features */
+.feats{display:grid;grid-template-columns:1fr;gap:16px;max-width:920px;margin:0 auto}
+.feat{background:var(--surf);border:1px solid var(--line);border-radius:var(--r);padding:28px 26px;transition:border-color .25s,transform .25s,background .25s}
+.feat:hover{border-color:rgba(0,212,170,.3);transform:translateY(-3px);background:var(--surf2)}
+.feat .ic{width:42px;height:42px;border-radius:11px;background:rgba(0,212,170,.1);border:1px solid rgba(0,212,170,.2);display:grid;place-items:center;color:var(--teal);font-size:1.15rem;margin-bottom:16px}
+.feat h3{font-size:1.06rem;font-weight:700;color:#fff;margin-bottom:7px}
+.feat p{color:var(--t2);font-size:.94rem;line-height:1.55}
+
+/* faq */
+.faq{max-width:740px;margin:0 auto}
+.faq .item{border-bottom:1px solid var(--line)}
+.faq .q{width:100%;background:none;border:none;text-align:left;color:#fff;font-size:1.04rem;font-weight:600;padding:22px 0;display:flex;justify-content:space-between;align-items:center;gap:16px;cursor:pointer;font-family:inherit}
+.faq .q .pm{flex-shrink:0;width:24px;height:24px;border-radius:7px;border:1px solid var(--line2);display:grid;place-items:center;color:var(--t2);font-size:1.1rem;transition:.25s;line-height:1}
+.faq .item.open .q .pm{transform:rotate(45deg);border-color:var(--teal);color:var(--teal)}
+.faq .a{max-height:0;overflow:hidden;transition:max-height .3s ease;color:var(--t2);font-size:.96rem;line-height:1.65}
+.faq .a .inner{padding:0 0 22px}
+.faq code{background:rgba(0,212,170,.08);color:var(--teal);padding:2px 7px;border-radius:5px;font-size:.86em;font-family:ui-monospace,Menlo,monospace}
+
+/* final */
+.final{padding:80px 0;text-align:center}
+.final .panel{max-width:720px;margin:0 auto;background:linear-gradient(135deg,rgba(0,212,170,.1),rgba(0,212,170,.02));border:1px solid rgba(0,212,170,.22);border-radius:24px;padding:52px 32px;position:relative;overflow:hidden}
+.final .panel::before{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at top,rgba(0,212,170,.16),transparent 60%);pointer-events:none}
+.final .panel h2{position:relative;font-size:clamp(1.5rem,3.2vw,2.1rem);font-weight:800;letter-spacing:-.02em;margin-bottom:12px}
+.final .panel p{position:relative;color:var(--t2);font-size:1.04rem;margin-bottom:26px}
+
+/* footer */
+footer{border-top:1px solid var(--line);padding:48px 0 40px}
+footer .grid{display:flex;flex-wrap:wrap;justify-content:space-between;gap:24px;align-items:flex-start}
+footer .brand{max-width:300px}
+footer .brand .logo{margin-bottom:12px}
+footer .brand p{color:var(--t3);font-size:.86rem;line-height:1.6}
+footer .cols{display:flex;gap:48px;flex-wrap:wrap}
+footer .col h4{font-size:.74rem;letter-spacing:.1em;text-transform:uppercase;color:var(--t4);margin-bottom:12px;font-weight:600}
+footer .col a{display:block;color:var(--t2);font-size:.9rem;padding:5px 0;transition:color .2s}
+footer .col a:hover{color:#fff}
+footer .bottom{margin-top:40px;padding-top:24px;border-top:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;color:var(--t4);font-size:.82rem}
+
+.reveal{opacity:0;transform:translateY(22px);transition:opacity .7s cubic-bezier(.2,.8,.2,1),transform .7s cubic-bezier(.2,.8,.2,1)}
+.reveal.in{opacity:1;transform:none}
+
+@media(min-width:760px){.feats{grid-template-columns:1fr 1fr}}
+@media(max-width:760px){
+  .hero{padding:54px 0 40px}
+  .sec{padding:64px 0}
+  .hero-card{padding:30px 22px 26px}
+  .hero-card .amt{font-size:2.7rem}
+  .step{flex-direction:column;gap:12px}
+  .final .panel{padding:40px 22px}
+}
+@media(max-width:420px){.hero h1{font-size:1.9rem}.wrap{padding:0 18px}}
+@media(prefers-reduced-motion:reduce){*{transition-duration:.01ms!important;animation-duration:.01ms!important;scroll-behavior:auto!important}.reveal{opacity:1!important;transform:none!important}}
 </style>
+<!-- PostHog -->
+<script>!function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.async=!0,p.src=s.api_host+"/static/array.js",(r=t.getElementsByTagName("head")[0]).appendChild(p);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])}(document,window.posthog||[]);posthog.init('phc_lyZCgvTpicjLzAO3rY2GhxuX5WUc5jQjP8ZVwwJqauX',{api_host:'https://us.i.posthog.com',person_profiles:'identified_only'})</script>
 </head>
 <body>
+<nav id="nav"><div class="wrap bar">
+  <a href="/" class="logo"><span class="mark">a</span> agent<span style="color:var(--teal)">mail</span></a>
+  <div class="links">
+    <a href="/">For Humans</a>
+    <a href="https://github.com/kindrat86/agentmail">GitHub</a>
+    <a href="https://github.com/kindrat86/agentmail" class="btn btn-primary">Integrate x402 &rarr;</a>
+  </div>
+</div></nav>
 
-<nav>
-<div class="logo">agent<span>mail</span></div>
-<div class="links">
-<a href="/">For Humans</a>
-<a href="https://github.com/kindrat86/agentmail" style="color:#555;font-size:0.78em">GitHub</a>
-</div>
-</nav>
+<!-- HERO -->
+<section class="hero"><div class="bg"><div class="grid"></div><div class="glow1"></div></div>
+<div class="wrap hero-inner">
+  <span class="pill">x402 &middot; USDC &middot; BASE</span>
+  <h1>Your agent pays <span class="hl">$0.05 USDC</span> and never sends money to a <span class="hl-r">sanctioned wallet</span>.</h1>
+  <p class="sub">OFAC fines start at $356,000 per violation. agentmail costs 5 cents. Your agent already understands the math.</p>
+  <div class="statrow">
+    <span class="s"><b>782</b> wallets</span>
+    <span class="s"><b>19,086</b> names</span>
+    <span class="s"><b>16</b> jurisdictions</span>
+    <span class="s"><b>100&nbsp;ms</b> response</span>
+  </div>
 
-<div class="hero">
-<div class="badge">x402 &middot; USDC &middot; BASE</div>
-<h1>Your agent pays <span class="hl">$0.05 USDC</span> and never sends money to a <span class="hl-r">sanctioned wallet</span>.</h1>
-<p class="sub">OFAC fines start at $356,000 per violation. agentmail costs 5 cents. Your agent already understands the math.</p>
-<div class="stat-row">
-<span><strong>782</strong> wallets</span>
-<span><strong>19,086</strong> names</span>
-<span><strong>16</strong> jurisdictions</span>
-<span><strong>100ms</strong> response</span>
+  <div class="hero-card reveal">
+    <span class="tag">Agent-native pricing</span>
+    <div class="amt">$0.05<small> / check</small></div>
+    <p class="per">Paid in USDC on Base &middot; No subscription &middot; No API key</p>
+    <ul>
+      <li><span class="ck">&#10003;</span> Unlimited checks</li>
+      <li><span class="ck">&#10003;</span> All 4 tools: sanctions_check, risk_score, kya_verify, dispute_open</li>
+      <li><span class="ck">&#10003;</span> MCP server access (Claude Code, Cursor, Windsurf)</li>
+      <li><span class="ck">&#10003;</span> Live OFAC data, synced hourly</li>
+    </ul>
+    <div class="guar"><b>Zero-liability guarantee</b> &mdash; if a passed check results in an OFAC fine, we cover the first <span class="g">$10,000</span> of legal fees.</div>
+    <a href="https://github.com/kindrat86/agentmail" class="btn btn-primary btn-lg">Integrate x402 &rarr;</a>
+  </div>
 </div>
-</div>
+</section>
 
-<div class="price-card">
-<div class="inner">
-<div class="popular">Agent-native pricing</div>
-<div class="price">$0.05<small>/check</small></div>
-<p class="per">Paid in USDC on Base &middot; No subscription &middot; No API key</p>
-<ul>
-<li>Unlimited checks</li>
-<li>All 4 tools: sanctions_check, risk_score, kya_verify, dispute_open</li>
-<li>MCP server access (Claude Code, Cursor, Windsurf)</li>
-<li>Live OFAC data, synced hourly</li>
-</ul>
-<a href="https://github.com/kindrat86/agentmail" class="btn btn-primary btn-lg" style="width:100%">Integrate x402 &rarr;</a>
-<div class="guarantee">
-<strong>Zero-liability guarantee</strong><br>
-If a passed check results in an OFAC fine, we cover the first <strong class="hl-g">$10,000</strong> of legal fees.
-</div>
-</div>
-</div>
+<!-- FLOW -->
+<section class="sec"><div class="wrap">
+  <div class="sec-head reveal"><span class="eyebrow"><span class="dot"></span> The protocol</span>
+    <h2>The flow &mdash; 4 steps your agent understands</h2>
+    <p>The x402 handshake your agent already knows, with a compliance gate built in. No SDK lock-in.</p>
+  </div>
+  <div class="flow">
+    <div class="step reveal"><div class="num">1</div><div class="c">
+      <h3>Agent calls without payment</h3>
+      <p>No API key. No auth header. Just the endpoint.</p>
+      <pre>curl "https://agentmail-api.fly.dev/sanctions?wallet=0x098B..."</pre>
+    </div></div>
+    <div class="step reveal"><div class="num">2</div><div class="c">
+      <h3>Server returns 402: &ldquo;Pay $0.05 USDC&rdquo;</h3>
+      <p>Payment requirements: network, asset, amount, and the <code style="color:var(--teal);background:rgba(0,212,170,.08);padding:2px 6px;border-radius:5px;font-size:.86em">pay_to</code> wallet.</p>
+      <pre>HTTP 402  { "maxAmountRequired": "$0.05",
+            "network": "eip155:8453" }</pre>
+    </div></div>
+    <div class="step reveal"><div class="num">3</div><div class="c">
+      <h3>Agent pays via x402 facilitator</h3>
+      <p>Signs $0.05 USDC on Base. Receives a signed payment payload.</p>
+    </div></div>
+    <div class="step reveal"><div class="num">4</div><div class="c">
+      <h3>Agent retries with X-PAYMENT header</h3>
+      <p>Server verifies via the facilitator and returns the result.</p>
+      <pre>curl -H "X-PAYMENT: &lt;signed-payload&gt;" \
+  "https://agentmail-api.fly.dev/sanctions?wallet=0x098B..."</pre>
+    </div></div>
+  </div>
+</div></section>
 
-<div class="protocol-flow">
-<h2>The flow &mdash; 4 steps your agent understands</h2>
-<div class="steps">
-<div class="step">
-<div class="num">1</div>
-<div class="content">
-<h3>Agent calls without payment</h3>
-<p>No API key. No auth. Just the endpoint.</p>
-<code>curl "https://agentmail-api.fly.dev/sanctions?wallet=0x098B..."</code>
-</div>
-</div>
-<div class="step">
-<div class="num">2</div>
-<div class="content">
-<h3>Server returns 402: "Pay $0.05 USDC"</h3>
-<p>Payment requirements: network, asset, amount, pay_to wallet.</p>
-<code>HTTP 402 &middot; { "maxAmountRequired": "$0.05", "network": "eip155:8453" }</code>
-</div>
-</div>
-<div class="step">
-<div class="num">3</div>
-<div class="content">
-<h3>Agent pays via x402 facilitator</h3>
-<p>Signs $0.05 USDC on Base. Gets a signed payment payload.</p>
-</div>
-</div>
-<div class="step">
-<div class="num">4</div>
-<div class="content">
-<h3>Agent retries with X-PAYMENT header</h3>
-<p>Server verifies via facilitator. Returns the result.</p>
-<code>curl -H "X-PAYMENT: &lt;signed-payload&gt;" "https://agentmail-api.fly.dev/sanctions?wallet=0x098B..."</code>
-</div>
-</div>
-</div>
-</div>
+<!-- STORY -->
+<section class="sec story" style="padding-top:0"><div class="wrap">
+  <div class="sec-head reveal"><span class="eyebrow"><span class="dot"></span> The story</span><h2>Test #47 sent USDC to a wallet on the SDN list.</h2></div>
+  <div class="pull reveal">
+    <blockquote>&ldquo;I checked the wallet against the OFAC SDN list. It was there. If that had been production, I would be looking at a $356,000 fine. The agent did not know what OFAC was. It just saw &lsquo;pay invoice #4021&rsquo; and sent USDC.&rdquo;</blockquote>
+    <p class="by"><b>Maryan</b> &mdash; founder, agentmail</p>
+  </div>
+  <div class="narr reveal"><p>The payment rails (x402, AP2, ACP) handle moving money. None of them check OFAC. This gap is why agentmail exists.</p></div>
+  <div class="callout reveal"><strong>Every agent that can pay needs a compliance layer.</strong> 5 cents per check. No subscription. No API key.</div>
+</div></section>
 
-<div class="story-section">
-<div class="story-label">THE STORY</div>
-<h2>Test #47 sent USDC to a wallet on the SDN list.</h2>
-<div class="quote">"I checked the wallet against the OFAC SDN list. It was there. If that had been production, I would be looking at a $356,000 fine. The agent did not know what OFAC was. It just saw 'pay invoice #4021' and sent USDC."</div>
-<p>The payment rails (x402, AP2, ACP) handle moving money. None of them check OFAC. This gap is why agentmail exists.</p>
-<div class="callout"><strong>Every agent that can pay needs a compliance layer.</strong> 5 cents per check. No subscription. No API key.</div>
-</div>
+<!-- FEATURES -->
+<section class="sec" style="padding-top:0"><div class="wrap">
+  <div class="sec-head reveal"><span class="eyebrow"><span class="dot"></span> Built for agents that move money</span>
+    <h2>Compliance that fits the agent economy</h2>
+  </div>
+  <div class="feats">
+    <div class="feat reveal"><div class="ic">&#9889;</div><h3>Per-call pricing</h3><p>$0.05 USDC. No monthly commitment. Perfect for any agent, any volume.</p></div>
+    <div class="feat reveal"><div class="ic">&#128274;</div><h3>No secrets to store</h3><p>The x402 payment IS the auth. Sign with your wallet and go.</p></div>
+    <div class="feat reveal"><div class="ic">&#128279;</div><h3>On-chain settlement</h3><p>Every check is a real USDC transfer on Base. Auditable forever.</p></div>
+    <div class="feat reveal"><div class="ic">&#129302;</div><h3>Agent-native protocol</h3><p>HTTP 402 is a standard your agent already understands.</p></div>
+  </div>
+</div></section>
 
-<div class="features">
-<h2>Built for agents that move money</h2>
-<div class="feature-grid">
-<div class="feature-card">
-<div class="icon">&#x26A1;</div>
-<h3>Per-call pricing</h3>
-<p>$0.05 USDC. No monthly commitment. Perfect for any agent.</p>
-</div>
-<div class="feature-card">
-<div class="icon">&#x1F512;</div>
-<h3>No secrets to store</h3>
-<p>The x402 payment IS the auth. Sign with your wallet and go.</p>
-</div>
-<div class="feature-card">
-<div class="icon">&#x26B3;</div>
-<h3>On-chain settlement</h3>
-<p>Every check is a real USDC on Base. Auditable forever.</p>
-</div>
-<div class="feature-card">
-<div class="icon">&#x1F916;</div>
-<h3>Agent-native protocol</h3>
-<p>HTTP 402 is a standard your agent already understands.</p>
-</div>
-</div>
-</div>
+<!-- FAQ -->
+<section class="sec" style="padding-top:0"><div class="wrap">
+  <div class="sec-head reveal"><span class="eyebrow"><span class="dot"></span> FAQ</span><h2>Agent FAQ</h2></div>
+  <div class="faq reveal">
+    <div class="item"><button class="q">Does my agent need a wallet on Base? <span class="pm">+</span></button><div class="a"><div class="inner">For x402, yes &mdash; any Base wallet with a USDC balance works. That wallet signs each $0.05 payment.</div></div></div>
+    <div class="item"><button class="q">Can I call this from any agent framework? <span class="pm">+</span></button><div class="a"><div class="inner">Yes. Any agent that speaks HTTP can use x402 &mdash; LangChain, CrewAI, Eliza, or raw Python/curl.</div></div></div>
+    <div class="item"><button class="q">What happens if the payment fails? <span class="pm">+</span></button><div class="a"><div class="inner">The server returns 402 again. No payment, no check &mdash; your agent retries with a fresh payment payload.</div></div></div>
+    <div class="item"><button class="q">How current is the OFAC data? <span class="pm">+</span></button><div class="a"><div class="inner">Synced hourly from the official US Treasury SDN list.</div></div></div>
+    <div class="item"><button class="q">Can I self-host? <span class="pm">+</span></button><div class="a"><div class="inner">Yes. MIT licensed. <code>pip install sanctions-mcp</code> and run your own server.</div></div></div>
+  </div>
+</div></section>
 
-<div class="faq">
-<h2>Agent FAQ</h2>
-<div class="faq-item">
-<h3>Does my agent need a wallet on Base?</h3>
-<p>For x402, yes. Any Base wallet with USDC balance works.</p>
-</div>
-<div class="faq-item">
-<h3>Can I call this from any agent framework?</h3>
-<p>Yes. Any agent that speaks HTTP can use x402. LangChain, CrewAI, Eliza, or raw Python.</p>
-</div>
-<div class="faq-item">
-<h3>What happens if the payment fails?</h3>
-<p>Server returns 402 again. No payment, no check. Retry with a new payment.</p>
-</div>
-<div class="faq-item">
-<h3>How current is the OFAC data?</h3>
-<p>Synced hourly from the US Treasury SDN list.</p>
-</div>
-<div class="faq-item">
-<h3>Can I self-host?</h3>
-<p>Yes. MIT licensed. <code>pip install sanctions-mcp</code>.</p>
-</div>
-</div>
+<!-- FINAL -->
+<section class="final"><div class="wrap">
+  <div class="panel reveal">
+    <h2>One endpoint. Five cents. Zero liability.</h2>
+    <p>Give your agent a compliance layer it can pay for itself.</p>
+    <a href="https://github.com/kindrat86/agentmail" class="btn btn-primary btn-lg">Integrate x402 &rarr;</a>
+  </div>
+</div></section>
 
-<footer>
-<div class="links">
-<a href="/">Home</a>
-<a href="https://github.com/kindrat86/agentmail">GitHub</a>
-<a href="https://pypi.org/project/sanctions-mcp/">PyPI</a>
-<a href="https://agentmail-api.fly.dev/health">API Status</a>
-</div>
-<p>agentmail &mdash; OFAC sanctions screening for AI agents &mdash; MIT licensed</p>
-</footer>
+<footer><div class="wrap">
+  <div class="grid">
+    <div class="brand">
+      <a href="/" class="logo"><span class="mark">a</span> agent<span style="color:var(--teal)">mail</span></a>
+      <p>OFAC sanctions screening for AI agents. x402-native, pay-per-check, no subscription. MIT licensed.</p>
+    </div>
+    <div class="cols">
+      <div class="col"><h4>Product</h4><a href="/">For Humans</a><a href="/agent">For AI Agents</a><a href="/docs">Docs</a><a href="/#pricing">Pricing</a></div>
+      <div class="col"><h4>Developers</h4><a href="https://github.com/kindrat86/agentmail">GitHub</a><a href="https://pypi.org/project/sanctions-mcp/">PyPI</a><a href="https://agentmail-api.fly.dev/health">API status</a></div>
+    </div>
+  </div>
+  <div class="bottom"><span>agentmail &mdash; OFAC sanctions screening for AI agents &mdash; MIT licensed</span><span>Built for the agent economy</span></div>
+</div></footer>
+
+<script>
+(function(){
+  var nav=document.getElementById('nav');
+  function onScroll(){if(window.scrollY>10)nav.classList.add('scrolled');else nav.classList.remove('scrolled');}
+  onScroll();window.addEventListener('scroll',onScroll,{passive:true});
+  document.querySelectorAll('.faq .q').forEach(function(q){
+    q.addEventListener('click',function(){
+      var item=q.parentNode,a=q.nextElementSibling,inner=a.querySelector('.inner');
+      var open=item.classList.contains('open');
+      document.querySelectorAll('.faq .item').forEach(function(i){i.classList.remove('open');i.querySelector('.a').style.maxHeight=null;});
+      if(!open){item.classList.add('open');a.style.maxHeight=inner.offsetHeight+24+'px';}
+    });
+  });
+  var prefersReduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var els=document.querySelectorAll('.reveal');
+  if(prefersReduce||!('IntersectionObserver' in window)){els.forEach(function(e){e.classList.add('in');});}
+  else{var io=new IntersectionObserver(function(en){en.forEach(function(x){if(x.isIntersecting){x.target.classList.add('in');io.unobserve(x.target);}});},{rootMargin:'0px 0px -8% 0px',threshold:.08});els.forEach(function(e){io.observe(e);});}
+})();
+</script>
 </body>
 </html>
 """
         self._send_html(200, html)
-    
 
     def _pricing_page(self):
         """Redirect to home page — pricing is on the landing page."""
