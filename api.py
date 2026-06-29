@@ -1310,9 +1310,9 @@ document.getElementById("lp-email-capture").addEventListener("submit",function(e
 <p style="color:#555;font-size:0.72em">Returns OFAC match data in under 100ms. Try it with any EVM wallet.</p>
 </div>
 <div class="pricing" id="pricing">
-<div class="risk-warning">OFAC penalties start at <strong>$356,000 per violation</strong>. agentmail starts at $0.</div>
+<div class="risk-warning">OFAC penalties start at $356,000 per violation. agentmail starts at $0.</div>
 <h2>Pricing</h2>
-<p class="lead">Free to try. $0.01 per check if your agent pays. $19/mo if you want predictable billing.</p>
+<p class="lead">Free to try. $19/mo when you need more. Your agent pays $0.05 via x402.</p>
 <div class="price-cards">
 <div class="price-card">
 <h3>Free</h3>
@@ -1324,68 +1324,23 @@ document.getElementById("lp-email-capture").addEventListener("submit",function(e
 <li>No signup needed</li>
 </ul>
 <a href="#install" class="btn btn-ghost">Try it now</a>
-<p class="guarantee-text">See if any wallet is sanctioned before you pay.</p>
+<p class="guarantee-text">See if any wallet is sanctioned before you pay. No risk.</p>
 </div>
 <div class="price-card featured">
-<div class="popular">Agent-native</div>
-<h3>x402 Per-Call</h3>
-<div class="price">$0.05<small>/check</small></div>
-<ul>
-<li>Unlimited checks</li>
-<li>Pay in USDC on Base</li>
-<li>No API key needed</li>
-<li>All 4 tools</li>
-<li>MCP server access</li>
-</ul>
-<a href="/agent" class="btn btn-primary">Go agent-native</a>
-<p class="guarantee-text">Zero-liability guarantee: if a passed check results in an OFAC fine, we cover the first $10K.</p>
-</div>
-<div class="price-card">
+<div class="popular">Most popular</div>
 <h3>Dev</h3>
 <div class="price">$19<small>/mo</small></div>
 <ul>
 <li>10,000 checks/month</li>
-<li>API key + audit log</li>
 <li>All 4 tools</li>
+<li>API key + audit log</li>
 <li>Priority support</li>
 </ul>
-<a href="/checkout/dev" class="btn btn-ghost">Subscribe</a>
-<p class="guarantee-text">Predictable billing. Same data. Same guarantees.</p>
+<a href="/checkout/dev" class="btn btn-primary">Subscribe</a>
+<p class="guarantee-text">For humans who need predictable billing and full access.</p>
 </div>
 </div>
-</div>
-<div class="faq">
-<h2>FAQ</h2>
-<div class="faq-item">
-<h3>Does this work with any agent framework?</h3>
-<p>Yes. MCP tools for Claude Code, Cursor, and Windsurf. HTTP API for any language. CLI for your terminal.</p>
-</div>
-<div class="faq-item">
-<h3>What if my agent uses x402?</h3>
-<p>agentmail accepts x402 payments for compliance checks. Your agent pays $0.01 USDC on Base, gets the sanctions result, proceeds only if clean. <a href="/agent">See the x402 flow.</a></p>
-</div>
-<div class="faq-item">
-<h3>How up to date is the OFAC data?</h3>
-<p>Synced hourly from the US Treasury SDN list. If the Treasury adds a wallet at 2:47 PM, agentmail catches it at 3:00 PM.</p>
-</div>
-<div class="faq-item">
-<h3>Can I self-host?</h3>
-<p>Yes. MIT licensed. <code>pip install sanctions-mcp</code> and run your own instance. Full data, zero leakage.</p>
-</div>
-</div>
-<footer>
-<div class="links">
-<a href="/">Home</a>
-<a href="/agent">For AI Agents</a>
-<a href="/docs">Docs</a>
-<a href="/pricing">Pricing</a>
-<a href="https://github.com/kindrat86/agentmail">GitHub</a>
-<a href="https://pypi.org/project/sanctions-mcp/">PyPI</a>
-</div>
-<p>agentmail &mdash; OFAC sanctions screening for AI agents &mdash; MIT licensed</p>
-</footer>
-</body>
-</html>
+<p style="color:#555;font-size:0.78em;margin-top:16px">Your agent uses x402? &rarr; <a href="/agent" style="color:#00d4aa;text-decoration:underline">$0.05/check, no API key, pay in USDC</a></p>
 """
         self._send_html(200, html)
 
