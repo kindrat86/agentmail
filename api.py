@@ -1385,8 +1385,8 @@ document.getElementById("free-tier-capture").addEventListener("submit",function(
 </script>
 </div
 
-<div style="text-align:center;padding:8px 16px 32px;max-width:640px;margin:0 auto">
-<p style="color:#888;font-size:0.85em">Need more than 5 checks/day? <a href="/checkout/dev" style="color:#00d4aa;font-weight:600;text-decoration:underline">Upgrade to Dev for $19/mo &rarr;</a></p>
+<div class="upgrade-cta">
+<p>Need more than 5 checks/day? <a href="/checkout/dev">Upgrade to Dev for $19/mo &rarr;</a></p>
 </div>
 <div class="pricing" id="pricing">
 <div class="risk-warning">OFAC penalties start at $356,000 per violation. agentmail starts at $0.</div>
