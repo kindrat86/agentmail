@@ -1142,7 +1142,7 @@ nav .btn{padding:6px 12px;font-size:0.72em;min-height:32px;border-radius:8px}
 .hero .urgency-bar .cta-link{color:#ff8888;text-decoration:underline;font-weight:600;display:inline-block;margin-top:6px}
 
 /* STORY - mobile first */
-.story-section{padding:40px 16px;max-width:600px;margin:0 auto}
+.story-section{padding:40px 16px;max-width:640px;margin:0 auto}
 .story-label{color:#555;font-size:0.68em;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:6px}
 .story-section h2{font-size:1.05em;font-weight:700;margin-bottom:10px;line-height:1.35}
 .story-section p{color:#999;font-size:0.85em;margin-bottom:10px;line-height:1.6}
@@ -1151,7 +1151,7 @@ nav .btn{padding:6px 12px;font-size:0.72em;min-height:32px;border-radius:8px}
 .story-section .callout strong{color:#00d4aa}
 
 /* TESTIMONIAL - mobile first */
-.testimonial{max-width:560px;margin:0 auto;padding:24px 16px;text-align:center}
+.testimonial{max-width:640px;margin:0 auto;padding:24px 16px;text-align:center}
 .testimonial .card{background:#111;border:1px solid #1a1a1a;border-radius:10px;padding:20px;max-width:460px;margin:0 auto}
 .testimonial .label{color:#ff6b6b;font-size:0.62em;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:8px}
 .testimonial .quote{color:#ccc;font-style:italic;font-size:0.85em;line-height:1.5;margin-bottom:12px}
@@ -1159,20 +1159,20 @@ nav .btn{padding:6px 12px;font-size:0.72em;min-height:32px;border-radius:8px}
 .testimonial .author{color:#555;font-size:0.72em}
 
 /* OFFER GRID - mobile first */
-.offer-grid{padding:40px 16px;max-width:720px;margin:0 auto;text-align:center}
+.offer-grid{padding:40px 16px;max-width:700px;margin:0 auto;text-align:center}
 .offer-grid h2{font-size:1.15em;font-weight:700;margin-bottom:20px}
-.offer-grid .grid{display:grid;grid-template-columns:1fr;gap:10px;text-align:left;max-width:500px;margin:0 auto}
+.offer-grid .grid{display:grid;grid-template-columns:1fr;gap:10px;text-align:left;max-width:560px;margin:0 auto}
 .offer-grid .card{background:#111;border:1px solid #1a1a1a;border-radius:10px;padding:16px}
 .offer-grid .card .n{color:#00d4aa;font-weight:700;font-size:1em;margin-bottom:3px}
 .offer-grid .card h3{color:#fff;font-size:0.9em;margin-bottom:2px}
 .offer-grid .card p{color:#888;font-size:0.8em;line-height:1.4}
-.offer-grid .value-stack{background:#0d1a14;border:1px solid rgba(0,212,170,.12);border-radius:10px;padding:20px;margin:20px auto 0;text-align:center;max-width:500px}
+.offer-grid .value-stack{background:#0d1a14;border:1px solid rgba(0,212,170,.12);border-radius:10px;padding:20px;margin:20px auto 0;text-align:center;max-width:560px}
 .offer-grid .value-stack .vs-price{font-size:1.8em;font-weight:800;color:#00d4aa}
 .offer-grid .value-stack .vs-price .s{color:#555;text-decoration:line-through;font-weight:400;font-size:0.6em}
 .offer-grid .value-stack .vs-label{color:#888;font-size:0.82em;margin-top:4px}
 
 /* INSTALL (FREE TIER) - mobile first */
-.install{padding:40px 16px;max-width:600px;margin:0 auto;text-align:center}
+.install{padding:40px 16px;max-width:640px;margin:0 auto;text-align:center}
 .install h2{font-size:1.05em;font-weight:700;margin-bottom:16px}
 .install .email-form{display:flex;flex-direction:column;gap:8px;max-width:400px;margin:0 auto}
 .install .email-form .input-row{display:flex;flex-direction:column;gap:8px;align-items:stretch}
@@ -1185,7 +1185,7 @@ nav .btn{padding:6px 12px;font-size:0.72em;min-height:32px;border-radius:8px}
 .pricing{padding:40px 16px;text-align:center}
 .pricing .risk-warning{color:#ff6b6b;font-size:0.72em;margin-bottom:16px;line-height:1.4}
 .pricing h2{font-size:1.15em;font-weight:700;margin-bottom:4px}
-.pricing .lead{color:#999;font-size:0.82em;margin-bottom:24px}
+.pricing .lead{color:#999;font-size:0.82em;margin-bottom:24px;max-width:500px;margin-left:auto;margin-right:auto}
 .price-cards{display:flex;flex-direction:column;gap:12px;max-width:340px;margin:0 auto}
 .price-card{background:#111;border:1px solid #1a1a1a;border-radius:12px;padding:20px;text-align:center;position:relative}
 .price-card.featured{border-color:#00d4aa;box-shadow:0 0 16px rgba(0,212,170,.06)}
@@ -1205,7 +1205,7 @@ nav .btn{padding:6px 12px;font-size:0.72em;min-height:32px;border-radius:8px}
 .upgrade-cta a{color:#00d4aa;font-weight:600;text-decoration:underline}
 
 /* FAQ - mobile first */
-.faq{padding:40px 16px;max-width:560px;margin:0 auto}
+.faq{padding:40px 16px;max-width:640px;margin:0 auto}
 .faq h2{text-align:center;font-size:1.1em;font-weight:700;margin-bottom:20px}
 .faq-item{border-bottom:1px solid #1a1a1a;padding:12px 0}
 .faq-item h3{font-size:0.82em;color:#e0e0e0;margin-bottom:3px;line-height:1.4}
@@ -1255,7 +1255,7 @@ nav{padding:20px 32px}nav .links{gap:24px}nav .links a{font-size:0.9em;color:#88
 /* LARGE DESKTOP (1024px+) */
 @media(min-width:1024px){
 .hero h1{font-size:2.4em}.hero .ctas{gap:16px}.hero .ctas .btn-lg{padding:18px 32px;font-size:1.05em}
-.price-card{width:280px;padding:32px}
+.price-card{width:290px;padding:32px}.price-cards{gap:24px}
 }
 
 /* REDUCED MOTION */
@@ -1385,9 +1385,7 @@ document.getElementById("free-tier-capture").addEventListener("submit",function(
 </script>
 </div
 
-<div class="upgrade-cta">
-<p>Need more than 5 checks/day? <a href="/checkout/dev">Upgrade to Dev for $19/mo &rarr;</a></p>
-</div>
+
 <div class="pricing" id="pricing">
 <div class="risk-warning">OFAC penalties start at $356,000 per violation. agentmail starts at $0.</div>
 <h2>Pricing</h2>
