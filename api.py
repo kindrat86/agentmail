@@ -173,7 +173,7 @@ _VERTICAL_KEYS = frozenset((
     "fintech", "crypto", "ecommerce", "trading", "payments", "marketplace",
     "dex", "defi", "defi-protocol", "remittance", "gaming", "nft", "lending",
 ))
-_COMPETITOR_KEYS = frozenset(("chainalysis", "elliptic", "complyadvantage", "sumsub"))
+_COMPETITOR_KEYS = frozenset(("chainalysis", "elliptic", "complyadvantage", "sumsub", "blockdaemon", "trm-labs", "ciphertrace"))
 _BLOG_SLUGS = frozenset(("ofac-for-agents", "know-your-agent", "x402-compliance"))
 
 _DARK_CSS = """
@@ -405,7 +405,50 @@ _COMPETITORS = {
         ],
         "when_to_pick": "Pick agentmail to screen counterparties and wallets against OFAC before an agent pays. Pick SumSub when your primary need is KYC and identity verification.",
     },
+    "blockdaemon": {
+        "name": "Blockdaemon",
+        "desc": "agentmail vs Blockdaemon: agentmail is agent-native sanctions screening with a free tier. Blockdaemon is institutional Web3 infrastructure and node operations.",
+        "rows": [
+            ("Built for AI agents (MCP + HTTP + CLI)", True, False),
+            ("Free tier (50 checks/day)", True, False),
+            ("Developer pricing from $19/mo", True, False),
+            ("Open-source self-host", True, False),
+            ("OFAC crypto wallet screening", True, "Enterprise"),
+            ("Institutional Web3 infrastructure", False, True),
+            ("Node operations and staking", False, True),
+        ],
+        "when_to_pick": "Pick agentmail for agent-first sanctions screening with a free tier. Pick Blockdaemon for institutional Web3 node infrastructure.",
+    },
+    "trm-labs": {
+        "name": "TRM Labs",
+        "desc": "agentmail vs TRM Labs: agentmail gives autonomous agents real-time sanctions screening with a free tier. TRM Labs focuses on blockchain intelligence and risk monitoring.",
+        "rows": [
+            ("Built for AI agents (MCP + HTTP + CLI)", True, False),
+            ("Free tier (50 checks/day)", True, False),
+            ("Developer pricing from $19/mo", True, False),
+            ("Open-source self-host", True, False),
+            ("Per-call x402 / USDC payments", True, False),
+            ("OFAC crypto wallet screening", True, True),
+            ("Blockchain forensics and risk platform", False, True),
+        ],
+        "when_to_pick": "Pick agentmail for agent-native, per-call sanctions screening. Pick TRM Labs for blockchain forensics and enterprise crypto risk programs.",
+    },
+    "ciphertrace": {
+        "name": "CipherTrace",
+        "desc": "agentmail vs CipherTrace: agentmail is real-time, agent-native sanctions screening. CipherTrace is a legacy crypto compliance and forensic analytics platform owned by Visa.",
+        "rows": [
+            ("Agent-native (MCP + HTTP + CLI)", True, False),
+            ("Free tier (50 checks/day)", True, False),
+            ("Developer pricing from $19/mo", True, False),
+            ("Open-source self-host", True, False),
+            ("OFAC crypto wallet screening", True, True),
+            ("Visa-backed compliance", False, True),
+            ("Legacy AML/KYC platform", False, True),
+        ],
+        "when_to_pick": "Pick agentmail for modern, agent-native sanctions. Pick CipherTrace if you are inside the Visa compliance ecosystem.",
+    },
 }
+
 
 _BLOG_POSTS = {
     "ofac-for-agents": {
@@ -627,6 +670,9 @@ class Handler(BaseHTTPRequestHandler):
             except Exception as e:
                 _json(self, 500, {"error": str(e)})
             return
+        # Squeeze / email capture page (Brunson: critical for funnel)
+        if p.path == "/start" or p.path == "/squeeze":
+            return self._squeeze_page()
         # Public content / SEO pages (no auth, no usage metering)
         if p.path == "/faq":
             return self._faq_page()
@@ -1530,6 +1576,45 @@ document.getElementById("wallet").addEventListener("keydown", function(e){ if(e.
         }
         return self._page(title + " — agentmail blog", post["desc"], body,
                           extra_head=self._ld(ld), canonical="/blog/" + slug)
+
+    def _squeeze_page(self):
+        """Brunson squeeze page: email capture before checkout."""
+        html = """<section style="border-top:none;text-align:center">
+<h1 style="font-size:2.6em">Get the Agent Compliance Playbook</h1>
+<p class="lead" style="max-width:560px;margin:12px auto 0">
+Free PDF: 7 patterns for adding OFAC sanctions screening to your AI agent's payment path.
+No spam. Unsubscribe anytime.
+</p>
+</section>
+<section style="padding-top:0">
+<div class="prose" style="max-width:480px;margin:0 auto">
+<form id="squeeze-form" style="display:flex;flex-direction:column;gap:12px">
+<input id="email" class="input" type="email" placeholder="you@example.com" required autocomplete="email">
+<button class="btn btn-primary" type="submit">Send me the playbook</button>
+</form>
+<div id="squeeze-result" class="result" style="margin-top:16px">
+Join 200+ developers building compliant agents.
+</div>
+<p class="note" style="margin-top:12px">
+PDF delivered by email. Already have an API key?
+<a href="/pricing">See Team plan</a>.
+</p>
+</div>
+</section>
+<script>
+document.getElementById("squeeze-form").addEventListener("submit", function(e){
+  e.preventDefault();
+  var email = document.getElementById("email").value.trim();
+  var out = document.getElementById("squeeze-result");
+  if(!email){ out.className="result"; out.textContent="Enter your email first."; return; }
+  // Replace with your email provider endpoint
+  // For now, redirect to pricing with email param
+  window.location.href = "/pricing?email=" + encodeURIComponent(email);
+});
+</script>"""
+        return self._page("Agent Compliance Playbook — Free PDF | agentmail",
+                          "Free PDF: 7 patterns for adding OFAC sanctions screening to AI agents. Download now.",
+                          html, canonical="/start")
 
     def _key_success_page(self, session_id: str):
         """Shows the API key after successful Stripe checkout."""
