@@ -1329,7 +1329,7 @@ document.getElementById("lp-email-capture").addEventListener("submit",function(e
 <div class="price-card featured">
 <div class="popular">Agent-native</div>
 <h3>x402 Per-Call</h3>
-<div class="price">$0.01<small>/check</small></div>
+<div class="price">$0.05<small>/check</small></div>
 <ul>
 <li>Unlimited checks</li>
 <li>Pay in USDC on Base</li>
@@ -1644,23 +1644,21 @@ const payment = await x402.pay({
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>x402 Compliance Check for AI Agents | OFAC Sanctions Screening | $0.01/check</title>
+<title>x402 Compliance Check for AI Agents | $0.05/check | agentmail</title>
+<meta name="description" content="OFAC sanctions screening for AI agents. Pay $0.05 USDC per check via x402 on Base. No API key. No signup. 782 wallets, 19,086 names, 16 jurisdictions.">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-<meta name="description" content="x402 compliance check for AI agents. Screen every counterparty against OFAC before your agent pays. $0.01/check via x402 on Base. No API key needed. 782 crypto wallets, 19,086 SDN names, 16 jurisdictions.">
-
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 html{-webkit-text-size-adjust:100%}
-body{font-family:-apple-system,system-ui,sans-serif;background:#0a0a0a;color:#e0e0e0;line-height:1.6;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:#0a0a0a;color:#e0e0e0;line-height:1.6;overflow-x:hidden;-webkit-font-smoothing:antialiased}
 a{color:#00d4aa;text-decoration:none;-webkit-tap-highlight-color:transparent}
 .btn{display:inline-flex;align-items:center;justify-content:center;padding:14px 24px;border-radius:10px;font-weight:600;font-size:0.95em;cursor:pointer;border:none;min-height:48px;text-decoration:none!important;transition:all .2s;touch-action:manipulation}
 .btn:active{transform:scale(0.97)}
 .btn-primary{background:#00d4aa;color:#0a0a0a!important}
 .btn-primary:hover{box-shadow:0 0 24px rgba(0,212,170,.25)}
-.btn-ghost{border:1.5px solid #333;color:#e0e0e0!important;background:transparent}
+.btn-ghost{border:1.5px solid #333;color:#e0e0e0!important;background:transparent;min-height:44px}
 .btn-ghost:hover{border-color:#00d4aa}
 .btn-lg{padding:16px 28px;font-size:1em;min-height:52px}
-.btn-block{width:100%}
 
 nav{padding:14px 20px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #1a1a1a;background:rgba(10,10,10,.96);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);position:sticky;top:0;z-index:100}
 .logo{font-weight:700;font-size:1.1em;color:#fff}
@@ -1668,111 +1666,75 @@ nav{padding:14px 20px;display:flex;justify-content:space-between;align-items:cen
 nav .links{display:flex;gap:16px;align-items:center}
 nav .links a{color:#888;font-size:0.82em;transition:color .2s}
 nav .links a:hover{color:#fff}
-nav .btn{padding:8px 14px;font-size:0.78em;min-height:36px}
-@media(min-width:768px){nav{padding:20px 24px}nav .links a{font-size:0.9em}nav .btn{padding:10px 20px}}
+@media(min-width:768px){nav{padding:20px 24px}nav .links a{font-size:0.9em}}
 
-/* HERO */
-.hero{text-align:center;padding:64px 16px 40px;position:relative;overflow:hidden}
-.hero::before{content:'';position:absolute;top:-120px;left:50%;transform:translateX(-50%);width:600px;height:600px;background:radial-gradient(circle,rgba(0,212,170,.04) 0%,transparent 70%);pointer-events:none}
-.hero .badge{display:inline-block;background:rgba(0,212,170,.1);color:#00d4aa;padding:5px 14px;border-radius:20px;font-size:0.65em;font-weight:600;margin-bottom:16px;border:1px solid rgba(0,212,170,.2);font-family:monospace}
-.hero h1{font-size:1.5em;font-weight:800;line-height:1.15;margin:0 auto 14px;letter-spacing:-0.02em}
+.hero{padding:60px 16px 30px;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-100px;left:50%;transform:translateX(-50%);width:600px;height:600px;background:radial-gradient(circle,rgba(0,212,170,.04) 0%,transparent 70%);pointer-events:none}
+.hero .badge{display:inline-block;background:rgba(0,212,170,.1);color:#00d4aa;padding:4px 12px;border-radius:20px;font-size:0.65em;font-weight:600;margin-bottom:14px;border:1px solid rgba(0,212,170,.2);font-family:monospace}
+.hero h1{font-size:1.5em;font-weight:800;line-height:1.15;max-width:620px;margin:0 auto 14px;letter-spacing:-0.02em}
 .hero h1 .hl{color:#00d4aa}
-.hero h1 .hl-red{color:#ff6b6b}
-.hero .sub{font-size:0.92em;color:#999;margin:0 auto 20px;max-width:520px}
-.hero .stat-row{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-bottom:20px}
-.hero .stat-row span{background:#111;border:1px solid #1a1a1a;border-radius:8px;padding:8px 14px;font-size:0.78em;color:#888}
+.hero h1 .hl-r{color:#ff6b6b}
+.hero .sub{font-size:0.92em;color:#999;max-width:500px;margin:0 auto 18px}
+.hero .stat-row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:18px}
+.hero .stat-row span{background:#111;border:1px solid #1a1a1a;border-radius:8px;padding:6px 12px;font-size:0.72em;color:#888}
 .hero .stat-row strong{color:#00d4aa}
-.hero .urgency-bar{background:#1a0a0a;border:1px solid #332222;border-radius:8px;padding:10px 16px;max-width:520px;margin:16px auto 0;font-size:0.78em;color:#ff8888;line-height:1.4}
-.hero .urgency-bar strong{color:#ff6b6b}
-.hero .ctas{display:flex;flex-direction:column;gap:12px;margin-top:24px;max-width:360px;margin-left:auto;margin-right:auto}
+.hero .cta-row{display:flex;flex-direction:column;gap:12px;margin-top:22px;max-width:360px;margin-left:auto;margin-right:auto}
+.hero .cta-row .hint{color:#555;font-size:0.68em;margin-top:-4px}
 @media(min-width:640px){
-.hero{padding:80px 24px 50px}
-.hero h1{font-size:2em;max-width:650px}
-.hero .sub{font-size:1em}
-.hero .ctas{flex-direction:row;max-width:none;justify-content:center;gap:16px}
+.hero{padding:80px 24px 40px}.hero h1{font-size:2em;max-width:650px}.hero .sub{font-size:1em}.hero .cta-row{flex-direction:row;max-width:none;justify-content:center;gap:14px}
 }
 
-/* EMAIL FORM */
-.email-form{display:flex;flex-direction:column;gap:8px;width:100%;max-width:400px;margin:0 auto}
-.email-form .input-row{display:flex;flex-direction:column;gap:8px}
-.email-form input{flex:1;padding:14px 16px;border-radius:10px;border:1.5px solid #333;background:#111;color:#e0e0e0;font-size:1em;outline:none;min-height:48px}
-.email-form input:focus{border-color:#00d4aa}
-.email-form .hint{color:#555;font-size:0.72em;margin-top:4px}
-@media(min-width:640px){.email-form .input-row{flex-direction:row}}
+.price-card{max-width:420px;margin:0 auto;padding:20px 16px 40px;text-align:center}
+.price-card .inner{background:linear-gradient(135deg,#0d1a14,#0a0a0a);border:1px solid rgba(0,212,170,.2);border-radius:16px;padding:32px;position:relative;overflow:hidden}
+.price-card .inner::before{content:'';position:absolute;top:-60px;right:-60px;width:120px;height:120px;background:radial-gradient(circle,rgba(0,212,170,.08) 0%,transparent 70%);pointer-events:none}
+.price-card .popular{display:inline-block;background:#00d4aa;color:#0a0a0a;padding:4px 14px;border-radius:20px;font-size:0.62em;font-weight:700;margin-bottom:14px;text-transform:uppercase;letter-spacing:0.04em}
+.price-card .price{font-size:3em;font-weight:800;color:#fff;letter-spacing:-0.02em}
+.price-card .price small{font-size:0.3em;color:#555;font-weight:400}
+.price-card .per{color:#555;font-size:0.78em;margin-bottom:16px}
+.price-card ul{list-style:none;padding:0;margin:16px 0 20px;text-align:center}
+.price-card ul li{color:#999;font-size:0.85em;padding:6px 0}
+.price-card ul li::before{content:"\\2713 ";color:#00d4aa;font-weight:700}
+.price-card .guarantee{background:#111;border:1px solid #1a1a1a;border-radius:8px;padding:14px;margin:16px 0 0;font-size:0.78em;color:#888;line-height:1.4}
+.price-card .guarantee strong{color:#e0e0e0}
+.price-card .guarantee .hl-g{color:#00d4aa}
 
-/* STORY */
-.story-section{padding:48px 16px}
-.story-label{color:#777;font-size:0.72em;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:8px}
-.story-section h2{font-size:1.2em;font-weight:700;margin-bottom:14px;line-height:1.35}
-.story-section p{color:#aaa;font-size:0.9em;margin-bottom:12px;max-width:640px}
-.story-section .story-quote{background:#111;border-left:3px solid #ff6b6b;padding:14px 16px;border-radius:0 8px 8px 0;margin:16px 0;font-style:italic;color:#ccc;font-size:0.9em;max-width:560px}
-.story-section .callout{background:#0d1a14;border:1px solid rgba(0,212,170,.12);border-radius:10px;padding:18px;margin:20px 0;max-width:560px}
+.protocol-flow{padding:40px 16px;max-width:640px;margin:0 auto}
+.protocol-flow h2{text-align:center;font-size:1.15em;font-weight:700;margin-bottom:24px;color:#fff}
+.steps{display:flex;flex-direction:column;gap:14px}
+.step{display:flex;gap:12px;align-items:flex-start;background:#111;border:1px solid #1a1a1a;border-radius:10px;padding:16px}
+.step .num{background:rgba(0,212,170,.1);color:#00d4aa;border-radius:6px;min-width:30px;height:30px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.8em;flex-shrink:0}
+.step .content h3{font-size:0.88em;color:#fff;margin-bottom:2px}
+.step .content p{font-size:0.8em;color:#888;line-height:1.4}
+.step .content code{display:block;background:#1a1a1a;color:#34d399;padding:5px 10px;border-radius:4px;font-size:0.7em;margin-top:5px;font-family:monospace;overflow-x:auto}
+
+.features{padding:40px 16px;max-width:700px;margin:0 auto}
+.features h2{text-align:center;font-size:1.1em;font-weight:700;margin-bottom:24px;color:#fff}
+.feature-grid{display:grid;grid-template-columns:1fr;gap:10px}
+.feature-card{background:#111;border:1px solid #1a1a1a;border-radius:10px;padding:16px;text-align:center}
+.feature-card .icon{font-size:1.3em;margin-bottom:4px}
+.feature-card h3{font-size:0.88em;color:#fff;margin-bottom:2px}
+.feature-card p{color:#888;font-size:0.8em;line-height:1.4}
+@media(min-width:480px){.feature-grid{grid-template-columns:1fr 1fr;gap:12px}}
+
+.story-section{padding:40px 16px;max-width:640px;margin:0 auto}
+.story-label{color:#555;font-size:0.7em;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:6px}
+.story-section h2{font-size:1.1em;font-weight:700;margin-bottom:10px;line-height:1.35}
+.story-section p{color:#999;font-size:0.85em;margin-bottom:10px;line-height:1.5}
+.story-section .quote{background:#111;border-left:3px solid #ff6b6b;padding:12px 14px;border-radius:0 8px 8px 0;margin:14px 0;font-style:italic;color:#ccc;font-size:0.85em}
+.story-section .callout{background:#0d1a14;border:1px solid rgba(0,212,170,.1);border-radius:8px;padding:14px;margin:16px 0;font-size:0.85em;color:#ccc}
 .story-section .callout strong{color:#00d4aa}
-@media(min-width:640px){.story-section{padding:60px 24px;max-width:640px;margin:0 auto}.story-section h2{font-size:1.4em}}
 
-/* PROTOCOL FLOW */
-.protocol-flow{padding:48px 16px}
-.protocol-flow h2{text-align:center;font-size:1.3em;font-weight:700;margin-bottom:28px}
-.steps{display:flex;flex-direction:column;gap:16px;max-width:620px;margin:0 auto}
-.step{display:flex;gap:14px;align-items:flex-start;background:#111;border:1px solid #1a1a1a;border-radius:12px;padding:18px}
-.step .num{background:rgba(0,212,170,.1);color:#00d4aa;border-radius:8px;min-width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.85em;flex-shrink:0}
-.step .content h3{font-size:0.9em;color:#fff;margin-bottom:3px}
-.step .content p{font-size:0.82em;color:#888;line-height:1.4}
-.step .content code{display:block;background:#1a1a1a;color:#34d399;padding:6px 10px;border-radius:4px;font-size:0.72em;margin-top:6px;font-family:monospace;overflow-x:auto}
-@media(min-width:640px){.protocol-flow{padding:60px 24px}}
+.faq{padding:40px 16px;max-width:600px;margin:0 auto}
+.faq h2{text-align:center;font-size:1.1em;font-weight:700;margin-bottom:20px;color:#fff}
+.faq-item{border-bottom:1px solid #1a1a1a;padding:12px 0}
+.faq-item h3{font-size:0.85em;color:#e0e0e0;margin-bottom:3px}
+.faq-item p{color:#888;font-size:0.8em;line-height:1.4}
 
-/* FEATURES */
-.features{padding:48px 16px;max-width:800px;margin:0 auto}
-.features h2{text-align:center;font-size:1.3em;font-weight:700;margin-bottom:28px}
-.feature-grid{display:grid;grid-template-columns:1fr;gap:12px}
-.feature-card{background:#111;border:1px solid #1a1a1a;border-radius:12px;padding:20px}
-.feature-card .icon{font-size:1.2em;margin-bottom:6px}
-.feature-card h3{font-size:0.9em;color:#fff;margin-bottom:3px}
-.feature-card p{color:#888;font-size:0.82em;line-height:1.4}
-@media(min-width:480px){.feature-grid{grid-template-columns:1fr 1fr;gap:14px}}
-@media(min-width:640px){.features{padding:60px 24px}}
-
-/* PRICING */
-.pricing-agent{padding:48px 16px;text-align:center}
-.pricing-agent h2{font-size:1.3em;font-weight:700;margin-bottom:6px}
-.pricing-agent .lead{color:#999;font-size:0.9em;margin-bottom:28px}
-.pricing-agent .risk-warning{color:#ff6b6b;font-size:0.78em;margin-bottom:24px;line-height:1.4}
-.price-cards{display:flex;flex-direction:column;gap:14px;max-width:360px;margin:0 auto}
-.price-card{background:#111;border:1px solid #1a1a1a;border-radius:14px;padding:24px;text-align:center;position:relative}
-.price-card.featured{border-color:#00d4aa;box-shadow:0 0 20px rgba(0,212,170,.08)}
-.price-card .popular{background:#00d4aa;color:#0a0a0a;display:inline-block;padding:3px 12px;border-radius:12px;font-size:0.62em;font-weight:700;margin-bottom:10px;text-transform:uppercase;letter-spacing:0.03em}
-.price-card h3{color:#fff;font-size:0.95em}
-.price-card .price{font-size:2em;font-weight:800;color:#fff;margin:10px 0}
-.price-card .price small{font-size:0.35em;color:#555;font-weight:400}
-.price-card ul{list-style:none;padding:0;margin:14px 0;text-align:left}
-.price-card ul li{color:#888;font-size:0.82em;padding:5px 0}
-.price-card ul li::before{content:"\2713";color:#00d4aa;margin-right:8px}
-.price-card .btn{width:100%;margin-top:6px}
-.price-card .guarantee-text{font-size:0.72em;color:#555;margin-top:10px;line-height:1.4}
-@media(min-width:640px){
-.pricing-agent{padding:60px 24px}
-.price-cards{flex-direction:row;gap:16px;max-width:none;justify-content:center}
-.price-card{width:260px;padding:28px}
-}
-
-/* FAQ */
-.faq{padding:48px 16px;max-width:600px;margin:0 auto}
-.faq h2{text-align:center;font-size:1.3em;font-weight:700;margin-bottom:24px}
-.faq-item{border-bottom:1px solid #1a1a1a;padding:14px 0}
-.faq-item h3{font-size:0.9em;color:#e0e0e0;margin-bottom:4px}
-.faq-item h3::before{content:"\25b8 ";color:#555;font-size:0.85em}
-.faq-item p{color:#888;font-size:0.83em;margin-left:16px;line-height:1.5}
-@media(min-width:640px){.faq{padding:60px 24px}}
-
-/* FOOTER */
-footer{padding:40px 16px;text-align:center;border-top:1px solid #1a1a1a}
-footer .links{display:flex;gap:16px;justify-content:center;margin-bottom:12px;flex-wrap:wrap}
-footer .links a{color:#555;font-size:0.82em;transition:color .2s}
-footer .links a:hover{color:#888}
-footer p{color:#333;font-size:0.72em}
+footer{padding:36px 16px;text-align:center;border-top:1px solid #1a1a1a}
+footer .links{display:flex;gap:14px;justify-content:center;margin-bottom:10px;flex-wrap:wrap}
+footer .links a{color:#555;font-size:0.8em}
+footer p{color:#333;font-size:0.7em}
 </style>
-<!-- PostHog -->
-<script>!function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.async=!0,p.src=s.api_host+"/static/array.js",(r=t.getElementsByTagName("head")[0]).appendChild(p);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])}(document,window.posthog||[]);posthog.init('phc_lyZCgvTpicjLzAO3rY2GhxuX5WUc5jQjP8ZVwwJqauX',{api_host:'https://us.i.posthog.com',person_profiles:'identified_only'})</script>
 </head>
 <body>
 
@@ -1780,244 +1742,148 @@ footer p{color:#333;font-size:0.72em}
 <div class="logo">agent<span>mail</span></div>
 <div class="links">
 <a href="/">For Humans</a>
-<a href="#pricing">Pricing</a>
-<a href="/">Home</a><a href="https://github.com/kindrat86/agentmail">GitHub</a>
+<a href="https://github.com/kindrat86/agentmail" style="color:#555;font-size:0.78em">GitHub</a>
 </div>
 </nav>
 
-<!-- HOOK: fear + specificity + identity -->
 <div class="hero">
-<div class="badge">X402 &middot; USDC &middot; BASE</div>
-<h1>There are <span class="hl-red">782 sanctioned wallets</span> on Base.<br>Your agent does not know <span class="hl">which ones they are</span>.</h1>
-<p class="sub">OFAC fines start at <strong style="color:#ff6b6b">$356,000 per violation</strong>. Pay $0.01 USDC via x402 and screen every counterparty before your agent sends money to the wrong wallet.</p>
+<div class="badge">x402 &middot; USDC &middot; BASE</div>
+<h1>Your agent pays <span class="hl">$0.05 USDC</span> and never sends money to a <span class="hl-r">sanctioned wallet</span>.</h1>
+<p class="sub">OFAC fines start at $356,000 per violation. agentmail costs 5 cents. Your agent already understands the math.</p>
 <div class="stat-row">
-<span><strong>782</strong> crypto wallets</span>
-<span><strong>19,086</strong> SDN names</span>
+<span><strong>782</strong> wallets</span>
+<span><strong>19,086</strong> names</span>
 <span><strong>16</strong> jurisdictions</span>
-<span><strong>$0.01</strong> per check</span>
-</div>
-<div class="ctas">
-<a href="#how-it-works" class="btn btn-ghost btn-lg">How x402 works &darr;</a>
-<a href="#pricing" class="btn btn-primary btn-lg">Start screening &rarr;</a>
-</div>
-<div class="urgency-bar">&#9200; Every day, more agents get the ability to send money. Every day, more sanctioned wallets receive funds from unchecked systems. The question is not <em>if</em> an agent will pay a sanctioned counterparty. It is <em>whose API key</em> that fine lands on.</div>
-</div>
-
-<!-- EMAIL CAPTURE: lead magnet for agents -->
-<div style="padding:32px 16px;text-align:center;background:linear-gradient(180deg,#0a0a0a,#0d1a14);border-top:1px solid #1a1a1a;border-bottom:1px solid #1a1a1a">
-<h2 style="font-size:1.1em;color:#fff;margin-bottom:8px;font-weight:600">Get the x402 compliance setup guide</h2>
-<p style="color:#888;font-size:0.85em;margin-bottom:20px;max-width:420px;margin-left:auto;margin-right:auto">Free PDF: Add OFAC screening to your agent's payment pipeline in 10 minutes. Includes MCP config, curl examples, and risk scoring thresholds.</p>
-<div class="email-form">
-<form id="agent-email-capture">
-<div class="input-row">
-<input type="email" id="capture-email" placeholder="you@example.com" required>
-<button type="submit" class="btn btn-primary" style="white-space:nowrap">Send me the guide</button>
-</div>
-</form>
-<p class="hint">No spam. Unsubscribe anytime.</p>
-</div>
-</div>
-<script>
-document.getElementById("agent-email-capture").addEventListener("submit", function(e){
-  e.preventDefault();
-  var email = document.getElementById("capture-email").value.trim();
-  var btn = this.querySelector("button");
-  if(!email||!email.includes("@")){alert("Enter a valid email");return;}
-  btn.textContent="Sending...";btn.disabled=true;
-  fetch("/subscribe",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({email:email,source:"agent-page"})})
-  .then(function(r){return r.json()})
-  .then(function(d){
-    if(d.ok){
-      btn.textContent="\u2713 Check your email";btn.style.background="#00d4aa";
-      setTimeout(function(){window.location.href="#how-it-works"},2000);
-    }else{alert(d.error||"Something went wrong");btn.textContent="Send me the guide";btn.disabled=false;}
-  })
-  .catch(function(){alert("Network error");btn.textContent="Send me the guide";btn.disabled=false;});
-});
-</script>
-
-<!-- STORY: Epiphany Bridge -->
-<div class="story-section" id="story">
-<div class="story-label">&#9643; THE STORY</div>
-<h2>I was building an agent that pays invoices. Then my test sent USDC to a wallet I did not recognize.</h2>
-<div class="story-quote">"On test #47, the agent processed a payment to a wallet address I did not recognize. I checked it against the OFAC SDN list. It was there. If that had been production, I would be looking at a $356,000 fine right now."</div>
-<p>The agent did not know what OFAC was. It just saw "pay invoice #4021" and sent USDC. It would have done it at 3 AM, repeatedly, until someone noticed.</p>
-<p>I searched for a compliance layer that agents could call before sending money. The big payment rails (x402, AP2, Coinbase AgentKit, Stripe ACP) — none of them check OFAC. None of them screen counterparties before money moves.</p>
-<div class="callout"><strong>That gap</strong> — between "agents can pay" and "nobody checks who they are paying" — is exactly why I built agentmail.</div>
-<p>Today, agentmail screens every counterparty against live OFAC SDN data, scores transactions for risk, verifies counterparty agents, and opens disputes when something goes wrong. All before money moves.</p>
-</div>
-
-
-<!-- SOCIAL PROOF: anonymous testimonial -->
-<div style="max-width:640px;margin:0 auto;padding:40px 20px;text-align:center">
-<div style="background:#111;border:1px solid #1a1a1a;border-radius:12px;padding:24px;max-width:500px;margin:0 auto">
-<div style="color:#ff6b6b;font-size:0.7em;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:10px">FROM A FINTECH DEV</div>
-<p style="color:#ccc;font-style:italic;font-size:0.9em;line-height:1.5;margin-bottom:14px">"Before agentmail, I was shipping x402 agents hoping OFAC did not notice. Now every wallet gets screened before payments go out. It takes one curl call. The peace of mind is worth more than $0.01."</p>
-<div style="width:32px;height:1px;background:#333;margin:0 auto 10px"></div>
-<p style="color:#555;font-size:0.78em">— Backend dev at a fintech startup (anonymous)</p>
+<span><strong>100ms</strong> response</span>
 </div>
 </div>
 
-<!-- PROTOCOL FLOW: The 4-step x402 framework -->
-<div class="protocol-flow" id="how-it-works">
-<h2>The x402 flow — 4 steps your agent already understands</h2>
+<div class="price-card">
+<div class="inner">
+<div class="popular">Agent-native pricing</div>
+<div class="price">$0.05<small>/check</small></div>
+<p class="per">Paid in USDC on Base &middot; No subscription &middot; No API key</p>
+<ul>
+<li>Unlimited checks</li>
+<li>All 4 tools: sanctions_check, risk_score, kya_verify, dispute_open</li>
+<li>MCP server access (Claude Code, Cursor, Windsurf)</li>
+<li>Live OFAC data, synced hourly</li>
+</ul>
+<a href="https://github.com/kindrat86/agentmail" class="btn btn-primary btn-lg" style="width:100%">Integrate x402 &rarr;</a>
+<div class="guarantee">
+<strong>Zero-liability guarantee</strong><br>
+If a passed check results in an OFAC fine, we cover the first <strong class="hl-g">$10,000</strong> of legal fees.
+</div>
+</div>
+</div>
+
+<div class="protocol-flow">
+<h2>The flow &mdash; 4 steps your agent understands</h2>
 <div class="steps">
 <div class="step">
 <div class="num">1</div>
 <div class="content">
-<h3>Your agent calls the API without payment</h3>
-<p>Sends a wallet address to screen. No API key. No auth header. Just the endpoint.</p>
+<h3>Agent calls without payment</h3>
+<p>No API key. No auth. Just the endpoint.</p>
 <code>curl "https://agentmail-api.fly.dev/sanctions?wallet=0x098B..."</code>
 </div>
 </div>
 <div class="step">
 <div class="num">2</div>
 <div class="content">
-<h3>Server responds: "Pay $0.01 USDC first"</h3>
-<p>HTTP 402 + Payment-Requirements: network, asset, amount, pay_to wallet.</p>
-<code>HTTP 402<br>{ "scheme": "exact", "network": "eip155:8453", "maxAmountRequired": "$0.01" }</code>
+<h3>Server returns 402: "Pay $0.05 USDC"</h3>
+<p>Payment requirements: network, asset, amount, pay_to wallet.</p>
+<code>HTTP 402 &middot; { "maxAmountRequired": "$0.05", "network": "eip155:8453" }</code>
 </div>
 </div>
 <div class="step">
 <div class="num">3</div>
 <div class="content">
-<h3>Your agent pays via the x402 facilitator</h3>
-<p>$0.01 USDC on Base. The facilitator returns a signed payment payload.</p>
-<code># Your agent signs once, then retries with X-PAYMENT header</code>
+<h3>Agent pays via x402 facilitator</h3>
+<p>Signs $0.05 USDC on Base. Gets a signed payment payload.</p>
 </div>
 </div>
 <div class="step">
 <div class="num">4</div>
 <div class="content">
-<h3>Server verifies and returns the sanctions result</h3>
-<p>OFAC match or clear. Verified on-chain. Auditable forever.</p>
-<code>curl -H "X-PAYMENT: &lt;signed-payload&gt;" \<br>  "https://agentmail-api.fly.dev/sanctions?wallet=0x098B..."</code>
+<h3>Agent retries with X-PAYMENT header</h3>
+<p>Server verifies via facilitator. Returns the result.</p>
+<code>curl -H "X-PAYMENT: &lt;signed-payload&gt;" "https://agentmail-api.fly.dev/sanctions?wallet=0x098B..."</code>
 </div>
 </div>
 </div>
 </div>
 
-<!-- FEATURES -->
+<div class="story-section">
+<div class="story-label">THE STORY</div>
+<h2>Test #47 sent USDC to a wallet on the SDN list.</h2>
+<div class="quote">"I checked the wallet against the OFAC SDN list. It was there. If that had been production, I would be looking at a $356,000 fine. The agent did not know what OFAC was. It just saw 'pay invoice #4021' and sent USDC."</div>
+<p>The payment rails (x402, AP2, ACP) handle moving money. None of them check OFAC. This gap is why agentmail exists.</p>
+<div class="callout"><strong>Every agent that can pay needs a compliance layer.</strong> 5 cents per check. No subscription. No API key.</div>
+</div>
+
 <div class="features">
 <h2>Built for agents that move money</h2>
 <div class="feature-grid">
 <div class="feature-card">
-<div class="icon">&#9889;</div>
-<h3>Per-call pricing</h3>
-<p>$0.01 USDC per check. No monthly commitment. No API key management. Perfect for agents that run sporadically.</p>
-</div>
-<div class="feature-card">
-<div class="icon">&#128274;</div>
-<h3>No secrets to store</h3>
-<p>Your agent does not need an API key. The x402 payment IS the authentication. Sign with your wallet and go.</p>
-</div>
-<div class="feature-card">
 <div class="icon">&#x26A1;</div>
+<h3>Per-call pricing</h3>
+<p>$0.05 USDC. No monthly commitment. Perfect for any agent.</p>
+</div>
+<div class="feature-card">
+<div class="icon">&#x1F512;</div>
+<h3>No secrets to store</h3>
+<p>The x402 payment IS the auth. Sign with your wallet and go.</p>
+</div>
+<div class="feature-card">
+<div class="icon">&#x26B3;</div>
 <h3>On-chain settlement</h3>
-<p>Every check is a real USDC transaction on Base. Transparent, auditable, and compatible with any agent wallet.</p>
+<p>Every check is a real USDC on Base. Auditable forever.</p>
 </div>
 <div class="feature-card">
-<div class="icon">&#129302;</div>
+<div class="icon">&#x1F916;</div>
 <h3>Agent-native protocol</h3>
-<p>HTTP 402 is a standard your agent already understands. No custom SDK. No special integration.</p>
-</div>
-<div class="feature-card">
-<div class="icon">&#128737;</div>
-<h3>Real OFAC data</h3>
-<p>782 crypto wallets, 19,086 names, 16 jurisdictions. Synced hourly from the US Treasury SDN list.</p>
-</div>
-<div class="feature-card">
-<div class="icon">&#9881;</div>
-<h3>Any agent framework</h3>
-<p>LangChain, CrewAI, AutoGPT, Eliza, or raw Python. If your agent speaks HTTP, it can use this.</p>
+<p>HTTP 402 is a standard your agent already understands.</p>
 </div>
 </div>
 </div>
 
-<!-- PRICING -->
-<div class="pricing-agent" id="pricing">
-<h2>Pricing for agents</h2>
-<p class="lead">Free to try. $0.01 per check in production. No subscription unless you want one.</p>
-<div class="risk-warning">&#9888;&#65039; OFAC penalties for sanctions violations start at <strong>$356,000</strong> per transaction. agentmail costs less than a coffee.</div>
-<div class="price-cards">
-<div class="price-card">
-<h3>Free</h3>
-<div class="price">$0<small>/check</small></div>
-<ul>
-<li>50 checks/day</li>
-<li>sanctions_check only</li>
-<li>Rate limited</li>
-<li>No signup needed</li>
-</ul>
-<a href="#how-it-works" class="btn btn-ghost">Test it now</a>
-<p class="guarantee-text">Try before you buy. See if a wallet is sanctioned in under 100ms.</p>
-</div>
-<div class="price-card featured">
-<div class="popular">Agent-native</div>
-<h3>x402 Per-Call</h3>
-<div class="price">$0.01<small>/check</small></div>
-<ul>
-<li>Unlimited checks</li>
-<li>Pay in USDC on Base</li>
-<li>No API key needed</li>
-<li>All 4 tools</li>
-<li>MCP server access</li>
-</ul>
-<a href="https://github.com/kindrat86/agentmail" class="btn btn-primary">Integrate x402 &rarr;</a>
-<p class="guarantee-text">&#128737; Zero-liability guarantee: if a passed check results in an OFAC fine, we cover the first $10K of legal fees.</p>
-</div>
-<div class="price-card">
-<h3>Dev</h3>
-<div class="price">$19<small>/mo</small></div>
-<ul>
-<li>10,000 checks/month</li>
-<li>API key + audit log</li>
-<li>All 4 tools</li>
-<li>Priority support</li>
-</ul>
-<a href="/checkout/dev" class="btn btn-ghost">Subscribe</a>
-<p class="guarantee-text">For predictable billing. Same data, same guarantees, fixed monthly price.</p>
-</div>
-</div>
-</div>
-
-<!-- FAQ -->
 <div class="faq">
 <h2>Agent FAQ</h2>
 <div class="faq-item">
 <h3>Does my agent need a wallet on Base?</h3>
-<p>For the x402 per-call option, yes. Your agent needs a wallet with some USDC on Base mainnet. The x402 facilitator handles the payment flow. For the free tier, no wallet needed at all.</p>
+<p>For x402, yes. Any Base wallet with USDC balance works.</p>
 </div>
 <div class="faq-item">
 <h3>Can I call this from any agent framework?</h3>
-<p>Yes. Any agent that can send HTTP requests can use x402. The 402 response tells the agent exactly what to pay and where. No custom SDK required. LangChain, CrewAI, AutoGPT, Eliza — all work.</p>
+<p>Yes. Any agent that speaks HTTP can use x402. LangChain, CrewAI, Eliza, or raw Python.</p>
 </div>
 <div class="faq-item">
-<h3>What if the payment fails?</h3>
-<p>The server returns 402 again. No payment, no result. Your agent can retry with a new payment. No recurring charges, no failed charges on your card.</p>
+<h3>What happens if the payment fails?</h3>
+<p>Server returns 402 again. No payment, no check. Retry with a new payment.</p>
 </div>
 <div class="faq-item">
-<h3>Is the OFAC data up to date?</h3>
-<p>We sync the OFAC SDN list hourly. If the Treasury adds a wallet at 2:47 PM, agentmail catches it at 3:00 PM. Every check runs against the latest data.</p>
+<h3>How current is the OFAC data?</h3>
+<p>Synced hourly from the US Treasury SDN list.</p>
 </div>
 <div class="faq-item">
 <h3>Can I self-host?</h3>
-<p>Yes. The entire stack is open source (MIT). Run your own instance with <code>pip install sanctions-mcp</code> and set the x402 env vars. Full data, no limits, zero data leakage.</p>
+<p>Yes. MIT licensed. <code>pip install sanctions-mcp</code>.</p>
 </div>
 </div>
 
 <footer>
 <div class="links">
-<a href="https://sanctionsai.dev">Home</a>
-<a href="/agent">For Agents</a><a href="/">Home</a><a href="https://github.com/kindrat86/agentmail">GitHub</a>
+<a href="/">Home</a>
+<a href="https://github.com/kindrat86/agentmail">GitHub</a>
 <a href="https://pypi.org/project/sanctions-mcp/">PyPI</a>
-<a href="#pricing">Pricing</a>
 <a href="https://agentmail-api.fly.dev/health">API Status</a>
 </div>
 <p>agentmail &mdash; OFAC sanctions screening for AI agents &mdash; MIT licensed</p>
 </footer>
 </body>
-</html>"""
+</html>
+"""
         self._send_html(200, html)
     
 
