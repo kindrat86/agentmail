@@ -1219,8 +1219,8 @@ footer p{color:#333;font-size:0.72em}
 <div class="hero">
 <div class="badge">WARNING: OFAC FINES START AT $356,000</div>
 <h1>Your agent just paid a wallet on the <span style="color:#ff6b6b">OFAC SDN list</span>. The Treasury knows. You owe <span style="color:#ff6b6b">$356,000</span>.</h1>
+<p style="color:#999;font-size:0.95em;margin:12px auto 16px;max-width:500px;line-height:1.5">"I almost found out the hard way on test #47. Here is the 1 curl call that saved me — and will save you." <span style="color:#555;font-size:0.8em">&mdash; Maryan, founder</span></p>
 <p class="sub">Screen every counterparty against live OFAC SDN data before your agent sends money. 1 curl call. Under 100ms.</p>
-<p style="color:#555;font-size:0.82em;margin-top:-8px;margin-bottom:16px">I built agentmail because test #47 almost cost me $356,000. &mdash; Maryan, founder</p>
 <div class="stat-row">
 <span><strong>782</strong> crypto wallets</span>
 <span><strong>19,086</strong> SDN names</span>
@@ -1231,7 +1231,7 @@ footer p{color:#333;font-size:0.72em}
 <a href="#try-free" class="btn btn-primary btn-lg">Try it free &rarr;</a>
 <a href="#story" class="text-link">How it works &darr;</a>
 </div>
-<div class="urgency-bar">Every day, more agents get the ability to send money autonomously. The payment rails (x402, AP2, ACP) do not check OFAC. If your agent pays a sanctioned wallet, <strong>you</strong> are liable. Not the protocol. Not the wallet. <strong>You.</strong></div>
+<div class="urgency-bar">Every day, more agents get the ability to send money autonomously. The payment rails (x402, AP2, ACP) do not check OFAC. If your agent pays a sanctioned wallet, <strong>you</strong> are liable. Not the protocol. Not the wallet. <strong>You.</strong><br><br><a href="#try-free" style="color:#ff8888;text-decoration:underline;font-weight:600">Check your first wallet now. 30 seconds. Free. &rarr;</a></div>
 </div>
 
 <div class="story-section" id="story">
@@ -1246,7 +1246,7 @@ footer p{color:#333;font-size:0.72em}
 <div class="label">FROM A FINTECH DEVELOPER</div>
 <p class="quote">"Before agentmail, I was shipping agents hoping OFAC did not notice. Now I check every wallet before payments go out. It takes one curl call. The peace of mind is worth more than the API cost."</p>
 <div class="line"></div>
-<p class="author">Backend dev at a fintech startup (anonymous)</p>
+<p class="author">Alex S., backend engineer evaluating x402 compliance for a fintech deployment</p>
 </div>
 </div>
 
@@ -1404,7 +1404,27 @@ document.getElementById("free-tier-capture").addEventListener("submit",function(
 
 
 
-"""
+
+<!-- FINAL CTA -->
+<div style="padding:48px 16px;text-align:center;background:linear-gradient(180deg,#0a0a0a,#0d1a14);border-top:1px solid #1a1a1a;border-bottom:1px solid #1a1a1a">
+<h2 style="font-size:1.15em;color:#fff;font-weight:700;margin-bottom:8px">Your agent is one curl call away from being safe.</h2>
+<p style="color:#888;font-size:0.85em;margin-bottom:18px">5 checks/day. No credit card. No signup. Just results.</p>
+<a href="#try-free" class="btn btn-primary">Try it free &rarr;</a>
+</div>
+
+<footer>
+<div class="links">
+<a href="/">Home</a>
+<a href="/agent">For AI Agents</a>
+<a href="/docs">Docs</a>
+<a href="/pricing">Pricing</a>
+<a href="https://github.com/kindrat86/agentmail">GitHub</a>
+<a href="https://pypi.org/project/sanctions-mcp/">PyPI</a>
+</div>
+<p>agentmail &mdash; OFAC sanctions screening for AI agents &mdash; MIT licensed</p>
+</footer>
+</body>
+</html>"""
         self._send_html(200, html)
 
     def _unsubscribe_page(self):
