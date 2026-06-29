@@ -1142,8 +1142,8 @@ curl "https://sanctionsai.dev/sanctions?wallet=0x098B716B8Aaf21512996dC57EB0615e
 <html lang="en"><head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>OFAC Sanctions Screening for AI Agents | agentmail</title>
-<meta name="description" content="Screen every counterparty against OFAC before your AI agent pays. 782 crypto wallets, 19,086 names. Free tier + x402 per-call USDC.">
+<title>OFAC & x402 Sanctions Check for AI Agents | agentmail | $0.05/check</title>
+<meta name="description" content="OFAC sanctions screening for x402 payment agents. Screen every counterparty before your agent pays — 782 crypto wallets, 19,086 names, under 100ms. Free tier + $0.05/check x402.">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <meta name="theme-color" content="#0a0a0a">
 <style>
@@ -1403,13 +1403,13 @@ footer .bottom{margin-top:40px;padding-top:24px;border-top:1px solid var(--line)
   <div class="ctas">
     <div class="row">
       <a href="#try-free" class="btn btn-primary btn-lg">Try it free &rarr;</a>
-      <a href="#story" class="btn btn-ghost btn-lg">How it works</a>
     </div>
+    <a href="#story" class="text-link">&darr; How it works</a>
     <a href="#try-free" class="text-link">No signup &middot; 5 checks/day free &middot; runs in 30 seconds</a>
   </div>
   <div class="codewin">
     <div class="top"><span class="d"></span><span class="d"></span><span class="d"></span><span class="file">screen before payment &mdash; 92ms</span></div>
-    <pre><span class="c-cmd">$</span> curl <span class="c-str">"https://agentmail-api.fly.dev/sanctions?wallet=0x098B...2f96"</span>
+    <pre><span class="c-cmd">$</span> curl <span class="c-str">"https://agentmail-api.fly.dev/sanctions?wallet=0x742d35Cc6634C0532925a3b844Bc9e7595f0bEbb"</span>
 {
   <span class="c-key">"clean"</span>: <span class="c-ok">true</span>,
   <span class="c-key">"action"</span>: <span class="c-str">"ALLOW"</span>,
@@ -1419,7 +1419,7 @@ footer .bottom{margin-top:40px;padding-top:24px;border-top:1px solid var(--line)
   </div>
   <div class="urgency">
     <div class="ic">&#9888;</div>
-    <p>Every day, more agents get the ability to send money autonomously. The payment rails (x402, AP2, ACP) do <b>not</b> check OFAC. If your agent pays a sanctioned wallet, <b>you</b> are liable &mdash; not the protocol, not the wallet. <a href="#try-free">Check your first wallet now &rarr;</a></p>
+    <p>Every day, more agents get the ability to send money autonomously. The payment rails (x402, AP2, ACP) do <b>not</b> check OFAC. If your agent pays a sanctioned wallet, <b>you</b> are liable &mdash; not the protocol, not the wallet. <strong style="color:var(--teal2)">We are building the compliance layer before the first massive fine makes agent payments illegal.</strong> <a href="#try-free">Check your first wallet now &rarr;</a></p>
   </div>
 </div>
 </section>
@@ -1460,14 +1460,14 @@ footer .bottom{margin-top:40px;padding-top:24px;border-top:1px solid var(--line)
   </div>
   <div class="statrow" style="margin-bottom:30px">
     <span class="s"><b>782</b> OFAC wallets</span>
-    <span class="s"><b>19,079</b> SDN names</span>
+    <span class="s"><b>19,086</b> SDN names</span>
     <span class="s"><b>16</b> jurisdictions</span>
     <span class="s"><b>hourly</b> sync</span>
     <span class="s"><b>&lt;100 ms</b> per check</span>
   </div>
   <div class="codewin" style="max-width:640px">
     <div class="top"><span class="d"></span><span class="d"></span><span class="d"></span><span class="file">real response &mdash; sanctioned wallet detected</span></div>
-    <pre><span class="c-cmd">$</span> curl <span class="c-str">"https://agentmail-api.fly.dev/sanctions?wallet=0x098B...2f96"</span>
+    <pre><span class="c-cmd">$</span> curl <span class="c-str">"https://agentmail-api.fly.dev/sanctions?wallet=0x098B716B8Aaf21512996dC57EB0615e2383E2f96"</span>
 {
   <span class="c-key">"matches"</span>: [{ <span class="c-key">"list"</span>: <span class="c-str">"OFAC_SDN"</span>,
                  <span class="c-key">"match_type"</span>: <span class="c-str">"wallet_exact"</span>,
@@ -1941,6 +1941,8 @@ nav .bar{display:flex;align-items:center;justify-content:space-between;height:62
 nav .links{display:flex;align-items:center;gap:22px}
 nav .links a{color:var(--t2);font-size:.9rem;font-weight:500;transition:color .2s}
 nav .links a:hover{color:#fff}
+nav .burger{display:none;width:42px;height:42px;border:1px solid var(--line2);border-radius:10px;background:transparent;cursor:pointer;flex-direction:column;gap:5px;align-items:center;justify-content:center}
+nav .burger span{width:17px;height:2px;background:#fff;border-radius:2px;transition:.25s}
 
 /* hero */
 .hero{position:relative;padding:90px 0 50px;text-align:center;overflow:hidden}
@@ -2041,6 +2043,11 @@ footer .bottom{margin-top:40px;padding-top:24px;border-top:1px solid var(--line)
 
 @media(min-width:760px){.feats{grid-template-columns:1fr 1fr}}
 @media(max-width:760px){
+  nav .links{display:none}
+  nav .burger{display:flex}
+  nav .links.open{display:flex;position:absolute;top:62px;left:0;right:0;flex-direction:column;background:rgba(10,10,10,.98);border-bottom:1px solid var(--line);padding:16px 22px;gap:6px;align-items:stretch}
+  nav .links.open a{padding:12px 4px;font-size:1rem;border-bottom:1px solid var(--line)}
+  nav .links.open .btn{margin-top:8px;text-align:center;border-bottom:none}
   .hero{padding:54px 0 40px}
   .sec{padding:64px 0}
   .hero-card{padding:30px 22px 26px}
@@ -2057,11 +2064,12 @@ footer .bottom{margin-top:40px;padding-top:24px;border-top:1px solid var(--line)
 <body>
 <nav id="nav"><div class="wrap bar">
   <a href="/" class="logo"><span class="mark">a</span> agent<span style="color:var(--teal)">mail</span></a>
-  <div class="links">
+  <div class="links" id="navlinks">
     <a href="/">For Humans</a>
     <a href="https://github.com/kindrat86/agentmail">GitHub</a>
     <a href="https://github.com/kindrat86/agentmail" class="btn btn-primary">Integrate x402 &rarr;</a>
   </div>
+  <button class="burger" id="burger" aria-label="Menu"><span></span><span></span><span></span></button>
 </div></nav>
 
 <!-- HERO -->
@@ -2164,7 +2172,7 @@ footer .bottom{margin-top:40px;padding-top:24px;border-top:1px solid var(--line)
 <section class="final"><div class="wrap">
   <div class="panel reveal">
     <h2>One endpoint. Five cents. Zero liability.</h2>
-    <p>Give your agent a compliance layer it can pay for itself.</p>
+    <p>The agent economy needs a compliance layer. We are building it before the first massive fine makes autonomous payments illegal.</p>
     <a href="https://github.com/kindrat86/agentmail" class="btn btn-primary btn-lg">Integrate x402 &rarr;</a>
   </div>
 </div></section>
@@ -2188,6 +2196,8 @@ footer .bottom{margin-top:40px;padding-top:24px;border-top:1px solid var(--line)
   var nav=document.getElementById('nav');
   function onScroll(){if(window.scrollY>10)nav.classList.add('scrolled');else nav.classList.remove('scrolled');}
   onScroll();window.addEventListener('scroll',onScroll,{passive:true});
+  var burger=document.getElementById('burger'),nl=document.getElementById('navlinks');
+  if(burger){burger.addEventListener('click',function(){nl.classList.toggle('open');});}
   document.querySelectorAll('.faq .q').forEach(function(q){
     q.addEventListener('click',function(){
       var item=q.parentNode,a=q.nextElementSibling,inner=a.querySelector('.inner');
