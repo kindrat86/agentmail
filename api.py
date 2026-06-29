@@ -1312,7 +1312,7 @@ document.getElementById("lp-email-capture").addEventListener("submit",function(e
 <div class="pricing" id="pricing">
 <div class="risk-warning">OFAC penalties start at $356,000 per violation. agentmail starts at $0.</div>
 <h2>Pricing</h2>
-<p class="lead">Free to try. $19/mo when you need more. Your agent pays $0.05 via x402.</p>
+<p class="lead">Free to try. $19/mo for developers. $99/mo for teams. Your agent pays $0.05 via x402.</p>
 <div class="price-cards">
 <div class="price-card">
 <h3>Free</h3>
@@ -1337,10 +1337,22 @@ document.getElementById("lp-email-capture").addEventListener("submit",function(e
 <li>Priority support</li>
 </ul>
 <a href="/checkout/dev" class="btn btn-primary">Subscribe</a>
-<p class="guarantee-text">For humans who need predictable billing and full access.</p>
+<p class="guarantee-text">If we miss a sanctioned wallet, we cover the first $10K of your legal fees.</p>
+</div>
+<div class="price-card">
+<h3>Pro</h3>
+<div class="price">$99<small>/mo</small></div>
+<ul>
+<li>100,000 checks/month</li>
+<li>All 4 tools</li>
+<li>API key + audit log</li>
+<li>Priority support + SLA</li>
+<li>Custom risk rules</li>
+</ul>
+<a href="/checkout/pro" class="btn btn-ghost">Subscribe</a>
+<p class="guarantee-text">For production teams with high-volume agent payments.</p>
 </div>
 </div>
-<p style="color:#555;font-size:0.78em;margin-top:16px">Your agent uses x402? &rarr; <a href="/agent" style="color:#00d4aa;text-decoration:underline">$0.05/check, no API key, pay in USDC</a></p>
 """
         self._send_html(200, html)
 
