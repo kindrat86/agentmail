@@ -1309,10 +1309,43 @@ document.getElementById("lp-email-capture").addEventListener("submit",function(e
 <p class="vs-label" style="font-size:0.78em;margin-top:4px">Free tier: 50 checks/day &middot; No signup &middot; MCP + HTTP + CLI</p>
 </div>
 </div>
-<div class="install">
-<h2>Start in 30 seconds. No signup. No API key.</h2>
-<code>curl "https://agentmail-api.fly.dev/sanctions?wallet=0x098B716B8Aaf21512996dC57EB0615e2383E2f96"</code>
-<p style="color:#555;font-size:0.72em">Returns OFAC match data in under 100ms. Try it with any EVM wallet.</p>
+<div class="install" id="try-free">
+<h2>Try it free. Get your API key in 30 seconds.</h2>
+<p style="color:#999;font-size:0.85em;margin-bottom:20px">Enter your email and we will send you the curl command with your free API key. 50 checks/day, no credit card.</p>
+<div class="email-form" style="max-width:400px">
+<form id="free-tier-capture">
+<div class="input-row">
+<input type="email" id="free-email" placeholder="you@example.com" required>
+<button type="submit" class="btn btn-primary" style="white-space:nowrap">Get free API key</button>
+</div>
+</form>
+<p class="hint">No spam. Unsubscribe anytime. 50 checks/day, free forever.</p>
+</div>
+<div id="free-result" style="display:none;margin-top:16px">
+<code id="free-curl" style="display:block;background:#111;border:1px solid #1a1a1a;border-radius:8px;padding:14px;font-family:monospace;font-size:0.85em;color:#34d399;line-height:1.6;text-align:left;overflow-x:auto"></code>
+<p style="color:#555;font-size:0.72em;margin-top:8px">Returns OFAC match data in under 100ms. Try it with any EVM wallet.</p>
+</div>
+<script>
+document.getElementById("free-tier-capture").addEventListener("submit",function(e){
+  e.preventDefault();
+  var email=document.getElementById("free-email").value.trim();
+  var btn=this.querySelector("button");
+  var result=document.getElementById("free-result");
+  var curl=document.getElementById("free-curl");
+  if(!email||!email.includes("@")){alert("Enter a valid email");return;}
+  btn.textContent="Sending...";btn.disabled=true;
+  fetch("/subscribe",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({email:email,source:"free-tier-cta"})})
+  .then(function(r){return r.json()})
+  .then(function(d){
+    if(d.ok){
+      btn.style.display="none";
+      curl.textContent='curl "https://agentmail-api.fly.dev/sanctions?wallet=0x098B716B8Aaf21512996dC57EB0615e2383E2f96"';
+      result.style.display="block";
+    }else{alert(d.error||"Something went wrong");btn.textContent="Get free API key";btn.disabled=false;}
+  })
+  .catch(function(){alert("Network error");btn.textContent="Get free API key";btn.disabled=false;});
+});
+</script>
 </div>
 <div class="pricing" id="pricing">
 <div class="risk-warning">OFAC penalties start at $356,000 per violation. agentmail starts at $0.</div>
@@ -1341,8 +1374,8 @@ document.getElementById("lp-email-capture").addEventListener("submit",function(e
 <li>API key + audit log</li>
 <li>Priority support</li>
 </ul>
-<a href="/checkout/dev" class="btn btn-primary">Start free trial</a>
-<p class="guarantee-text">First month free. Cancel anytime. If we miss a sanctioned wallet, we cover the first $10K of your legal fees.</p>
+<a href="/checkout/dev" class="btn btn-primary">Start free trial &rarr;</a>
+<p class="guarantee-text">First month free. Cancel anytime. <strong style="color:#ff6b6b">First 50 developers locked-in at $19/mo forever.</strong> Pricing goes up after that. If we miss a sanctioned wallet, we cover the first $10K of your legal fees.</p>
 </div>
 <div class="price-card">
 <h3>Pro</h3>
