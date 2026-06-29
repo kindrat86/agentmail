@@ -270,7 +270,7 @@ _VERTICALS = {
         "desc": "Add OFAC sanctions screening to fintech AI agents. Screen counterparties, wallets, and names before any regulated transaction.",
         "p1": "Regulated financial institutions deploying AI agents must screen every counterparty against OFAC sanctions lists before funds move. agentmail gives fintech agents a single API call that checks names, crypto wallets, and countries against the full OFAC Specially Designated Nationals list in real time.",
         "p2": "For fintechs the cost of a miss is severe — civil penalties can reach $300,000 or twice the transaction value per violation. Automating payments without screening transfers that liability straight onto your institution. agentmail closes the gap between autonomous execution and regulatory obligation, leaving a defensible audit trail.",
-        "p3": "Integrate sanctions checks into your loan-approval, onboarding, and payment-routing agents via MCP, HTTP, or CLI. The free tier covers 50 checks per day with no signup, so you can validate the workflow before scaling to a paid plan.",
+        "p3": "Integrate sanctions checks into your loan-approval, onboarding, and payment-routing agents via MCP, HTTP, or CLI. The free tier covers 5 checks per day per day with no signup, so you can validate the workflow before scaling to a paid plan.",
     },
     "crypto": {
         "name": "Crypto",
@@ -286,7 +286,7 @@ _VERTICALS = {
         "desc": "E-commerce agents screen buyer names, supplier wallets, and destination countries against OFAC before approving international orders.",
         "p1": "E-commerce agents that process international orders routinely decide where to ship, whom to refund, and which supplier to pay. Each of those decisions can touch an embargoed country or a sanctioned supplier. agentmail lets your agent screen buyer names, supplier wallets, and destination countries against OFAC before it acts.",
         "p2": "Cross-border commerce is exactly where sanctions exposure hides — a flagged buyer, a drop-ship supplier in a restricted jurisdiction, a payout to a sanctioned wallet. Screening programmatically means your storefront agent can decline risky orders automatically instead of generating compliance work after the fact.",
-        "p3": "Drop the check into your order-approval or payout agent. Free tier: 50 checks/day, no key required. Production volume from $19/mo.",
+        "p3": "Drop the check into your order-approval or payout agent. Free tier: 5 checks/day, no key required. Production volume from $19/mo.",
     },
     "trading": {
         "name": "Trading",
@@ -294,7 +294,7 @@ _VERTICALS = {
         "desc": "Trading bots screen counterparties, wallets, and jurisdictions against OFAC before each cross-border fill or settlement.",
         "p1": "Trading bots that execute cross-border transactions move fast — often too fast for manual compliance review. agentmail gives your trading agent a sub-second sanctions check on counterparty names, wallets, and jurisdictions before each fill or settlement.",
         "p2": "A single trade with a sanctioned counterparty can freeze assets and trigger regulatory scrutiny that outweighs months of gains. Building the screen into the execution path means your bot declines the trade rather than explaining it later.",
-        "p3": "Call it over HTTP from any trading runtime, or expose it as an MCP tool to your reasoning agent. No key needed to start — 50 free checks a day.",
+        "p3": "Call it over HTTP from any trading runtime, or expose it as an MCP tool to your reasoning agent. No key needed to start — 5 checks/day free.",
     },
     "payments": {
         "name": "Payments",
@@ -318,7 +318,7 @@ _VERTICALS = {
         "desc": "DEX agents screen the wallet behind every pool and router call against OFAC-listed addresses before approving a swap.",
         "p1": "DEX agents that execute swaps interact purely with smart contracts and unknown wallets — the perfect conditions for accidentally interacting with a sanctioned address. agentmail screens the counterparty wallet behind every pool and router call against OFAC-listed addresses before your agent approves the swap.",
         "p2": "OFAC has sanctioned individual wallets and entire mixing protocols; an agent that swaps into or out of a tainted pool can create exposure for its operator. A pre-trade wallet screen is the simplest control that keeps your DEX agent from touching sanctioned liquidity.",
-        "p3": "Add the check to your swap-approval logic over HTTP or MCP. Free tier, no key, 50 checks/day.",
+        "p3": "Add the check to your swap-approval logic over HTTP or MCP. Free tier, no key, 5 checks/day.",
     },
     "defi": {
         "name": "DeFi",
@@ -342,7 +342,7 @@ _VERTICALS = {
         "desc": "Remittance agents screen sender and receiver names, payout wallets, and destination countries against OFAC on every transfer.",
         "p1": "Remittance agents that send cross-border transfers are the textbook OFAC use case — high volume, many jurisdictions, strict screening duties. agentmail screens sender and receiver names, payout wallets, and destination countries on every transfer before it is queued.",
         "p2": "Money transmitters are expected to screen every party on both ends; an autonomous remittance agent that skips this transfers the violation — and the penalty — to its operator. Building the check into the send flow makes compliance automatic, not a post-transaction report.",
-        "p3": "Integrate via MCP, HTTP, or CLI alongside your existing rail. 50 free checks/day to validate, paid plans for production volume.",
+        "p3": "Integrate via MCP, HTTP, or CLI alongside your existing rail. 5 checks/day to validate, paid plans for production volume.",
     },
     "gaming": {
         "name": "Gaming",
@@ -366,7 +366,7 @@ _VERTICALS = {
         "desc": "Lending protocol agents screen borrower wallets and deposit addresses against OFAC before opening or rolling a position.",
         "p1": "Lending protocol agents that issue loans against collateral must evaluate the borrower and the collateral source — both can be sanctioned. agentmail screens borrower wallets and deposit addresses against OFAC before your agent opens or rolls a position.",
         "p2": "A loan funded to a sanctioned borrower, or collateral sourced from a sanctioned wallet, is a direct violation that an autonomous agent can commit in milliseconds. A pre-loan screen on both sides of the book is the control that prevents it.",
-        "p3": "Call it from your underwriting agent over HTTP or MCP. Free tier: 50 checks/day, no signup.",
+        "p3": "Call it from your underwriting agent over HTTP or MCP. Free tier: 5 checks/day, no signup.",
     },
 
     "insurance": {
@@ -403,7 +403,7 @@ _COMPETITORS = {
         "desc": "agentmail vs Chainalysis: agentmail gives AI agents a sanctions screen they can call before every payment, with a free tier and self-host option. Chainalysis is built for enterprise blockchain forensics.",
         "rows": [
             ("Built for AI agents (MCP + HTTP + CLI)", True, False),
-            ("Free tier (50 checks/day)", True, False),
+            ("Free tier (5 checks/day)", True, False),
             ("Developer pricing from $19/mo", True, False),
             ("Open-source self-host", True, False),
             ("Per-call x402 / USDC payments", True, False),
@@ -420,7 +420,7 @@ _COMPETITORS = {
         "desc": "agentmail vs Elliptic: agentmail is agent-native sanctions screening with a developer tier and free checks. Elliptic focuses on enterprise crypto compliance.",
         "rows": [
             ("Built for AI agents (MCP + HTTP + CLI)", True, False),
-            ("Free tier (50 checks/day)", True, False),
+            ("Free tier (5 checks/day)", True, False),
             ("Developer pricing from $19/mo", True, False),
             ("Open-source self-host", True, False),
             ("OFAC crypto wallet screening", True, True),
@@ -436,7 +436,7 @@ _COMPETITORS = {
         "rows": [
             ("Agent-native (MCP + HTTP + CLI)", True, False),
             ("Real-time crypto wallet screening", True, "Limited"),
-            ("Free tier (50 checks/day)", True, False),
+            ("Free tier (5 checks/day)", True, False),
             ("Developer pricing from $19/mo", True, False),
             ("Open-source self-host", True, False),
             ("OFAC name + country screening", True, True),
@@ -452,7 +452,7 @@ _COMPETITORS = {
             ("Agent-native (MCP + HTTP + CLI)", True, False),
             ("Sanctions-first design", True, "KYC-first"),
             ("Real-time crypto wallet screening", True, False),
-            ("Free tier (50 checks/day)", True, False),
+            ("Free tier (5 checks/day)", True, False),
             ("Developer pricing from $19/mo", True, False),
             ("Open-source self-host", True, False),
             ("KYC / identity verification", False, True),
@@ -465,7 +465,7 @@ _COMPETITORS = {
         "desc": "agentmail vs Blockdaemon: agentmail is agent-native sanctions screening with a free tier. Blockdaemon is institutional Web3 infrastructure and node operations.",
         "rows": [
             ("Built for AI agents (MCP + HTTP + CLI)", True, False),
-            ("Free tier (50 checks/day)", True, False),
+            ("Free tier (5 checks/day)", True, False),
             ("Developer pricing from $19/mo", True, False),
             ("Open-source self-host", True, False),
             ("OFAC crypto wallet screening", True, "Enterprise"),
@@ -479,7 +479,7 @@ _COMPETITORS = {
         "desc": "agentmail vs TRM Labs: agentmail gives autonomous agents real-time sanctions screening with a free tier. TRM Labs focuses on blockchain intelligence and risk monitoring.",
         "rows": [
             ("Built for AI agents (MCP + HTTP + CLI)", True, False),
-            ("Free tier (50 checks/day)", True, False),
+            ("Free tier (5 checks/day)", True, False),
             ("Developer pricing from $19/mo", True, False),
             ("Open-source self-host", True, False),
             ("Per-call x402 / USDC payments", True, False),
@@ -493,7 +493,7 @@ _COMPETITORS = {
         "desc": "agentmail vs CipherTrace: agentmail is real-time, agent-native sanctions screening. CipherTrace is a legacy crypto compliance and forensic analytics platform owned by Visa.",
         "rows": [
             ("Agent-native (MCP + HTTP + CLI)", True, False),
-            ("Free tier (50 checks/day)", True, False),
+            ("Free tier (5 checks/day)", True, False),
             ("Developer pricing from $19/mo", True, False),
             ("Open-source self-host", True, False),
             ("OFAC crypto wallet screening", True, True),
@@ -508,7 +508,7 @@ _COMPETITORS = {
         "desc": "agentmail vs CharmVerse compliance: agentmail is sanctions-first, CharmVerse is KYC-first.",
         "rows": [
             ("Built for AI agents (MCP + HTTP + CLI)", True, False),
-            ("Free tier (50 checks/day)", True, False),
+            ("Free tier (5 checks/day)", True, False),
             ("Developer pricing from $19/mo", True, False),
             ("Open-source self-host", True, False),
             ("OFAC crypto wallet screening", True, "Enterprise"),
@@ -533,7 +533,7 @@ _BLOG_POSTS = {
 <h2>The fix is one API call</h2>
 <p>The right pattern is simple: screen before you pay. Call <code>sanctions_check</code> on the counterparty (by wallet, name, or country) before authorizing the transaction. If the response says <code>clean: false</code>, decline. agentmail exposes exactly this as a single HTTP call, an MCP tool, and a CLI — with a free tier so you can prove it works before paying anything.</p>
 <pre><code>curl "https://sanctionsai.dev/sanctions?wallet=0x098B716B8Aaf21512996dC57EB0615e2383E2f96"</code></pre>
-<p>Build the check into your agent's payment path today. The free tier covers 50 checks per day, no API key required.</p>""",
+<p>Build the check into your agent's payment path today. The free tier covers 5 checks per day per day, no API key required.</p>""",
     },
     "know-your-agent": {
         "title": "Know Your Agent (KYA), Explained",
@@ -547,7 +547,7 @@ _BLOG_POSTS = {
 <pre><code>curl -X POST https://sanctionsai.dev/kya \\
   -H "Content-Type: application/json" \\
   -d '{"agent_id":"bot-42","evidence":{"wallet_address":"0x...","wallet_age_days":310,"domain":"example.com"}}'</code></pre>
-<p>Start with the free tier: 50 sanctions checks a day, no key. Add KYA and risk scoring on a $19/mo plan.</p>""",
+<p>Start with the free tier: 5 sanctions checks/day, no key. Add KYA and risk scoring on a $19/mo plan.</p>""",
     },
     "x402-compliance": {
         "title": "x402 Payments and Compliance for AI Agents",
@@ -559,14 +559,14 @@ _BLOG_POSTS = {
 <h2>The right pattern: screen, then pay</h2>
 <p>Treat the sanctions check as the gate before the x402 payment. agentmail accepts an x402 payment itself for the screen, so an agent with no API key can still run a paid, per-call sanctions check — and then decide whether to proceed with the downstream payment it was about to make.</p>
 <pre><code>curl -H "X-PAYMENT: &lt;x402-facility&gt;" "https://sanctionsai.dev/sanctions?wallet=0x098B..."</code></pre>
-<p>The free tier also covers 50 checks/day by IP with no payment at all. Add compliance to your x402 agent in minutes.</p>""",
+<p>The free tier also covers 5 checks/day by IP with no payment at all. Add compliance to your x402 agent in minutes.</p>""",
     },
 
     "openai-agents-sdk-compliance": {
         "title": "Adding Compliance to OpenAI Agents SDK Agents",
         "date": "2026-06-29",
         "desc": "How to add OFAC sanctions screening to agents built with OpenAI's Agents SDK.",
-        "html": """<p>How to add OFAC sanctions screening to agents built with OpenAI's Agents SDK.</p><p>agentmail provides OFAC sanctions screening that fits directly into your agent's workflow. Use the free checker or integrate via MCP.</p><pre><code>curl "https://sanctionsai.dev/tools/wallet-checker"</code></pre><p>Start with 50 free checks per day. Scale on a $19/mo plan when ready.</p>""",
+        "html": """<p>How to add OFAC sanctions screening to agents built with OpenAI's Agents SDK.</p><p>agentmail provides OFAC sanctions screening that fits directly into your agent's workflow. Use the free checker or integrate via MCP.</p><pre><code>curl "https://sanctionsai.dev/tools/wallet-checker"</code></pre><p>Start with 5 checks/day. Scale on a $19/mo plan when ready.</p>""",
     },
 }
 
@@ -753,7 +753,7 @@ class Handler(BaseHTTPRequestHandler):
                 "self_host": "pip install sanctions-mcp",
                 "hosted_pricing": f"{_PUBLIC_URL}/pricing",
                 "github": "https://github.com/kindrat86/agentmail",
-                "free_tier": "50 checks/day by IP, no key needed",
+                "free_tier": "5 checks/day by IP, no key needed",
             })
         # MCP server card — lets MCP registries (Smithery) skip auto-scan
         if p.path == "/.well-known/mcp/server-card.json":
@@ -1306,12 +1306,12 @@ document.getElementById("lp-email-capture").addEventListener("submit",function(e
 <div class="value-stack">
 <p class="vs-label">Total monthly value of all 4 tools</p>
 <p class="vs-price"><span class="s">$1,096</span> $19<span style="font-size:0.4em;color:#555;font-weight:400">/mo</span></p>
-<p class="vs-label" style="font-size:0.78em;margin-top:4px">Free tier: 50 checks/day &middot; No signup &middot; MCP + HTTP + CLI</p>
+<p class="vs-label" style="font-size:0.78em;margin-top:4px">Free tier: 5 checks/day &middot; No signup &middot; MCP + HTTP + CLI</p>
 </div>
 </div>
 <div class="install" id="try-free">
 <h2>Try it free. Get your API key in 30 seconds.</h2>
-<p style="color:#999;font-size:0.85em;margin-bottom:20px">Enter your email and we will send you the curl command with your free API key. 50 checks/day, no credit card.</p>
+<p style="color:#999;font-size:0.85em;margin-bottom:20px">Enter your email and we will send you the curl command with your free API key. 5 checks/day, no credit card.</p>
 <div class="email-form" style="max-width:400px">
 <form id="free-tier-capture">
 <div class="input-row">
@@ -1319,7 +1319,7 @@ document.getElementById("lp-email-capture").addEventListener("submit",function(e
 <button type="submit" class="btn btn-primary" style="white-space:nowrap">Get free API key</button>
 </div>
 </form>
-<p class="hint">No spam. Unsubscribe anytime. 50 checks/day, free forever.</p>
+<p class="hint">No spam. Unsubscribe anytime. 5 checks/day, free forever.</p>
 </div>
 <div id="free-result" style="display:none;margin-top:16px">
 <code id="free-curl" style="display:block;background:#111;border:1px solid #1a1a1a;border-radius:8px;padding:14px;font-family:monospace;font-size:0.85em;color:#34d399;line-height:1.6;text-align:left;overflow-x:auto"></code>
@@ -1350,19 +1350,19 @@ document.getElementById("free-tier-capture").addEventListener("submit",function(
 <div class="pricing" id="pricing">
 <div class="risk-warning">OFAC penalties start at $356,000 per violation. agentmail starts at $0.</div>
 <h2>Pricing</h2>
-<p class="lead">Free to try. $19/mo for developers. $99/mo for teams. Your agent pays $0.05 via x402.</p>
+<p class="lead">Free: 5 checks/day. Dev: 10,000 checks/month. Pro: 100,000 checks/month. Your agent pays $0.05 via x402.</p>
 <div class="price-cards">
 <div class="price-card">
 <h3>Free</h3>
 <div class="price">$0<small>/check</small></div>
 <ul>
-<li>50 checks/day</li>
+<li>5 checks/day</li>
 <li>sanctions_check</li>
 <li>Rate limited</li>
 <li>No signup needed</li>
 </ul>
 <a href="#install" class="btn btn-ghost">Try it now</a>
-<p class="guarantee-text">50 checks/day, free forever. No credit card. No time limit.</p>
+<p class="guarantee-text">5 checks/day, free forever. No credit card. No time limit.</p>
 </div>
 <div class="price-card featured">
 <div class="popular">Most popular</div>
@@ -1524,7 +1524,7 @@ if not response.json().get("clean"):
 <div class="cta-box">
 <p><strong>Try it with your agent right now.</strong></p>
 <a href="https://sanctionsai.dev/agent" class="btn">See the x402 flow &rarr;</a>
-<p style="color:#888;font-size:0.82em;margin-top:10px">Free tier: 50 checks/day, no signup &middot; x402 per-call: $0.01/check</p>
+<p style="color:#888;font-size:0.82em;margin-top:10px">Free tier: 5 checks/day, no signup &middot; x402 per-call: $0.01/check</p>
 </div>
 
 <h2>The Bottom Line</h2>
@@ -1934,7 +1934,7 @@ If a passed check results in an OFAC fine, we cover the first <strong class="hl-
     <h3>Free</h3>
     <div class="price">$0<small>/mo</small></div>
     <ul>
-      <li>50 checks/day (by IP)</li>
+      <li>5 checks/day (by IP)</li>
       <li>No signup required</li>
       <li>sanctions_check only</li>
     </ul>
@@ -2016,7 +2016,7 @@ If a passed check results in an OFAC fine, we cover the first <strong class="hl-
             ("What data sources does agentmail use?",
              "Crypto wallets come from the vile/ofac-sdn-list GitHub releases (multi-chain, refreshed daily). Names come from the US Treasury OFAC sdn.csv. Jurisdictions cover the 16 comprehensively sanctioned / embargoed regions. Everything is public, free, primary-source data."),
             ("Do I need an API key to start?",
-             "No. The free tier gives you 50 sanctions checks per day metered by IP address, with no signup or API key. For higher volume, all four tools, and an audit log, upgrade to a paid key from $19/month at /pricing."),
+             "No. The free tier gives you 5 sanctions checks/day metered by IP address, with no signup or API key. For higher volume, all four tools, and an audit log, upgrade to a paid key from $19/month at /pricing."),
             ("How accurate is the sanctions data?",
              "Wallet matches against the published OFAC address list are exact (confidence 1.0). Name matching uses fuzzy matching with a confidence score so your agent can set a review threshold. The underlying lists are refreshed daily, so you are screening against current, not stale, data."),
             ("What is Know Your Agent (KYA)?",
@@ -2038,7 +2038,7 @@ If a passed check results in an OFAC fine, we cover the first <strong class="hl-
             '</section>'
             '<section><div class="prose">' + items + '</div></section>'
             '<section><div class="cta-box"><h2>Start screening in 30 seconds</h2>'
-            '<p>50 free checks a day. No API key required.</p>'
+            '<p>5 checks/day free. No API key required.</p>'
             '<a href="/tools/wallet-checker" class="btn btn-primary">Try the free wallet checker</a>'
             '&nbsp; <a href="/pricing" class="btn btn-ghost">See pricing</a></div></section>'
         )
@@ -2075,7 +2075,7 @@ If a passed check results in an OFAC fine, we cover the first <strong class="hl-
             '<p>' + v["p3"] + '</p>'
             '<h3>Example: screen a wallet before paying</h3>'
             '<pre><code>curl "' + _SITE + '/sanctions?wallet=0x098B716B8Aaf21512996dC57EB0615e2383E2f96"</code></pre>'
-            '<p class="note">Real OFAC data. Free tier: 50 checks/day, no API key.</p>'
+            '<p class="note">Real OFAC data. Free tier: 5 checks/day, no API key.</p>'
             '</div></section>'
             '<section><div class="cta-box">'
             '<h2>Add compliance to your ' + v["name"].lower() + ' agents</h2>'
@@ -2132,7 +2132,7 @@ If a passed check results in an OFAC fine, we cover the first <strong class="hl-
             '</div></section>'
             '<section><div class="cta-box">'
             '<h2>Screen your agents payments</h2>'
-            '<p>Free tier, 50 checks/day. Paid from $19/mo.</p>'
+            '<p>Free tier, 5 checks/day. Paid from $19/mo.</p>'
             '<a href="/pricing" class="btn btn-primary">See pricing</a>'
             '</div></section>'
         )
@@ -2153,7 +2153,7 @@ If a passed check results in an OFAC fine, we cover the first <strong class="hl-
 <section style="text-align:center;border-top:none">
 <h1>API documentation</h1>
 <p class="lead" style="max-width:600px;margin:0 auto">OFAC sanctions screening, transaction risk, and Know-Your-Agent for AI agents — over HTTP, MCP, and CLI.</p>
-<p class="note">Base URL: <code>__SITE__</code> · Free tier: 50 checks/day, no key · Auth: <code>X-API-Key</code> or <code>Authorization: Bearer</code></p>
+<p class="note">Base URL: <code>__SITE__</code> · Free tier: 5 checks/day, no key · Auth: <code>X-API-Key</code> or <code>Authorization: Bearer</code></p>
 </section>
 <section><div class="prose">
 <h2>Authentication</h2>
@@ -2175,7 +2175,7 @@ If a passed check results in an OFAC fine, we cover the first <strong class="hl-
 <p>Score a transaction's fraud risk before authorizing payment. Returns a recommendation of <code>allow</code>, <code>review</code>, or <code>decline</code>.</p>
 <pre><code>curl -X POST __SITE__/risk \\
   -H "Content-Type: application/json" \\
-  -d '{"counterparty_id":"bot-42","amount":"50","currency":"USDC","rail":"x402"}'</code></pre>
+  -d '{"counterparty_id":"bot-42","amount":"5","currency":"USDC","rail":"x402"}'</code></pre>
 <pre><code>{
   "risk_score": 0.82,
   "recommendation": "decline",
@@ -2251,7 +2251,7 @@ python -m agentmail.cli sanctions --wallet 0x098B...</code></pre>
 <button class="btn btn-primary" onclick="checkWallet()">Check wallet</button>
 </div>
 <div id="result" class="result">Enter a wallet address above, then click Check.</div>
-<p class="note">Live check via the agentmail API. Free tier: 50 checks/day by IP. Need more? <a href="/pricing">Get an API key</a>.</p>
+<p class="note">Live check via the agentmail API. Free tier: 5 checks/day by IP. Need more? <a href="/pricing">Get an API key</a>.</p>
 </div></section>
 <section><div class="cta-box">
 <h2>Embed this in your agents</h2>
@@ -2292,7 +2292,7 @@ document.getElementById("wallet").addEventListener("keydown", function(e){ if(e.
             "offers": [{"@type": "Offer", "price": "0", "priceCurrency": "USD"}],
         }
         return self._page("Free OFAC Wallet Checker — agentmail",
-                          "Free tool: paste any crypto wallet address and check it against the OFAC sanctions list in real time. No signup, no API key. 50 free checks/day.",
+                          "Free tool: paste any crypto wallet address and check it against the OFAC sanctions list in real time. No signup, no API key. 5 checks/day.",
                           body, extra_head=self._ld(ld), canonical="/tools/wallet-checker")
 
     # ─── Blog article pages ─────────────────────────────────────────────
@@ -2308,7 +2308,7 @@ document.getElementById("wallet").addEventListener("keydown", function(e){ if(e.
             '<p class="lead">' + post["desc"] + '</p>'
             + post["html"] +
             '<div class="cta-box" style="margin-top:40px"><h3>Screen your agents payments</h3>'
-            '<p>Free tier, 50 checks/day. Add compliance before money moves.</p>'
+            '<p>Free tier, 5 checks/day. Add compliance before money moves.</p>'
             '<a href="/tools/wallet-checker" class="btn btn-primary">Try the free checker</a>'
             '&nbsp; <a href="/pricing" class="btn btn-ghost">See pricing</a></div>'
             '</div></section>'
@@ -2522,7 +2522,7 @@ _SOAP_CONTENT.append("""
 <span style='display:inline-block;background:rgba(0,212,170,0.1);color:#00d4aa;font-size:10px;font-weight:700;padding:4px 12px;border-radius:20px;letter-spacing:0.5px'>DAY 2 OF 5</span>
 </div>
 <h2 style='margin:0 0 16px;font-size:18px;font-weight:700;color:#fff;line-height:1.3'>The 3 false beliefs about agent compliance</h2>
-<p style='margin:0 0 20px;font-size:14px;color:#999;line-height:1.6'>After talking to 50+ AI agent builders, I hear the same objections. Here is why they are wrong.</p>
+<p style='margin:0 0 20px;font-size:14px;color:#999;line-height:1.6'>After talking to dozens of AI agent builders, I hear the same objections. Here is why they are wrong.</p>
 <div style='background:#120808;border:1px solid #2a1414;border-radius:10px;padding:16px;margin-bottom:12px'>
 <p style='margin:0 0 4px;font-size:13px;font-weight:600;color:#ff6b6b'>False belief #1: "My agent only pays known vendors"</p>
 <p style='margin:0;font-size:12px;color:#888;line-height:1.5'>Vendors change wallets. Wallets get compromised. Your agent pays whoever it is told. The check costs nothing. The fine costs $356K.</p>
@@ -2744,7 +2744,7 @@ def _send_welcome_email(email: str) -> dict:
     html += '<p style="margin:0 0 10px;font-size:13px;font-weight:600;color:#00d4aa">Your free tier is ready. No API key needed.</p>'
     html += '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#0a0a0a;border-radius:6px;border:1px solid #1a1a1a"><tr><td style="padding:14px 16px;font-family:\'SF Mono\',Consolas,monospace;font-size:12px;color:#34d399;line-height:1.6;word-break:break-all">'
     html += 'curl <a href="https://agentmail-api.fly.dev/sanctions?wallet=0x098B716B8Aaf21512996dC57EB0615e2383E2f96" style="color:#34d399;text-decoration:none">https://agentmail-api.fly.dev/sanctions?wallet=0x098B716B8Aaf21512996dC57EB0615e2383E2f96</a>'
-    html += '</td></tr></table><p style="margin:6px 0 0;font-size:11px;color:#555">50 checks/day &middot; No signup &middot; Free forever</p>'
+    html += '</td></tr></table><p style="margin:6px 0 0;font-size:11px;color:#555">5 checks/day &middot; No signup &middot; Free forever</p>'
     html += '</td></tr></table>'
     html += '<h3 style="margin:0 0 16px;font-size:14px;font-weight:700;color:#fff">The 4 tools your agent needs</h3>'
     html += '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:24px">'
