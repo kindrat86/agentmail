@@ -1114,6 +1114,8 @@ nav .links{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
 nav .links a{color:#888;font-size:0.82em;transition:color .2s;white-space:nowrap}
 nav .links a:hover{color:#fff}
 nav .btn{padding:8px 14px;font-size:0.78em;min-height:36px}
+.text-link{color:#888;font-size:0.82em;text-decoration:underline;text-underline-offset:3px;transition:color .2s;display:inline-block}
+.text-link:hover{color:#00d4aa}@media(max-width:400px){.text-link{font-size:0.78em}}
 @media(min-width:768px){nav{padding:20px 24px}nav .links{gap:20px}nav .links a{font-size:0.88em}nav .btn{padding:10px 20px}}
 .hero{padding:64px 16px 40px;text-align:center;position:relative;overflow:hidden}
 .hero::before{content:'';position:absolute;top:-100px;left:50%;transform:translateX(-50%);width:600px;height:600px;background:radial-gradient(circle,rgba(0,212,170,.04) 0%,transparent 70%);pointer-events:none}
@@ -1217,7 +1219,7 @@ footer p{color:#333;font-size:0.72em}
 <div class="hero">
 <div class="badge">WARNING: OFAC FINES START AT $356,000</div>
 <h1>Your agent just paid a wallet on the <span style="color:#ff6b6b">OFAC SDN list</span>. The Treasury knows. You owe <span style="color:#ff6b6b">$356,000</span>.</h1>
-<p class="sub">Screen every counterparty against live OFAC SDN data before your agent sends money. Under 100ms. From $0.</p>
+<p class="sub">Screen every counterparty against live OFAC SDN data before your agent sends money. 1 curl call. Under 100ms.</p>
 <p style="color:#555;font-size:0.82em;margin-top:-8px;margin-bottom:16px">I built agentmail because test #47 almost cost me $356,000. &mdash; Maryan, founder</p>
 <div class="stat-row">
 <span><strong>782</strong> crypto wallets</span>
@@ -1226,8 +1228,8 @@ footer p{color:#333;font-size:0.72em}
 <span><strong>$0</strong> to start</span>
 </div>
 <div class="ctas">
-<a href="#story" class="btn btn-primary btn-lg" style="flex:1">See why this matters</a>
-<a href="#pricing" class="btn btn-ghost btn-lg">Pricing</a>
+<a href="#try-free" class="btn btn-primary btn-lg">Try it free &rarr;</a>
+<a href="#story" class="text-link">How it works &darr;</a>
 </div>
 <div class="urgency-bar">Every day, more agents get the ability to send money autonomously. The payment rails (x402, AP2, ACP) do not check OFAC. If your agent pays a sanctioned wallet, <strong>you</strong> are liable. Not the protocol. Not the wallet. <strong>You.</strong></div>
 </div>
