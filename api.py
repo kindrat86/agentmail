@@ -1238,7 +1238,9 @@ footer p{color:#333;font-size:0.72em}
 <div class="story-label">THE STORY</div>
 <h2>I was building an agent that pays invoices. Then test #47 sent USDC to a wallet I did not recognize.</h2>
 <div class="story-quote">"I checked the wallet against the OFAC SDN list. It was there. If that had been production, I would be looking at a $356,000 fine right now. The agent did not know what OFAC was. It just saw 'pay invoice #4021' and sent USDC. It would have done it at 3 AM, repeatedly, until someone noticed."</div>
+<p style="color:#999;font-size:0.9em;line-height:1.5">I sat there staring at the screen thinking: if I had deployed this to production, I would be looking for a new job right now.</p>
 <p>The problem was not the agent. The problem was that <strong>nobody was checking</strong>. The big payment rails handle moving money. They do not screen recipients. That gap is why I built agentmail.</p>
+<p style="color:#999;font-size:0.9em;line-height:1.5">The first question developers ask me: "Does not my payment provider handle this?" No. x402, AP2, ACP, Coinbase AgentKit — none of them check OFAC. They move money. They do not screen recipients. That is your responsibility — and ours.</p>
 <div class="callout"><strong>Your agent needs this check.</strong> Not next quarter. Not after the compliance notice. Before you deploy.</div>
 </div>
 <div class="testimonial">
@@ -1250,35 +1252,7 @@ footer p{color:#333;font-size:0.72em}
 </div>
 </div>
 
-<div class="email-section">
-<h2>Get the compliance setup guide for your agent</h2>
-<p class="sub">Free PDF: Add OFAC screening to your agent's payment pipeline in 10 minutes. MCP config, curl examples, risk scoring.</p>
-<div class="email-form">
-<form id="lp-email-capture">
-<div class="input-row">
-<input type="email" id="capture-email" placeholder="you@example.com" required>
-<button type="submit" class="btn btn-primary" style="white-space:nowrap">Send me the guide</button>
-</div>
-</form>
-<p class="hint">No spam. Unsubscribe anytime.</p>
-</div>
-</div>
-<script>
-document.getElementById("lp-email-capture").addEventListener("submit",function(e){
-  e.preventDefault();
-  var email=document.getElementById("capture-email").value.trim();
-  var btn=this.querySelector("button");
-  if(!email||!email.includes("@")){alert("Enter a valid email");return;}
-  btn.textContent="Sending...";btn.disabled=true;
-  fetch("/subscribe",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({email:email,source:"landing"})})
-  .then(function(r){return r.json()})
-  .then(function(d){
-    if(d.ok){btn.textContent="Check your email";btn.style.background="#00d4aa";setTimeout(function(){window.location.href="#story"},2000);}
-    else{alert(d.error||"Something went wrong");btn.textContent="Send me the guide";btn.disabled=false;}
-  })
-  .catch(function(){alert("Network error");btn.textContent="Send me the guide";btn.disabled=false;});
-});
-</script>
+
 
 
 <div class="offer-grid">
@@ -1348,6 +1322,10 @@ document.getElementById("free-tier-capture").addEventListener("submit",function(
   .catch(function(){alert("Network error");btn.textContent="Get free API key";btn.disabled=false;});
 });
 </script>
+</div
+
+<div style="text-align:center;padding:8px 16px 32px;max-width:640px;margin:0 auto">
+<p style="color:#888;font-size:0.85em">Need more than 5 checks/day? <a href="/checkout/dev" style="color:#00d4aa;font-weight:600;text-decoration:underline">Upgrade to Dev for $19/mo &rarr;</a></p>
 </div>
 <div class="pricing" id="pricing">
 <div class="risk-warning">OFAC penalties start at $356,000 per violation. agentmail starts at $0.</div>
