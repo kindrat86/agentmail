@@ -169,12 +169,25 @@ def _json(handler, status, obj):
 # ─── Marketing site (sanctionsai.dev) — shared dark theme + SEO data ──────────
 _SITE = "https://sanctionsai.dev"
 
-_VERTICAL_KEYS = frozenset((
-    "fintech", "crypto", "ecommerce", "trading", "payments", "marketplace",
-    "dex", "defi", "defi-protocol", "remittance", "gaming", "nft", "lending",
+_VERTICAL_KEYS = frozenset(
+    "real-estate",
 ))
-_COMPETITOR_KEYS = frozenset(("chainalysis", "elliptic", "complyadvantage", "sumsub", "blockdaemon", "trm-labs", "ciphertrace"))
-_BLOG_SLUGS = frozenset(("ofac-for-agents", "know-your-agent", "x402-compliance"))
+_COMPETITOR_KEYS = frozenset(
+    "blockdaemon",
+    "chainalysis",
+    "charmverse",
+    "ciphertrace",
+    "complyadvantage",
+    "elliptic",
+    "sumsub",
+    "trm-labs",
+))
+_BLOG_SLUGS = frozenset(
+    "know-your-agent",
+    "ofac-for-agents",
+    "openai-agents-sdk-compliance",
+    "x402-compliance",
+))
 
 _DARK_CSS = """
 *{margin:0;padding:0;box-sizing:border-box}
@@ -340,6 +353,33 @@ _VERTICALS = {
         "p2": "A loan funded to a sanctioned borrower, or collateral sourced from a sanctioned wallet, is a direct violation that an autonomous agent can commit in milliseconds. A pre-loan screen on both sides of the book is the control that prevents it.",
         "p3": "Call it from your underwriting agent over HTTP or MCP. Free tier: 50 checks/day, no signup.",
     },
+
+    "insurance": {
+        "name": "OFAC",
+        "title": "OFAC Sanctions for Insurance AI Agents",
+        "desc": "Insurance agents that underwrite policies and process claims need to screen applicants and claimants against OFAC.",
+        "p1": "OFAC Sanctions for Insurance AI Agents screen counterparties against OFAC before every transaction. agentmail gives you real-time sanctions data, no key to start.",
+        "p2": "Agents executing OFAC operations touch real value and real counterparties. A missed sanctions check is a violation.",
+        "p3": "Add the screen to your ofac agent workflow. Free tier, paid plans for volume.",
+    },
+
+    "healthcare": {
+        "name": "OFAC",
+        "title": "OFAC Sanctions for Healthcare AI Agents",
+        "desc": "Healthcare agents handling billing, eligibility, and cross-border patient services need OFAC screening.",
+        "p1": "OFAC Sanctions for Healthcare AI Agents screen counterparties against OFAC before every transaction. agentmail gives you real-time sanctions data, no key to start.",
+        "p2": "Agents executing OFAC operations touch real value and real counterparties. A missed sanctions check is a violation.",
+        "p3": "Add the screen to your ofac agent workflow. Free tier, paid plans for volume.",
+    },
+
+    "real-estate": {
+        "name": "OFAC",
+        "title": "OFAC Sanctions for Real Estate AI Agents",
+        "desc": "Real estate agents processing international transactions need to screen counterparties against OFAC.",
+        "p1": "OFAC Sanctions for Real Estate AI Agents screen counterparties against OFAC before every transaction. agentmail gives you real-time sanctions data, no key to start.",
+        "p2": "Agents executing OFAC operations touch real value and real counterparties. A missed sanctions check is a violation.",
+        "p3": "Add the screen to your ofac agent workflow. Free tier, paid plans for volume.",
+    },
 }
 
 _COMPETITORS = {
@@ -447,6 +487,20 @@ _COMPETITORS = {
         ],
         "when_to_pick": "Pick agentmail for modern, agent-native sanctions. Pick CipherTrace if you are inside the Visa compliance ecosystem.",
     },
+
+    "charmverse": {
+        "name": "CharmVerse",
+        "desc": "agentmail vs CharmVerse compliance: agentmail is sanctions-first, CharmVerse is KYC-first.",
+        "rows": [
+            ("Built for AI agents (MCP + HTTP + CLI)", True, False),
+            ("Free tier (50 checks/day)", True, False),
+            ("Developer pricing from $19/mo", True, False),
+            ("Open-source self-host", True, False),
+            ("OFAC crypto wallet screening", True, "Enterprise"),
+            ("Legacy compliance", False, True),
+        ],
+        "when_to_pick": "Pick agentmail for agent-native sanctions screening with a free tier. Pick CharmVerse for enterprise compliance programs.",
+    },
 }
 
 
@@ -491,6 +545,13 @@ _BLOG_POSTS = {
 <p>Treat the sanctions check as the gate before the x402 payment. agentmail accepts an x402 payment itself for the screen, so an agent with no API key can still run a paid, per-call sanctions check — and then decide whether to proceed with the downstream payment it was about to make.</p>
 <pre><code>curl -H "X-PAYMENT: &lt;x402-facility&gt;" "https://sanctionsai.dev/sanctions?wallet=0x098B..."</code></pre>
 <p>The free tier also covers 50 checks/day by IP with no payment at all. Add compliance to your x402 agent in minutes.</p>""",
+    },
+
+    "openai-agents-sdk-compliance": {
+        "title": "Adding Compliance to OpenAI Agents SDK Agents",
+        "date": "2026-06-29",
+        "desc": "How to add OFAC sanctions screening to agents built with OpenAI's Agents SDK.",
+        "html": """<p>How to add OFAC sanctions screening to agents built with OpenAI's Agents SDK.</p><p>agentmail provides OFAC sanctions screening that fits directly into your agent's workflow. Use the free checker or integrate via MCP.</p><pre><code>curl "https://sanctionsai.dev/tools/wallet-checker"</code></pre><p>Start with 50 free checks per day. Scale on a $19/mo plan when ready.</p>""",
     },
 }
 
@@ -858,7 +919,12 @@ class Handler(BaseHTTPRequestHandler):
             ("/blog/ofac-for-agents", "monthly", "0.6", "Why AI agents need OFAC sanctions screening"),
             ("/blog/know-your-agent", "monthly", "0.6", "Know Your Agent (KYA) explained"),
             ("/blog/x402-compliance", "monthly", "0.6", "x402 payment compliance for AI agents"),
-        ]
+                ("/for/insurance", "monthly", "0.7", "Insurance"),
+        ("/for/healthcare", "monthly", "0.7", "Healthcare"),
+        ("/for/real-estate", "monthly", "0.7", "Real Estate"),
+        ("/compare/charmverse", "monthly", "0.7", "Charmverse"),
+        ("/blog/openai-agents-sdk-compliance", "monthly", "0.7", "Openai Agents Sdk Compliance"),
+]
         import datetime
         today = datetime.date.today().isoformat()
         xml = '<?xml version="1.0" encoding="UTF-8"?>\n'
