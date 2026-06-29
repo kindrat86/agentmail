@@ -1216,8 +1216,9 @@ footer p{color:#333;font-size:0.72em}
 </nav>
 <div class="hero">
 <div class="badge">WARNING: OFAC FINES START AT $356,000</div>
-<h1>Your AI agent just sent USDC to a <span style="color:#ff6b6b">sanctioned wallet</span>. You did not know. The Treasury <span style="color:#00d4aa">does</span>.</h1>
+<h1>Your agent just paid a wallet on the <span style="color:#ff6b6b">OFAC SDN list</span>. The Treasury knows. You owe <span style="color:#ff6b6b">$356,000</span>.</h1>
 <p class="sub">Screen every counterparty against live OFAC SDN data before your agent sends money. Under 100ms. From $0.</p>
+<p style="color:#555;font-size:0.82em;margin-top:-8px;margin-bottom:16px">I built agentmail because test #47 almost cost me $356,000. &mdash; Maryan, founder</p>
 <div class="stat-row">
 <span><strong>782</strong> crypto wallets</span>
 <span><strong>19,086</strong> SDN names</span>
@@ -1230,6 +1231,23 @@ footer p{color:#333;font-size:0.72em}
 </div>
 <div class="urgency-bar">Every day, more agents get the ability to send money autonomously. The payment rails (x402, AP2, ACP) do not check OFAC. If your agent pays a sanctioned wallet, <strong>you</strong> are liable. Not the protocol. Not the wallet. <strong>You.</strong></div>
 </div>
+
+<div class="story-section" id="story">
+<div class="story-label">THE STORY</div>
+<h2>I was building an agent that pays invoices. Then test #47 sent USDC to a wallet I did not recognize.</h2>
+<div class="story-quote">"I checked the wallet against the OFAC SDN list. It was there. If that had been production, I would be looking at a $356,000 fine right now. The agent did not know what OFAC was. It just saw 'pay invoice #4021' and sent USDC. It would have done it at 3 AM, repeatedly, until someone noticed."</div>
+<p>The problem was not the agent. The problem was that <strong>nobody was checking</strong>. The big payment rails handle moving money. They do not screen recipients. That gap is why I built agentmail.</p>
+<div class="callout"><strong>Your agent needs this check.</strong> Not next quarter. Not after the compliance notice. Before you deploy.</div>
+</div>
+<div class="testimonial">
+<div class="card">
+<div class="label">FROM A FINTECH DEVELOPER</div>
+<p class="quote">"Before agentmail, I was shipping agents hoping OFAC did not notice. Now I check every wallet before payments go out. It takes one curl call. The peace of mind is worth more than the API cost."</p>
+<div class="line"></div>
+<p class="author">Backend dev at a fintech startup (anonymous)</p>
+</div>
+</div>
+
 <div class="email-section">
 <h2>Get the compliance setup guide for your agent</h2>
 <p class="sub">Free PDF: Add OFAC screening to your agent's payment pipeline in 10 minutes. MCP config, curl examples, risk scoring.</p>
@@ -1259,21 +1277,8 @@ document.getElementById("lp-email-capture").addEventListener("submit",function(e
   .catch(function(){alert("Network error");btn.textContent="Send me the guide";btn.disabled=false;});
 });
 </script>
-<div class="story-section" id="story">
-<div class="story-label">THE STORY</div>
-<h2>I was building an agent that pays invoices. Then test #47 sent USDC to a wallet I did not recognize.</h2>
-<div class="story-quote">"I checked the wallet against the OFAC SDN list. It was there. If that had been production, I would be looking at a $356,000 fine right now. The agent did not know what OFAC was. It just saw 'pay invoice #4021' and sent USDC. It would have done it at 3 AM, repeatedly, until someone noticed."</div>
-<p>The problem was not the agent. The problem was that <strong>nobody was checking</strong>. The big payment rails handle moving money. They do not screen recipients. That gap is why I built agentmail.</p>
-<div class="callout"><strong>Your agent needs this check.</strong> Not next quarter. Not after the compliance notice. Before you deploy.</div>
-</div>
-<div class="testimonial">
-<div class="card">
-<div class="label">FROM A FINTECH DEVELOPER</div>
-<p class="quote">"Before agentmail, I was shipping agents hoping OFAC did not notice. Now I check every wallet before payments go out. It takes one curl call. The peace of mind is worth more than the API cost."</p>
-<div class="line"></div>
-<p class="author">Backend dev at a fintech startup (anonymous)</p>
-</div>
-</div>
+
+
 <div class="offer-grid">
 <h2>What you get when you screen before every payment</h2>
 <div class="grid">
@@ -1324,7 +1329,7 @@ document.getElementById("lp-email-capture").addEventListener("submit",function(e
 <li>No signup needed</li>
 </ul>
 <a href="#install" class="btn btn-ghost">Try it now</a>
-<p class="guarantee-text">See if any wallet is sanctioned before you pay. No risk.</p>
+<p class="guarantee-text">50 checks/day, free forever. No credit card. No time limit.</p>
 </div>
 <div class="price-card featured">
 <div class="popular">Most popular</div>
@@ -1336,8 +1341,8 @@ document.getElementById("lp-email-capture").addEventListener("submit",function(e
 <li>API key + audit log</li>
 <li>Priority support</li>
 </ul>
-<a href="/checkout/dev" class="btn btn-primary">Subscribe</a>
-<p class="guarantee-text">If we miss a sanctioned wallet, we cover the first $10K of your legal fees.</p>
+<a href="/checkout/dev" class="btn btn-primary">Start free trial</a>
+<p class="guarantee-text">First month free. Cancel anytime. If we miss a sanctioned wallet, we cover the first $10K of your legal fees.</p>
 </div>
 <div class="price-card">
 <h3>Pro</h3>
@@ -1350,9 +1355,20 @@ document.getElementById("lp-email-capture").addEventListener("submit",function(e
 <li>Custom risk rules</li>
 </ul>
 <a href="/checkout/pro" class="btn btn-ghost">Subscribe</a>
-<p class="guarantee-text">For production teams with high-volume agent payments.</p>
+<p class="guarantee-text">Same $10K guarantee. Priority SLA. Custom risk rules. For production teams.</p>
 </div>
+</div></div>
+
+
 </div>
+
+
+
+</div>
+
+
+
+
 """
         self._send_html(200, html)
 
