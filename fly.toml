@@ -31,7 +31,16 @@ primary_region = "fra"
     hard_limit = 250
     soft_limit = 200
 
-# Persistent volume for the OFAC cache + dispute registry + audit log
+  # Fly-native health check (Fly ignores Dockerfile HEALTHCHECK).
+  # Grace period lets the app finish its cold-start bind before Fly routes traffic,
+  # so the first request after an idle wake waits instead of failing.
+  [[http_service.checks]]
+    interval = "10s"
+    timeout = "3s"
+    grace_period = "30s"
+    method = "GET"
+    path = "/health"
+
 [mounts]
   source = "agentmail_data"
   destination = "/data"
