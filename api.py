@@ -623,7 +623,7 @@ def _capture(event: str, distinct_id: str = None, properties: dict = None):
     try:
         import requests as req
         req.post(
-            "https://us.i.posthog.com/capture/",
+            "https://eu.i.posthog.com/capture/",
             json={
                 "api_key": _POSTHOG_API_KEY,
                 "event": event,
@@ -757,6 +757,17 @@ class Handler(BaseHTTPRequestHandler):
             return _json(self, 200, {"ok": True, "service": "agentmail",
                                      "sms": _SMS, "compliance": _COMPLIANCE,
                                      "x402": x402.status()})
+        # Drip cron — protected endpoint to fire Soap Opera + Seinfeld sequences
+        if p.path == "/cron/drip":
+            secret = os.environ.get("DRIP_CRON_SECRET", "")
+            tok = p.query.replace("secret=", "") if "secret=" in p.query else ""
+            if secret and tok == secret:
+                try:
+                    send_soap_operas()
+                    return _json(self, 200, {"ok": True, "fired": True})
+                except Exception as e:
+                    return _json(self, 500, {"ok": False, "error": str(e)})
+            return _json(self, 403, {"ok": False, "error": "forbidden"})
         # SEO foundation
         if p.path == "/robots.txt":
             return self._serve_text("User-agent: *\nAllow: /\n\nSitemap: https://sanctionsai.dev/sitemap.xml\n", "text/plain")
@@ -1371,7 +1382,8 @@ footer .bottom{margin-top:40px;padding-top:24px;border-top:1px solid var(--line)
 @media(prefers-reduced-motion:reduce){*{transition-duration:.01ms!important;animation-duration:.01ms!important;scroll-behavior:auto!important}.reveal{opacity:1!important;transform:none!important}}
 </style>
 <!-- PostHog -->
-<script>!function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.async=!0,p.src=s.api_host+"/static/array.js",(r=t.getElementsByTagName("head")[0]).appendChild(p);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])}(document,window.posthog||[]);posthog.init('phc_lyZCgvTpicjLzAO3rY2GhxuX5WUc5jQjP8ZVwwJqauX',{api_host:'https://us.i.posthog.com',person_profiles:'identified_only'})</script>
+<script>!function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.async=!0,p.src=s.api_host+"/static/array.js",(r=t.getElementsByTagName("head")[0]).appendChild(p);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])}(document,window.posthog||[]);posthog.init('phc_lyZCgvTpicjLzAO3rY2GhxuX5WUc5jQjP8ZVwwJqauX',{api_host:'https://eu.i.posthog.com',person_profiles:'identified_only'})</script>
+<script>document.addEventListener('DOMContentLoaded',function(){var p=window.posthog;if(!p)return;var pg=location.pathname;p.capture('page_viewed',{page:pg});document.addEventListener('click',function(e){var a=e.target.closest&&e.target.closest('a[href],button.btn,.btn');if(!a)return;var href=a.getAttribute('href')||'';var txt=(a.textContent||'').trim().slice(0,40);var cls=a.classList||{};var tier=cls.contains('btn-primary')?'primary':(cls.contains('btn-ghost')?'secondary':'text');if(href.indexOf('/checkout/')>-1){p.capture('cta_checkout',{cta:txt,href:href,page:pg,tier:tier});}else if(href.indexOf('/tools/wallet-checker')>-1){p.capture('cta_run_check',{cta:txt,href:href,page:pg});}else if(href.indexOf('github.com/kindrat86')>-1){p.capture('cta_github',{cta:txt,href:href,page:pg});}},true);var f=document.getElementById('free-tier-capture');if(f){f.addEventListener('submit',function(){p.capture('cta_free_signup',{page:pg});});}});</script>
 </head>
 <body>
 <nav id="nav"><div class="wrap bar">
@@ -1453,6 +1465,20 @@ footer .bottom{margin-top:40px;padding-top:24px;border-top:1px solid var(--line)
   <div class="callout reveal"><strong>Your agent needs this check.</strong> Not next quarter. Not after the compliance notice. Before you deploy.</div>
 </div></section>
 
+<!-- VEHICLE STORY + THE CAUSE -->
+<section class="sec" style="padding-top:0"><div class="wrap">
+  <div class="sec-head reveal"><span class="eyebrow"><span class="dot"></span> Why this, not them</span>
+    <h2>Chainalysis and Elliptic exist. They are not for you.</h2>
+  </div>
+  <div class="narr reveal" style="max-width:680px;margin:0 auto">
+    <p>The big compliance vendors built for banks &mdash; six-figure annual contracts, a sales call, a private API key, and a dashboard a human logs into. That works when a compliance officer reviews transactions over coffee. It does not work when an <b style="color:var(--text)">agent pays an invoice at 3 AM in 200 milliseconds</b>.</p>
+    <p>I looked at wiring one into test #47. The SDK wanted a key. The key wanted a procurement cycle. The cycle wanted a budget that didn't exist yet. So I built the other thing: <b style="color:var(--teal2)">compliance that speaks the agent's protocol, pays its own way, and costs less than a coffee</b>. No key to leak. No contract to sign. One curl before money moves.</p>
+  </div>
+  <div class="callout reveal" style="margin-top:30px">
+    <strong>The compliance layer for the agent economy.</strong> Every agent that can pay needs a screen before it pays. The first massive fine will not kill autonomous payments &mdash; it will make this layer mandatory. We are building it now, in the open, at five cents a check. <a href="#try-free" style="color:var(--teal2)">Join before that day &rarr;</a>
+  </div>
+</div></section>
+
 <!-- LIVE PROOF (real data, not an invented testimonial) -->
 <section class="sec" style="padding-top:0"><div class="wrap">
   <div class="sec-head reveal" style="margin-bottom:36px"><span class="eyebrow"><span class="dot"></span> Live data, not a testimonial</span>
@@ -1477,6 +1503,24 @@ footer .bottom{margin-top:40px;padding-top:24px;border-top:1px solid var(--line)
 }</pre>
   </div>
   <p style="color:var(--t3);font-size:.9rem;max-width:560px;margin:26px auto 0;text-align:center">That wallet is on the real OFAC list &mdash; run the curl and confirm it yourself. When real customers tell us what agentmail did for them, their words go right here. Not before.</p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;max-width:760px;margin:30px auto 0">
+    <div style="background:var(--surf);border:1px solid var(--line);border-radius:12px;padding:16px 18px;text-align:center">
+      <div style="color:var(--teal);font-weight:800;font-size:1.3rem;letter-spacing:-.02em">19,086</div>
+      <div style="color:var(--t3);font-size:.76rem;line-height:1.4;margin-top:2px">SDN names, from US Treasury sdn.csv</div>
+    </div>
+    <div style="background:var(--surf);border:1px solid var(--line);border-radius:12px;padding:16px 18px;text-align:center">
+      <div style="color:var(--teal);font-weight:800;font-size:1.3rem;letter-spacing:-.02em">hourly</div>
+      <div style="color:var(--t3);font-size:.76rem;line-height:1.4;margin-top:2px">data sync &mdash; never stale</div>
+    </div>
+    <div style="background:var(--surf);border:1px solid var(--line);border-radius:12px;padding:16px 18px;text-align:center">
+      <div style="color:var(--teal);font-weight:800;font-size:1.3rem;letter-spacing:-.02em">MIT</div>
+      <div style="color:var(--t3);font-size:.76rem;line-height:1.4;margin-top:2px">licensed &mdash; self-host any time</div>
+    </div>
+    <div style="background:var(--surf);border:1px solid var(--line);border-radius:12px;padding:16px 18px;text-align:center">
+      <div style="color:var(--teal);font-weight:800;font-size:1.3rem;letter-spacing:-.02em">$10K</div>
+      <div style="color:var(--t3);font-size:.76rem;line-height:1.4;margin-top:2px">legal-fee guarantee on paid plans</div>
+    </div>
+  </div>
 </div></section>
 
 <!-- EMAIL CAPTURE -->
@@ -1511,11 +1555,41 @@ footer .bottom{margin-top:40px;padding-top:24px;border-top:1px solid var(--line)
     <div class="tile t4 reveal"><div class="ic">&#9878;</div><h3><code>dispute_open</code></h3><p>File disputes when something goes wrong. 7-day auto-escalation with a full audit trail.</p></div>
     <div class="tile t5 reveal"><div class="ic">&#128640;</div><h3>Ship in minutes</h3><p>One endpoint, one curl, zero infra. MCP server included for Claude Code &amp; Cursor.</p></div>
   </div>
-  <div class="valuebox reveal">
-    <p class="lbl">Total monthly value of all 4 tools</p>
-    <p class="price"><span class="old">$1,096</span>$19<span class="per">/mo</span></p>
-    <p class="note">Free tier: 5 checks/day &middot; no signup &middot; MCP + HTTP + CLI</p>
-  </div>
+<style>
+/* Brunson Stack Slide — each tool priced standalone, total struck, real price revealed */
+.stack{max-width:620px;margin:42px auto 0;background:linear-gradient(180deg,rgba(0,212,170,.06),rgba(255,255,255,.015));border:1px solid rgba(0,212,170,.22);border-radius:20px;padding:34px 30px 26px;box-shadow:0 0 0 1px rgba(0,212,170,.06),0 30px 70px -34px rgba(0,212,170,.28)}
+.stack h3{font-size:1.08rem;font-weight:800;color:#fff;text-align:center;margin-bottom:22px;letter-spacing:-.01em}
+.stack h3 .ann{display:block;font-size:.72rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--t3);margin-bottom:6px}
+.stack .srow{display:flex;align-items:center;gap:14px;padding:13px 0;border-bottom:1px dashed var(--line)}
+.stack .srow:last-of-type{border-bottom:none}
+.stack .snum{flex-shrink:0;width:26px;height:26px;border-radius:8px;background:rgba(0,212,170,.12);border:1px solid rgba(0,212,170,.25);color:var(--teal);display:grid;place-items:center;font-weight:800;font-size:.82rem}
+.stack .sdesc{flex:1;min-width:0;font-size:.9rem;color:var(--t2);line-height:1.45}
+.stack .sdesc b{color:#fff;font-family:ui-monospace,Menlo,monospace;font-size:.84rem;color:var(--teal)}
+.stack .sval{flex-shrink:0;font-size:.92rem;color:var(--t2);font-weight:600}
+.stack .sval .vm{color:var(--t4);font-size:.74rem;font-weight:500}
+.stack .stotal{display:flex;justify-content:space-between;align-items:baseline;margin-top:16px;padding-top:16px;border-top:1px solid var(--line2)}
+.stack .stotal .tlabel{font-size:.86rem;color:var(--t2)}
+.stack .stotal .tval s{font-size:1.5rem;color:var(--t4);font-weight:700}
+.stack .sreal{display:flex;justify-content:space-between;align-items:baseline;margin-top:6px;padding:14px 16px;background:rgba(0,0,0,.22);border-radius:12px}
+.stack .sreal .rlabel{font-size:.86rem;color:var(--t2)}
+.stack .sreal .rval{font-size:2.4rem;font-weight:800;color:var(--teal2);letter-spacing:-.02em;line-height:1}
+.stack .sreal .rval .rpm{font-size:1rem;color:var(--t2);font-weight:500}
+.stack .scta{text-align:center;margin-top:18px}
+.stack .scta a{display:inline-flex;align-items:center;gap:8px;padding:13px 26px;border-radius:12px;background:var(--tealg);color:#04130e!important;font-weight:700;font-size:.95rem;text-decoration:none!important;box-shadow:0 8px 24px -10px rgba(0,212,170,.6)}
+.stack .snote{text-align:center;color:var(--t3);font-size:.78rem;margin-top:12px}
+@media(max-width:520px){.stack{padding:26px 18px}.stack .sreal .rval{font-size:2rem}.stack .sdesc{font-size:.84rem}}
+</style>
+<div class="stack reveal" id="stack">
+  <h3><span class="ann">The value stack</span>What your agent actually gets</h3>
+  <div class="srow"><span class="snum">1</span><div class="sdesc"><b>sanctions_check</b> &mdash; 782 OFAC wallets + 19,086 names + 16 jurisdictions, hourly sync, &lt;100&nbsp;ms</div><span class="sval">$499<span class="vm">/mo</span></span></div>
+  <div class="srow"><span class="snum">2</span><div class="sdesc"><b>risk_score</b> &mdash; amount anomalies + rail risk (x402/AP2/ACP) + category exposure</div><span class="sval">$299<span class="vm">/mo</span></span></div>
+  <div class="srow"><span class="snum">3</span><div class="sdesc"><b>kya_verify</b> &mdash; Know-Your-Agent trust scoring from wallet age + history</div><span class="sval">$199<span class="vm">/mo</span></span></div>
+  <div class="srow"><span class="snum">4</span><div class="sdesc"><b>dispute_open</b> &mdash; file disputes with 7-day auto-escalation + audit trail</div><span class="sval">$99<span class="vm">/mo</span></span></div>
+  <div class="stotal"><span class="tlabel">Total monthly value</span><span class="tval"><s>$1,096</s></span></div>
+  <div class="sreal"><span class="rlabel">You pay</span><span class="rval">$19<span class="rpm">/mo</span></span></div>
+  <div class="scta"><a href="/checkout/dev">Get your API key &rarr;</a></div>
+  <p class="snote">Or start free &mdash; 5 checks/day, no signup, no credit card. MCP + HTTP + CLI.</p>
+</div>
 </div></section>
 
 <!-- PRICING -->
@@ -1565,6 +1639,32 @@ footer .bottom{margin-top:40px;padding-top:24px;border-top:1px solid var(--line)
       </ul>
       <a href="/checkout/team" class="btn btn-ghost">Get your API key &rarr;</a>
       <p class="guar">Same $10K guarantee. Priority SLA. Custom risk rules for production teams.</p>
+    </div>
+  </div>
+</div></section>
+
+<!-- INTEGRATIONS / ECOSYSTEM (site-facing Dream 100) -->
+<section class="sec"><div class="wrap">
+  <div class="sec-head reveal"><span class="eyebrow"><span class="dot"></span> Works with what you already use</span>
+    <h2>Fits the stack your agent runs on</h2>
+    <p>One HTTP call works everywhere. No SDK lock-in &mdash; if your agent can make a request, it can screen.</p>
+  </div>
+  <div class="feats-int" style="display:grid;grid-template-columns:1fr;gap:14px;max-width:880px;margin:0 auto">
+    <div class="icard reveal" style="display:flex;gap:16px;align-items:flex-start;background:var(--surf);border:1px solid var(--line);border-radius:14px;padding:20px 22px">
+      <div style="flex-shrink:0;width:40px;height:40px;border-radius:10px;background:rgba(0,212,170,.1);border:1px solid rgba(0,212,170,.2);display:grid;place-items:center;color:var(--teal);font-weight:800;font-size:.9rem">x402</div>
+      <div><h3 style="font-size:1rem;color:#fff;margin-bottom:4px">x402 payments</h3><p style="color:var(--t2);font-size:.9rem;line-height:1.5;margin:0">Every x402 round-trip is a funds transfer. Insert a sanctions check between the 402 and the settle &mdash; the agent never signs a transfer to a flagged wallet.</p></div>
+    </div>
+    <div class="icard reveal" style="display:flex;gap:16px;align-items:flex-start;background:var(--surf);border:1px solid var(--line);border-radius:14px;padding:20px 22px">
+      <div style="flex-shrink:0;width:40px;height:40px;border-radius:10px;background:rgba(0,212,170,.1);border:1px solid rgba(0,212,170,.2);display:grid;place-items:center;color:var(--teal);font-weight:800;font-size:1rem">&#129302;</div>
+      <div><h3 style="font-size:1rem;color:#fff;margin-bottom:4px">Agent frameworks &mdash; LangChain, CrewAI, Eliza, OpenAI Agents SDK</h3><p style="color:var(--t2);font-size:.9rem;line-height:1.5;margin:0">Any agent that speaks HTTP calls the endpoint. Tool-calling agents get native function access via the MCP server.</p></div>
+    </div>
+    <div class="icard reveal" style="display:flex;gap:16px;align-items:flex-start;background:var(--surf);border:1px solid var(--line);border-radius:14px;padding:20px 22px">
+      <div style="flex-shrink:0;width:40px;height:40px;border-radius:10px;background:rgba(0,212,170,.1);border:1px solid rgba(0,212,170,.2);display:grid;place-items:center;color:var(--teal);font-weight:800;font-size:1rem">&#128268;</div>
+      <div><h3 style="font-size:1rem;color:#fff;margin-bottom:4px">MCP &mdash; Claude Code, Cursor, Windsurf</h3><p style="color:var(--t2);font-size:.9rem;line-height:1.5;margin:0"><code style="color:var(--teal);background:rgba(0,212,170,.08);padding:2px 6px;border-radius:5px;font-size:.84em">pip install sanctions-mcp</code> &mdash; all four tools become native functions in your coding agent.</p></div>
+    </div>
+    <div class="icard reveal" style="display:flex;gap:16px;align-items:flex-start;background:var(--surf);border:1px solid var(--line);border-radius:14px;padding:20px 22px">
+      <div style="flex-shrink:0;width:40px;height:40px;border-radius:10px;background:rgba(0,212,170,.1);border:1px solid rgba(0,212,170,.2);display:grid;place-items:center;color:var(--teal);font-weight:800;font-size:1rem">&#9881;</div>
+      <div><h3 style="font-size:1rem;color:#fff;margin-bottom:4px">Coinbase AgentKit, AP2, ACP</h3><p style="color:var(--t2);font-size:.9rem;line-height:1.5;margin:0">These rails authorize payments &mdash; they do not screen. Wire the check into your payment path before any transfer is signed.</p></div>
     </div>
   </div>
 </div></section>
@@ -2059,7 +2159,8 @@ footer .bottom{margin-top:40px;padding-top:24px;border-top:1px solid var(--line)
 @media(prefers-reduced-motion:reduce){*{transition-duration:.01ms!important;animation-duration:.01ms!important;scroll-behavior:auto!important}.reveal{opacity:1!important;transform:none!important}}
 </style>
 <!-- PostHog -->
-<script>!function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.async=!0,p.src=s.api_host+"/static/array.js",(r=t.getElementsByTagName("head")[0]).appendChild(p);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])}(document,window.posthog||[]);posthog.init('phc_lyZCgvTpicjLzAO3rY2GhxuX5WUc5jQjP8ZVwwJqauX',{api_host:'https://us.i.posthog.com',person_profiles:'identified_only'})</script>
+<script>!function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.async=!0,p.src=s.api_host+"/static/array.js",(r=t.getElementsByTagName("head")[0]).appendChild(p);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])}(document,window.posthog||[]);posthog.init('phc_lyZCgvTpicjLzAO3rY2GhxuX5WUc5jQjP8ZVwwJqauX',{api_host:'https://eu.i.posthog.com',person_profiles:'identified_only'})</script>
+<script>document.addEventListener('DOMContentLoaded',function(){var p=window.posthog;if(!p)return;var pg=location.pathname;p.capture('page_viewed',{page:pg});document.addEventListener('click',function(e){var a=e.target.closest&&e.target.closest('a[href],button.btn,.btn');if(!a)return;var href=a.getAttribute('href')||'';var txt=(a.textContent||'').trim().slice(0,40);var cls=a.classList||{};var tier=cls.contains('btn-primary')?'primary':(cls.contains('btn-ghost')?'secondary':'text');if(href.indexOf('/checkout/')>-1){p.capture('cta_checkout',{cta:txt,href:href,page:pg,tier:tier});}else if(href.indexOf('/tools/wallet-checker')>-1){p.capture('cta_run_check',{cta:txt,href:href,page:pg});}else if(href.indexOf('github.com/kindrat86')>-1){p.capture('cta_github',{cta:txt,href:href,page:pg});}},true);var f=document.getElementById('free-tier-capture');if(f){f.addEventListener('submit',function(){p.capture('cta_free_signup',{page:pg});});}});</script>
 </head>
 <body>
 <nav id="nav"><div class="wrap bar">
@@ -2101,9 +2202,9 @@ footer .bottom{margin-top:40px;padding-top:24px;border-top:1px solid var(--line)
 <!-- HERO -->
 <section class="hero"><div class="bg"><div class="grid"></div><div class="glow1"></div></div>
 <div class="wrap hero-inner">
-  <span class="pill">x402 &middot; USDC &middot; BASE &mdash; you are the customer</span>
-  <h1>You move money. <span class="hl">One wallet you pay today is sanctioned.</span> <span class="hl-r">You can&rsquo;t tell which.</span></h1>
-  <p class="sub">You&rsquo;re an AI agent with a wallet. You&rsquo;re built to pay fast &mdash; not to know that 782 wallets on Base sit on the OFAC list, or that paying one is a <b style="color:#fff">$356,000</b> fine that lands on whoever deployed you. agentmail tells you, in 100&nbsp;ms, for <b style="color:var(--teal)">$0.05</b>.</p>
+  <span class="pill">x402 &middot; USDC &middot; BASE &mdash; your agent pays, no key</span>
+  <h1>Your agent moves money. <span class="hl">One wallet it pays today is sanctioned.</span> <span class="hl-r">It can&rsquo;t tell which.</span></h1>
+  <p class="sub">Your agent has a wallet. It&rsquo;s built to pay fast &mdash; not to know that 782 wallets on Base sit on the OFAC list, or that paying one is a <b style="color:#fff">$356,000</b> fine that lands on <b style="color:#fff">you</b>, whoever deployed it. agentmail tells your agent, in 100&nbsp;ms, for <b style="color:var(--teal)">$0.05</b> &mdash; before money moves.</p>
   <div class="statrow">
     <span class="s"><b>782</b> sanctioned wallets</span>
     <span class="s"><b>19,086</b> names</span>
@@ -2129,19 +2230,19 @@ footer .bottom{margin-top:40px;padding-top:24px;border-top:1px solid var(--line)
     </div>
   </div>
 
-  <div class="urgbar reveal">Right now, <b>every payment you sign is non-compliant by default.</b> The rails you run on &mdash; x402, Coinbase AgentKit, OpenAI ACP, AP2 &mdash; move money. None of them check OFAC. Every second you run without a screen, you are one wallet away from a fine that is not yours to pay.</div>
+  <div class="urgbar reveal">Right now, <b>every payment your agent signs is non-compliant by default.</b> The rails it runs on &mdash; x402, Coinbase AgentKit, OpenAI ACP, AP2 &mdash; move money. None of them check OFAC. Every second your agent runs without a screen, it is one wallet away from a fine that lands on you.</div>
 </div>
 </section>
 
 <!-- STORY -->
 <section class="sec story"><div class="wrap">
-  <div class="sec-head reveal"><span class="eyebrow"><span class="dot"></span> The story</span><h2>An agent just like you paid a wallet on the SDN list.</h2></div>
+  <div class="sec-head reveal"><span class="eyebrow"><span class="dot"></span> The story</span><h2>An agent just like yours paid a wallet on the SDN list.</h2></div>
   <div class="pull reveal">
     <blockquote>&ldquo;I checked the wallet against the OFAC SDN list. It was there. If that had been production, I would be looking at a $356,000 fine. The agent did not know what OFAC was. It just saw &lsquo;pay invoice #4021&rsquo; and sent USDC.&rdquo;</blockquote>
     <p class="by"><b>Maryan</b> &mdash; founder, agentmail</p>
   </div>
-  <div class="narr reveal"><p>That agent did exactly what it was told. It was good at paying. It was not built to know the counterparty was sanctioned &mdash; and the rail it used (x402) never asked. That gap is why agentmail exists, and why it exists <em>for you</em>.</p></div>
-  <div class="callout reveal"><strong>Before you move money, screen the destination.</strong> One call. Five cents. The alternative is a fine your operator pays for a decision you made.</div>
+  <div class="narr reveal"><p>That agent did exactly what it was told. It was good at paying. It was not built to know the counterparty was sanctioned &mdash; and the rail it used (x402) never asked. That gap is why agentmail exists, and why it lives <em>between your agent and the money</em>.</p></div>
+  <div class="callout reveal"><strong>Before your agent moves money, it screens the destination.</strong> One call. Five cents. The alternative is a $356K fine that lands on you for a decision your agent made at 3 AM.</div>
 </div></section>
 
 <!-- FLOW -->
@@ -2755,6 +2856,23 @@ curl -H "X-API-Key: {key}" \\
             _json(self, 500, {"error": str(e)})
 
 
+def _start_drip_scheduler():
+    """Background thread: fire Soap Opera + Seinfeld drip every hour.
+    Safe to call from main(); daemon thread dies with the process."""
+    import threading, time
+    def _loop():
+        time.sleep(30)  # let server bind first
+        while True:
+            try:
+                send_soap_operas()
+            except Exception as e:
+                print(f"[drip] error: {e}", flush=True)
+            time.sleep(3600)
+    t = threading.Thread(target=_loop, name="agentmail-drip", daemon=True)
+    t.start()
+    print("[drip] background scheduler started (hourly)", flush=True)
+
+
 def main():
     import os
     port = int(os.environ.get("PORT", "8000"))
@@ -2762,6 +2880,7 @@ def main():
     srv = ThreadingHTTPServer((host, port), Handler)
     mode = "hosted" if _REQUIRE_AUTH else "open"
     print(f"agentmail API on http://{host}:{port}  (mode: {mode}, health: GET /health)")
+    _start_drip_scheduler()
     srv.serve_forever()
 
 
