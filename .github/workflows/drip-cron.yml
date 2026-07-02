@@ -1,0 +1,15 @@
+name: Soap Opera Drip Cron
+on:
+  schedule:
+    - cron: '0 */3 * * *'  # every 3 hours
+  workflow_dispatch:        # manual trigger too
+
+jobs:
+  drip:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fire Soap Opera drip
+        run: |
+          curl -sS --max-time 30 \
+            "https://agentmail-api.fly.dev/cron/drip?secret=${{ secrets.DRIP_CRON_SECRET }}" \
+            | python3 -c "import sys,json; d=json.load(sys.stdin); print('ok' if d.get('ok') else d)"
