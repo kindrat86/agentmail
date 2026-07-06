@@ -371,7 +371,7 @@ footer p{color:#444;font-size:.8em}
 
 _NAV = '<nav><div class="logo">agent<span>mail</span></div><div class="links"><a href="/">Home</a><a href="/teardown">How It Works</a><a href="/dashboard">Dashboard</a><a href="/faq">FAQ</a><a href="/docs">Docs</a><a href="/tools/wallet-checker">Free Checker</a><a href="/blog/ofac-for-agents">Blog</a><a href="/pricing">Pricing</a><a href="/checkout/dev" class="btn btn-primary">Get API key</a></div></nav>'
 
-_FOOTER = '<footer><div class="links" style="display:flex;flex-wrap:wrap;gap:12px 28px;justify-content:center;max-width:900px;margin:0 auto 16px"><div style="min-width:140px"><strong style="color:#888;font-size:.75em;text-transform:uppercase;letter-spacing:.05em">Product</strong><br><a href="/">Home</a><br><a href="/teardown">How It Works</a><br><a href="/dashboard">Dashboard</a><br><a href="/faq">FAQ</a><br><a href="/docs">Docs</a><br><a href="/pricing">Pricing</a><br><a href="/tools/wallet-checker">Free Wallet Checker</a><br><a href="/llms.txt">llms.txt (AI docs)</a></div><div style="min-width:140px"><strong style="color:#888;font-size:.75em;text-transform:uppercase;letter-spacing:.05em">By Industry</strong><br><a href="/for/fintech">Fintech</a><br><a href="/for/crypto">Crypto</a><br><a href="/for/dex">DEX</a><br><a href="/for/defi">DeFi</a><br><a href="/for/trading">Trading</a><br><a href="/for/payments">Payments</a><br><a href="/for/ecommerce">E-commerce</a><br><a href="/for/gaming">Gaming</a><br><a href="/for/ai-agents">AI Agents</a><br><a href="/for/developers">Developers</a></div><div style="min-width:140px"><strong style="color:#888;font-size:.75em;text-transform:uppercase;letter-spacing:.05em">Compare</strong><br><a href="/compare/chainalysis">vs Chainalysis</a><br><a href="/compare/elliptic">vs Elliptic</a><br><a href="/compare/complyadvantage">vs ComplyAdvantage</a><br><a href="/compare/sumsub">vs SumSub</a><br><a href="/compare/world-check">vs World-Check</a></div><div style="min-width:140px"><strong style="color:#888;font-size:.75em;text-transform:uppercase;letter-spacing:.05em">Resources</strong><br><a href="https://github.com/kindrat86/agentmail">GitHub</a><br><a href="https://pypi.org/project/sanctions-mcp/">PyPI</a><br><a href="/blog">Blog</a><br><a href="/guides">Guides</a><br><a href="/penalties">Penalties & Risk</a><br><a href="/content-strategy">Content Strategy</a><br><a href="/partners/jv">JV Partners (50%)</a><br><a href="/dream100">Dream 100</a><br><a href="/agent">For Agents</a><br><a href="/about">About</a><br><a href="/privacy">Privacy</a><br><a href="/terms">Terms</a></div></div><p style="text-align:center;color:#666">agentmail - OFAC sanctions screening for AI agents · MIT licensed · Data from US Treasury &amp; vile/ofac-sdn-list</p></footer>'
+_FOOTER = '<footer><div class="links" style="display:flex;flex-wrap:wrap;gap:12px 28px;justify-content:center;max-width:900px;margin:0 auto 16px"><div style="min-width:140px"><strong style="color:#888;font-size:.75em;text-transform:uppercase;letter-spacing:.05em">Product</strong><br><a href="/">Home</a><br><a href="/teardown">How It Works</a><br><a href="/dashboard">Dashboard</a><br><a href="/faq">FAQ</a><br><a href="/docs">Docs</a><br><a href="/pricing">Pricing</a><br><a href="/tools/wallet-checker">Free Wallet Checker</a><br><a href="/llms.txt">llms.txt (AI docs)</a></div><div style="min-width:140px"><strong style="color:#888;font-size:.75em;text-transform:uppercase;letter-spacing:.05em">By Industry</strong><br><a href="/for/fintech">Fintech</a><br><a href="/for/crypto">Crypto</a><br><a href="/for/dex">DEX</a><br><a href="/for/defi">DeFi</a><br><a href="/for/trading">Trading</a><br><a href="/for/payments">Payments</a><br><a href="/for/ecommerce">E-commerce</a><br><a href="/for/gaming">Gaming</a><br><a href="/for/ai-agents">AI Agents</a><br><a href="/for/developers">Developers</a></div><div style="min-width:140px"><strong style="color:#888;font-size:.75em;text-transform:uppercase;letter-spacing:.05em">Compare</strong><br><a href="/compare/chainalysis">vs Chainalysis</a><br><a href="/compare/elliptic">vs Elliptic</a><br><a href="/compare/complyadvantage">vs ComplyAdvantage</a><br><a href="/compare/sumsub">vs SumSub</a><br><a href="/compare/world-check">vs World-Check</a></div><div style="min-width:140px"><strong style="color:#888;font-size:.75em;text-transform:uppercase;letter-spacing:.05em">Resources</strong><br><a href="https://github.com/kindrat86/agentmail">GitHub</a><br><a href="https://pypi.org/project/sanctions-mcp/">PyPI</a><br><a href="/blog">Blog</a><br><a href="/guides">Guides</a><br><a href="/penalties">Penalties & Risk</a><br><a href="/agent">For Agents</a><br><a href="/about">About</a><br><a href="/privacy">Privacy</a><br><a href="/terms">Terms</a></div></div><p style="text-align:center;color:#666">agentmail - OFAC sanctions screening for AI agents · MIT licensed · Data from US Treasury &amp; vile/ofac-sdn-list</p></footer>'
 
 _VERTICALS = {
     "fintech": {
@@ -1707,13 +1707,6 @@ class Handler(BaseHTTPRequestHandler):
             return _json(self, 404, {"error": "not found"})
         if p.path == "/guides":
             return self._guides_index_page()
-        # Traffic Secrets pages — content strategy, JV partners, dream 100
-        if p.path == "/content-strategy":
-            return self._content_strategy_page()
-        if p.path == "/partners/jv" or p.path == "/partners":
-            return self._partners_jv_page()
-        if p.path == "/dream100":
-            return self._dream100_page()
         # sanctions GET - paid endpoint (accepts API key OR x402 payment)
         if p.path == "/sanctions" or p.path.startswith("/sanctions?"):
             q = parse_qs(p.query)
@@ -2022,9 +2015,6 @@ class Handler(BaseHTTPRequestHandler):
         ("/about", "monthly", "0.5", "About sanctionsai.dev"),
         ("/privacy", "monthly", "0.4", "Privacy Policy"),
         ("/terms", "monthly", "0.4", "Terms of Service"),
-        ("/content-strategy", "monthly", "0.6", "Content strategy — hub-and-spoke distribution model"),
-            ("/partners/jv", "monthly", "0.6", "JV partner program — 50% recurring commission"),
-            ("/dream100", "monthly", "0.5", "Dream 100 — target influencers and communities"),
             ("/docs", "monthly", "0.6", "API documentation - agentmail"),
             ("/for/fintech", "monthly", "0.7", "OFAC sanctions for fintech agents"),
             ("/for/crypto", "monthly", "0.7", "OFAC sanctions for crypto agents"),
@@ -2626,18 +2616,6 @@ footer .bottom{margin-top:40px;padding-top:24px;border-top:1px solid var(--line)
     <div class="result" id="free-result">
       <code id="free-curl"></code>
       <p class="cap">This returns OFAC match data in under 100&nbsp;ms. Try it with any EVM wallet. 5 checks/day, free forever.</p>
-    </div>
-  </div>
-</div></section>
-
-<!-- WHAT HAPPENS IF YOU DO NOTHING (Brunson: cost-of-inaction before the offer) -->
-<section class="sec" style="padding-top:0"><div class="wrap">
-  <div class="narr reveal" style="max-width:680px;margin:0 auto">
-    <div class="callout" style="background:linear-gradient(135deg,rgba(255,107,107,.08),rgba(255,107,107,.02));border:1px solid rgba(255,107,107,.2);border-radius:16px;padding:28px 30px;color:#e7a3a3;line-height:1.7">
-      <div class="eyebrow" style="color:#ff6b6b;margin-bottom:14px"><span class="dot" style="background:#ff6b6b;box-shadow:0 0 12px #ff6b6b"></span> What happens if you do nothing</div>
-      <p style="margin:0 0 14px;font-size:1.02rem">Nothing changes today. Your agent keeps paying. Maybe nothing happens this week &mdash; there are 782 sanctioned wallets and your agent touches a handful of counterparties.</p>
-      <p style="margin:0 0 14px;font-size:1.02rem">But agents are getting more autonomous every month. More wallets, more chains, higher amounts. The rails they run on &mdash; <strong style="color:#ff9b9b">x402, AgentKit, AP2, ACP</strong> &mdash; do not screen. They never will on their own. The first time your agent pays the wrong wallet, the notice is $356,000. Not a bug report. Not a refund. <strong style="color:#ff9b9b">A fine that lands on whoever deployed the agent.</strong></p>
-      <p style="margin:0;font-size:1.02rem">Six months from now, when the first agent-driven OFAC enforcement makes the news, you'll either have had this screen in place for months &mdash; or you'll be explaining why you didn't. The curl above takes 30 seconds. <a href="#try-free" style="color:#ff9b9b;text-decoration:underline">Run it now &rarr;</a></p>
     </div>
   </div>
 </div></section>
@@ -3986,53 +3964,12 @@ document.getElementById("wallet").addEventListener("keydown", function(e){ if(e.
         if not post:
             return _json(self, 404, {"error": "not found"})
         title = post["title"]
-        page_url = _SITE + "/blog/" + slug
-        share_url = page_url.replace(":", "%3A").replace("/", "%2F")
-        share_title_enc = title.replace(" ", "+").replace("&", "%26")
-        # Traffic Secrets Ch 5: frictionless social sharing on every content piece
-        share_buttons = (
-            '<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:18px 0;padding:14px 16px;background:var(--surf);border:1px solid var(--line);border-radius:12px">'
-            '<span style="font-size:.78rem;color:var(--t3);letter-spacing:.04em;text-transform:uppercase;margin-right:6px">Share</span>'
-            '<a href="https://twitter.com/intent/tweet?text=' + share_title_enc + '&url=' + share_url + '&via=agentmaildev" target="_blank" rel="noopener" style="padding:7px 14px;border-radius:8px;background:rgba(0,212,170,.08);border:1px solid rgba(0,212,170,.2);color:var(--teal2);font-size:.82rem;font-weight:600;text-decoration:none">X / Twitter</a>'
-            '<a href="https://www.linkedin.com/sharing/share-offsite/?url=' + share_url + '" target="_blank" rel="noopener" style="padding:7px 14px;border-radius:8px;background:rgba(14,165,233,.08);border:1px solid rgba(14,165,233,.2);color:#7dd3fc;font-size:.82rem;font-weight:600;text-decoration:none">LinkedIn</a>'
-            '<a href="https://www.reddit.com/submit?url=' + share_url + '&title=' + share_title_enc + '" target="_blank" rel="noopener" style="padding:7px 14px;border-radius:8px;background:rgba(255,107,107,.08);border:1px solid rgba(255,107,107,.2);color:#ff9b9b;font-size:.82rem;font-weight:600;text-decoration:none">Reddit</a>'
-            '<a href="https://news.ycombinator.com/submitlink?u=' + share_url + '&t=' + share_title_enc + '" target="_blank" rel="noopener" style="padding:7px 14px;border-radius:8px;background:rgba(255,159,11,.08);border:1px solid rgba(255,159,11,.2);color:#fcd34d;font-size:.82rem;font-weight:600;text-decoration:none">HN</a>'
-            '<button onclick="navigator.clipboard.writeText(\'' + page_url + '\').then(function(){this.textContent=\'Copied!\';setTimeout(function(){var b=document.getElementById(\'cpbtn\');if(b)b.textContent=\'Copy link\'},2000)}.bind(this))" id="cpbtn" style="padding:7px 14px;border-radius:8px;background:rgba(255,255,255,.04);border:1px solid var(--line2);color:var(--t2);font-size:.82rem;font-weight:600;cursor:pointer">Copy link</button>'
-            '</div>'
-        )
-        # Traffic Secrets Ch 9: content upgrade — inline lead magnet specific to THIS post
-        content_upgrade = (
-            '<div style="margin:32px 0;padding:22px 24px;background:linear-gradient(135deg,rgba(0,212,170,.06),rgba(0,212,170,.02));border:1px solid rgba(0,212,170,.2);border-radius:14px">'
-            '<h3 style="font-size:1.05rem;color:#fff;margin:0 0 8px">📋 Free: Agent Compliance Checklist (PDF)</h3>'
-            '<p style="color:var(--t2);font-size:.9rem;margin:0 0 14px;line-height:1.5">A 1-page compliance audit for your payment agent. Check your setup against the 7-point framework. Enter your email — we send it instantly.</p>'
-            '<form onsubmit="var e=this.querySelector(\'input\').value;if(e&&e.indexOf(\'@\')>0){fetch(\'/subscribe\',{method:\'POST\',headers:{\'Content-Type\':\'application/json\'},body:JSON.stringify({email:e,source:\'blog-' + slug + '-upgrade\'})}).catch(function(){});this.innerHTML=\'<p style=color:var(--teal2);font-size:.9rem>✓ Checklist is on its way. Check your inbox in 2 minutes.</p>\'}else{this.innerHTML=\'<p style=color:var(--teal2);font-size:.9rem>✓ No email needed — <a href=/tools/wallet-checker style=color:var(--teal2)>try the free checker now →</a></p>\'}return false" style="display:flex;gap:8px;flex-wrap:wrap">'
-            '<input type="email" placeholder="you@example.com (optional)" style="flex:1;min-width:180px;padding:10px 14px;border-radius:8px;border:1px solid var(--line2);background:rgba(255,255,255,.02);color:var(--text);font-size:.88rem">'
-            '<button type="submit" style="padding:10px 20px;border-radius:8px;background:var(--tealg,linear-gradient(135deg,#00d4aa,#2deec0));color:#04130e;font-weight:700;font-size:.88rem;border:none;cursor:pointer">Get checklist →</button>'
-            '</form></div>'
-        )
-        # Insert content upgrade AFTER the second <h2> in the post body (mid-article, not bottom)
-        post_html = post["html"]
-        h2_count = post_html.count("<h2>")
-        if h2_count >= 2:
-            # Insert after the second </h2>
-            second_h2_end = post_html.find("</h2>", post_html.find("</h2>") + 5) + 5
-            if second_h2_end > 4:
-                post_html = post_html[:second_h2_end] + content_upgrade + post_html[second_h2_end:]
-        else:
-            # If fewer than 2 h2s, insert before the first <h2> or at the start
-            first_h2 = post_html.find("<h2>")
-            if first_h2 > 0:
-                post_html = post_html[:first_h2] + content_upgrade + post_html[first_h2:]
-            else:
-                post_html = content_upgrade + post_html
         body = (
             '<section style="border-top:none"><div class="prose" style="padding-top:40px">'
             '<p class="note">' + post["date"] + ' · agentmail</p>'
             '<h1>' + title + '</h1>'
             '<p class="lead">' + post["desc"] + '</p>'
-            + share_buttons +
-            post_html +
-            share_buttons +
+            + post["html"] +
             '<div class="cta-box" style="margin-top:40px"><h3>Screen your agents payments</h3>'
             '<p>Free tier, 5 checks/day. Add compliance before money moves.</p>'
             '<a href="/tools/wallet-checker" class="btn btn-primary">Try the free checker</a>'
@@ -4061,225 +3998,6 @@ document.getElementById("wallet").addEventListener("keydown", function(e){ if(e.
         }
         return self._page(title + " - agentmail blog", post["desc"], body,
                           extra_head=self._ld(ld) + self._ld(bc), canonical="/blog/" + slug)
-
-    def _content_strategy_page(self):
-        """Traffic Secrets: Hub-and-Spoke content distribution strategy."""
-        body = (
-            '<section style="text-align:center;border-top:none">'
-            '<p class="note" style="letter-spacing:.05em;text-transform:uppercase">Content Strategy</p>'
-            '<h1>How we distribute: the Hub-and-Spoke model</h1>'
-            '<p class="lead" style="max-width:640px;margin:0 auto 28px">Every piece of content starts here, then fans out to 6 platforms. One pillar post becomes 10 pieces of distribution.</p>'
-            '<a href="/blog" class="btn btn-primary">Read the blog</a>&nbsp; '
-            '<a href="#subscribe" class="btn btn-ghost">Get the roadmap</a></section>'
-            '<section><div class="prose">'
-            '<h2>The Hub</h2>'
-            '<p><strong>sanctionsai.dev/blog</strong> is the hub. Every deep-dive article lives here first. This is where SEO authority accumulates, where internal links point, and where the email capture converts readers into subscribers. The hub is permanent.</p>'
-            '<h2>The 6 Spokes</h2>'
-            '<p>Each pillar post gets repurposed across 6 distribution channels within 48 hours:</p>'
-            '<table style="width:100%;border-collapse:collapse;font-size:.9rem">'
-            '<tr style="border-bottom:1px solid var(--line)"><th style="text-align:left;padding:8px">Spoke</th><th style="text-align:left;padding:8px">Format</th><th style="text-align:left;padding:8px">Why</th></tr>'
-            '<tr style="border-bottom:1px solid var(--line)"><td style="padding:8px"><strong>Hacker News</strong></td><td style="padding:8px">Show HN or comment</td><td style="padding:8px">Devs who build payment agents</td></tr>'
-            '<tr style="border-bottom:1px solid var(--line)"><td style="padding:8px"><strong>Reddit</strong></td><td style="padding:8px">r/MachineLearning, r/algotrading</td><td style="padding:8px">Agent builders + compliance teams</td></tr>'
-            '<tr style="border-bottom:1px solid var(--line)"><td style="padding:8px"><strong>X / Twitter</strong></td><td style="padding:8px">5-tweet thread</td><td style="padding:8px">Dev accounts, MCP community</td></tr>'
-            '<tr style="border-bottom:1px solid var(--line)"><td style="padding:8px"><strong>LinkedIn</strong></td><td style="padding:8px">Carousel</td><td style="padding:8px">Fintech + compliance pros</td></tr>'
-            '<tr style="border-bottom:1px solid var(--line)"><td style="padding:8px"><strong>Dev.to / Medium</strong></td><td style="padding:8px">Cross-post</td><td style="padding:8px">SEO backlinks</td></tr>'
-            '<tr><td style="padding:8px"><strong>Newsletter</strong></td><td style="padding:8px">Email mention</td><td style="padding:8px">Owned audience — highest conversion</td></tr>'
-            '</table>'
-            '<h2>3 Content Pillars</h2>'
-            '<div style="display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));margin:20px 0">'
-            '<div style="padding:20px;background:var(--surf);border:1px solid var(--line);border-radius:12px"><h3 style="color:var(--teal2);font-size:1rem;margin:0 0 8px">1. Compliance Education</h3><p style="font-size:.86rem;margin:0">What OFAC is, how the SDN list works, strict liability. For devs who never dealt with sanctions.</p></div>'
-            '<div style="padding:20px;background:var(--surf);border:1px solid var(--line);border-radius:12px"><h3 style="color:var(--teal2);font-size:1rem;margin:0 0 8px">2. Technical Integration</h3><p style="font-size:.86rem;margin:0">How to wire sanctions_check into x402, LangChain, Claude Code. Code-first, copyable examples.</p></div>'
-            '<div style="padding:20px;background:var(--surf);border:1px solid var(--line);border-radius:12px"><h3 style="color:var(--teal2);font-size:1rem;margin:0 0 8px">3. Regulatory Risk</h3><p style="font-size:.86rem;margin:0">Real enforcement actions, penalty math. Fear-driven content for the buyer about to deploy.</p></div>'
-            '</div>'
-            '<h2>The repurposing pipeline</h2>'
-            '<p>One pillar post (2,000+ words) becomes 10 pieces of distribution:</p>'
-            '<ul style="list-style:none;padding:0">'
-            '<li style="padding:6px 0">5-tweet X thread (one insight per tweet)</li>'
-            '<li style="padding:6px 0">1 HN comment (contextual, on a relevant top story)</li>'
-            '<li style="padding:6px 0">1 Reddit post (full body)</li>'
-            '<li style="padding:6px 0">1 LinkedIn carousel (8 slides from headers)</li>'
-            '<li style="padding:6px 0">1 newsletter mention</li>'
-            '<li style="padding:6px 0">1 Dev.to cross-post (canonical points to hub)</li>'
-            '</ul>'
-            '</div></section>'
-            '<section id="subscribe"><div class="cta-box"><h2>Get the content roadmap</h2><p>Our 90-day publishing plan. See what we are writing, where we are distributing, and why.</p>'
-            '<a href="/blog/ofac-for-agents" class="btn btn-primary">Start with the blog</a>&nbsp; '
-            '<a href="/partners/jv" class="btn btn-ghost">Become a distribution partner</a></div></section>'
-        )
-        ld = {"@context": "https://schema.org", "@type": "WebPage",
-              "name": "Content Strategy | agentmail", "description": "Hub-and-Spoke content distribution model.",
-              "url": _SITE + "/content-strategy"}
-        return self._page("Content Strategy — Hub-and-Spoke Model | agentmail",
-                          "How agentmail distributes content across 6 platforms using the Hub-and-Spoke model.",
-                          body, extra_head=self._ld(ld), canonical="/content-strategy")
-
-    def _partners_jv_page(self):
-        """Traffic Secrets: JV Partnership / Affiliate program page."""
-        body = (
-            '<section style="text-align:center;border-top:none">'
-            '<p class="note" style="letter-spacing:.05em;text-transform:uppercase">JV / Affiliate Program</p>'
-            '<h1>Earn 50% recurring commission for 12 months</h1>'
-            '<p class="lead" style="max-width:640px;margin:0 auto 28px">Every developer you refer who upgrades to a paid plan earns you 50% of their monthly payment — for a full year. One referral to Pro = $594 over 12 months.</p>'
-            '<a href="mailto:hello@sanctionsai.dev?subject=JV%20Partner%20Application" class="btn btn-primary">Apply for a partner ID →</a>'
-            '&nbsp; <a href="#math" class="btn btn-ghost">See the math</a></section>'
-
-            '<section id="math"><div class="prose">'
-            '<h2>The commission math</h2>'
-            '<table style="width:100%;border-collapse:collapse;font-size:.9rem">'
-            '<tr style="border-bottom:1px solid var(--line2)"><th style="text-align:left;padding:10px">Plan</th><th style="text-align:left;padding:10px">Price/mo</th><th style="text-align:left;padding:10px">Your 50% / mo</th><th style="text-align:left;padding:10px">12-month value</th></tr>'
-            '<tr style="border-bottom:1px solid var(--line)"><td style="padding:10px"><strong>Dev</strong></td><td style="padding:10px">$19</td><td style="padding:10px;color:var(--teal2)">$9.50</td><td style="padding:10px;color:var(--teal2)"><strong>$114</strong></td></tr>'
-            '<tr style="border-bottom:1px solid var(--line)"><td style="padding:10px"><strong>Pro</strong></td><td style="padding:10px">$99</td><td style="padding:10px;color:var(--teal2)">$49.50</td><td style="padding:10px;color:var(--teal2)"><strong>$594</strong></td></tr>'
-            '<tr><td style="padding:10px"><strong>Compliance Pro</strong></td><td style="padding:10px">$499</td><td style="padding:10px;color:var(--teal2)">$249.50</td><td style="padding:10px;color:var(--teal2)"><strong>$2,994</strong></td></tr>'
-            '</table>'
-            '<p class="note">Example: 5 Pro referrals = $2,970/year. 10 Dev referrals = $1,140/year. Recurring, not one-time.</p>'
-
-            '<h2>How it works</h2>'
-            '<ol style="line-height:2">'
-            '<li><strong>You get a partner ID.</strong> Email hello@sanctionsai.dev with your audience description.</li>'
-            '<li><strong>Append ?ref=YOURID to any link.</strong> sanctionsai.dev/?ref=YOURID, sanctionsai.dev/pricing?ref=YOURID, etc.</li>'
-            '<li><strong>The referral is tracked for 60 days.</strong> If they sign up for any paid plan within 60 days of clicking your link, you get the commission.</li>'
-            '<li><strong>You get paid monthly via Stripe Connect.</strong> $50 minimum payout. Dashboard shows clicks, signups, and commissions in real time.</li>'
-            '</ol>'
-
-            '<h2>Swipe copy — paste and go</h2>'
-            '<p>Ready-to-use templates. Replace <code>[YOURID]</code> with your partner ID:</p>'
-
-            '<h3>1. Twitter / X thread</h3>'
-            '<pre style="background:#0c0d0f;border:1px solid var(--line);border-radius:10px;padding:16px;font-size:.82rem;overflow-x:auto;color:#cfd3d8">1/ Your AI agent can send USDC at 3 AM now.\n\nx402, Coinbase AgentKit, OpenAI ACP — all let agents pay autonomously.\n\nBut none of them check if the recipient is on the OFAC sanctions list.\n\nThe fine for hitting a sanctioned wallet: $356,000 per violation.\n\n2/ I found a tool that fixes this in one curl call:\n\nsanctionsai.dev/?ref=[YOURID]\n\nScreen every counterparty before your agent pays. Under 100ms. Free tier.\n\n3/ How it works:\n- 782 OFAC-listed crypto wallets\n- 19,086 SDN names\n- 16 jurisdictions\n- Hourly sync\n\nOne HTTP call. No SDK lock-in.\n\n4/ MCP support too — native in Claude Code and Cursor.\n\npip install sanctions-mcp\n\nYour coding agent can screen wallets as a tool call.\n\n5/ If you are building payment agents, you need this before you ship:\n\nsanctionsai.dev/?ref=[YOURID]\n\nFree to start. $19/mo in production.</pre>'
-
-            '<h3>2. Hacker News — Show HN</h3>'
-            '<pre style="background:#0c0d0f;border:1px solid var(--line);border-radius:10px;padding:16px;font-size:.82rem;overflow-x:auto;color:#cfd3d8">Show HN: OFAC sanctions screening for AI payment agents ($0.05/check)\n\nI built a one-curl-call sanctions check for AI agents that send money.\n\nThe problem: x402, AP2, ACP, and Coinbase AgentKit all let agents pay autonomously — but none of them screen recipients against the OFAC SDN list. If an agent pays a sanctioned wallet, the operator is liable under strict liability ($356K/violation).\n\nThe fix: one HTTP call before the payment. 782 OFAC crypto wallets, 19K names, 16 jurisdictions. Under 100ms.\n\nhttps://sanctionsai.dev/?ref=[YOURID]\n\nMIT licensed, self-hostable, MCP + HTTP + CLI.</pre>'
-
-            '<h3>3. Reddit — r/MachineLearning</h3>'
-            '<pre style="background:#0c0d0f;border:1px solid var(--line);border-radius:10px;padding:16px;font-size:.82rem;overflow-x:auto;color:#cfd3d8">Title: If your AI agent can send money, you need OFAC screening before it pays\n\nBody: Built a sanctions screening API for autonomous payment agents. One curl call checks any wallet/name/country against the OFAC SDN list in under 100ms.\n\nx402 and AgentKit move money but do not screen recipients. Strict liability = $356K per violation. This adds the missing compliance layer.\n\nFree tier (5 checks/day, no signup): sanctionsai.dev/?ref=[YOURID]</pre>'
-
-            '<h3>4. LinkedIn DM</h3>'
-            '<pre style="background:#0c0d0f;border:1px solid var(--line);border-radius:10px;padding:16px;font-size:.82rem;overflow-x:auto;color:#cfd3d8">Hi [Name],\n\nNoticed you are building in the AI agent / payments space. I thought you might be interested in a sanctions screening API designed specifically for autonomous payment agents — it checks OFAC before the agent pays, in under 100ms.\n\nFree to try (no signup): sanctionsai.dev/?ref=[YOURID]\n\nIf your audience would find this useful, I have a 50% recurring affiliate program. Let me know if you want a partner ID.\n\n[Your name]</pre>'
-
-            '<h2>Best-fit partners</h2>'
-            '<div style="display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));margin:20px 0">'
-            '<div style="padding:18px;background:var(--surf);border:1px solid var(--line);border-radius:12px"><strong style="color:var(--teal2)">Agent framework creators</strong><br><span style="font-size:.86rem;color:var(--t2)">LangChain, CrewAI, Eliza plugin developers</span></div>'
-            '<div style="padding:18px;background:var(--surf);border:1px solid var(--line);border-radius:12px"><strong style="color:var(--teal2)">MCP directory curators</strong><br><span style="font-size:.86rem;color:var(--t2)">Smithery, mcp.so, Glama.ai maintainers</span></div>'
-            '<div style="padding:18px;background:var(--surf);border:1px solid var(--line);border-radius:12px"><strong style="color:var(--teal2)">Fintech newsletters</strong><br><span style="font-size:.86rem;color:var(--t2)">Fintech / crypto compliance content creators</span></div>'
-            '<div style="padding:18px;background:var(--surf);border:1px solid var(--line);border-radius:12px"><strong style="color:var(--teal2)">Crypto dev YouTubers</strong><br><span style="font-size:.86rem;color:var(--t2)">Content creators covering agent payments, x402, DeFi</span></div>'
-            '<div style="padding:18px;background:var(--surf);border:1px solid var(--line);border-radius:12px"><strong style="color:var(--teal2)">Compliance consultants</strong><br><span style="font-size:.86rem;color:var(--t2)">AML/KYC professionals advising agent startups</span></div>'
-            '<div style="padding:18px;background:var(--surf);border:1px solid var(--line);border-radius:12px"><strong style="color:var(--teal2)">DevRel at agent platforms</strong><br><span style="font-size:.86rem;color:var(--t2)">Coinbase Dev Platform, OpenAI, Anthropic partner teams</span></div>'
-            '</div>'
-
-            '<h2>Payout terms</h2>'
-            '<ul>'
-            '<li><strong>50% recurring</strong> for 12 months from the first payment</li>'
-            '<li><strong>Monthly payout</strong> via Stripe Connect (PayPal on request)</li>'
-            '<li><strong>$50 minimum</strong> payout threshold</li>'
-            '<li><strong>60-day cookie</strong> — referral tracked from first click</li>'
-            '<li><strong>Self-serve dashboard</strong> — clicks, signups, commissions in real time</li>'
-            '</ul>'
-            '</div></section>'
-
-            '<section><div class="cta-box">'
-            '<h2>Apply for a partner ID</h2>'
-            '<p>Tell us about your audience. We will send your partner ID + swipe copy within 24 hours.</p>'
-            '<a href="mailto:hello@sanctionsai.dev?subject=JV%20Partner%20Application&body=Audience:%20%0APlatform(s):%20%0AEstimated%20reach:%20" class="btn btn-primary">Email hello@sanctionsai.dev →</a>'
-            '</div></section>'
-        )
-        ld = {"@context": "https://schema.org", "@type": "WebPage",
-              "name": "JV Partner Program — agentmail", "description": "50% recurring commission for 12 months per referred paying customer.",
-              "url": _SITE + "/partners/jv"}
-        return self._page("JV Partner Program — 50% Recurring Commission | agentmail",
-                          "Earn 50% recurring commission for 12 months on every developer you refer to agentmail. Swipe copy, partner ID, and monthly payouts.",
-                          body, extra_head=self._ld(ld), canonical="/partners/jv")
-
-    def _dream100_page(self):
-        """Traffic Secrets: Dream 100 — the target list of influencers and communities."""
-        body = (
-            '<section style="text-align:center;border-top:none">'
-            '<p class="note" style="letter-spacing:.05em;text-transform:uppercase">Dream 100</p>'
-            '<h1>The 100 people and communities we are building with</h1>'
-            '<p class="lead" style="max-width:640px;margin:0 auto 28px">Russell Brunson says: identify your Dream 100, serve them before you ask, and become a contributing member of their world. This is our list.</p></section>'
-
-            '<section><div class="prose">'
-            '<h2>Tier 1 — Agent payment infrastructure (20)</h2>'
-            '<p>The teams building the rails our product sits on top of. If their agents screen before paying, we win.</p>'
-            '<ul style="columns:2;font-size:.88rem;line-height:1.8">'
-            '<li>x402 working group</li><li>Coinbase Developer Platform / AgentKit</li>'
-            '<li>OpenAI Agents SDK team</li><li>Stripe ACP team</li>'
-            '<li>AP2 protocol contributors</li><li>Base / Coinbase L2 team</li>'
-            '<li>Vercel AI SDK team</li><li>Anthropic MCP team</li>'
-            '<li>LangChain core team</li><li>CrewAI maintainers</li>'
-            '<li>Eliza framework community</li><li>AutoGen team</li>'
-            '<li>LlamaIndex team</li><li>Pydantic AI team</li>'
-            '<li>Mastra team</li><li>Vercel AI SDK</li>'
-            '<li>Inkeep AI</li><li>Stagehand team</li>'
-            '<li>Browserbase</li><li>Payman team</li>'
-            '</ul>'
-
-            '<h2>Tier 2 — Developer communities (30)</h2>'
-            '<p>The congregations where our dream customer hangs out. We contribute before we promote.</p>'
-            '<ul style="columns:2;font-size:.88rem;line-height:1.8">'
-            '<li>Hacker News</li><li>r/MachineLearning</li>'
-            '<li>r/algotrading</li><li>r/CryptoCurrency</li>'
-            '<li>r/LocalLLaMA</li><li>r/OpenAI</li>'
-            '<li>r/singularity</li><li>Indie Hackers</li>'
-            '<li>Product Hunt</li><li>Smithery.ai</li>'
-            '<li>mcp.so</li><li>Glama.ai</li>'
-            '<li>awesome-mcp-servers</li><li>Anthropic Discord</li>'
-            '<li>LangChain Discord</li><li>CrewAI Discord</li>'
-            '<li>Eliza Discord</li><li>Cursor community</li>'
-            '<li>Windsurf community</li><li>Claude Code users</li>'
-            '<li>Dev.to</li><li>Hashnode</li>'
-            '<li>Stack Overflow (AI agents)</li><li>GitHub trending</li>'
-            '<li>Terminal.shop</li><li>X / AI dev accounts</li>'
-            '<li>YouTube (AI dev channels)</li><li>Substack (AI/agent newsletters)</li>'
-            '<li>LinkedIn fintech groups</li><li>Hacker News Algo</li>'
-            '</ul>'
-
-            '<h2>Tier 3 — Compliance and fintech (25)</h2>'
-            '<p>The professionals who advise teams that deploy agents. They become referral partners.</p>'
-            '<ul style="columns:2;font-size:.88rem;line-height:1.8">'
-            '<li>ACAMS community</li><li>ABA fintech committee</li>'
-            '<li>Chainalysis alumni</li><li>Elliptic alumni</li>'
-            '<li>TRM Labs network</li><li>ComplyAdvantage users</li>'
-            '<li>SumSub community</li><li>World-Check users</li>'
-            '<li>OFAC.gov liaison</li><li>FinCEN resources</li>'
-            '<li>a16z crypto compliance</li><li>Coin Center</li>'
-            '<li>Blockchain Association</li><li>Compound compliance</li>'
-            '<li>Coinbase compliance blog</li><li>Crypto compliance newsletters</li>'
-            '<li>Fintech compliance consultants</li><li>Regtech analysts</li>'
-            '<li>Gartner risk</li><li>Forrester compliance</li>'
-            '<li>LinkedIn compliance groups</li><li>AML professionals</li>'
-            '<li>KYC/AML Reddit</li><li>Compliance Week</li>'
-            '<li>Money Laundering blog</li>'
-            '</ul>'
-
-            '<h2>How we serve the Dream 100</h2>'
-            '<div style="display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));margin:20px 0">'
-            '<div style="padding:20px;background:var(--surf);border:1px solid var(--line);border-radius:12px">'
-            '<h3 style="color:var(--teal2);font-size:1rem;margin:0 0 8px">1. Build in public</h3>'
-            '<p style="font-size:.86rem;margin:0">Open-source everything. The MCP server, the OFAC data pipeline, the compliance docs. The Dream 100 finds us through our work, not our ads.</p></div>'
-            '<div style="padding:20px;background:var(--surf);border:1px solid var(--line);border-radius:12px">'
-            '<h3 style="color:var(--teal2);font-size:1rem;margin:0 0 8px">2. Contribute first</h3>'
-            '<p style="font-size:.86rem;margin:0">Answer questions in Discord, write guides that help the community, PR into framework repos with compliance integrations. Earn the right to be seen.</p></div>'
-            '<div style="padding:20px;background:var(--surf);border:1px solid var(--line);border-radius:12px">'
-            '<h3 style="color:var(--teal2);font-size:1rem;margin:0 0 8px">3. Feature them</h3>'
-            '<p style="font-size:.86rem;margin:0">When a Dream 100 member builds something, we feature it in our content. We become a distribution channel for their work before we ask them to distribute ours.</p></div>'
-            '</div>'
-
-            '<p style="text-align:center;color:var(--t3);font-size:.86rem;margin-top:30px">This page is public on purpose. If you are on this list — <a href="mailto:hello@sanctionsai.dev" style="color:var(--teal2)">say hi</a>. We would love to collaborate.</p>'
-            '</div></section>'
-
-            '<section><div class="cta-box">'
-            '<h2>Think you belong on this list?</h2>'
-            '<p>If you build, write, or advise in the agent payments space, we want to know you.</p>'
-            '<a href="mailto:hello@sanctionsai.dev?subject=Dream%20100" class="btn btn-primary">Introduce yourself →</a>'
-            '&nbsp; <a href="/partners/jv" class="btn btn-ghost">See the JV program</a>'
-            '</div></section>'
-        )
-        ld = {"@context": "https://schema.org", "@type": "WebPage",
-              "name": "Dream 100 — agentmail", "description": "Our target list of influencers, communities, and partners for distributing OFAC sanctions screening to AI agent developers.",
-              "url": _SITE + "/dream100"}
-        return self._page("Dream 100 — Our Target Distribution List | agentmail",
-                          "The influencers, communities, and partners we are building relationships with to bring OFAC sanctions screening to every AI payment agent.",
-                          body, extra_head=self._ld(ld), canonical="/dream100")
 
     def _blog_index_page(self):
         """Render an index of all blog posts."""
@@ -4769,7 +4487,6 @@ document.getElementById("squeeze-form").addEventListener("submit", function(e){
         return self._page(d["title"], d["desc"], body,
                           extra_head=self._ld(ld) + self._ld(bc), canonical="/guides/" + slug)
 
-
     def _legal_page(self, page_type: str):
         """E-E-A-T trust pages: About, Privacy, Terms. Uses the _page() wrapper
         so they get full nav/footer/schema treatment."""
@@ -4963,30 +4680,12 @@ curl -H "X-API-Key: {key}" \\
         self._send_html(200, html)
 
     def _stripe_webhook(self):
-        """Receive and process Stripe webhook events.
-
-        On checkout completion: fire post-purchase onboarding email (Brunson Ch 10/12).
-        On subscription deletion: fire win-back sequence (Brunson Ch 12 Continuous Loop).
-        """
+        """Receive and process Stripe webhook events."""
         n = int(self.headers.get("Content-Length", 0) or 0)
         payload = self.rfile.read(n) if n else b""
         sig = self.headers.get("Stripe-Signature", "")
         try:
             result = billing.handle_webhook(payload, sig)
-            etype = result.get("event_type", "")
-            # Fire post-purchase onboarding email immediately after checkout
-            if etype == "checkout.session.completed" and result.get("email"):
-                try:
-                    _send_post_purchase_email(result["email"], result.get("plan", "dev"))
-                except Exception as e:
-                    print(f"[webhook] post-purchase email failed: {e}", flush=True)
-            # Fire win-back sequence when a subscription is cancelled
-            if etype == "subscription.deleted":
-                for email in result.get("emails", []):
-                    try:
-                        _send_winback_email(email)
-                    except Exception as e:
-                        print(f"[webhook] win-back email failed: {e}", flush=True)
             status = 200 if result.get("handled") else 400
             _json(self, status, result)
         except Exception as e:
@@ -5367,74 +5066,6 @@ def _send_welcome_email(email: str) -> dict:
     html += '<p style="margin:12px 0 0;font-size:10px;color:#333;text-align:center">You received this because you signed up for agentmail.</p>'
     html += '</td></tr></table></body></html>'
     
-    return _send_resend(email, subject, html)
-
-
-def _send_post_purchase_email(email: str, plan: str = "dev") -> dict:
-    """Brunson Ch 10/12 — immediate onboarding email fires the instant a buyer pays.
-
-    This is NOT the welcome email (sent to free opt-ins). This fires from the Stripe
-    webhook checkout.session.completed handler and marks the transition from prospect
-    to customer: receipt + first-value + next-steps + upsell anchor.
-    """
-    plan_label = {"dev": "Dev ($19/mo)", "team": "Pro ($99/mo)", "pro": "Compliance Pro ($499/mo)"}.get(plan, plan)
-    subject = f"You're in. Your {plan_label} agentmail key is live."
-    html = f'''<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"></head>
-<body style="margin:0;padding:0;background:#0a0a0a;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif">
-<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#0a0a0a"><tr><td align="center" style="padding:40px 16px">
-<table role="presentation" width="100%" style="max-width:560px;background:#111;border-radius:16px;overflow:hidden;border:1px solid #1a1a1a">
-<tr><td style="background:linear-gradient(135deg,#0a0a0a,#0d1a14);border-bottom:1px solid #1a1a1a;text-align:center;padding:36px 32px 24px">
-<h1 style="margin:0;font-size:24px;font-weight:800;color:#fff">agent<span style="color:#00d4aa">mail</span></h1>
-<p style="margin:6px 0 0;font-size:11px;color:#555;letter-spacing:1px;text-transform:uppercase">YOUR AGENT IS NOW PROTECTED</p>
-</td></tr>
-<tr><td style="padding:32px">
-<p style="margin:0 0 16px;font-size:15px;color:#ccc;line-height:1.6">Your <strong style="color:#00d4aa">{plan_label}</strong> plan is active. Every payment your agent signs from this moment is screened against the full OFAC SDN list.</p>
-<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#0d1a14;border-radius:10px;border:1px solid rgba(0,212,170,0.08);margin-bottom:24px"><tr><td style="padding:20px">
-<p style="margin:0 0 8px;font-size:13px;font-weight:600;color:#00d4aa">Step 1 — make your first paid check</p>
-<pre style="margin:0;background:#0a0a0a;border:1px solid #1a1a1a;border-radius:6px;padding:14px;font-size:12px;color:#34d399;overflow-x:auto">curl -H "Authorization: Bearer YOUR_KEY" \\
-  "https://agentmail-api.fly.dev/sanctions?wallet=0x742d35Cc..."</pre>
-</td></tr></table>
-<p style="margin:0 0 12px;font-size:14px;color:#fff;font-weight:700">Next steps:</p>
-<p style="margin:0 0 8px;font-size:14px;color:#999">1. Add your API key to your agent's payment path</p>
-<p style="margin:0 0 8px;font-size:14px;color:#999">2. Watch your dashboard at <a href="https://sanctionsai.dev/dashboard" style="color:#00d4aa">sanctionsai.dev/dashboard</a></p>
-<p style="margin:0 0 24px;font-size:14px;color:#999">3. Join the <a href="https://sanctionsai.dev/partners/jv" style="color:#00d4aa">partner program</a> — 50% recurring for every dev you refer</p>
-<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:linear-gradient(135deg,#0d1a14,#0a0a0a);border:1px solid rgba(0,212,170,0.12);border-radius:10px"><tr><td style="padding:20px;text-align:center">
-<p style="margin:0 0 6px;font-size:13px;color:#666">Need help wiring this into your stack?</p>
-<p style="margin:0;font-size:14px;color:#fff;font-weight:600">Reply to this email. I read every one — Maryan, founder.</p>
-</td></tr></table>
-</td></tr>
-<tr><td style="padding:24px 32px;text-align:center;border-top:1px solid #1a1a1a">
-<p style="margin:0;font-size:11px;color:#555"><a href="https://sanctionsai.dev" style="color:#00d4aa">sanctionsai.dev</a> · <a href="https://sanctionsai.dev/docs" style="color:#555">Docs</a> · <a href="https://sanctionsai.dev/unsubscribe?email={email}" style="color:#555">Unsubscribe</a></p>
-</td></tr></table></td></tr></table></body></html>'''
-    return _send_resend(email, subject, html)
-
-
-def _send_winback_email(email: str) -> dict:
-    """Brunson Ch 12 — win-back sequence fires when a buyer cancels.
-
-    The 3-email sequence (survey → story → offer) is simplified to a single high-impact
-    email here. The survey ask + the honest story + the return offer land in one touch.
-    """
-    subject = "Your agent is paying wallets unscreened again."
-    html = f'''<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"></head>
-<body style="margin:0;padding:0;background:#0a0a0a;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif">
-<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#0a0a0a"><tr><td align="center" style="padding:40px 16px">
-<table role="presentation" width="100%" style="max-width:560px;background:#111;border-radius:16px;overflow:hidden;border:1px solid #1a1a1a">
-<tr><td style="background:linear-gradient(135deg,#1a0606,#0a0a0a);border-bottom:1px solid rgba(255,107,107,0.15);text-align:center;padding:36px 32px 24px">
-<h1 style="margin:0;font-size:24px;font-weight:800;color:#fff">agent<span style="color:#00d4aa">mail</span></h1>
-<p style="margin:6px 0 0;font-size:11px;color:#ff6b6b;letter-spacing:1px;text-transform:uppercase">YOUR SCREENING WAS DEACTIVATED</p>
-</td></tr>
-<tr><td style="padding:32px">
-<p style="margin:0 0 16px;font-size:15px;color:#ccc;line-height:1.6">Your subscription was cancelled. Right now, every wallet your agent pays is <strong style="color:#ff6b6b">unscreened</strong>. The fine is still <strong style="color:#ff6b6b">$356,000 per violation</strong> — the risk hasn't changed, only the protection.</p>
-<p style="margin:0 0 24px;font-size:15px;color:#999;line-height:1.6">If it was price, the API key, or something we missed — <strong style="color:#fff">reply and tell me why</strong>. I read every reply. If the tool wasn't right, I want to know exactly what failed so we fix it.</p>
-<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:linear-gradient(135deg,#0d1a14,#0a0a0a);border:1px solid rgba(0,212,170,0.18);border-radius:12px"><tr><td style="padding:24px;text-align:center">
-<p style="margin:0 0 8px;font-size:13px;color:#666">Come back at 50% off the first 3 months:</p>
-<p style="margin:0 0 16px;font-size:22px;font-weight:800;color:#00d4aa">$9.50/mo for Dev <span style="font-size:14px;color:#555;font-weight:400">(then $19/mo)</span></p>
-<table role="presentation" cellpadding="0" cellspacing="0" style="margin:0 auto"><tr><td style="border-radius:8px;background:#00d4aa"><a href="https://sanctionsai.dev/checkout/dev?winback=1" style="display:inline-block;padding:14px 36px;font-size:14px;font-weight:700;color:#0a0a0a;text-decoration:none;border-radius:8px">Reactivate screening &rarr;</a></td></tr></table>
-</td></tr></table>
-<p style="margin:24px 0 0;font-size:13px;color:#666;line-height:1.6;text-align:center">Or self-host the MIT-licensed version for free at <a href="https://github.com/kindrat86/agentmail" style="color:#00d4aa">GitHub</a>. Whatever keeps your agent safe.</p>
-<p style="margin:16px 0 0;font-size:12px;color:#555;text-align:center">— Maryan, founder · <a href="https://sanctionsai.dev/unsubscribe?email={email}" style="color:#444">Unsubscribe</a></p>
-</td></tr></table></td></tr></table></body></html>'''
     return _send_resend(email, subject, html)
 # ─── Email configuration ────────────────────────────────────────
 _RESEND_API_KEY=os.environ.get("RESEND_API_KEY", "")

@@ -301,7 +301,7 @@ def _on_checkout_completed(session_obj: dict) -> dict:
         c.execute("DELETE FROM pending_sessions WHERE session_id = ?", (session_id,))
         c.commit()
     return {"handled": True, "event_type": "checkout.session.completed",
-            "key_prefix": key[:12] + "...", "plan": plan}
+            "key_prefix": key[:12] + "...", "plan": plan, "email": email}
 
 
 def _on_subscription_deleted(sub_obj: dict) -> dict:
@@ -309,13 +309,13 @@ def _on_subscription_deleted(sub_obj: dict) -> dict:
     sub_id = sub_obj.get("id", "")
     with _lock, _db() as c:
         rows = c.execute(
-            "SELECT key FROM api_keys WHERE stripe_subscription_id = ?", (sub_id,)
+            "SELECT key, email FROM api_keys WHERE stripe_subscription_id = ?", (sub_id,)
         ).fetchall()
         for row in rows:
             c.execute("UPDATE api_keys SET active = 0 WHERE key = ?", (row["key"],))
         c.commit()
     return {"handled": True, "event_type": "subscription.deleted",
-            "deactivated": len(rows)}
+            "deactivated": len(rows), "emails": [r["email"] for r in rows if r["email"]]}
 
 
 def _on_subscription_updated(sub_obj: dict) -> dict:
