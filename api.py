@@ -1974,7 +1974,7 @@ class Handler(BaseHTTPRequestHandler):
         self.send_header("X-Frame-Options", "SAMEORIGIN")
         self.send_header("Referrer-Policy", "strict-origin-when-cross-origin")
         self.send_header("Strict-Transport-Security", "max-age=63072000; includeSubDomains; preload")
-        self.send_header("Cache-Control", "public, max-age=3600")
+        self.send_header("Cache-Control", "public, max-age=60")
         self.send_header("X-Robots-Tag", "index, follow, max-snippet:-1, max-image-preview:large")
         self.end_headers()
         self.wfile.write(body)
