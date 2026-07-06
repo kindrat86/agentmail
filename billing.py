@@ -43,6 +43,13 @@ TIERS = {
         "label": "Team",
         "price": "$99/mo",
     },
+    "pro": {
+        "price_id_env": "STRIPE_PRICE_PRO",
+        "monthly_limit": 0,
+        "rate_limit": 0,
+        "label": "Pro",
+        "price": "$499/mo",
+    },
 }
 
 _STRIPE_SECRET = os.environ.get("STRIPE_SECRET_KEY", "")
@@ -81,6 +88,13 @@ def init_db():
             CREATE TABLE IF NOT EXISTS pending_sessions (
                 session_id TEXT PRIMARY KEY,
                 plan TEXT NOT NULL,
+                created_at REAL NOT NULL
+            )
+        """)
+        c.execute("""
+            CREATE TABLE IF NOT EXISTS leads (
+                email TEXT PRIMARY KEY,
+                source TEXT NOT NULL,
                 created_at REAL NOT NULL
             )
         """)
@@ -126,10 +140,23 @@ def record_usage(key: str) -> dict:
             record["usage_window_start"] = now
         tier_cfg = TIERS.get(record["tier"], {})
         limit = tier_cfg.get("monthly_limit", 10000)
+        # Unlimited tiers set limit to 0 and bypass rate limiting.
+        if limit == 0:
+            c.execute(
+                "UPDATE api_keys SET usage_count = usage_count + 1, last_used_at = ? WHERE key = ?",
+                (now, key),
+            )
+            c.commit()
+            return {
+                "blocked": False,
+                "tier": record["tier"],
+                "usage": record["usage_count"] + 1,
+                "limit": 0,
+                "remaining": 0,
+            }
         if record["usage_count"] >= limit:
             return {"blocked": True, "reason": "monthly_limit_exceeded",
-                    "tier": record["tier"], "usage": record["usage_count"],
-                    "limit": limit}
+                    "tier": record["tier"], "usage": record["usage_count"], "limit": limit}
         c.execute(
             "UPDATE api_keys SET usage_count = usage_count + 1, last_used_at = ? WHERE key = ?",
             (now, key),
@@ -153,9 +180,31 @@ def deactivate_key(key: str, reason: str = "subscription_cancelled"):
         c.commit()
 
 
+# ─── Order bump configuration ───────────────────────────────────────────
+# Brunson Ch 14: an order bump is a default-checked add-on offered AT the
+# checkout — not on the pricing page. The bump must be cheap enough to be
+# an impulse yes (under 50% of the main price), relevant to the purchase,
+# and add real value. Here: extended audit log retention + webhook alerts,
+# priced at $9/mo on top of the $19 Dev plan.
+BUMP_TIERS = {
+    "audit_plus": {
+        "price_id_env": "STRIPE_PRICE_BUMP_AUDIT",
+        "label": "Extended Audit Log",
+        "price": "$9/mo",
+        "desc": "180-day audit log retention (vs 30-day) + real-time webhook alerts on any BLOCK",
+    },
+}
+
+
 # ─── Stripe Checkout ────────────────────────────────────────────────────
-def create_checkout_session(plan: str) -> dict:
-    """Create a Stripe Checkout Session for a plan. Returns {url, session_id}."""
+def create_checkout_session(plan: str, bump: str | None = None) -> dict:
+    """Create a Stripe Checkout Session for a plan. Returns {url, session_id}.
+
+    If bump is set (e.g. "audit_plus"), adds an order-bump line item — a
+    Brunson-style default-checked add-on at checkout. The bump's price_id
+    must be set via the BUMP_TIERS env var. If the env is missing, the bump
+    is silently skipped (graceful degradation — checkout still works).
+    """
     if not _STRIPE_SECRET:
         raise RuntimeError("STRIPE_SECRET_KEY not set — billing disabled")
     if plan not in TIERS:
@@ -167,12 +216,22 @@ def create_checkout_session(plan: str) -> dict:
     if not price_id:
         raise RuntimeError(f"{TIERS[plan]['price_id_env']} env not set")
 
+    line_items = [{"price": price_id, "quantity": 1}]
+
+    # Order bump: append as a second line item if configured
+    bump_added = False
+    if bump and bump in BUMP_TIERS:
+        bump_price_id = os.environ.get(BUMP_TIERS[bump]["price_id_env"], "")
+        if bump_price_id:
+            line_items.append({"price": bump_price_id, "quantity": 1})
+            bump_added = True
+
     session = stripe.checkout.Session.create(
         mode="subscription",
-        line_items=[{"price": price_id, "quantity": 1}],
+        line_items=line_items,
         success_url=f"{_PUBLIC_URL}/keys/{{CHECKOUT_SESSION_ID}}",
         cancel_url=f"{_PUBLIC_URL}/pricing?cancelled=1",
-        metadata={"plan": plan},
+        metadata={"plan": plan, "bump": bump if bump_added else ""},
     )
     # Record pending session so webhook can associate it
     now = time.time()
@@ -267,6 +326,20 @@ def _on_subscription_updated(sub_obj: dict) -> dict:
         return _on_subscription_deleted(sub_obj)
     return {"handled": False, "event_type": "subscription.updated",
             "detail": f"status={status} (no action)"}
+
+
+def add_lead(email: str, source: str, created_at: float) -> dict:
+    """Upsert a lead by email. Returns ok=False if email is missing."""
+    email = (email or "").strip()
+    if not email or "@" not in email:
+        return {"ok": False}
+    with _db() as c:
+        c.execute(
+            "INSERT OR IGNORE INTO leads(email, source, created_at) VALUES(?,?,?)",
+            (email.lower(), source or "teardown", created_at),
+        )
+        c.commit()
+    return {"ok": True}
 
 
 def get_key_by_session(session_id: str) -> dict | None:
