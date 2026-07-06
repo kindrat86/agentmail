@@ -2243,6 +2243,10 @@ Then add to your MCP client (Claude Code, Cursor, Windsurf).
 <meta name="twitter:description" content="OFAC sanctions screening for x402 payment agents. Screen every counterparty before your agent pays.">
 <meta name="twitter:image" content="https://sanctionsai.dev/og.png">
 <link rel="canonical" href="https://sanctionsai.dev/">
+<link rel="preconnect" href="https://eu.i.posthog.com">
+<link rel="dns-prefetch" href="https://eu.i.posthog.com">
+<link rel="preconnect" href="https://agentmail-api.fly.dev">
+<link rel="dns-prefetch" href="https://agentmail-api.fly.dev">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"agentmail","url":"https://sanctionsai.dev/","description":"OFAC sanctions screening for AI agents. Screen wallets, names, and countries before your agent pays.","potentialAction":{"@type":"SearchAction","target":"https://sanctionsai.dev/sanctions?wallet={wallet}","query-input":"required name=wallet"}}</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":
 <style>
@@ -2261,10 +2265,13 @@ Then add to your MCP client (Claude Code, Cursor, Windsurf).
 html{-webkit-text-size-adjust:100%;text-size-adjust:100%;scroll-behavior:smooth}
 body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;overflow-x:hidden;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
 a{color:var(--teal);text-decoration:none;-webkit-tap-highlight-color:transparent}
+:focus-visible{outline:2px solid var(--teal);outline-offset:2px;border-radius:4px}
+.btn:focus-visible,.faq .q:focus-visible{outline-offset:4px}
 ::selection{background:rgba(0,212,170,.25);color:#fff}
-.wrap{max-width:var(--maxw);margin:0 auto;padding:0 22px}
-
-/* ---------- shared bits ---------- */
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 22px;padding-left:max(22px,env(safe-area-inset-left));padding-right:max(22px,env(safe-area-inset-right))}
+/* skip-to-content for a11y */
+.skip-link{position:fixed;top:-100px;left:16px;z-index:200;background:var(--teal);color:#04130e!important;padding:10px 20px;border-radius:0 0 10px 10px;font-weight:700;font-size:.88rem;transition:top .2s}
+.skip-link:focus{top:0}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:13px 22px;border-radius:12px;font-weight:600;font-size:.95rem;cursor:pointer;border:none;min-height:48px;text-decoration:none!important;transition:transform .18s cubic-bezier(.2,.8,.2,1),box-shadow .2s,background .2s,border-color .2s;touch-action:manipulation;user-select:none;white-space:nowrap}
 .btn:active{transform:translateY(1px) scale(.99)}
 .btn-primary{background:var(--tealg);color:#04130e!important;box-shadow:0 8px 24px -10px rgba(0,212,170,.6)}
@@ -2276,7 +2283,7 @@ a{color:var(--teal);text-decoration:none;-webkit-tap-highlight-color:transparent
 .eyebrow .dot{width:6px;height:6px;border-radius:50%;background:var(--teal);box-shadow:0 0 12px var(--teal)}
 
 /* ---------- nav ---------- */
-nav{position:sticky;top:0;z-index:100;backdrop-filter:saturate(160%) blur(16px);-webkit-backdrop-filter:saturate(160%) blur(16px);background:rgba(10,10,10,.72);border-bottom:1px solid transparent;transition:border-color .3s,background .3s}
+nav{position:sticky;top:0;z-index:100;backdrop-filter:saturate(160%) blur(16px);-webkit-backdrop-filter:saturate(160%) blur(16px);background:rgba(10,10,10,.72);border-bottom:1px solid transparent;transition:border-color .3s,background .3s;padding-top:env(safe-area-inset-top)}
 nav.scrolled{border-color:var(--line);background:rgba(10,10,10,.86)}
 nav .bar{display:flex;align-items:center;justify-content:space-between;height:62px}
 .logo{display:flex;align-items:center;gap:9px;font-weight:700;font-size:1.02rem;color:#fff;letter-spacing:-.01em}
@@ -2285,8 +2292,14 @@ nav .links{display:flex;align-items:center;gap:26px}
 nav .links a{color:var(--t2);font-size:.9rem;font-weight:500;transition:color .2s}
 nav .links a:hover{color:#fff}
 nav .links .btn{padding:9px 16px;font-size:.84rem;min-height:38px}
-nav .burger{display:none;width:42px;height:42px;border:1px solid var(--line2);border-radius:10px;background:transparent;cursor:pointer;flex-direction:column;gap:5px;align-items:center;justify-content:center}
-nav .burger span{width:17px;height:2px;background:#fff;border-radius:2px;transition:.25s}
+nav .burger{display:none;width:44px;height:44px;border:1px solid var(--line2);border-radius:10px;background:transparent;cursor:pointer;flex-direction:column;gap:5px;align-items:center;justify-content:center;position:relative}
+nav .burger span{width:18px;height:2px;background:#fff;border-radius:2px;transition:transform .3s ease,opacity .2s ease}
+nav .burger.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+nav .burger.open span:nth-child(2){opacity:0}
+nav .burger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+/* backdrop for mobile menu */
+.menu-backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:99;opacity:0;transition:opacity .25s}
+.menu-backdrop.show{display:block;opacity:1}
 
 /* ---------- hero ---------- */
 .hero{position:relative;padding:88px 0 56px;text-align:center;overflow:hidden}
@@ -2311,12 +2324,15 @@ nav .burger span{width:17px;height:2px;background:#fff;border-radius:2px;transit
 .ctas .text-link:hover{color:var(--teal);text-decoration-color:var(--teal)}
 
 /* ---------- code window ---------- */
-.codewin{max-width:640px;margin:46px auto 0;text-align:left;background:linear-gradient(180deg,#0e0f12,#0a0b0d);border:1px solid var(--line2);border-radius:14px;overflow:hidden;box-shadow:0 30px 80px -30px rgba(0,0,0,.8),0 0 0 1px rgba(0,212,170,.06)}
+.codewin{max-width:640px;margin:46px auto 0;text-align:left;background:linear-gradient(180deg,#0e0f12,#0a0b0d);border:1px solid var(--line2);border-radius:14px;overflow:hidden;box-shadow:0 30px 80px -30px rgba(0,0,0,.8),0 0 0 1px rgba(0,212,170,.06);position:relative}
 .codewin .top{display:flex;align-items:center;gap:8px;padding:12px 16px;border-bottom:1px solid var(--line);background:rgba(255,255,255,.015)}
 .codewin .top .d{width:11px;height:11px;border-radius:50%;background:#2a2c30}
 .codewin .top .d:nth-child(1){background:#ff5f57}.codewin .top .d:nth-child(2){background:#febc2e}.codewin .top .d:nth-child(3){background:#28c840}
-.codewin .top .file{margin-left:10px;font-size:.74rem;color:var(--t3);font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace}
-.codewin pre{padding:18px 18px 18px;overflow-x:auto;font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;font-size:.8rem;line-height:1.65;color:#cfd3d8}
+.codewin .top .file{margin-left:10px;font-size:.74rem;color:var(--t3);font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1}
+.codewin .copy-btn{flex-shrink:0;background:rgba(0,212,170,.08);border:1px solid rgba(0,212,170,.2);color:var(--teal);font-size:.68rem;font-weight:600;padding:5px 10px;border-radius:6px;cursor:pointer;transition:background .2s,color .2s;min-height:28px;font-family:inherit}
+.codewin .copy-btn:hover{background:rgba(0,212,170,.15)}
+.codewin .copy-btn.copied{background:var(--teal);color:#04130e}
+.codewin pre{padding:18px 18px 18px;overflow-x:auto;font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;font-size:.8rem;line-height:1.65;color:#cfd3d8;-webkit-overflow-scrolling:touch}
 .codewin .c-cmd{color:var(--t3)}.codewin .c-url{color:#7fd6c4}.codewin .c-key{color:#8ec5ff}.codewin .c-str{color:#e6c07b}.codewin .c-num{color:#d19a66}.codewin .c-ok{color:#28c840;font-weight:600}
 .urgency{margin:30px auto 0;max-width:600px;display:flex;gap:14px;align-items:flex-start;background:linear-gradient(180deg,rgba(255,107,107,.06),rgba(255,107,107,.02));border:1px solid rgba(255,107,107,.16);border-radius:14px;padding:16px 18px;text-align:left}
 .urgency .ic{flex-shrink:0;width:34px;height:34px;border-radius:9px;background:rgba(255,107,107,.12);display:grid;place-items:center;font-size:1rem}
@@ -2450,8 +2466,9 @@ footer .bottom{margin-top:40px;padding-top:24px;border-top:1px solid var(--line)
 @media(max-width:760px){
   nav .links{display:none}
   nav .burger{display:flex}
-  nav .links.open{display:flex;position:absolute;top:62px;left:0;right:0;flex-direction:column;background:rgba(10,10,10,.98);border-bottom:1px solid var(--line);padding:16px 22px;gap:6px;align-items:stretch}
-  nav .links.open a{padding:12px 4px;font-size:1rem;border-bottom:1px solid var(--line)}
+  nav .links.open{display:flex;position:fixed;top:0;left:0;right:0;flex-direction:column;background:rgba(10,10,10,.98);border-bottom:1px solid var(--line);padding:calc(62px + env(safe-area-inset-top)) 22px 24px;gap:4px;align-items:stretch;z-index:101;max-height:calc(100vh - 62px);overflow-y:auto;-webkit-overflow-scrolling:touch;animation:menuSlide .25s ease}
+  @keyframes menuSlide{from{opacity:0;transform:translateY(-12px)}to{opacity:1;transform:translateY(0)}}
+  nav .links.open a{padding:14px 4px;font-size:1rem;border-bottom:1px solid var(--line)}
   nav .links.open .btn{margin-top:8px;text-align:center;border-bottom:none}
   .hero{padding:54px 0 40px}
   .sec{padding:64px 0}
@@ -2461,12 +2478,26 @@ footer .bottom{margin-top:40px;padding-top:24px;border-top:1px solid var(--line)
   .tcard{padding:30px 24px}
   .tcard .q{font-size:1.05rem}
   .final .panel{padding:40px 22px}
+  /* code windows: allow horizontal swipe without breaking layout */
+  .codewin pre{font-size:.75rem;-webkit-text-size-adjust:100%}
+  /* stat chips wrap nicely */
+  .statrow{gap:8px}
+  .statrow .s{padding:8px 14px;font-size:.8rem}
 }
 @media(max-width:420px){
   .hero h1{font-size:1.95rem}
-  .wrap{padding:0 18px}
+  .wrap{padding-left:max(18px,env(safe-area-inset-left));padding-right:max(18px,env(safe-area-inset-right))}
   .pill{font-size:.68rem}
+  .statrow .s{font-size:.76rem;padding:7px 12px}
+  .codewin pre{font-size:.72rem}
+  .codewin .top .file{font-size:.68rem}
+  .btn-lg{padding:14px 24px;font-size:.95rem;min-height:52px}
 }
+@media(max-width:360px){
+  .hero h1{font-size:1.72rem}
+  .hero .sub{font-size:.96rem}
+}
+footer{padding-bottom:max(40px,env(safe-area-inset-bottom))}
 @media(prefers-reduced-motion:reduce){*{transition-duration:.01ms!important;animation-duration:.01ms!important;scroll-behavior:auto!important}.reveal{opacity:1!important;transform:none!important}}
 </style>
 <!-- PostHog -->
@@ -2474,8 +2505,10 @@ footer .bottom{margin-top:40px;padding-top:24px;border-top:1px solid var(--line)
 <script>document.addEventListener('DOMContentLoaded',function(){var p=window.posthog;if(!p)return;var pg=location.pathname;p.capture('page_viewed',{page:pg});document.addEventListener('click',function(e){var a=e.target.closest&&e.target.closest('a[href],button.btn,.btn');if(!a)return;var href=a.getAttribute('href')||'';var txt=(a.textContent||'').trim().slice(0,40);var cls=a.classList||{};var tier=cls.contains('btn-primary')?'primary':(cls.contains('btn-ghost')?'secondary':'text');if(href.indexOf('/checkout/')>-1){p.capture('cta_checkout',{cta:txt,href:href,page:pg,tier:tier});}else if(href.indexOf('/tools/wallet-checker')>-1){p.capture('cta_run_check',{cta:txt,href:href,page:pg});}else if(href.indexOf('github.com/kindrat86')>-1){p.capture('cta_github',{cta:txt,href:href,page:pg});}},true);var f=document.getElementById('free-tier-capture');if(f){f.addEventListener('submit',function(){p.capture('cta_free_signup',{page:pg});});}});</script>
 </head>
 <body>
+<a href="#story" class="skip-link">Skip to content</a>
+<div class="menu-backdrop" id="menu-backdrop"></div>
 <nav id="nav"><div class="wrap bar">
-  <a href="/" class="logo"><span class="mark">a</span> agent<span style="color:var(--teal)">mail</span></a>
+  <a href="/" class="logo" aria-label="agentmail home"><span class="mark">a</span> agent<span style="color:var(--teal)">mail</span></a>
   <div class="links" id="navlinks">
     <a href="#story">How it works</a>
     <a href="/agent">For AI Agents</a>
@@ -2484,7 +2517,7 @@ footer .bottom{margin-top:40px;padding-top:24px;border-top:1px solid var(--line)
     <a href="https://github.com/kindrat86/agentmail">GitHub</a>
     <a href="#try-free" class="btn btn-primary">Try free &rarr;</a>
   </div>
-  <button class="burger" id="burger" aria-label="Menu"><span></span><span></span><span></span></button>
+  <button class="burger" id="burger" aria-label="Toggle menu" aria-controls="navlinks" aria-expanded="false"><span></span><span></span><span></span></button>
 </div></nav>
 
 <!-- HERO -->
@@ -2508,7 +2541,7 @@ footer .bottom{margin-top:40px;padding-top:24px;border-top:1px solid var(--line)
     <a href="#try-free" class="text-link">No signup &middot; 5 checks/day free &middot; runs in 30 seconds</a>
   </div>
   <div class="codewin">
-    <div class="top"><span class="d"></span><span class="d"></span><span class="d"></span><span class="file">screen before payment &mdash; 92ms</span></div>
+    <div class="top"><span class="d"></span><span class="d"></span><span class="d"></span><span class="file">screen before payment &mdash; 92ms</span><button class="copy-btn" data-copy='curl "https://agentmail-api.fly.dev/sanctions?wallet=0x742d35Cc6634C0532925a3b844Bc9e7595f0bEbb"'>Copy</button></div>
     <pre><span class="c-cmd">$</span> curl <span class="c-str">"https://agentmail-api.fly.dev/sanctions?wallet=0x742d35Cc6634C0532925a3b844Bc9e7595f0bEbb"</span>
 {
   <span class="c-key">"clean"</span>: <span class="c-ok">true</span>,
@@ -2536,7 +2569,7 @@ footer .bottom{margin-top:40px;padding-top:24px;border-top:1px solid var(--line)
 </div></div></div>
 
 <!-- STORY -->
-<section class="sec story" id="story"><div class="wrap">
+<section class="sec story" id="story" tabindex="-1"><div class="wrap">
   <div class="sec-head reveal"><span class="eyebrow"><span class="dot"></span> The story</span>
     <h2>I was building an agent that pays invoices. Then test #47 sent USDC to a wallet I did not recognize.</h2>
   </div>
@@ -2580,7 +2613,7 @@ footer .bottom{margin-top:40px;padding-top:24px;border-top:1px solid var(--line)
     <span class="s"><b>&lt;100 ms</b> per check</span>
   </div>
   <div class="codewin" style="max-width:640px">
-    <div class="top"><span class="d"></span><span class="d"></span><span class="d"></span><span class="file">real response &mdash; sanctioned wallet detected</span></div>
+    <div class="top"><span class="d"></span><span class="d"></span><span class="d"></span><span class="file">real response &mdash; sanctioned wallet detected</span><button class="copy-btn" data-copy='curl "https://agentmail-api.fly.dev/sanctions?wallet=0x098B716B8Aaf21512996dC57EB0615e2383E2f96"'>Copy</button></div>
     <pre><span class="c-cmd">$</span> curl <span class="c-str">"https://agentmail-api.fly.dev/sanctions?wallet=0x098B716B8Aaf21512996dC57EB0615e2383E2f96"</span>
 {
   <span class="c-key">"matches"</span>: [{ <span class="c-key">"list"</span>: <span class="c-str">"OFAC_SDN"</span>,
@@ -2618,8 +2651,8 @@ footer .bottom{margin-top:40px;padding-top:24px;border-top:1px solid var(--line)
     <p class="lead">No signup, no API key, no credit card. Paste any wallet address and see the result instantly &mdash; or drop your email for a 5-day series on agent compliance.</p>
     <form class="form" id="free-tier-capture">
       <div class="row">
-        <input type="email" id="free-email" placeholder="you@example.com (optional &mdash; for the compliance series)" autocomplete="email">
-        <button type="submit" class="btn btn-primary btn-lg">Get the curl + 5-day series &rarr;</button>
+        <input type="email" id="free-email" inputmode="email" autocomplete="email" placeholder="you@example.com (optional &mdash; for the compliance series)" aria-label="Email address (optional)">
+        <button type="submit" class="btn btn-primary btn-lg" id="free-submit">Get the curl + 5-day series &rarr;</button>
       </div>
     </form>
     <p class="hint">The curl works right now &mdash; no waiting. The email series is a bonus, not a gate.</p>
@@ -2740,8 +2773,8 @@ footer .bottom{margin-top:40px;padding-top:24px;border-top:1px solid var(--line)
       <a href="/checkout/team" class="btn btn-ghost">Get your API key &rarr;</a>
       <p class="guar">Same $10K guarantee. Priority SLA. Custom risk rules for production teams.</p>
     </div>
-    <div class="pcard feat reveal">
-      <span class="pop">Compliance dept</span>
+    <div class="pcard reveal">
+      <span class="pop" style="background:linear-gradient(135deg,#ff6b6b,#ff9b9b)">Compliance dept</span>
       <h3>Compliance Pro</h3>
       <div class="amt">$499<small> /mo</small></div>
       <p class="desc">Unlimited screening. Dedicated compliance for agents.</p>
@@ -2787,12 +2820,12 @@ footer .bottom{margin-top:40px;padding-top:24px;border-top:1px solid var(--line)
 <!-- FAQ -->
 <section class="sec" style="padding-top:0"><div class="wrap">
   <div class="sec-head reveal"><span class="eyebrow"><span class="dot"></span> FAQ</span><h2>Agent questions, answered</h2></div>
-  <div class="faq reveal">
-    <div class="item"><button class="q">Doesn&rsquo;t my payment provider handle OFAC screening? <span class="pm">+</span></button><div class="a"><div class="inner">No. x402, AP2, ACP, and Coinbase AgentKit move money &mdash; none of them screen recipients against the SDN list. Compliance is a separate layer and it is your responsibility. agentmail is that layer.</div></div></div>
-    <div class="item"><button class="q">How current is the OFAC data? <span class="pm">+</span></button><div class="a"><div class="inner">Synced hourly from the official US Treasury SDN list. Every check runs against the freshest data.</div></div></div>
-    <div class="item"><button class="q">Which chains and assets are supported? <span class="pm">+</span></button><div class="a"><div class="inner">EVM chains (Ethereum, Base, Arbitrum, Optimism and more), Bitcoin, and Tron addresses &mdash; 782 OFAC-listed wallets across all of them, plus 19,086 names and 16 jurisdictions.</div></div></div>
-    <div class="item"><button class="q">Can I call it from my agent framework? <span class="pm">+</span></button><div class="a"><div class="inner">Yes &mdash; anything that speaks HTTP works. We also ship an MCP server for Claude Code, Cursor, and Windsurf, plus a CLI and a Python package (<code>pip install sanctions-mcp</code>).</div></div></div>
-    <div class="item"><button class="q">Can I self-host? <span class="pm">+</span></button><div class="a"><div class="inner">Yes. agentmail is MIT licensed and open source. The hosted API is the fast path; the self-hosted path is always free.</div></div></div>
+  <div class="faq reveal" id="faq-list">
+    <div class="item"><button class="q" aria-expanded="false">Doesn&rsquo;t my payment provider handle OFAC screening? <span class="pm">+</span></button><div class="a"><div class="inner">No. x402, AP2, ACP, and Coinbase AgentKit move money &mdash; none of them screen recipients against the SDN list. Compliance is a separate layer and it is your responsibility. agentmail is that layer.</div></div></div>
+    <div class="item"><button class="q" aria-expanded="false">How current is the OFAC data? <span class="pm">+</span></button><div class="a"><div class="inner">Synced hourly from the official US Treasury SDN list. Every check runs against the freshest data.</div></div></div>
+    <div class="item"><button class="q" aria-expanded="false">Which chains and assets are supported? <span class="pm">+</span></button><div class="a"><div class="inner">EVM chains (Ethereum, Base, Arbitrum, Optimism and more), Bitcoin, and Tron addresses &mdash; 782 OFAC-listed wallets across all of them, plus 19,086 names and 16 jurisdictions.</div></div></div>
+    <div class="item"><button class="q" aria-expanded="false">Can I call it from my agent framework? <span class="pm">+</span></button><div class="a"><div class="inner">Yes &mdash; anything that speaks HTTP works. We also ship an MCP server for Claude Code, Cursor, and Windsurf, plus a CLI and a Python package (<code>pip install sanctions-mcp</code>).</div></div></div>
+    <div class="item"><button class="q" aria-expanded="false">Can I self-host? <span class="pm">+</span></button><div class="a"><div class="inner">Yes. agentmail is MIT licensed and open source. The hosted API is the fast path; the self-hosted path is always free.</div></div></div>
   </div>
 </div></section>
 
@@ -2824,41 +2857,74 @@ footer .bottom{margin-top:40px;padding-top:24px;border-top:1px solid var(--line)
 <script>
 (function(){
   // nav scroll state + burger
-  var nav=document.getElementById('nav'),burger=document.getElementById('burger'),nl=document.getElementById('navlinks');
+  var nav=document.getElementById('nav'),burger=document.getElementById('burger'),nl=document.getElementById('navlinks'),backdrop=document.getElementById('menu-backdrop');
   function onScroll(){if(window.scrollY>10)nav.classList.add('scrolled');else nav.classList.remove('scrolled');}
   onScroll();window.addEventListener('scroll',onScroll,{passive:true});
-  if(burger){burger.addEventListener('click',function(){nl.classList.toggle('open');});}
-  // faq accordion
+
+  function closeMenu(){nl.classList.remove('open');burger.classList.remove('open');burger.setAttribute('aria-expanded','false');backdrop.classList.remove('show');document.body.style.overflow='';}
+  function openMenu(){nl.classList.add('open');burger.classList.add('open');burger.setAttribute('aria-expanded','true');backdrop.classList.add('show');document.body.style.overflow='hidden';}
+  if(burger){burger.addEventListener('click',function(){nl.classList.contains('open')?closeMenu():openMenu();});}
+  if(backdrop){backdrop.addEventListener('click',closeMenu);}
+  // close menu on link click
+  if(nl){nl.querySelectorAll('a').forEach(function(a){a.addEventListener('click',closeMenu);});}
+  // close menu on Escape
+  document.addEventListener('keydown',function(e){if(e.key==='Escape'&&nl.classList.contains('open'))closeMenu();});
+
+  // faq accordion + scroll into view + ARIA
   document.querySelectorAll('.faq .q').forEach(function(q){
     q.addEventListener('click',function(){
       var item=q.parentNode,a=q.nextElementSibling,inner=a.querySelector('.inner');
       var open=item.classList.contains('open');
-      document.querySelectorAll('.faq .item').forEach(function(i){i.classList.remove('open');i.querySelector('.a').style.maxHeight=null;});
-      if(!open){item.classList.add('open');a.style.maxHeight=inner.offsetHeight+24+'px';}
+      document.querySelectorAll('.faq .item').forEach(function(i){i.classList.remove('open');i.querySelector('.q').setAttribute('aria-expanded','false');i.querySelector('.a').style.maxHeight=null;});
+      if(!open){item.classList.add('open');q.setAttribute('aria-expanded','true');a.style.maxHeight=inner.offsetHeight+24+'px';}
     });
   });
+
+  // copy-to-clipboard for code windows
+  document.querySelectorAll('.copy-btn').forEach(function(btn){
+    btn.addEventListener('click',function(){
+      var text=btn.getAttribute('data-copy')||'';
+      if(navigator.clipboard&&navigator.clipboard.writeText){
+        navigator.clipboard.writeText(text).then(function(){btn.classList.add('copied');btn.textContent='Copied!';setTimeout(function(){btn.classList.remove('copied');btn.textContent='Copy';},2000);}).catch(function(){fallbackCopy(text,btn);});
+      } else { fallbackCopy(text,btn); }
+    });
+  });
+  function fallbackCopy(text,btn){
+    var ta=document.createElement('textarea');ta.value=text;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();try{document.execCommand('copy');btn.classList.add('copied');btn.textContent='Copied!';setTimeout(function(){btn.classList.remove('copied');btn.textContent='Copy';},2000);}catch(e){}document.body.removeChild(ta);
+  }
+
   // reveal on scroll
   var prefersReduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var els=document.querySelectorAll('.reveal');
   if(prefersReduce||!('IntersectionObserver' in window)){els.forEach(function(e){e.classList.add('in');});}
   else{var io=new IntersectionObserver(function(en){en.forEach(function(x){if(x.isIntersecting){x.target.classList.add('in');io.unobserve(x.target);}});},{rootMargin:'0px 0px -8% 0px',threshold:.08});els.forEach(function(e){io.observe(e);});}
-  // free-tier email capture — INSTANT delivery (Brunson: no email-gating the lead magnet)
+
+  // free-tier email capture — INSTANT delivery
   var f=document.getElementById('free-tier-capture');
   if(f){f.addEventListener('submit',function(e){
     e.preventDefault();
     var email=document.getElementById('free-email').value.trim();
-    var btn=this.querySelector('button');
+    var btn=document.getElementById('free-submit');
     var result=document.getElementById('free-result');
     var curl=document.getElementById('free-curl');
-    // Show the curl INSTANTLY regardless of email — the value is instant, not gated
     btn.style.display='none';
     curl.textContent='curl "https://agentmail-api.fly.dev/sanctions?wallet=0x742d35Cc6634C0532925a3b844Bc9e7595f0bEbb"';
     result.style.display='block';
-    // Only subscribe if email provided — the email is a bonus follow-up, not the deliverable
+    result.scrollIntoView({behavior:'smooth',block:'center'});
     if(email&&email.indexOf('@')>0){
       fetch('/subscribe',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:email,source:'free-tier-cta'})}).catch(function(){});
     }
   });}
+
+  // smooth scroll for anchor links with offset for sticky nav
+  document.querySelectorAll('a[href^="#"]').forEach(function(a){
+    a.addEventListener('click',function(e){
+      var href=a.getAttribute('href');
+      if(href.length<2)return;
+      var target=document.querySelector(href);
+      if(target){e.preventDefault();var navH=nav.offsetHeight;var top=target.getBoundingClientRect().top+window.scrollY-navH-8;window.scrollTo({top:top,behavior:prefersReduce?'auto':'smooth'});}
+    });
+  });
 })();
 </script>
 </body>
