@@ -1,4 +1,38 @@
-# sanctionsai.dev
+# agentmail
 
-> Key pages for AI assistants and crawlers.
+> OFAC sanctions screening, transaction risk scoring, and Know-Your-Agent verification for AI agents that transact autonomously.
 
+agentmail lets any AI agent check whether a counterparty (wallet, name, or country) is on the OFAC Specially Designated Nationals list before paying them. It runs on real, free, public data with no API key required for the free tier.
+
+## Quick start
+
+```
+pip install sanctions-mcp
+```
+
+Or use the hosted API:
+
+```
+curl "https://sanctionsai.dev/sanctions?wallet=0x098B716B8Aaf21512996dC57EB0615e2383E2f96"
+```
+
+## Tools
+
+- sanctions_check(name, wallet, country): Screen against 782 OFAC crypto wallets + 19,086 names + 16 embargoed jurisdictions
+- risk_score(counterparty, amount, rail, category): Pre-payment fraud scoring (allow/review/decline)
+- kya_verify(agent_id, evidence): Know-Your-Agent trust scoring
+- dispute_open(transaction_id, reason): Record a disputed transaction
+
+## Data sources
+
+- Crypto wallets: vile/ofac-sdn-list GitHub releases (multi-chain, daily refresh)
+- Names: US Treasury OFAC sdn.csv
+- Countries: 16 comprehensive sanctions jurisdictions
+
+## Links
+
+- [GitHub](https://github.com/kindrat86/agentmail)
+- [PyPI](https://pypi.org/project/sanctions-mcp/)
+- [Pricing](https://sanctionsai.dev/pricing)
+- [API docs](https://sanctionsai.dev/api)
+- [MCP registry](https://mcp.so/server/agentmail)

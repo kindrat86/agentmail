@@ -50,3 +50,4 @@ secrets/
 Thumbs.db
 dist/
 build/
+.vercel
