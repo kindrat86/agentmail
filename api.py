@@ -4133,7 +4133,7 @@ document.getElementById("wallet").addEventListener("keydown", function(e){ if(e.
                 post_html = content_upgrade + post_html
         body = (
             '<section style="border-top:none"><div class="prose" style="padding-top:40px">'
-            '<p class="note">' + post["date"] + ' · agentmail</p>'
+            '<p class="note">By <span class="author" rel="author">agentmail team</span> · <time datetime="' + post["date"] + '">' + post["date"] + '</time> · last updated ' + post["date"] + '</p>'
             '<h1>' + title + '</h1>'
             '<p class="lead">' + post["desc"] + '</p>'
             + share_buttons +
