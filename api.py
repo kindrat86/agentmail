@@ -1269,25 +1269,58 @@ _GUIDE_CONTENT = {
         "title": "How to Set Up OFAC Sanctions Screening for Your AI Agent in 5 Minutes",
         "desc": "A step-by-step guide to adding OFAC sanctions screening to any AI agent using HTTP, MCP, or CLI. Zero configuration required for the free tier.",
         "h1": "How to Set Up OFAC Sanctions Screening for Your AI Agent",
+        "tldr": "Add sanctions screening to your AI agent with one HTTP call: <code>curl \"https://sanctionsai.dev/sanctions?wallet=0x...\"</code>. If the response says <code>clean: false</code>, halt the payment. Free tier: 5 checks/day, no API key. Integration takes under 5 minutes via HTTP, MCP, or CLI.",
         "html": "<p>Adding sanctions screening to your AI agent takes one API call and under five minutes. This guide covers all three integration methods: HTTP API, MCP tool, and CLI.</p><h2>Method 1: HTTP API (simplest, works with any agent framework)</h2><p>Call our HTTP endpoint with the wallet address, name, or country you want to check. No API key needed for the free tier (5 checks/day per IP).</p><pre><code>curl &quot;https://sanctionsai.dev/sanctions?wallet=0x098B716B8Aaf21512996dC57EB0615e2383E2f96&quot;</code></pre><p>Response includes <code>clean</code> (boolean), <code>matches</code> (array of matched SDN entries), and <code>quota</code> (remaining free checks). Wire this before your agent&rsquo;s payment function.</p><h2>Method 2: MCP tool (works with Claude Code, Cursor, Windsurf)</h2><p>Install pip install sanctions-mcp, configure the MCP server, and your agent can call <code>sanctions_check</code> as a native tool.</p><pre><code>pip install sanctions-mcp\n# Add to your MCP config:\n# mcpServers.sanctions.command = &quot;python -m sanctions_mcp&quot;</code></pre><h2>Method 3: CLI (for scripts and cron jobs)</h2><pre><code>sanctions check --wallet 0x098B716B8Aaf21512996dC57EB0615e2383E2f96</code></pre><h2>What to do with the result</h2><p>If clean=True, the transaction is safe to proceed. If clean=False, halt the transaction, log the match, and alert a human. Every check is timestamped for your compliance audit trail.</p>",
+        "steps": [
+            {"name": "Choose your integration mode", "text": "Pick HTTP API (simplest, works with any framework), MCP tool (for Claude Code, Cursor, Windsurf), or CLI (for scripts). All check the same 782 OFAC-sanctioned wallets."},
+            {"name": "Add the screening call before your payment function", "text": "Wire the sanctions check into your agent's payment path. For HTTP: curl the endpoint with the wallet address. The free tier allows 5 checks/day with no API key."},
+            {"name": "Handle the response", "text": "If clean=True, proceed with the payment. If clean=False, halt the transaction and log the match details from the matches array for your audit trail."},
+            {"name": "Log every screen", "text": "Record the timestamp, wallet, result, and OFAC list version for every check. This tamper-evident log is your evidence if Treasury asks."},
+        ],
     },
     "choose-sanctions-api": {
         "title": "How to Choose the Right Sanctions Screening API for Your AI Agent",
         "desc": "A comparison of OFAC screening APIs and what to look for: agent-native design, crypto wallet support, free tier, and integration options.",
         "h1": "How to Choose the Right Sanctions Screening API for Your AI Agent",
+        "tldr": "For AI agents, pick a sanctions API that supports crypto wallets (not just names), offers MCP and HTTP integration, has a free tier for testing, screens in under 100ms, and logs every check for OFAC audit. agentmail is purpose-built for autonomous payment pipelines.",
         "html": "<p>Not all sanctions screening APIs are built for autonomous agents. Here is what to look for.</p><h2>1. Does it support crypto wallet addresses?</h2><p>Many enterprise screening tools only check names and countries. Your agent probably pays crypto wallets. agentmail screens 782 OFAC-sanctioned crypto addresses across EVM, Bitcoin, Solana, and Tron.</p><h2>2. Can agents call it programmatically?</h2><p>Look for MCP support (AI-native protocol), a simple HTTP API, and a CLI. agentmail supports all three. A PDF report or dashboard-only tool does not help an agent.</p><h2>3. Is there a free tier?</h2><p>You should never pay to test compliance. agentmail gives 5 free checks/day with no signup or API key. If an API requires a sales call to try, it is not built for agents.</p><h2>4. Does it log for audit?</h2><p>OFAC expects documented screening. agentmail paid plans include a full audit dashboard with timestamped, exportable logs.</p><h2>5. What is the latency?</h2><p>Agent payment flows need sub-second responses. agentmail screens in under 100ms. If the API takes seconds, your agent user experience degrades.</p><h2>The verdict</h2><p>For AI agents, agentmail is purpose-built. Enterprise tools like Chainalysis, World-Check, and ComplyAdvantage are designed for human analysts, not autonomous payment pipelines.</p>",
+        "steps": [
+            {"name": "Check crypto wallet support", "text": "Ensure the API screens wallet addresses, not just names. agentmail covers 782 OFAC-sanctioned addresses across EVM, Bitcoin, Solana, and Tron."},
+            {"name": "Verify agent-native integration", "text": "Look for MCP support, a simple HTTP API, and a CLI. Dashboard-only tools do not help autonomous agents."},
+            {"name": "Confirm a free tier exists", "text": "You should never pay to test compliance. agentmail gives 5 free checks/day with no signup."},
+            {"name": "Check latency", "text": "Agent payment flows need sub-second responses. agentmail screens in under 100ms."},
+            {"name": "Ensure audit logging", "text": "OFAC expects documented screening. Verify the API provides timestamped, exportable logs."},
+        ],
     },
     "build-compliance-program": {
         "title": "How to Build an OFAC Compliance Program for AI Agents",
         "desc": "A practical framework for building a documented OFAC compliance program that covers autonomous agents and satisfies regulatory expectations.",
         "h1": "How to Build an OFAC Compliance Program for AI Agents",
+        "tldr": "An OFAC compliance program for AI agents needs five components: a one-page risk assessment, pre-payment screening controls (agentmail handles this), weekly testing with known sanctioned wallets, a 30-minute team training session, and a documented sanctions-hit response plan. OFAC treats documented programs as a significant mitigating factor.",
         "html": "<p>OFAC expects every US person deploying an agent that moves money to have a compliance program. Here is the minimum viable program.</p><h2>Step 1: Risk assessment</h2><p>Document what your agent does, what counterparties it interacts with, what jurisdictions it touches, and the maximum transaction value. A one-page risk assessment is enough to start.</p><h2>Step 2: Internal controls</h2><p>Implement pre-payment screening (agentmail handles this), set transaction limits, and establish a manual review process for flagged transactions. Document every control.</p><h2>Step 3: Testing and audit</h2><p>Test your screening weekly with known sanctioned wallets. Review audit logs monthly. agentmail paid plans include automated audit logging with CSV export.</p><h2>Step 4: Training</h2><p>Ensure everyone who deploys or manages agents understands OFAC strict liability. A 30-minute training session is sufficient for most teams.</p><h2>Step 5: Response plan</h2><p>Document what happens when a sanctions hit occurs. Who gets notified? Who reviews the match? What evidence is preserved? OFAC considers response plans as a mitigating factor.</p>",
+        "steps": [
+            {"name": "Conduct a risk assessment", "text": "Document what your agent does, what counterparties it interacts with, what jurisdictions it touches, and the maximum transaction value. A one-page assessment is enough to start."},
+            {"name": "Implement internal controls", "text": "Set up pre-payment screening (agentmail handles this), transaction limits, and a manual review process for flagged transactions. Document every control."},
+            {"name": "Test and audit regularly", "text": "Test your screening weekly with known sanctioned wallets. Review audit logs monthly. agentmail paid plans include automated audit logging with CSV export."},
+            {"name": "Train your team", "text": "Ensure everyone who deploys or manages agents understands OFAC strict liability. A 30-minute training session is sufficient for most teams."},
+            {"name": "Document your response plan", "text": "Define what happens when a sanctions hit occurs: who gets notified, who reviews the match, and what evidence is preserved. OFAC considers response plans as a mitigating factor."},
+        ],
     },
     "avoid-ofac-violations": {
         "title": "7 Ways AI Agents Can Avoid OFAC Sanctions Violations",
         "desc": "Common scenarios where AI agents accidentally trigger OFAC violations and how to prevent each one.",
         "h1": "7 Ways AI Agents Can Avoid OFAC Sanctions Violations",
+        "tldr": "The top causes of agent-driven OFAC violations: skipping pre-payment screening, caching results instead of re-screening, ignoring country checks, delegating to unscreened sub-agents, using privacy protocols, trusting un-screened third-party APIs, and lacking an audit trail. Prevent all seven with a single agentmail check before every payment.",
         "html": "<p>Here are the seven most common ways AI agents trigger OFAC violations and how to prevent each one.</p><h2>1. Pre-payment screening</h2><p>The #1 cause: an agent pays without checking. Solution: call agentmail before every payment. One API call, under 100ms.</p><h2>2. Cached screening results</h2><p>An agent screens a wallet once, records it as clean, and never re-screens. The SDN list changes daily. Solution: screen before every transaction, never cache results.</p><h2>3. Missing country checks</h2><p>An agent checks the wallet but not the jurisdiction. The wallet is clean but the counterparty is in an embargoed country. Solution: agentmail checks all three: wallet, name, and country.</p><h2>4. Sub-agent delegation</h2><p>Your agent delegates payment to a sub-agent that does not screen. The sub-agent pays a sanctioned wallet. Solution: ensure every agent in your pipeline screens before transacting.</p><h2>5. Zero-knowledge protocols</h2><p>An agent uses a mixing or privacy protocol that obscures the destination. OFAC considers this a red flag. Solution: screen before the privacy layer, not after.</p><h2>6. Third-party integrations</h2><p>Your agent uses an API that makes payments on your behalf. The API provider may not screen. Solution: screen the counterparty before calling the payment API, regardless of the provider.</p><h2>7. No audit trail</h2><p>An OFAC inquiry arrives and you have no records. Solution: agentmail paid plans include an automatic, exportable audit log for every screen.</p>",
+        "steps": [
+            {"name": "Add pre-payment screening", "text": "Call agentmail before every payment. One API call, under 100ms. This prevents the #1 cause of violations."},
+            {"name": "Never cache screening results", "text": "Screen before every transaction. The SDN list changes daily, so a wallet clean yesterday may be sanctioned today."},
+            {"name": "Check countries, not just wallets", "text": "A clean wallet in an embargoed jurisdiction is still a violation. agentmail checks wallet, name, and country."},
+            {"name": "Screen all sub-agents", "text": "Ensure every agent in your pipeline screens before transacting. Unscreened sub-agents inherit your liability."},
+            {"name": "Screen before privacy protocols", "text": "OFAC treats mixing and privacy protocols as red flags. Screen the destination before the privacy layer, not after."},
+            {"name": "Verify third-party integrations", "text": "Screen the counterparty before calling any payment API, regardless of whether the provider claims to screen."},
+            {"name": "Maintain an audit trail", "text": "Keep timestamped, exportable logs of every screen. agentmail paid plans include automatic audit logging for OFAC inquiries."},
+        ],
     },
 }
 
@@ -4805,10 +4838,18 @@ document.getElementById("squeeze-form").addEventListener("submit", function(e){
         d = _GUIDE_CONTENT.get(slug)
         if not d:
             return _json(self, 404, {"error": "not found"})
+        tldr = d.get("tldr", "")
+        tldr_html = (
+            '<div class="tldr" style="background:#f0f7ff;border-left:4px solid #2563eb;'
+            'padding:16px 20px;margin:24px 0;border-radius:0 8px 8px 0;font-size:0.95em">'
+            '<strong style="display:block;margin-bottom:6px">TL;DR</strong>'
+            + tldr + '</div>'
+        ) if tldr else ""
         body = (
             '<section style="border-top:none"><div class="prose" style="padding-top:40px">'
             '<h1>' + d["h1"] + '</h1>'
             '<p class="lead">' + d["desc"] + '</p>'
+            + tldr_html
             + d["html"] +
             '<div class="cta-box" style="margin-top:40px"><h3>Start screening in 30 seconds</h3>'
             '<p>Free tier, 5 checks/day. No API key required.</p>'
@@ -4816,12 +4857,23 @@ document.getElementById("squeeze-form").addEventListener("submit", function(e){
             '&nbsp; <a href="/pricing" class="btn btn-ghost">See pricing</a></div>'
             '</div></section>'
         )
+        steps = d.get("steps", [])
+        howto_steps = [
+            {"@type": "HowToStep", "position": i + 1,
+             "name": s["name"], "text": s["text"]}
+            for i, s in enumerate(steps)
+        ] if steps else []
         ld = {
             "@context": "https://schema.org",
             "@type": "HowTo",
             "name": d["h1"],
             "description": d["desc"],
             "url": _SITE + "/guides/" + slug,
+            "step": howto_steps or [{
+                "@type": "HowToStep",
+                "name": d["h1"],
+                "text": d["desc"],
+            }],
         }
         bc = {
             "@context": "https://schema.org",
