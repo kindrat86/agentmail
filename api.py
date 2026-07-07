@@ -1594,7 +1594,7 @@ class Handler(BaseHTTPRequestHandler):
             return _json(self, 403, {"ok": False, "error": "forbidden"})
         # SEO foundation
         if p.path == "/robots.txt":
-            return self._serve_text("User-agent: *\nAllow: /\nDisallow: /checkout/\nDisallow: /dashboard\nDisallow: /start\nDisallow: /squeeze\n\nSitemap: https://sanctionsai.dev/sitemap.xml\n", "text/plain")
+            return self._serve_text("User-agent: *\nDisallow: /checkout/\nDisallow: /dashboard\nDisallow: /start\nDisallow: /squeeze\n\nSitemap: https://sanctionsai.dev/sitemap.xml\n", "text/plain")
         if p.path == "/sitemap.xml":
             return self._sitemap_xml()
         if p.path == "/llms.txt":
