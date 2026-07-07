@@ -2566,6 +2566,10 @@ footer{padding-bottom:max(40px,env(safe-area-inset-bottom))}
     <span class="s"><b>16</b> jurisdictions</span>
     <span class="s"><b>$0</b> to start</span>
   </div>
+  <div style="max-width:720px;margin:0 auto 28px;padding:18px 24px;background:rgba(0,212,170,.06);border:1px solid rgba(0,212,170,.18);border-radius:14px;text-align:left">
+    <strong style="display:block;color:var(--teal2);font-size:.8rem;letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px">TL;DR</strong>
+    <p style="color:var(--t2);font-size:.95rem;margin:0;line-height:1.6"><b style="color:var(--text)">agentmail is an OFAC sanctions screening API for AI agents.</b> One HTTP call before every payment: <b style="color:var(--text)">clean = proceed, flagged = halt</b>. Covers 782 crypto wallets, 19,086 names, and 16 jurisdictions in under 100&nbsp;ms. Free tier (5 checks/day, no key), paid from $19/mo, or $0.05/check via x402. MIT-licensed and self-hostable.</p>
+  </div>
   <div class="ctas">
     <div class="row">
       <a href="#try-free" class="btn btn-primary btn-lg">Try it free &rarr;</a>
@@ -3428,6 +3432,11 @@ footer .bottom{margin-top:40px;padding-top:24px;border-top:1px solid var(--line)
     <span class="s"><b>19,086</b> names</span>
     <span class="s"><b>16</b> jurisdictions</span>
     <span class="s"><b>$0.05</b> / check</span>
+  </div>
+
+  <div style="max-width:680px;margin:28px auto 0;padding:18px 24px;background:rgba(0,212,170,.06);border:1px solid rgba(0,212,170,.18);border-radius:14px;text-align:left">
+    <strong style="display:block;color:var(--teal2);font-size:.8rem;letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px">TL;DR</strong>
+    <p style="color:var(--t2);font-size:.95rem;margin:0">OFAC strict liability means every payment your agent sends to a sanctioned wallet is a violation &mdash; up to $356,000 each, even if nobody knew. agentmail is one HTTP call your agent makes before every payment: <b style="color:#fff">clean = proceed, flagged = halt</b>. 782 wallets, 19,086 names, 16 jurisdictions, checked in under 100&nbsp;ms for $0.05 via x402 on Base. No API key, no signup.</p>
   </div>
 
   <div class="hero-card reveal">
