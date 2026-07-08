@@ -1632,6 +1632,15 @@ class Handler(BaseHTTPRequestHandler):
 
     def do_GET(self):
         p = urlparse(self.path)
+
+        # SEO: redirect www to apex
+        host = self.headers.get('Host', '') or self.headers.get('host', '')
+        if host.startswith('www.'):
+            target = 'https://' + host[4:] + self.path
+            self.send_response(301)
+            self.send_header('Location', target)
+            self.end_headers()
+            return
         if p.path == "/health":
             return _json(self, 200, {"ok": True, "service": "agentmail",
                                      "sms": _SMS, "compliance": _COMPLIANCE,
