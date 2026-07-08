@@ -916,9 +916,9 @@ _GLOSSARY = {
         "agents": "AI agents have the same OFAC obligations as their human operators. agentmail screens against the SDN list automatically.",
         "coverage": "agentmail indexes 782 OFAC-sanctioned crypto wallets plus 19,086 sanctioned names.",
         "faq": [
-            ("How often is the SDN list updated?", "OFAC updates frequently, sometimes daily. agentmail refreshes from US Treasury SDN.csv plus vile/ofac-sdn-list daily."),
-            ("Does the SDN list include crypto wallets?", "Yes. Since 2018 OFAC has listed crypto wallets as blocked property. agentmail indexes 782 SDN-listed addresses."),
-            ("What happens if my agent pays an SDN?", "Civil penalties can reach $330,944 per transaction. Avoid with pre-payment OFAC screening."),
+            ("How often is the SDN list updated?", "OFAC updates the SDN List frequently, sometimes multiple times per day and often with no advance notice. agentmail refreshes its copy daily from the official US Treasury SDN.csv feed plus the vile/ofac-sdn-list crypto registry, so screening always runs against the most current designations rather than a stale snapshot."),
+            ("Does the SDN list include crypto wallets?", "Yes. Since 2018 OFAC has published cryptocurrency wallet addresses as blocked property directly on the SDN List, and the count keeps growing. agentmail indexes 782 SDN-listed addresses across Ethereum, Bitcoin, and Tron, matching every counterparty wallet your agent is about to pay before the transaction is signed."),
+            ("What happens if my agent pays an SDN?", "Paying a Specially Designated National is a strict-liability violation, meaning intent is irrelevant. Civil penalties reach $330,944 per transaction or twice the transaction value, whichever is greater. The fix is a single pre-payment screening call so your agent halts before it ever sends funds to a blocked party."),
         ],
     },
     "specially-designated-nationals": {
@@ -932,9 +932,9 @@ _GLOSSARY = {
         "agents": "AI agents must not transact with SDN-listed parties. The operator is the responsible US person.",
         "coverage": "agentmail uses fuzzy matching for names and aliases against the full SDN list.",
         "faq": [
-            ("Are SDN designations permanent?", "Some are delisted after sanctions relief, others remain for decades."),
-            ("Can delisted SDNs re-enter the financial system?", "Yes if delisted, but enhanced due diligence is still recommended."),
-            ("Does being an SDN block ALL transactions?", "Yes, unless OFAC grants a specific license."),
+            ("Are SDN designations permanent?", "No. Some designations are removed after sanctions relief, settlements, or policy changes, while others remain in place for decades. Because entries are added and delisted continuously, agentmail refreshes daily so your agent is neither screening against stale data nor missing a newly designated party."),
+            ("Can delisted SDNs re-enter the financial system?", "Yes. Once OFAC removes a party from the SDN List their assets are unblocked and they may transact again, though enhanced due diligence is still prudent. agentmail reflects delistings on its next daily refresh, so a formerly blocked counterparty stops flagging once officially removed by Treasury."),
+            ("Does being an SDN block ALL transactions?", "Yes. Unless OFAC grants a specific license, US persons are prohibited from any transaction with an SDN, and all property in which the SDN has an interest is blocked. This is why a single pre-payment screen matters: one unscreened payment to an SDN is a complete violation."),
         ],
     },
     "know-your-agent": {
@@ -948,9 +948,9 @@ _GLOSSARY = {
         "agents": "KYA means identity verification of the deploying party, behavior monitoring of the agent, and sanctions screening of every transaction.",
         "coverage": "agentmail covers the sanctions screening leg of KYA.",
         "faq": [
-            ("Is Know Your Agent a legal requirement?", "Not yet codified, but regulators including the UK FCA and US Treasury have indicated operators will be held responsible."),
-            ("What is the difference between KYC and KYA?", "KYC verifies a human. KYA extends the same logic to AI agents."),
-            ("How does OFAC compliance fit into KYA?", "Sanctions screening verifies both parties in an agent transaction are not SDN-listed."),
+            ("Is Know Your Agent a legal requirement?", "Not yet codified into a single statute, but regulators including the UK FCA and the US Treasury have signaled that operators will be held responsible for their agents' financial conduct. Building KYA controls now, including sanctions screening on every transaction, positions you ahead of the compliance expectations that are clearly forming."),
+            ("What is the difference between KYC and KYA?", "KYC (Know Your Customer) verifies the identity of a human account holder. KYA (Know Your Agent) extends that same logic to autonomous software: who built the agent, what permissions it holds, and what it has actually done. Sanctions screening of each transaction is the enforcement layer that makes KYA meaningful."),
+            ("How does OFAC compliance fit into KYA?", "Sanctions screening is the transactional core of Know Your Agent. Verifying an agent's identity is useless if it can still pay a blocked wallet, so KYA requires checking that both parties in every agent transaction are absent from the OFAC SDN List. agentmail provides exactly this screening leg of a KYA program."),
         ],
     },
     "x402-protocol": {
@@ -964,9 +964,9 @@ _GLOSSARY = {
         "agents": "Agents face two OFAC risks: origin of incoming payments and destination of outgoing payments.",
         "coverage": "The /x402-demo endpoint screens incoming wallets and prevents 402 responses to sanctioned sources.",
         "faq": [
-            ("Is x402 OFAC compliant?", "x402 is a payment protocol. Compliance is the operator's responsibility. agentmail provides the screening layer."),
-            ("Does x402 include KYC?", "No. Identity verification is layered on top by the operator."),
-            ("Do x402 payments create an audit trail?", "On-chain payments do. agentmail adds OFAC context to off-chain settlements."),
+            ("Is x402 OFAC compliant?", "x402 is a neutral payment protocol, so compliance is the operator's responsibility rather than a built-in feature. Every x402 payment is still a transfer of value subject to OFAC rules. agentmail provides the screening layer that checks each counterparty against the SDN List before an x402 payment is authorized, closing that gap."),
+            ("Does x402 include KYC?", "No. x402 handles the mechanics of paying per API call via HTTP 402 and EIP-3009, but it deliberately leaves identity verification to the operator. Any Know Your Customer or Know Your Agent checks, along with sanctions screening, must be layered on top of x402 by the developer integrating the protocol."),
+            ("Do x402 payments create an audit trail?", "On-chain x402 settlements are permanently recorded on the blockchain, which provides a durable transaction trail. agentmail adds the compliance context OFAC expects, logging the screening result, timestamp, and SDN-list version for each payment so you can demonstrate a documented pre-payment compliance process if audited."),
         ],
     },
     "voluntary-self-disclosure": {
@@ -980,9 +980,9 @@ _GLOSSARY = {
         "agents": "Automated screening with audit logs makes detection fast and documentation VSD-ready.",
         "coverage": "agentmail exports timestamped CSV: wallet, result, screen ID, latency - VSD evidence.",
         "faq": [
-            ("How much does VSD reduce OFAC penalties?", "Roughly 50% compared to cases discovered through OFAC enforcement."),
-            ("What evidence is needed for a VSD?", "Detailed violation description, conduct, mitigation steps, and compliance overhaul evidence."),
-            ("How long does an OFAC investigation take?", "From 6 to 24 months. Retaining detailed logs is critical."),
+            ("How much does VSD reduce OFAC penalties?", "A qualifying Voluntary Self-Disclosure roughly halves the base civil penalty compared with a violation that OFAC discovers on its own. Under OFAC's Enforcement Guidelines the base penalty amount is cut by up to 50%, which on a $330,944-per-transaction exposure is a very large incentive to detect and report quickly."),
+            ("What evidence is needed for a VSD?", "OFAC expects a detailed account of the apparent violation: what happened, the conduct that caused it, the parties and amounts involved, the remedial steps taken, and evidence of a strengthened compliance program. agentmail's timestamped screening logs supply much of this record, showing exactly what was checked and when."),
+            ("How long does an OFAC investigation take?", "OFAC enforcement matters commonly run from six months to two years, and complex cases can take longer. Because resolution is slow and document-intensive, retaining detailed, tamper-evident screening logs from the start is critical. agentmail's exportable CSV audit trail preserves that evidence across the entire investigation window."),
         ],
     },
     "blocked-person": {
