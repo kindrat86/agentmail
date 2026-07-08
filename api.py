@@ -1596,7 +1596,6 @@ class Handler(BaseHTTPRequestHandler):
         if p.path == "/robots.txt":
             return self._serve_text("""# Allow all AI crawlers, bots, and assistants
 User-agent: *
-Allow: /
 Allow: /docs
 Allow: /api
 Allow: /blog/
