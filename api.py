@@ -339,6 +339,21 @@ nav a:hover{color:#fff}
 section{padding:56px 24px;border-top:1px solid #1a1a1a}
 section:first-of-type{border-top:none}
 h1{font-size:2.2em;font-weight:800;line-height:1.15;letter-spacing:-.02em;margin-bottom:16px}
+    "elliptic": {
+        "name": "Elliptic", "tagline": "Enterprise blockchain analytics",
+        "url": "https://www.elliptic.co", "free_tier": False, "agent_api": False,
+        "crypto_wallets": True, "sanctions_list": True, "self_host": False,
+        "mcp_server": False, "pricing_public": False, "minimum": "Custom quote",
+        "startup_friendly": False,
+    },
+    "scorechain": {
+        "name": "Scorechain", "tagline": "Crypto compliance and risk scoring",
+        "url": "https://www.scorechain.com", "free_tier": False, "agent_api": False,
+        "crypto_wallets": True, "sanctions_list": True, "self_host": False,
+        "mcp_server": False, "pricing_public": False, "minimum": "Custom quote",
+        "startup_friendly": False,
+    },
+
 h2{font-size:1.6em;font-weight:700;margin-bottom:16px}
 h3{font-size:1.1em;font-weight:600;margin:22px 0 8px;color:#fff}
 p{color:#b0b0b0;margin-bottom:14px}
@@ -3102,7 +3117,8 @@ footer{padding-bottom:max(40px,env(safe-area-inset-bottom))}
 <!-- PostHog -->
 <script>!function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.async=!0,p.src=s.api_host+"/static/array.js",(r=t.getElementsByTagName("head")[0]).appendChild(p);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])}(document,window.posthog||[]);posthog.init('phc_lyZCgvTpicjLzAO3rY2GhxuX5WUc5jQjP8ZVwwJqauX',{api_host:'https://eu.i.posthog.com',person_profiles:'identified_only'})</script>
 <script>document.addEventListener('DOMContentLoaded',function(){var p=window.posthog;if(!p)return;var pg=location.pathname;p.capture('page_viewed',{page:pg});document.addEventListener('click',function(e){var a=e.target.closest&&e.target.closest('a[href],button.btn,.btn');if(!a)return;var href=a.getAttribute('href')||'';var txt=(a.textContent||'').trim().slice(0,40);var cls=a.classList||{};var tier=cls.contains('btn-primary')?'primary':(cls.contains('btn-ghost')?'secondary':'text');if(href.indexOf('/checkout/')>-1){p.capture('cta_checkout',{cta:txt,href:href,page:pg,tier:tier});}else if(href.indexOf('/tools/wallet-checker')>-1){p.capture('cta_run_check',{cta:txt,href:href,page:pg});}else if(href.indexOf('github.com/kindrat86')>-1){p.capture('cta_github',{cta:txt,href:href,page:pg});}},true);var f=document.getElementById('free-tier-capture');if(f){f.addEventListener('submit',function(){p.capture('cta_free_signup',{page:pg});});}});</script>
-</head>
+<link rel="stylesheet" href="/ux.css">
+    </head>
 <body>
 <a href="#story" class="skip-link">Skip to content</a>
 <div class="menu-backdrop" id="menu-backdrop"></div>
