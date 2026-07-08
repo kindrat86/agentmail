@@ -1640,6 +1640,8 @@ Sitemap: https://sanctionsai.dev/sitemap.xml
             return self._serve_text("google-site-verification: googlea30bb998b91eb6ac.html", "text/html")
         if p.path == "/sitemap.xml":
             return self._sitemap_xml()
+        if p.path == "/87aaa199acaf7d14c812e974ce115e32.txt":
+            return self._serve_text("87aaa199acaf7d14c812e974ce115e32", "text/plain")
         if p.path == "/llms.txt":
             return self._llms_txt()
         if p.path == "/llms-full.txt":
