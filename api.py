@@ -2597,6 +2597,7 @@ Then add to your MCP client (Claude Code, Cursor, Windsurf).
 <meta name="description" content="OFAC sanctions screening for x402 payment agents. Screen every counterparty before your agent pays - 782 crypto wallets, 19,086 names, under 100ms. Free tier + $0.05/check x402.">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <meta name="theme-color" content="#0a0a0a">
+<meta name="indexnow" content="87aaa199acaf7d14c812e974ce115e32">
 <meta property="og:title" content="OFAC &amp; x402 Sanctions Check for AI Agents | agentmail | $0.05/check">
 <meta property="og:description" content="OFAC sanctions screening for x402 payment agents. Screen every counterparty before your agent pays - 782 crypto wallets, 19,086 names, under 100ms.">
 <meta property="og:type" content="website">
@@ -3727,6 +3728,7 @@ const payment = await x402.pay({
 <meta name="description" content="OFAC sanctions screening for AI agents. Pay $0.05 USDC per check via x402 on Base. No API key. No signup. 782 wallets, 19,086 names, 16 jurisdictions.">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <meta name="theme-color" content="#0a0a0a">
+<meta name="indexnow" content="87aaa199acaf7d14c812e974ce115e32">
 <style>
 :root{
   --bg:#0a0a0a; --bg2:#0c0c0e;
