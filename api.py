@@ -1636,6 +1636,8 @@ Sitemap: https://sanctionsai.dev/sitemap.xml
 """, "text/plain")
         if p.path == "/BingSiteAuth.xml":
             return self._bing_site_auth()
+        if p.path == "/googlea30bb998b91eb6ac.html":
+            return self._serve_text("google-site-verification: googlea30bb998b91eb6ac.html", "text/html")
         if p.path == "/sitemap.xml":
             return self._sitemap_xml()
         if p.path == "/llms.txt":
@@ -5571,25 +5573,77 @@ document.getElementById("squeeze-form").addEventListener("submit", function(e){
         if not page:
             return _json(self, 404, {"error": "not found"})
         
+        _page_url = _SITE + "/" + page_key.replace("_", "/")
+        _today = __import__("datetime").date.today().isoformat()
+        # Shared OFAC-screening FAQ — drives AEO (FAQPage schema + <details>)
+        _faq = [
+            ("What is OFAC sanctions screening?",
+             "OFAC sanctions screening checks a name, crypto wallet, or country against the U.S. Treasury's Office of Foreign Assets Control (OFAC) Specially Designated Nationals (SDN) list before you transact. sanctionsai.dev screens 782 sanctioned crypto wallets and 19,086 names in under 100ms."),
+            ("How much does an OFAC violation cost?",
+             "OFAC penalties start at $330,944 per violation under strict liability, meaning you can be liable even without intent. Screening every counterparty before a transaction is the standard mitigation."),
+            ("Do I need an API key to screen a wallet?",
+             "No. sanctionsai.dev offers 5 free checks per day with no API key and no signup. For higher volume, pay per check via x402 ($0.05/check) or use a flat developer tier."),
+            ("Which chains and lists does sanctionsai.dev cover?",
+             "It screens Ethereum and EVM chains (Polygon, Arbitrum, Base, Optimism), Bitcoin, Solana, and Tron wallets, plus name and country screening against the OFAC SDN list."),
+        ]
+        _faq_schema = {
+            "@type": "FAQPage",
+            "mainEntity": [
+                {"@type": "Question", "name": q,
+                 "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in _faq
+            ],
+        }
         schema = {
             "@context": "https://schema.org",
-            "@type": "WebPage",
-            "name": page["title"],
-            "url": _SITE + "/" + page_key.replace("_", "/"),
-            "description": page["desc"],
-            "isPartOf": {"@type": "WebSite", "name": "sanctionsai.dev", "url": _SITE},
+            "@graph": [
+                {
+                    "@type": "Article",
+                    "headline": page["title"],
+                    "description": page["desc"],
+                    "url": _page_url,
+                    "datePublished": "2026-01-01",
+                    "dateModified": _today,
+                    "author": {"@type": "Organization", "name": "sanctionsai.dev", "url": _SITE},
+                    "publisher": {"@type": "Organization", "name": "sanctionsai.dev", "url": _SITE},
+                    "mainEntityOfPage": _page_url,
+                    "isPartOf": {"@type": "WebSite", "name": "sanctionsai.dev", "url": _SITE},
+                },
+                _faq_schema,
+            ],
         }
+        _faq_html = "".join(
+            f'<details><summary>{q}</summary><p>{a}</p></details>' for q, a in _faq
+        )
         html = f"""<!DOCTYPE html>
 <html lang="en"><head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{page["title"]}</title>
 <meta name="description" content="{page["desc"]}">
+<meta name="robots" content="index, follow, max-image-preview:large">
 <link rel="canonical" href="{_SITE}/{page_key.replace("_", "/")}">
 <script type="application/ld+json">{json.dumps(schema)}</script>
 {_FOOTER}
 </head>
 <body><main><article>{page["body"]}
+<h2>Frequently asked questions</h2>
+<div class="faq">{_faq_html}</div>
+<!-- Brunson Trust Bar — Dotcom Secrets Chapter 7 -->
+<section style="background:linear-gradient(135deg,#f0f9ff,#e8f5e9);border-radius:16px;padding:32px 24px;margin:40px 0;border:2px solid #0066cc30;text-align:center">
+  <h2 style="font-size:1.5rem;margin-bottom:16px;color:#1a1a1a">Trusted by Developers Screening Millions of Transactions</h2>
+  <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:20px;margin-bottom:24px">
+    <div style="min-width:100px"><div style="font-size:1.8rem;font-weight:800;color:#0066cc">782</div><div style="font-size:0.85rem;color:#666">Sanctioned Wallets</div></div>
+    <div style="min-width:100px"><div style="font-size:1.8rem;font-weight:800;color:#0066cc">19K+</div><div style="font-size:0.85rem;color:#666">Names Screened</div></div>
+    <div style="min-width:100px"><div style="font-size:1.8rem;font-weight:800;color:#0066cc">&lt;100ms</div><div style="font-size:0.85rem;color:#666">Response Time</div></div>
+  </div>
+  <div style="background:#fef3c7;border-radius:8px;padding:12px;margin:12px 0;text-align:center"><strong>🛡️ 5 Free Checks Per Day — No API Key Required. Ever.</strong></div>
+  <div style="background:white;border-radius:12px;padding:20px;max-width:500px;margin:0 auto 16px;box-shadow:0 2px 8px rgba(0,0,0,0.08)">
+    <p style="font-size:1.1rem;font-weight:600;margin-bottom:8px">📥 Free OFAC Compliance Checklist for Developers</p>
+    <p style="color:#555;margin-bottom:12px;font-size:0.9rem">5 things every dev team must screen before an AI agent transacts.</p>
+    <a href="https://sanctionsai.dev/learn/sanctions-compliance-program" style="display:inline-block;background:#0066cc;color:white;padding:14px 32px;border-radius:8px;text-decoration:none;font-weight:700">Get Free Checklist →</a>
+  </div>
+  <p style="color:#cc3300;font-weight:600;margin-top:12px">⚠️ OFAC Penalties Start at $330,944 Per Violation. Screen Every Transaction.</p>
+</section>
 <section><p><a href="https://sanctionsai.dev">Try sanctionsai.dev free →</a></p></section>
 </article></main></body></html>"""
         self._serve_text(html, "text/html; charset=utf-8")
