@@ -1617,7 +1617,6 @@ Allow: /openapi.json
 Allow: /.well-known/
 Allow: /feed.xml
 Allow: /rss.xml
-
 # Only block checkout and auth pages
 Disallow: /checkout/
 Disallow: /dashboard
