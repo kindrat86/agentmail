@@ -247,7 +247,7 @@ _VERTICAL_KEYS = frozenset((
     "legal-compliance",
     "startup",
     "freelance-developer",
-    "enterprise",,
+    "enterprise",
     "rwa-tokenization",
     "kyc-providers",
     "stablecoin-issuers",
