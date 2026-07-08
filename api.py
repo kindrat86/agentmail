@@ -247,7 +247,13 @@ _VERTICAL_KEYS = frozenset((
     "legal-compliance",
     "startup",
     "freelance-developer",
-    "enterprise",
+    "enterprise",,
+    "rwa-tokenization",
+    "kyc-providers",
+    "stablecoin-issuers",
+    "cross-border-payments",
+    "dao-treasuries",
+    "nft-marketplaces"
 ))
 _INTEGRATION_KEYS = frozenset((
     "autonome",
@@ -616,6 +622,55 @@ _VERTICALS = {
         "p1": "Enterprises deploying AI agents at scale need a compliance layer that meets regulatory standards. agentmail provides enterprise-grade OFAC screening with tamper-evident audit logging, role-based API keys, and support for 10,000+ daily checks.",
         "p2": "For enterprises the compliance burden is higher than startups: internal audit requirements board-level risk reporting and regulator expectations all demand documented screening. agentmail logs every screen with timestamp counterparty result and API key identity.",
         "p3": "Enterprise volume pricing is available. Contact us through GitHub for custom SLAs and dedicated support.",
+    },
+
+    "nft-marketplaces": {
+        "name": "NFT Marketplaces",
+        "title": "OFAC Sanctions Screening for NFT Marketplaces",
+        "desc": "Screen wallet addresses before minting, listing, or transferring NFTs — prevent sanctioned wallet interactions.",
+        "p1": "NFT marketplaces handling on-chain transactions must screen every wallet address against OFAC sanctions lists. A single sanctioned wallet interaction can trigger asset freezes, regulatory scrutiny, and reputational damage.",
+        "p2": "The pseudonymous nature of crypto wallets means you cannot rely on identity-based screening alone. OFAC-listed wallets are updated regularly, and interacting with them is a strict-liability violation.",
+        "p3": "Add a single curl call to your minting or transfer agent. Free tier: 5 checks/day, no API key. Production from $19/mo.",
+    },
+    "dao-treasuries": {
+        "name": "DAO Treasuries",
+        "title": "OFAC Sanctions Screening for DAO Treasuries",
+        "desc": "Screen recipient wallets before DAO treasury disbursements — protect your multisig from OFAC violations.",
+        "p1": "DAOs that disburse treasury funds to contributors must screen every recipient wallet against OFAC sanctions lists. A single payment to a sanctioned wallet can expose signers to personal liability.",
+        "p2": "DAO treasury management is under increasing regulatory scrutiny. The Treasury Department has made clear that facilitating transactions with sanctioned entities is prohibited regardless of organizational structure.",
+        "p3": "Integrate sanctions checks into your DAO's payment workflow via HTTP API or MCP. Free tier: 5 checks/day. Production from $19/mo.",
+    },
+    "cross-border-payments": {
+        "name": "Cross-Border Payments",
+        "title": "OFAC Sanctions Screening for Cross-Border Payments",
+        "desc": "Screen counterparties, jurisdictions, and wallets before cross-border transfers — agent-native compliance under 100ms.",
+        "p1": "Cross-border payment agents handle transfers across jurisdictions and regulatory regimes. Every transaction touches counterparties that must be screened against OFAC sanctions.",
+        "p2": "Cross-border payments face the highest sanctions risk because they intersect with embargoed jurisdictions, sanctioned banks, and designated individuals. A single wire can result in civil penalties up to $300,000.",
+        "p3": "Add sanctions checking to your payment-routing agent with a single API call. Free tier: 5 checks/day. Production from $19/mo.",
+    },
+    "stablecoin-issuers": {
+        "name": "Stablecoin Issuers",
+        "title": "OFAC Sanctions Screening for Stablecoin Issuers",
+        "desc": "Screen all mint, burn, and redeem addresses in real time — OFAC compliance for stablecoin operations.",
+        "p1": "Stablecoin issuers that mint, burn, or redeem tokens must screen every wallet address against OFAC sanctions lists. A single mint to a sanctioned wallet creates a permanent on-chain record.",
+        "p2": "Stablecoin compliance is under intense regulatory focus. OFAC has sanctioned specific addresses, and issuers are expected to prevent interactions with these addresses.",
+        "p3": "Integrate agentmail into your mint, burn, and redeem transaction paths. Free tier: 5 checks/day. Production from $19/mo.",
+    },
+    "kyc-providers": {
+        "name": "KYC Providers",
+        "title": "OFAC Sanctions Screening for KYC Providers",
+        "desc": "Augment KYC checks with real-time wallet-level sanctions screening — cover what traditional KYC misses.",
+        "p1": "Traditional KYC providers screen identities but miss the wallet layer. agentmail fills this gap with real-time OFAC sanctions screening on crypto wallets.",
+        "p2": "Regulated entities are increasingly expected to screen crypto wallet addresses as part of compliance programs. Wallet-level screening is no longer optional.",
+        "p3": "Offer wallet screening as an add-on to your KYC platform. Free tier: 5 checks/day. Production from $19/mo.",
+    },
+    "rwa-tokenization": {
+        "name": "RWA Tokenization",
+        "title": "OFAC Sanctions Screening for RWA Tokenization",
+        "desc": "Screen wallets before tokenizing real-world assets — compliance for securities, commodities, and real estate on-chain.",
+        "p1": "RWA tokenization platforms must screen every wallet involved in tokenization, custody, and trading against OFAC sanctions lists.",
+        "p2": "Tokenized real-world assets inherit the regulatory obligations of traditional securities plus the permanence of on-chain records. A single sanctioned wallet is visible forever.",
+        "p3": "Add wallet screening to your tokenization, custody, and transfer workflows. Free tier: 5 checks/day. Production from $19/mo.",
     },
 }
 
