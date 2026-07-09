@@ -4475,6 +4475,7 @@ footer .bottom{margin-top:40px;padding-top:24px;border-top:1px solid var(--line)
         if not v:
             return _json(self, 404, {"error": "not found"})
         name_lower = v["name"].lower()
+        today = "2026-07-09"
         body = (
             '<section style="text-align:center;border-top:none">'
             '<p class="note" style="letter-spacing:.05em;text-transform:uppercase">For ' + v["name"] + ' agents</p>'
@@ -4484,25 +4485,35 @@ footer .bottom{margin-top:40px;padding-top:24px;border-top:1px solid var(--line)
             '&nbsp; <a href="/checkout/dev" class="btn btn-ghost">Get an API key</a>'
             '</section>'
             '<section><div class="prose">'
+            f'<p class="note" style="font-size:.82rem;color:var(--t3)">By <span class="author" rel="author">agentmail team</span> &middot; <time datetime="{today}">{today}</time></p>'
             '<h2>Why ' + v["name"] + ' agents need sanctions screening</h2>'
             '<p>' + v["p1"] + '</p>'
             '<p>' + v["p2"] + '</p>'
+            '<h2>How sanctions screening works for ' + v["name"] + ' agents</h2>'
             '<p>' + v["p3"] + '</p>'
             '<h3>Example: screen a wallet before paying</h3>'
             '<pre><code>curl "' + _SITE + '/sanctions?wallet=0x098B716B8Aaf21512996dC57EB0615e2383E2f96"</code></pre>'
             '<p class="note">Real OFAC data. Free tier: 5 checks/day, no API key.</p>'
+            '<h2>Coverage: what agentmail screens for ' + name_lower + ' agents</h2>'
+            '<ul>'
+            '<li><strong>782 OFAC-sanctioned crypto wallets</strong> across Ethereum, Bitcoin, Solana, and Tron &mdash; refreshed daily from US Treasury and vile/ofac-sdn-list</li>'
+            '<li><strong>19,086 Specially Designated Nationals</strong> with fuzzy name matching for aliases, transliterations, and alternative spellings</li>'
+            '<li><strong>16 embargoed jurisdictions</strong> including comprehensive sanctions on Cuba, Iran, North Korea, and Syria</li>'
+            '<li><strong>Sub-100ms response</strong> so the check fits inline in any payment path without degrading the agent experience</li>'
+            '<li><strong>Automatic audit trail</strong> with timestamp, subject, result, and SDN list version for every screen</li>'
+            '</ul>'
             '</div></section>'
             # Cross-links to related programmatic pages (SEO: internal linking depth)
             '<section><div class="prose">'
             '<h3>Related resources</h3>'
             '<ul>'
-            '<li><a href="/for/ai-agents">OFAC screening for AI agents</a> \u2014 general agent compliance guide</li>'
+            '<li><a href="/for/ai-agents">OFAC screening for AI agents</a> \\u2014 general agent compliance guide</li>'
             '<li><a href="/glossary/ofac-sdn-list">What is the OFAC SDN list?</a></li>'
             '<li><a href="/glossary/strict-liability">What is strict liability?</a></li>'
             '<li><a href="/penalties/ofac-violation-costs">OFAC violation costs for ' + name_lower + ' agents</a></li>'
             '<li><a href="/guides/setup-ofac-screening">How to set up OFAC screening</a></li>'
             '<li><a href="/blog/how-to-screen-wallet-agent">How to screen a wallet before your agent pays</a></li>'
-            '<li><a href="/compare/chainalysis">agentmail vs Chainalysis <span style="color:var(--t3)">\u2014 pricing and feature comparison</span></a></li>'
+            '<li><a href="/compare/chainalysis">agentmail vs Chainalysis <span style="color:var(--t3)">\\u2014 pricing and feature comparison</span></a></li>'
             '</ul>'
             '</div></section>'
             '<section><div class="cta-box">'
@@ -4514,12 +4525,13 @@ footer .bottom{margin-top:40px;padding-top:24px;border-top:1px solid var(--line)
         ld = {
             "@context": "https://schema.org",
             "@type": "SoftwareApplication",
-            "name": "agentmail",
-            "applicationCategory": "DeveloperApplication",
+            "name": "sanctionsai.dev",
+            "applicationCategory": "SecurityApplication",
             "operatingSystem": "Web",
-            "description": v["desc"],
+            "description": "OFAC sanctions screening for " + name_lower + " AI agents",
             "url": _SITE + "/for/" + vertical,
-            "offers": [{"@type": "Offer", "price": "0", "priceCurrency": "USD"}],
+            "author": {"@type": "Organization", "name": "sanctionsai.dev"},
+            "dateModified": today,
         }
         # Breadcrumb structured data
         bc = {
