@@ -2391,8 +2391,11 @@ License: MIT
         body = html.encode("utf-8")
         self.send_response(status)
         self.send_header("Content-Type", "text/html; charset=utf-8")
-        # Gzip compress responses over 1KB for performance
-        if len(body) > 1024:
+        # Gzip compress responses over 1KB — but only when the client accepts it.
+        # Clients that don't advertise gzip (many crawlers/AI bots) must get
+        # identity bytes, or they see binary garbage instead of HTML.
+        accepts_gzip = "gzip" in self.headers.get("Accept-Encoding", "").lower()
+        if accepts_gzip and len(body) > 1024:
             buf = io.BytesIO()
             with gzip.GzipFile(fileobj=buf, mode="wb", compresslevel=6) as f:
                 f.write(body)
@@ -2412,6 +2415,7 @@ License: MIT
         self.send_header("Referrer-Policy", "strict-origin-when-cross-origin")
         self.send_header("Strict-Transport-Security", "max-age=63072000; includeSubDomains; preload")
         self.send_header("Cache-Control", "public, max-age=60")
+        self.send_header("Vary", "Accept-Encoding")
         self.send_header("X-Robots-Tag", "index, follow, max-snippet:-1, max-image-preview:large")
         self.end_headers()
         self.wfile.write(body)
