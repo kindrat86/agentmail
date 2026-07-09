@@ -1704,12 +1704,34 @@ Disallow: /squeeze
 Disallow: /keys/
 Disallow: /webhooks/
 
+# AI crawler directives — explicitly invite crawling by all major AI/LLM bots
+User-agent: GPTBot
+Disallow:
+User-agent: Claude-Web
+Disallow:
+User-agent: Claude-3
+Disallow:
+User-agent: anthropic-ai
+Disallow:
+User-agent: Omgili
+Disallow:
+User-agent: CCBot
+Disallow:
+User-agent: Google-Extended
+Disallow:
+User-agent: PerplexityBot
+Disallow:
+User-agent: Applebot-Extended
+Disallow:
+
 # AI-friendly directives (per Google's AI crawler guidelines)
-# - llms.txt for AI assistant consumption
+# - llms.txt for AI assistant consumption (38 lines of structured product docs)
+# - llms-full.txt for complete AI-parseable reference
 # - OpenAPI spec for AI coding agents
 # - RSS feed for content discovery
 # - agents.md for autonomous agent entry point
 # - .well-known/ for A2A, MCP, and ChatGPT plugin discovery
+# - IndexNow key at /87aaa199acaf7d14c812e974ce115e32.txt
 
 Sitemap: https://sanctionsai.dev/sitemap.xml
 """, "text/plain")
@@ -2409,7 +2431,7 @@ License: MIT
         else:
             self.send_header("Content-Length", str(len(body)))
         self.send_header("X-Content-Type-Options", "nosniff")
-        self.send_header("Content-Security-Policy", "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self'; frame-ancestors 'none'; object-src 'none'; base-uri 'self'")
+        self.send_header("Content-Security-Policy", "default-src 'self'; script-src 'self' 'unsafe-inline' https://eu.i.posthog.com https://js.stripe.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self' https://eu.i.posthog.com https://api.stripe.com; frame-ancestors 'none'; frame-src https://js.stripe.com https://hooks.stripe.com; object-src 'none'; base-uri 'self'")
         self.send_header("Permissions-Policy", "camera=(), microphone=(), geolocation=(), payment=(), usb=(), browsing-topics=(), interest-cohort=()")
         self.send_header("X-Frame-Options", "SAMEORIGIN")
         self.send_header("Referrer-Policy", "strict-origin-when-cross-origin")
@@ -2417,6 +2439,10 @@ License: MIT
         self.send_header("Cache-Control", "public, max-age=60")
         self.send_header("Vary", "Accept-Encoding")
         self.send_header("X-Robots-Tag", "index, follow, max-snippet:-1, max-image-preview:large")
+        # Preconnect to origins the page will hit — saves RTT on first navigation
+        self.send_header("Link", "<https://eu.i.posthog.com>; rel=preconnect, <https://agentmail-api.fly.dev>; rel=preconnect")
+        # Accept-CH: tell Chrome to send client-hints on subresource fetches (saves re-request)
+        self.send_header("Accept-CH", "Sec-CH-UA-Platform, Sec-CH-UA-Mobile, Viewport-Width")
         self.end_headers()
         self.wfile.write(body)
 
