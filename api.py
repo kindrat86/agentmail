@@ -2730,7 +2730,7 @@ Then add to your MCP client (Claude Code, Cursor, Windsurf).
     {
       "@type": "Organization",
       "@id": "https://sanctionsai.dev/#organization",
-      "name": "agentmail (sanctionsai.dev)",
+      "name": "sanctionsai.dev",
       "url": "https://sanctionsai.dev/",
       "description": "OFAC sanctions screening API for AI agents. Screen every counterparty before your agent pays.",
       "email": "hello@sanctionsai.dev",
@@ -4827,8 +4827,9 @@ document.getElementById("wallet").addEventListener("keydown", function(e){ if(e.
             "headline": title,
             "description": post["desc"],
             "datePublished": post["date"],
-            "author": {"@type": "Organization", "name": "agentmail"},
-            "publisher": {"@type": "Organization", "name": "agentmail"},
+            "dateModified": post.get("updated", post["date"]),
+            "author": {"@type": "Organization", "name": "sanctionsai.dev"},
+            "publisher": {"@type": "Organization", "name": "sanctionsai.dev"},
             "url": _SITE + "/blog/" + slug,
             "mainEntityOfPage": _SITE + "/blog/" + slug,
         }
