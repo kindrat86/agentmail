@@ -1832,6 +1832,18 @@ Sitemap: https://sanctionsai.dev/sitemap.xml
             return self._isenberg_page("int-solana")
         if p.path == "/openapi.json":
             return self._openapi_spec()
+        # Greg Isenberg pSEO Round 14: Country guides, how-to, cost pages, free tools
+        if p.path.startswith("/countries/"):
+            return self._country_page(p.path.replace("/countries/", ""))
+        if p.path.startswith("/how-to/"):
+            return self._howto_page(p.path.replace("/how-to/", ""))
+        if p.path.startswith("/cost/"):
+            return self._cost_page(p.path.replace("/cost/", ""))
+        if p.path.startswith("/tools/"):
+            _tool_slug = p.path.replace("/tools/", "").split("?")[0]
+            if _tool_slug in ("wallet-checker", "name-checker", "country-checker",
+                              "batch-checker", "compliance-checker"):
+                return self._free_tool_page(_tool_slug)
         # AI discoverability: agents.md - agent entry point
         if p.path == "/agents.md":
             return self._serve_text("""# AgentMail — AI Agent Entry Point
@@ -2565,6 +2577,47 @@ License: MIT
         ("/guides/choose-sanctions-api", "monthly", "0.7", "Choose a sanctions API"),
         ("/guides/build-compliance-program", "monthly", "0.7", "Build an OFAC compliance program"),
         ("/guides/avoid-ofac-violations", "monthly", "0.7", "Avoid OFAC violations"),
+        # pSEO Round 14: countries, how-to, cost, tools
+        ("/countries/iran", "monthly", "0.8", "OFAC sanctions on Iran"),
+        ("/countries/north-korea", "monthly", "0.8", "OFAC sanctions on North Korea"),
+        ("/countries/cuba", "monthly", "0.8", "OFAC sanctions on Cuba"),
+        ("/countries/syria", "monthly", "0.8", "OFAC sanctions on Syria"),
+        ("/countries/russia", "monthly", "0.8", "OFAC sanctions on Russia"),
+        ("/countries/venezuela", "monthly", "0.7", "OFAC sanctions on Venezuela"),
+        ("/countries/myanmar", "monthly", "0.7", "OFAC sanctions on Myanmar"),
+        ("/countries/belarus", "monthly", "0.7", "OFAC sanctions on Belarus"),
+        ("/countries/sudan", "monthly", "0.7", "OFAC sanctions on Sudan"),
+        ("/countries/libya", "monthly", "0.7", "OFAC sanctions on Libya"),
+        ("/countries/somalia", "monthly", "0.7", "OFAC sanctions on Somalia"),
+        ("/countries/yemen", "monthly", "0.7", "OFAC sanctions on Yemen"),
+        ("/countries/iraq", "monthly", "0.7", "OFAC sanctions on Iraq"),
+        ("/countries/zimbabwe", "monthly", "0.7", "OFAC sanctions on Zimbabwe"),
+        ("/countries/nicaragua", "monthly", "0.7", "OFAC sanctions on Nicaragua"),
+        ("/countries/china", "monthly", "0.7", "OFAC sanctions on China"),
+        ("/countries/afghanistan", "monthly", "0.7", "OFAC sanctions on Afghanistan"),
+        ("/countries/lebanon", "monthly", "0.7", "OFAC sanctions on Lebanon"),
+        ("/countries/pakistan", "monthly", "0.7", "OFAC sanctions on Pakistan"),
+        ("/countries/ethiopia", "monthly", "0.7", "OFAC sanctions on Ethiopia"),
+        ("/how-to/comply-with-ofac", "monthly", "0.7", "How to comply with OFAC sanctions"),
+        ("/how-to/screen-crypto-wallet", "monthly", "0.7", "How to screen a crypto wallet for OFAC"),
+        ("/how-to/build-a-compliance-program", "monthly", "0.7", "How to build an OFAC compliance program"),
+        ("/how-to/file-voluntary-disclosure", "monthly", "0.7", "How to file an OFAC VSD"),
+        ("/how-to/check-company-sanctions", "monthly", "0.7", "How to check if a company is OFAC sanctioned"),
+        ("/how-to/screen-name-list", "monthly", "0.7", "How to screen names against OFAC SDN"),
+        ("/how-to/integrate-sanctions-api", "monthly", "0.7", "How to integrate sanctions screening API"),
+        ("/how-to/avoid-ofac-violations", "monthly", "0.7", "How to avoid OFAC violations"),
+        ("/cost/ofac-fine-per-violation", "monthly", "0.8", "OFAC fine amount per violation"),
+        ("/cost/ofac-criminal-penalties", "monthly", "0.7", "OFAC criminal penalties"),
+        ("/cost/ofac-penalty-for-crypto", "monthly", "0.8", "OFAC penalties for crypto transactions"),
+        ("/cost/ofac-settlement-costs", "monthly", "0.7", "OFAC settlement costs"),
+        ("/cost/cost-of-non-compliance", "monthly", "0.7", "True cost of OFAC non-compliance"),
+        ("/cost/ofac-penalty-multiplier", "monthly", "0.7", "How OFAC penalties multiply"),
+        ("/cost/cost-of-sanctions-screening", "monthly", "0.8", "How much does sanctions screening cost"),
+        ("/cost/ofac-enforcement-actions", "monthly", "0.7", "Recent OFAC enforcement actions"),
+        ("/tools/name-checker", "weekly", "0.9", "Free OFAC name checker"),
+        ("/tools/country-checker", "weekly", "0.9", "Free OFAC country checker"),
+        ("/tools/batch-checker", "weekly", "0.8", "Free OFAC batch screening tool"),
+        ("/tools/compliance-checker", "weekly", "0.8", "Free OFAC compliance checker"),
     ]
         import datetime
         today = datetime.date.today().isoformat()
@@ -5779,6 +5832,196 @@ document.getElementById("squeeze-form").addEventListener("submit", function(e){
 <section><p><a href="https://sanctionsai.dev">Try sanctionsai.dev free →</a></p></section>
 </article></main></body></html>"""
         self._serve_text(html, "text/html; charset=utf-8")
+
+    def _country_page(self, slug):
+        """pSEO Round 14: Country/jurisdiction sanctions guides."""
+        import html as _html
+        COUNTRIES = {
+            "iran": {"name": "Iran", "status": "Comprehensive sanctions", "program": "Iranian Transactions and Sanctions Regulations (ITSR)", "desc": "Iran is subject to comprehensive US sanctions. Nearly all transactions involving Iran are prohibited."},
+            "north-korea": {"name": "North Korea (DPRK)", "status": "Comprehensive sanctions", "program": "North Korea Sanctions and Policy Enhancement Act", "desc": "DPRK faces comprehensive sanctions covering trade, finance, and technology transfers."},
+            "cuba": {"name": "Cuba", "status": "Comprehensive sanctions", "program": "Cuban Assets Control Regulations (CACR)", "desc": "Cuba is under a comprehensive economic embargo maintained by OFAC since 1963."},
+            "syria": {"name": "Syria", "status": "Comprehensive sanctions", "program": "Syrian Civilian Protection Act", "desc": "Syria faces comprehensive sanctions targeting the Assad regime and associated entities."},
+            "russia": {"name": "Russia", "status": "Extensive sectoral sanctions", "program": "Russia Harmful Foreign Activities Sanctions", "desc": "Russia faces extensive sectoral sanctions following the 2022 invasion of Ukraine, targeting financial institutions, energy, and defense sectors."},
+            "venezuela": {"name": "Venezuela", "status": "Sectoral sanctions", "program": "Venezuela Sanctions Regulations", "desc": "Venezuela faces sectoral sanctions targeting the oil industry and government officials."},
+            "myanmar": {"name": "Myanmar", "status": "Targeted sanctions", "program": "Burma Sanctions Regulations", "desc": "Myanmar faces targeted sanctions on military leaders and military-owned enterprises following the 2021 coup."},
+            "belarus": {"name": "Belarus", "status": "Targeted sanctions", "program": "Belarus Sanctions Regulations", "desc": "Belarus faces sanctions aligned with Russia measures, targeting government officials and defense industries."},
+            "sudan": {"name": "Sudan", "status": "Targeted sanctions", "program": "Sudan Sanctions Regulations", "desc": "Sudan has targeted sanctions related to the Darfur conflict. Most comprehensive sanctions were lifted in 2017."},
+            "libya": {"name": "Libya", "status": "Targeted sanctions", "program": "Libya Sanctions Regulations", "desc": "Libya faces targeted sanctions on individuals and entities involved in conflict and human rights abuses."},
+            "somalia": {"name": "Somalia", "status": "Targeted sanctions", "program": "Somalia Sanctions Regulations", "desc": "Somalia has targeted sanctions related to piracy, terrorism, and Al-Shabaab."},
+            "yemen": {"name": "Yemen", "status": "Targeted sanctions", "program": "Yemen Sanctions Regulations", "desc": "Yemen faces targeted sanctions related to the ongoing conflict and Houthi activities."},
+            "iraq": {"name": "Iraq", "status": "Legacy sanctions", "program": "Iraq Sanctions Regulations", "desc": "Iraq has legacy sanctions from the Saddam Hussein era, mostly lifted but with residual restrictions."},
+            "zimbabwe": {"name": "Zimbabwe", "status": "Targeted sanctions", "program": "Zimbabwe Sanctions Regulations", "desc": "Zimbabwe faces targeted sanctions on specific individuals and entities associated with the government."},
+            "nicaragua": {"name": "Nicaragua", "status": "Targeted sanctions", "program": "Nicaragua Sanctions Regulations", "desc": "Nicaragua faces targeted sanctions on government officials and associates involved in human rights abuses."},
+            "china": {"name": "China (PRC)", "status": "Targeted sanctions", "program": "Various (UFLPA, HK Autonomy Act)", "desc": "China faces targeted sanctions on specific entities related to Xinjiang, Hong Kong, and military-civil fusion."},
+            "afghanistan": {"name": "Afghanistan", "status": "Targeted sanctions", "program": "Afghanistan Sanctions Regulations", "desc": "Afghanistan has targeted sanctions related to the Taliban and Haqqani Network."},
+            "lebanon": {"name": "Lebanon", "status": "Targeted sanctions", "program": "Lebanon Sanctions Regulations", "desc": "Lebanon faces targeted sanctions on Hezbollah and associated networks."},
+            "pakistan": {"name": "Pakistan", "status": "Limited targeted sanctions", "program": "Various entity-list designations", "desc": "Pakistan has limited targeted sanctions on specific entities related to proliferation and terrorism concerns."},
+            "ethiopia": {"name": "Ethiopia", "status": "Targeted sanctions", "program": "Ethiopia Sanctions Regulations", "desc": "Ethiopia faces targeted sanctions related to the Tigray conflict."},
+        }
+        c = COUNTRIES.get(slug)
+        if not c:
+            return _json(self, 404, {"error": "not found"})
+        today = "2026-07-13"
+        body = f"""<p class="note">By <span class="author" rel="author">sanctionsai.dev team</span> &middot; <time datetime="{today}">{today}</time></p>
+<h2>Is {c["name"]} sanctioned by OFAC?</h2>
+<p>Yes. {c["name"]} is subject to <strong>{c["status"].lower()}</strong> under the {c["program"]}. {c["desc"]} If your AI agent, application, or business transacts with counterparties in {c["name"]}, you must screen every transaction against OFAC lists before funds move.</p>
+<h2>What sanctions means for {c["name"]} transactions</h2>
+<p>Under OFAC strict liability, US persons and entities — including AI agents operating on behalf of US persons — are prohibited from transacting with sanctioned parties in {c["name"]} regardless of intent. Civil penalties start at <strong>$356,571 per violation</strong> or twice the transaction value, whichever is greater.</p>
+<h3>Screen {c["name"]} counterparties instantly</h3>
+<pre><code>curl "https://sanctionsai.dev/sanctions?country={slug}"</code></pre>
+<p class="note">Free tier: 5 checks/day, no API key. Real OFAC data.</p>
+<h2>Coverage for {c["name"]}</h2>
+<ul>
+<li><strong>782 OFAC-sanctioned crypto wallets</strong> that may be linked to {c["name"]} entities</li>
+<li><strong>19,086 SDN names</strong> including individuals and entities designated under {c["program"]}</li>
+<li><strong>16 embargoed jurisdictions</strong> including {c["name"]}</li>
+<li><strong>Sub-100ms response</strong> for real-time transaction screening</li>
+<li><strong>Automatic audit trail</strong> with timestamp and list version</li>
+</ul>"""
+        faq = [
+            (f"Can I send money to {c['name']}?", f"It depends on the specific sanctions program. {c['desc']} You must screen every counterparty against OFAC lists before transacting. Use sanctionsai.dev to check."),
+            (f"What is the penalty for violating {c['name']} sanctions?", "OFAC civil penalties start at $356,571 per violation or twice the transaction value. Criminal penalties can reach $20 million and 30 years imprisonment."),
+            ("How do I screen for sanctioned parties?", "Use the sanctionsai.dev API: send a GET request with a name, wallet, or country parameter. The API checks against the full OFAC SDN list in under 100ms."),
+        ]
+        self._render_pseo(f"OFAC Sanctions on {c['name']} — Status, Screening, and Compliance", c["desc"], body, faq, f"/countries/{slug}")
+
+    def _howto_page(self, slug):
+        """pSEO Round 14: How-to guides for OFAC compliance."""
+        HOWTO = {
+            "comply-with-ofac": {"title": "How to Comply with OFAC Sanctions", "h1": "How to Comply with OFAC Sanctions Requirements", "steps": ["Identify all counterparties in your transaction flow (names, wallets, countries).", "Screen each counterparty against the OFAC SDN list before funds move.", "Document every screen with timestamp, subject, result, and SDN list version.", "Block any transaction that returns a match and escalate to compliance.", "Retain screening records for at least 5 years per OFAC recordkeeping rules."]},
+            "screen-crypto-wallet": {"title": "How to Screen a Crypto Wallet for OFAC Sanctions", "h1": "How to Screen a Crypto Wallet Before Your Agent Pays", "steps": ["Extract the destination wallet address from the transaction payload.", "Call GET /sanctions?wallet=0x... against the OFAC SDN list.", "Check the response: match=true means the wallet is sanctioned.", "If clean, proceed with payment and log the screening receipt.", "If matched, block the transaction immediately and flag for review."]},
+            "build-a-compliance-program": {"title": "How to Build an OFAC Compliance Program", "h1": "How to Build an OFAC Sanctions Compliance Program for AI Agents", "steps": ["Map every payment path where your agent sends or receives funds.", "Insert a sanctions screening call before every transaction.", "Configure automatic blocking for any match (no human-in-the-loop needed for obvious matches).", "Set up an audit log with timestamp, subject, result, and SDN list version.", "Review flagged transactions weekly and update your screening rules."]},
+            "file-voluntary-disclosure": {"title": "How to File an OFAC Voluntary Self-Disclosure", "h1": "How to File a Voluntary Self-Disclosure with OFAC", "steps": ["Detect the potential violation through your screening or audit process.", "Preserve all evidence: transaction records, screening logs, and communications.", "Prepare Form TD F 90-22.50 with full details of the violation.", "Submit to OFAC within 30 days of discovery for maximum penalty mitigation.", "Cooperate fully with the investigation and implement corrective measures."]},
+            "check-company-sanctions": {"title": "How to Check if a Company Is on the OFAC List", "h1": "How to Check if a Company Is OFAC-Sanctioned", "steps": ["Get the company legal name and any known aliases or DBA names.", "Call GET /sanctions?name=Company+Name to check against 19,086 SDN entries.", "Review the match results for confidence scores and alias matches.", "If matched, do not transact. Document the screen and escalate.", "If clean, proceed and log the screening receipt for your audit trail."]},
+            "screen-name-list": {"title": "How to Screen Names Against OFAC SDN List", "h1": "How to Screen Names Against the OFAC SDN List", "steps": ["Collect the full legal name of each counterparty.", "Call GET /sanctions?name=John+Doe for each name.", "Review fuzzy match results for aliases and transliterations.", "Flag any match above your confidence threshold for manual review.", "Log every screen with timestamp and SDN list version."]},
+            "integrate-sanctions-api": {"title": "How to Integrate a Sanctions Screening API", "h1": "How to Integrate OFAC Sanctions Screening into Your App", "steps": ["Choose your integration method: HTTP API, MCP server, or Python package.", "Add a screening call before every payment in your codebase.", "Handle the response: proceed if clean, block if matched.", "Log every screen for your compliance audit trail.", "Test with known sanctioned addresses to verify detection."]},
+            "avoid-ofac-violations": {"title": "How to Avoid OFAC Violations with AI Agents", "h1": "How to Avoid OFAC Sanctions Violations with AI Agents", "steps": ["Never let an AI agent send money without a pre-payment sanctions screen.", "Screen every wallet, name, and country in the transaction path.", "Configure automatic blocking for any match — no exceptions.", "Maintain a tamper-evident audit trail for every transaction.", "Review your screening coverage monthly and close any gaps."]},
+        }
+        h = HOWTO.get(slug)
+        if not h:
+            return _json(self, 404, {"error": "not found"})
+        today = "2026-07-13"
+        steps_html = "".join(f'<li><strong>Step {i+1}.</strong> {s}</li>' for i, s in enumerate(h["steps"]))
+        body = f"""<p class="note">By <span class="author" rel="author">sanctionsai.dev team</span> &middot; <time datetime="{today}">{today}</time></p>
+<h2>{h["h1"]}</h2>
+<p>This guide walks through the exact steps to ensure OFAC compliance for your AI agents and applications. Every step uses real OFAC data and produces an audit-ready screening trail.</p>
+<ol>{steps_html}</ol>
+<h3>Example: screen a wallet</h3>
+<pre><code>curl "https://sanctionsai.dev/sanctions?wallet=0x098B716B8Aaf21512996dC57EB0615e2383E2f96"</code></pre>
+<p class="note">Free tier: 5 checks/day, no API key. Real OFAC data, refreshed daily.</p>"""
+        faq = [
+            ("How long does a sanctions screen take?", "Under 100ms per check. The sanctionsai.dev API runs on real OFAC data and returns instant results."),
+            ("Do I need an API key?", "No. The free tier allows 5 checks per day by IP address with no signup or API key."),
+            ("What happens if I miss a sanctioned party?", "OFAC operates under strict liability. You are liable even if you did not know the party was sanctioned. Penalties start at $356,571 per violation."),
+        ]
+        self._render_pseo(h["title"], h["h1"], body, faq, f"/how-to/{slug}")
+
+    def _cost_page(self, slug):
+        """pSEO Round 14: Cost/penalty pages for bottom-funnel commercial intent."""
+        COSTS = {
+            "ofac-fine-per-violation": {"title": "OFAC Fine Amount Per Violation", "amount": "$356,571", "desc": "The base civil penalty per OFAC violation, or twice the transaction value, whichever is greater."},
+            "ofac-criminal-penalties": {"title": "OFAC Criminal Penalties", "amount": "$20M + 30 years", "desc": "Criminal penalties for willful violations can reach $20 million for entities and 30 years imprisonment for individuals."},
+            "ofac-penalty-for-crypto": {"title": "OFAC Penalties for Crypto Transactions", "amount": "$356,571+", "desc": "Crypto transactions with sanctioned wallets carry the same penalties as fiat. Each transaction is a separate violation."},
+            "ofac-settlement-costs": {"title": "OFAC Settlement Costs", "amount": "Varies", "desc": "Settlement amounts vary based on voluntary disclosure, cooperation, and remediation. VSD can reduce penalties by ~50%."},
+            "cost-of-non-compliance": {"title": "The True Cost of OFAC Non-Compliance", "amount": "$356K+ per violation", "desc": "Beyond fines, non-compliance brings legal costs, reputational damage, loss of banking access, and potential criminal charges."},
+            "ofac-penalty-multiplier": {"title": "How OFAC Penalties Multiply Per Transaction", "amount": "Per-violation", "desc": "Each transaction with a sanctioned party is a separate violation. A bot making 100 payments to one sanctioned wallet = 100 violations."},
+            "cost-of-sanctions-screening": {"title": "How Much Does OFAC Sanctions Screening Cost?", "amount": "$0 to $499/mo", "desc": "Free tier: 5 checks/day. Dev: $19/mo for 1,000 checks/day. Compliance Pro: $499/mo for unlimited."},
+            "ofac-enforcement-actions": {"title": "Recent OFAC Enforcement Actions and Fines", "amount": "Millions", "desc": "Recent OFAC enforcement actions include fines against Binance ($968M), BitGo ($98K), and others for sanctions violations."},
+        }
+        c = COSTS.get(slug)
+        if not c:
+            return _json(self, 404, {"error": "not found"})
+        today = "2026-07-13"
+        body = f"""<p class="note">By <span class="author" rel="author">sanctionsai.dev team</span> &middot; <time datetime="{today}">{today}</time></p>
+<h2>{c["title"]}</h2>
+<p><strong>Penalty: {c["amount"]}</strong></p>
+<p>{c["desc"]}</p>
+<h2>How to protect yourself</h2>
+<p>Screen every transaction against the OFAC SDN list before funds move. sanctionsai.dev provides sub-100ms screening with an automatic audit trail.</p>
+<pre><code>curl "https://sanctionsai.dev/sanctions?wallet=0x098B716B8Aaf21512996dC57EB0615e2383E2f96"</code></pre>
+<p class="note">Free tier: 5 checks/day. No API key required.</p>
+<h2>Penalty mitigation</h2>
+<p>If you discover a potential violation, filing a Voluntary Self-Disclosure (VSD) with OFAC can reduce penalties by approximately 50%. sanctionsai.dev automatically logs every screening with timestamp and list version for your VSD evidence.</p>"""
+        faq = [
+            ("What is the maximum OFAC penalty?", "Civil penalties: $356,571 per violation or 2x the transaction value. Criminal penalties: up to $20 million and 30 years imprisonment for willful violations."),
+            ("Does each transaction count as a separate violation?", "Yes. Each transaction with a sanctioned party is a separate violation. A payment bot making 100 payments to one sanctioned wallet faces 100 violations."),
+            ("Can screening reduce my penalty?", "OFAC considers whether you had a compliance program in place. Implementing screening before a violation occurs demonstrates good-faith compliance and can significantly reduce penalties."),
+        ]
+        self._render_pseo(c["title"], c["desc"], body, faq, f"/cost/{slug}")
+
+    def _free_tool_page(self, slug):
+        """pSEO Round 14: Additional free tool landing pages."""
+        TOOLS = {
+            "wallet-checker": {"title": "Free OFAC Wallet Checker — Screen Crypto Wallets Instantly", "desc": "Free tool to check any crypto wallet against the OFAC SDN list. Ethereum, Bitcoin, Solana, Tron. No signup.", "h1": "Free OFAC Crypto Wallet Checker"},
+            "name-checker": {"title": "Free OFAC Name Checker — Screen Names Against SDN List", "desc": "Free tool to check any person or company name against the OFAC SDN list. 19,086 entries. No signup.", "h1": "Free OFAC Name Screening Tool"},
+            "country-checker": {"title": "Free OFAC Country Checker — Is a Country Sanctioned?", "desc": "Free tool to check if a country is under OFAC sanctions. 16 embargoed jurisdictions. No signup.", "h1": "Free OFAC Country Sanctions Checker"},
+            "batch-checker": {"title": "Free OFAC Batch Screening Tool — Check Multiple Wallets", "desc": "Screen multiple crypto wallets or names against OFAC in batch. Free for up to 5 checks/day.", "h1": "Free OFAC Batch Screening Tool"},
+            "compliance-checker": {"title": "Free OFAC Compliance Checker — Is Your Agent Compliant?", "desc": "Free tool to verify your AI agent screens every transaction against OFAC. Compliance checklist.", "h1": "Free OFAC Compliance Checker for AI Agents"},
+        }
+        t = TOOLS.get(slug)
+        if not t:
+            return _json(self, 404, {"error": "not found"})
+        today = "2026-07-13"
+        body = f"""<p class="note">By <span class="author" rel="author">sanctionsai.dev team</span> &middot; <time datetime="{today}">{today}</time></p>
+<h2>{t["h1"]}</h2>
+<p>{t["desc"]}</p>
+<h3>Try it now</h3>
+<pre><code>curl "https://sanctionsai.dev/sanctions?wallet=0x098B716B8Aaf21512996dC57EB0615e2383E2f96"</code></pre>
+<p class="note">Free tier: 5 checks/day, no API key. Real OFAC data, refreshed daily.</p>
+<h2>What this tool checks</h2>
+<ul>
+<li><strong>782 OFAC-sanctioned crypto wallets</strong> across Ethereum, Bitcoin, Solana, and Tron</li>
+<li><strong>19,086 Specially Designated Nationals</strong> with fuzzy name matching</li>
+<li><strong>16 embargoed jurisdictions</strong> including Iran, North Korea, Cuba, Syria, and Crimea</li>
+<li><strong>Sub-100ms response</strong> with automatic audit trail</li>
+</ul>"""
+        faq = [
+            ("Is this really free?", "Yes. 5 checks per day with no signup, no API key, and no credit card. Upgrade to $19/mo for 1,000 checks/day."),
+            ("What data does this use?", "Real OFAC SDN list data from the US Treasury, refreshed daily from the official SDN.xml feed and vile/ofac-sdn-list."),
+            ("Can I use this for my business?", "Yes. The free tier is suitable for testing and low-volume use. For production volume, upgrade to the Dev plan ($19/mo) or Compliance Pro ($499/mo)."),
+        ]
+        self._render_pseo(t["title"], t["desc"], body, faq, f"/tools/{slug}")
+
+    def _render_pseo(self, title, desc, body_html, faqs, canonical_path):
+        """Shared renderer for pSEO pages with schema."""
+        today = "2026-07-13"
+        _page_url = _SITE + canonical_path
+        faq_schema = {"@context": "https://schema.org", "@type": "FAQPage",
+                       "mainEntity": [{"@type": "Question", "name": q,
+                                       "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in faqs]}
+        schema = {"@context": "https://schema.org", "@graph": [
+            {"@type": "Article", "headline": title, "description": desc,
+             "author": {"@type": "Organization", "name": "sanctionsai.dev"},
+             "publisher": {"@type": "Organization", "name": "sanctionsai.dev"},
+             "datePublished": today, "dateModified": today,
+             "mainEntityOfPage": _page_url},
+            {"@type": "BreadcrumbList", "itemListElement": [
+                {"@type": "ListItem", "position": 1, "name": "Home", "item": _SITE + "/"},
+                {"@type": "ListItem", "position": 2, "name": title, "item": _page_url}]},
+            faq_schema,
+            {"@type": "WebPage", "@id": _page_url + "#speakable", "url": _page_url,
+             "speakable": {"@type": "SpeakableSpecification", "cssSelector": ["h1", "h2", ".note"]}},
+        ]}
+        faq_html = "".join(f'<details><summary>{q}</summary><p>{a}</p></details>' for q, a in faqs)
+        html = f"""<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{title}</title>
+<meta name="description" content="{desc}">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<meta name="indexnow" content="87aaa199acaf7d14c812e974ce115e32">
+<link rel="canonical" href="{_page_url}">
+<script type="application/ld+json">{json.dumps(schema)}</script>
+</head>
+<body><main><article>{body_html}
+<h2>Frequently asked questions</h2>
+<div class="faq">{faq_html}</div>
+<section><p><a href="{_SITE}">Try sanctionsai.dev free →</a></p></section>
+</article></main>
+{_FOOTER}
+</body></html>"""
+        self._send_html(200, html)
 
     def _pseo_page(self, page_key: str):
         """pSEO pages for sanctionsai.dev."""
