@@ -1897,6 +1897,8 @@ License: MIT
     <language>en</language>
     <lastBuildDate>{date}</lastBuildDate>
     <atom:link href="https://sanctionsai.dev/rss.xml" rel="self" type="application/rss+xml"/>
+    <atom:link href="https://pubsubhubbub.appspot.com/" rel="hub"/>
+    <atom:link href="https://pubsubhubbub.superfeedr.com/" rel="hub"/>
     <item>
       <title>OFAC Penalties for AI Agents: What Every Developer Must Know</title>
       <link>https://sanctionsai.dev/penalties</link>
@@ -2770,7 +2772,7 @@ Then add to your MCP client (Claude Code, Cursor, Windsurf).
     {
       "@type": "SoftwareApplication",
       "@id": "https://sanctionsai.dev/#softwareapplication",
-      "name": "agentmail",
+      "name": "sanctionsai.dev",
       "applicationCategory": "DeveloperApplication",
       "operatingSystem": "Web, Linux, macOS",
       "url": "https://sanctionsai.dev/",
@@ -2801,6 +2803,16 @@ Then add to your MCP client (Claude Code, Cursor, Windsurf).
         }
       ],
       "author": {"@id": "https://sanctionsai.dev/#organization"}
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://sanctionsai.dev/#speakable",
+      "url": "https://sanctionsai.dev/",
+      "speakable": {
+        "@type": "SpeakableSpecification",
+        "cssSelector": ["h1", ".lead", ".cta-box h2", ".cta-box p", ".note"]
+      },
+      "isPartOf": {"@id": "https://sanctionsai.dev/#website"}
     }
   ]
 }
