@@ -1801,12 +1801,8 @@ Sitemap: https://sanctionsai.dev/sitemap.xml
             return self._pseo_page("complyadvantage")
         if p.path == "/alternatives-to/world-check":
             return self._pseo_page("world-check")
-        if p.path == "/for/defi":
-            return self._pseo_page("for-defi")
-        if p.path == "/for/fintech":
-            return self._pseo_page("for-fintech")
-        if p.path == "/for/ai-agents":
-            return self._pseo_page("for-ai-agents")
+        if p.path.startswith("/for/"):
+            return self._vertical_page(p.path.replace("/for/",""))
         if p.path == "/glossary/ofac":
             return self._pseo_page("glossary-ofac")
         if p.path == "/glossary/sdn-list":
@@ -2119,11 +2115,6 @@ License: MIT
             return self._docs_page()
         if p.path == "/tools/wallet-checker":
             return self._wallet_checker_page()
-        if p.path.startswith("/for/"):
-            vertical = p.path[len("/for/"):].split("?")[0].split("/")[0]
-            if vertical in _VERTICAL_KEYS:
-                return self._vertical_page(vertical)
-            return _json(self, 404, {"error": "not found"})
         if p.path.startswith("/compare/"):
             competitor = p.path[len("/compare/"):].split("?")[0].split("/")[0]
             if competitor in _COMPETITOR_KEYS:
