@@ -4545,7 +4545,7 @@ footer .bottom{margin-top:40px;padding-top:24px;border-top:1px solid var(--line)
         if not v:
             return _json(self, 404, {"error": "not found"})
         name_lower = v["name"].lower()
-        today = "2026-07-09"
+        today = "2026-07-17"
         body = (
             '<section style="text-align:center;border-top:none">'
             '<p class="note" style="letter-spacing:.05em;text-transform:uppercase">For ' + v["name"] + ' agents</p>'
@@ -4556,15 +4556,16 @@ footer .bottom{margin-top:40px;padding-top:24px;border-top:1px solid var(--line)
             '</section>'
             '<section><div class="prose">'
             f'<p class="note" style="font-size:.82rem;color:var(--t3)">By <span class="author" rel="author">agentmail team</span> &middot; <time datetime="{today}">{today}</time></p>'
-            '<h2>Why ' + v["name"] + ' agents need sanctions screening</h2>'
+            '<p><strong>Answer:</strong> ' + v["name"] + ' agents screen counterparties against the OFAC SDN list (19,086 names, 782 crypto wallets, 16 embargoed jurisdictions) via a single API call before every payment. A <code>"clean": true</code> response means proceed; <code>"clean": false</code> means halt. The check runs in under 100ms and the free tier covers 5 checks/day with no API key.</p>'
+            '<h2>Why do ' + v["name"] + ' agents need OFAC sanctions screening?</h2>'
             '<p>' + v["p1"] + '</p>'
             '<p>' + v["p2"] + '</p>'
-            '<h2>How sanctions screening works for ' + v["name"] + ' agents</h2>'
+            '<h2>How does sanctions screening work for ' + v["name"] + ' agents?</h2>'
             '<p>' + v["p3"] + '</p>'
             '<h3>Example: screen a wallet before paying</h3>'
             '<pre><code>curl "' + _SITE + '/sanctions?wallet=0x098B716B8Aaf21512996dC57EB0615e2383E2f96"</code></pre>'
             '<p class="note">Real OFAC data. Free tier: 5 checks/day, no API key.</p>'
-            '<h2>Coverage: what agentmail screens for ' + name_lower + ' agents</h2>'
+            '<h2>What exactly does agentmail screen for ' + name_lower + ' agents?</h2>'
             '<ul>'
             '<li><strong>782 OFAC-sanctioned crypto wallets</strong> across Ethereum, Bitcoin, Solana, and Tron &mdash; refreshed daily from US Treasury and vile/ofac-sdn-list</li>'
             '<li><strong>19,086 Specially Designated Nationals</strong> with fuzzy name matching for aliases, transliterations, and alternative spellings</li>'
