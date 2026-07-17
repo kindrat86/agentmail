@@ -2272,7 +2272,8 @@ License: MIT
             try:
                 b = self._body()
                 email = b.get("email", "")
-                if not email or "@" not in email:
+                import re
+                if not re.match(r'^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$', email or ""):
                     return _json(self, 400, {"error": "valid email required"})
                 import os, json, time
                 # Use a writeable path: env AGENTMAIL_HOME, then ~/.agentmail, then /tmp
@@ -2758,6 +2759,7 @@ Then add to your MCP client (Claude Code, Cursor, Windsurf).
 <meta property="og:title" content="OFAC &amp; x402 Sanctions Check for AI Agents | agentmail | $0.05/check">
 <meta property="og:description" content="OFAC sanctions screening for x402 payment agents. Screen every counterparty before your agent pays - 782 crypto wallets, 19,086 names, under 100ms.">
 <meta property="og:type" content="website">
+<meta property="og:site_name" content="agentmail">
 <meta property="og:url" content="https://sanctionsai.dev/">
 <meta property="og:image" content="https://sanctionsai.dev/og.png">
 <meta name="twitter:card" content="summary_large_image">
@@ -2776,8 +2778,13 @@ Then add to your MCP client (Claude Code, Cursor, Windsurf).
     {
       "@type": "Organization",
       "@id": "https://sanctionsai.dev/#organization",
-      "name": "sanctionsai.dev",
+      "name": "agentmail",
+      "alternateName": "sanctionsai.dev",
       "url": "https://sanctionsai.dev/",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://sanctionsai.dev/og.png"
+      },
       "description": "OFAC sanctions screening API for AI agents. Screen every counterparty before your agent pays.",
       "email": "hello@sanctionsai.dev",
       "founder": {
@@ -2786,13 +2793,14 @@ Then add to your MCP client (Claude Code, Cursor, Windsurf).
       },
       "sameAs": [
         "https://x.com/data_nerd",
-        "https://github.com/kindrat86"
+        "https://github.com/kindrat86/agentmail"
       ]
     },
     {
       "@type": "WebSite",
       "@id": "https://sanctionsai.dev/#website",
-      "name": "agentmail - OFAC Sanctions Screening for AI Agents",
+      "name": "agentmail",
+      "alternateName": "sanctionsai.dev",
       "url": "https://sanctionsai.dev/",
       "description": "OFAC sanctions screening, transaction risk scoring, and Know-Your-Agent verification for AI agents that transact autonomously.",
       "publisher": {"@id": "https://sanctionsai.dev/#organization"},
@@ -2825,7 +2833,7 @@ Then add to your MCP client (Claude Code, Cursor, Windsurf).
     {
       "@type": "SoftwareApplication",
       "@id": "https://sanctionsai.dev/#softwareapplication",
-      "name": "sanctionsai.dev",
+      "name": "agentmail",
       "applicationCategory": "DeveloperApplication",
       "operatingSystem": "Web, Linux, macOS",
       "url": "https://sanctionsai.dev/",
@@ -3203,7 +3211,7 @@ footer{padding-bottom:max(40px,env(safe-area-inset-bottom))}
 }
 </script>
 <!-- PostHog -->
-<script>!function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.async=!0,p.src=s.api_host+"/static/array.js",(r=t.getElementsByTagName("head")[0]).appendChild(p);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])}(document,window.posthog||[]);posthog.init('phc_lyZCgvTpicjLzAO3rY2GhxuX5WUc5jQjP8ZVwwJqauX',{api_host:'https://eu.i.posthog.com',person_profiles:'identified_only'})</script>
+<script>(function(){if(window.posthog&&window.posthog.__loaded)return;var s=document.createElement("script");s.type="text/javascript";s.crossOrigin="anonymous";s.defer=true;s.src="https://eu.i.posthog.com/static/array.js";s.onload=function(){window.posthog.init("phc_lyZCgvTpicjLzAO3rY2GhxuX5WUc5jQjP8ZVwwJqauX",{api_host:"https://eu.i.posthog.com",person_profiles:"identified_only",defaults:"2025-05-24",capture_pageview:false});window.posthog.capture("$pageview",{$viewport_height:window.innerHeight,$viewport_width:window.innerWidth})};document.head.appendChild(s);})();</script>
 <script>document.addEventListener('DOMContentLoaded',function(){var p=window.posthog;if(!p)return;var pg=location.pathname;p.capture('page_viewed',{page:pg});document.addEventListener('click',function(e){var a=e.target.closest&&e.target.closest('a[href],button.btn,.btn');if(!a)return;var href=a.getAttribute('href')||'';var txt=(a.textContent||'').trim().slice(0,40);var cls=a.classList||{};var tier=cls.contains('btn-primary')?'primary':(cls.contains('btn-ghost')?'secondary':'text');if(href.indexOf('/checkout/')>-1){p.capture('cta_checkout',{cta:txt,href:href,page:pg,tier:tier});}else if(href.indexOf('/tools/wallet-checker')>-1){p.capture('cta_run_check',{cta:txt,href:href,page:pg});}else if(href.indexOf('github.com/kindrat86')>-1){p.capture('cta_github',{cta:txt,href:href,page:pg});}},true);var f=document.getElementById('free-tier-capture');if(f){f.addEventListener('submit',function(){p.capture('cta_free_signup',{page:pg});});}});</script>
 <link rel="stylesheet" href="/ux.css">
     </head>
@@ -4051,7 +4059,7 @@ footer .bottom{margin-top:40px;padding-top:24px;border-top:1px solid var(--line)
 @media(prefers-reduced-motion:reduce){*{transition-duration:.01ms!important;animation-duration:.01ms!important;scroll-behavior:auto!important}.reveal{opacity:1!important;transform:none!important}}
 </style>
 <!-- PostHog -->
-<script>!function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.async=!0,p.src=s.api_host+"/static/array.js",(r=t.getElementsByTagName("head")[0]).appendChild(p);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])}(document,window.posthog||[]);posthog.init('phc_lyZCgvTpicjLzAO3rY2GhxuX5WUc5jQjP8ZVwwJqauX',{api_host:'https://eu.i.posthog.com',person_profiles:'identified_only'})</script>
+<script>(function(){if(window.posthog&&window.posthog.__loaded)return;var s=document.createElement("script");s.type="text/javascript";s.crossOrigin="anonymous";s.defer=true;s.src="https://eu.i.posthog.com/static/array.js";s.onload=function(){window.posthog.init("phc_lyZCgvTpicjLzAO3rY2GhxuX5WUc5jQjP8ZVwwJqauX",{api_host:"https://eu.i.posthog.com",person_profiles:"identified_only",defaults:"2025-05-24",capture_pageview:false});window.posthog.capture("$pageview",{$viewport_height:window.innerHeight,$viewport_width:window.innerWidth})};document.head.appendChild(s);})();</script>
 <script>document.addEventListener('DOMContentLoaded',function(){var p=window.posthog;if(!p)return;var pg=location.pathname;p.capture('page_viewed',{page:pg});document.addEventListener('click',function(e){var a=e.target.closest&&e.target.closest('a[href],button.btn,.btn');if(!a)return;var href=a.getAttribute('href')||'';var txt=(a.textContent||'').trim().slice(0,40);var cls=a.classList||{};var tier=cls.contains('btn-primary')?'primary':(cls.contains('btn-ghost')?'secondary':'text');if(href.indexOf('/checkout/')>-1){p.capture('cta_checkout',{cta:txt,href:href,page:pg,tier:tier});}else if(href.indexOf('/tools/wallet-checker')>-1){p.capture('cta_run_check',{cta:txt,href:href,page:pg});}else if(href.indexOf('github.com/kindrat86')>-1){p.capture('cta_github',{cta:txt,href:href,page:pg});}},true);var f=document.getElementById('free-tier-capture');if(f){f.addEventListener('submit',function(){p.capture('cta_free_signup',{page:pg});});}});</script>
 </head>
 <body>
@@ -4463,6 +4471,7 @@ footer .bottom{margin-top:40px;padding-top:24px;border-top:1px solid var(--line)
             '<meta property="og:title" content="' + t + '">',
             '<meta property="og:description" content="' + d + '">',
             '<meta property="og:type" content="website">',
+            '<meta property="og:site_name" content="agentmail">',
             '<meta property="og:url" content="' + url + '">',
             '<meta property="og:image" content="' + _SITE + '/og.png">',
             '<meta name="twitter:card" content="summary_large_image">',
@@ -4581,12 +4590,12 @@ footer .bottom{margin-top:40px;padding-top:24px;border-top:1px solid var(--line)
         ld = {
             "@context": "https://schema.org",
             "@type": "SoftwareApplication",
-            "name": "sanctionsai.dev",
+            "name": "agentmail",
             "applicationCategory": "SecurityApplication",
             "operatingSystem": "Web",
             "description": "OFAC sanctions screening for " + name_lower + " AI agents",
             "url": _SITE + "/for/" + vertical,
-            "author": {"@type": "Organization", "name": "sanctionsai.dev"},
+            "author": {"@type": "Organization", "name": "agentmail"},
             "dateModified": today,
         }
         # Breadcrumb structured data
@@ -4884,8 +4893,8 @@ document.getElementById("wallet").addEventListener("keydown", function(e){ if(e.
             "description": post["desc"],
             "datePublished": post["date"],
             "dateModified": post.get("updated", post["date"]),
-            "author": {"@type": "Organization", "name": "sanctionsai.dev"},
-            "publisher": {"@type": "Organization", "name": "sanctionsai.dev"},
+            "author": {"@type": "Organization", "name": "agentmail"},
+            "publisher": {"@type": "Organization", "name": "agentmail"},
             "url": _SITE + "/blog/" + slug,
             "mainEntityOfPage": _SITE + "/blog/" + slug,
         }
@@ -5788,10 +5797,10 @@ document.getElementById("squeeze-form").addEventListener("submit", function(e){
                     "url": _page_url,
                     "datePublished": "2026-01-01",
                     "dateModified": _today,
-                    "author": {"@type": "Organization", "name": "sanctionsai.dev", "url": _SITE},
-                    "publisher": {"@type": "Organization", "name": "sanctionsai.dev", "url": _SITE},
+                    "author": {"@type": "Organization", "name": "agentmail", "url": _SITE},
+                    "publisher": {"@type": "Organization", "name": "agentmail", "url": _SITE},
                     "mainEntityOfPage": _page_url,
-                    "isPartOf": {"@type": "WebSite", "name": "sanctionsai.dev", "url": _SITE},
+                    "isPartOf": {"@type": "WebSite", "name": "agentmail", "url": _SITE},
                 },
                 _faq_schema,
             ],
@@ -5991,8 +6000,8 @@ document.getElementById("squeeze-form").addEventListener("submit", function(e){
                                        "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in faqs]}
         schema = {"@context": "https://schema.org", "@graph": [
             {"@type": "Article", "headline": title, "description": desc,
-             "author": {"@type": "Organization", "name": "sanctionsai.dev"},
-             "publisher": {"@type": "Organization", "name": "sanctionsai.dev"},
+             "author": {"@type": "Organization", "name": "agentmail"},
+             "publisher": {"@type": "Organization", "name": "agentmail"},
              "datePublished": today, "dateModified": today,
              "mainEntityOfPage": _page_url},
             {"@type": "BreadcrumbList", "itemListElement": [
@@ -6171,7 +6180,7 @@ document.getElementById("squeeze-form").addEventListener("submit", function(e){
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://sanctionsai.dev">
 <script type="application/ld+json">
-{{"@context":"https://schema.org","@type":"Article","headline":"{page['title']}","description":"{page['desc']}","publisher":{{"@type":"Organization","name":"sanctionsai.dev"}}}}
+{{"@context":"https://schema.org","@type":"Article","headline":"{page['title']}","description":"{page['desc']}","publisher":{{"@type":"Organization","name":"agentmail"}}}}
 </script>
 </head>
 <body>
@@ -6209,7 +6218,7 @@ document.getElementById("squeeze-form").addEventListener("submit", function(e){
             org = {
                 "@context": "https://schema.org",
                 "@type": "Organization",
-                "name": "sanctionsai.dev",
+                "name": "agentmail",
                 "alternateName": "agentmail",
                 "url": _SITE,
                 "logo": _SITE + "/favicon.svg",
