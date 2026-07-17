@@ -4515,6 +4515,9 @@ footer .bottom{margin-top:40px;padding-top:24px;border-top:1px solid var(--line)
             '<h1>Frequently asked questions</h1>'
             '<p class="lead" style="max-width:600px;margin:0 auto">OFAC sanctions screening for AI agents - the practical questions.</p>'
             '</section>'
+            '<section><div class="prose">'
+            '<p><strong>Quick answer:</strong> agentmail is an OFAC sanctions screening API built for AI agents that move money autonomously. You call <code>GET /sanctions?wallet=0x...</code> before every payment. If the response says <code>"clean": true</code>, the counterparty is safe to pay. If <code>"clean": false</code>, your agent halts. It checks 782 sanctioned crypto wallets, 19,086 SDN names, and 16 embargoed jurisdictions in under 100ms. The free tier gives you 5 checks/day with no API key &mdash; <a href="/tools/wallet-checker">try it now</a>.</p>'
+            '</div></section>'
             '<section><div class="prose">' + items + '</div></section>'
             '<section><div class="cta-box"><h2>Start screening in 30 seconds</h2>'
             '<p>5 checks/day free. No API key required.</p>'
@@ -4685,9 +4688,21 @@ footer .bottom{margin-top:40px;padding-top:24px;border-top:1px solid var(--line)
 <section style="text-align:center;border-top:none">
 <h1>API documentation</h1>
 <p class="lead" style="max-width:600px;margin:0 auto">OFAC sanctions screening, transaction risk, and Know-Your-Agent for AI agents - over HTTP, MCP, and CLI.</p>
-<p class="note">Base URL: <code>__SITE__</code> · Free tier: 5 checks/day, no key · Auth: <code>X-API-Key</code> or <code>Authorization: Bearer</code></p>
+<p class="note">Base URL: <code>__SITE__</code> · Free tier: 5 checks/day, no key · Auth: <code>X-API-Key</code> or <code>Authorization: ***
 </section>
 <section><div class="prose">
+<p><strong>TL;DR:</strong> This is a REST API with four endpoints. <code>GET /sanctions</code> screens a name, wallet, or country against the OFAC SDN list (782 crypto addresses + 19,086 names + 16 embargoed jurisdictions). <code>POST /risk</code> scores transaction fraud risk. <code>POST /kya</code> verifies an AI agent's identity. <code>POST /disputes</code> opens a dispute record. All return JSON, run in under 100ms, and work with or without an API key. Start with the free tier: 5 checks/day, no signup.</p>
+<h2>Quick start — screen a wallet in one call</h2>
+<p>Screen any crypto wallet against the full OFAC list with a single GET request. No API key needed on the free tier:</p>
+<pre><code>curl "__SITE__/sanctions?wallet=0x098B716B8Aaf21512996dC57EB0615e2383E2f96"</code></pre>
+<pre><code>{
+  "matches": [
+    {"list": "OFAC_SDN", "match_type": "wallet", "confidence": 1.0}
+  ],
+  "clean": false,
+  "checked_at": 1718000000
+}</code></pre>
+<p>The <code>clean</code> boolean is your go/no-go signal: <code>true</code> means the counterparty is not on any sanctions list, <code>false</code> means a match was found and your agent should halt the payment.</p>
 <h2>Authentication</h2>
 <p>Pass your API key in the <code>X-API-Key</code> header (or as <code>Authorization: Bearer &lt;key&gt;</code>). The free tier needs no key - requests are metered by IP.</p>
 <pre><code>curl -H "X-API-Key: am_live_xxx" "__SITE__/sanctions?wallet=0x098B..."</code></pre>
