@@ -1884,6 +1884,11 @@ Allow: /openapi.json
 Allow: /.well-known/
 Allow: /feed.xml
 Allow: /rss.xml
+# Google Discover + Visual Search directives (2026-07-18)
+# max-image-preview:large is THE gatekeeper for Google Discover (800M users)
+max-image-preview:large
+max-video-preview:-1
+max-snippet:-1
 # Only block checkout and auth pages
 Disallow: /checkout/
 Disallow: /dashboard
@@ -4309,6 +4314,99 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
       <div style="flex-shrink:0;width:40px;height:40px;border-radius:10px;background:rgba(0,212,170,.1);border:1px solid rgba(0,212,170,.2);display:grid;place-items:center;color:var(--teal);font-weight:800;font-size:1rem">&#9881;</div>
       <div><h3 style="font-size:1rem;color:#fff;margin-bottom:4px">Coinbase AgentKit, AP2, ACP</h3><p style="color:var(--t2);font-size:.9rem;line-height:1.5;margin:0">These rails authorize payments &mdash; they do not screen. Wire the check into your payment path before any transfer is signed.</p></div>
     </div>
+  </div>
+</div></section>
+
+<!-- ===== BRUNSON: NAMED FRAMEWORK (Ch16) — The 4-Gate Agent Payment Protocol™ ===== -->
+<section class="sec" id="framework" style="padding-top:64px"><div class="wrap">
+  <div class="sec-head reveal">
+    <span class="eyebrow"><span class="dot"></span> The Framework</span>
+    <h2>Every compliant agent payment passes through <span style="color:var(--teal)">four gates</span>.</h2>
+    <p class="sub" style="color:var(--t2);max-width:760px;margin:12px auto 0;font-size:1.05rem">
+      Not a checklist. Not a dashboard. A protocol &mdash; the same way TLS is a protocol. We call it
+      <strong style="color:#fff">The 4-Gate Agent Payment Protocol&trade;</strong>. Your agent runs every payment through it in under 100 milliseconds. No gate is optional. No gate can be skipped.
+    </p>
+  </div>
+
+  <div class="framework-grid reveal" style="display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:36px">
+    <!-- GATE 1: SCREEN -->
+    <div class="gate" style="background:var(--surf);border:1px solid var(--line);border-radius:16px;padding:28px 22px;position:relative;overflow:hidden">
+      <div style="position:absolute;top:0;left:0;right:0;height:3px;background:var(--tealg)"></div>
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+        <span style="display:grid;place-items:center;width:38px;height:38px;border-radius:10px;background:rgba(0,212,170,.12);border:1px solid rgba(0,212,170,.22);color:var(--teal);font-weight:800;font-size:.85rem">01</span>
+        <span style="font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:var(--t2);font-weight:700">Gate One</span>
+      </div>
+      <h3 style="color:#fff;font-size:1.3rem;margin:0 0 8px">SCREEN</h3>
+      <p style="color:var(--t2);font-size:.92rem;line-height:1.55;margin:0">
+        Every counterparty checked against <strong style="color:var(--teal)">782 sanctioned crypto wallets</strong> + <strong style="color:var(--teal)">19,086 names</strong> <em>before</em> the payment moves. Not after. <strong style="color:#fff">Before.</strong>
+      </p>
+    </div>
+    <!-- GATE 2: SCORE -->
+    <div class="gate" style="background:var(--surf);border:1px solid var(--line);border-radius:16px;padding:28px 22px;position:relative;overflow:hidden">
+      <div style="position:absolute;top:0;left:0;right:0;height:3px;background:var(--tealg)"></div>
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+        <span style="display:grid;place-items:center;width:38px;height:38px;border-radius:10px;background:rgba(0,212,170,.12);border:1px solid rgba(0,212,170,.22);color:var(--teal);font-weight:800;font-size:.85rem">02</span>
+        <span style="font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:var(--t2);font-weight:700">Gate Two</span>
+      </div>
+      <h3 style="color:#fff;font-size:1.3rem;margin:0 0 8px">SCORE</h3>
+      <p style="color:var(--t2);font-size:.92rem;line-height:1.55;margin:0">
+        Real-time risk scoring in <strong style="color:var(--teal)">under 100&nbsp;ms</strong>. The agent doesn't wait. The agent doesn't skip. The score comes back before the transaction is signed.
+      </p>
+    </div>
+    <!-- GATE 3: STOP -->
+    <div class="gate" style="background:var(--surf);border:1px solid var(--line);border-radius:16px;padding:28px 22px;position:relative;overflow:hidden">
+      <div style="position:absolute;top:0;left:0;right:0;height:3px;background:var(--tealg)"></div>
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+        <span style="display:grid;place-items:center;width:38px;height:38px;border-radius:10px;background:rgba(0,212,170,.12);border:1px solid rgba(0,212,170,.22);color:var(--teal);font-weight:800;font-size:.85rem">03</span>
+        <span style="font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:var(--t2);font-weight:700">Gate Three</span>
+      </div>
+      <h3 style="color:#fff;font-size:1.3rem;margin:0 0 8px">STOP</h3>
+      <p style="color:var(--t2);font-size:.92rem;line-height:1.55;margin:0">
+        Sanctioned wallets blocked automatically. <strong style="color:#fff">No override</strong>, no &ldquo;are you sure&rdquo;, no <strong style="color:var(--teal)">$356,000 OFAC fine</strong>.
+      </p>
+    </div>
+    <!-- GATE 4: STAMP -->
+    <div class="gate" style="background:var(--surf);border:1px solid var(--line);border-radius:16px;padding:28px 22px;position:relative;overflow:hidden">
+      <div style="position:absolute;top:0;left:0;right:0;height:3px;background:var(--tealg)"></div>
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+        <span style="display:grid;place-items:center;width:38px;height:38px;border-radius:10px;background:rgba(0,212,170,.12);border:1px solid rgba(0,212,170,.22);color:var(--teal);font-weight:800;font-size:.85rem">04</span>
+        <span style="font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:var(--t2);font-weight:700">Gate Four</span>
+      </div>
+      <h3 style="color:#fff;font-size:1.3rem;margin:0 0 8px">STAMP</h3>
+      <p style="color:var(--t2);font-size:.92rem;line-height:1.55;margin:0">
+        Every approved payment gets a <strong style="color:var(--teal)">compliance receipt</strong>. Audit-ready. Regulator-ready. If OFAC ever asks, you already have the answer.
+      </p>
+    </div>
+  </div>
+
+  <div class="reveal" style="margin-top:28px;text-align:center;padding:22px;background:rgba(0,212,170,.04);border:1px dashed rgba(0,212,170,.3);border-radius:14px">
+    <p style="color:var(--t2);font-size:.92rem;margin:0;line-height:1.6">
+      <span style="color:var(--teal);font-weight:800;letter-spacing:.06em">SCREEN &rarr; SCORE &rarr; STOP &rarr; STAMP.</span>
+      Four gates, four milliseconds of agent time, zero exceptions. That is the protocol.
+    </p>
+  </div>
+</div></section>
+
+<!-- ===== BRUNSON: FUTURE-BASED CAUSE (Ch4) — The Compliance Layer for Autonomous Commerce ===== -->
+<section class="sec" id="movement" style="padding-top:56px"><div class="wrap">
+  <div class="sec-head reveal">
+    <span class="eyebrow"><span class="dot"></span> The Bigger Fight</span>
+    <h2 style="max-width:820px;margin:0 auto">We're not building a sanctions API. We're building <span style="color:var(--teal)">the compliance layer for autonomous commerce</span>.</h2>
+  </div>
+
+  <div class="reveal" style="max-width:780px;margin:28px auto 0;padding:32px 36px;background:var(--surf);border-left:3px solid var(--teal);border-radius:0 14px 14px 0">
+    <p style="color:#e8eaed;font-size:1.12rem;line-height:1.75;margin:0">
+      The next million payment decisions won't be made by humans. They'll be made by software &mdash; at 3&nbsp;AM, at scale, without supervision. Every single one of them should be screened the same way a bank screens a wire transfer: <strong style="color:#fff">automatically, instantly, and with a paper trail</strong>.
+    </p>
+    <p style="color:var(--t2);font-size:1.05rem;line-height:1.75;margin:18px 0 0">
+      We're not building a sanctions API. We're building <strong style="color:var(--teal)">the compliance layer for autonomous commerce</strong>. If your agent can spend your money, it should answer to <strong style="color:#fff">the same rules your bank does</strong>.
+    </p>
+    <p style="color:var(--t3);font-size:.88rem;margin:22px 0 0;font-style:italic">&mdash; The agentmail team</p>
+  </div>
+
+  <div class="reveal" style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:28px">
+    <a href="#try-free" class="btn btn-primary btn-lg">Screen your first agent payment</a>
+    <a href="#framework" class="btn btn-ghost">Re-read the 4-Gate Protocol</a>
   </div>
 </div></section>
 
