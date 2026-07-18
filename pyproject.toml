@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "sanctions-mcp"
-version = "0.4.0"
+version = "0.5.0"
 description = "OFAC sanctions screen, KYA, and transaction risk for AI agents — MCP + HTTP + CLI. Real OFAC data, no API key. (package: agentmail)"
 readme = "README.md"
 license = { file = "LICENSE" }
@@ -12,7 +12,7 @@ requires-python = ">=3.11"
 authors = [
     { name = "Maryan Kindrat" },
 ]
-keywords = ["mcp", "ai-agents", "compliance", "ofac", "sanctions", "kya", "risk", "agent-economy", "verification", "otp"]
+keywords = ["mcp", "ai-agents", "compliance", "ofac", "sanctions", "kya", "risk", "agent-economy", "verification", "sei", "sanctions-exposure-index", "x402"]
 classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
@@ -43,9 +43,11 @@ dev = ["pytest>=7", "mcp>=0.9", "posthog>=3.0.0"]
 agentmail = "agentmail.cli:main"
 
 [project.urls]
-Homepage = "https://github.com/kindrat86/agentmail"
+Homepage = "https://sanctionsai.dev"
 Repository = "https://github.com/kindrat86/agentmail"
 Issues = "https://github.com/kindrat86/agentmail/issues"
+Documentation = "https://sanctionsai.dev/docs"
+Changelog = "https://github.com/kindrat86/agentmail/blob/main/CHANGELOG.md"
 
 [tool.setuptools]
 # The package is the agentmail/ directory; treat the repo root as the package.

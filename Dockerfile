@@ -19,6 +19,10 @@ COPY alternatives-to/ ./alternatives-to/
 # Round 16 new page types
 COPY penalties/ ./penalties/
 COPY guides/ ./guides/
+# Round 19 Isenberg pSEO (checklists, cost-of, best — templates not generated for this site)
+COPY checklists/ ./checklists/
+COPY cost-of/ ./cost-of/
+COPY best/ ./best/
 
 RUN pip install --no-cache-dir ".[mcp]" && \
     cp /home/agentmail/app/api.py /usr/local/lib/python3.11/site-packages/agentmail/api.py && \
