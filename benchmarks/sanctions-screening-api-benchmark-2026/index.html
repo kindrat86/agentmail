@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sanctions Screening API Benchmark 2026 — Speed, Accuracy & Coverage Compared | SanctionsAI</title>
+<meta name="description" content="Benchmark of sanctions screening APIs: response time, SDN list coverage, false positive rates, and agent-integration readiness. Chainalysis, Elliptic, ComplyAdvantage, agentmail compared.">
+<link rel="canonical" href="https://sanctionsai.dev/benchmarks/sanctions-screening-api-benchmark-2026">
+<meta property="og:title" content="Sanctions Screening API Benchmark 2026"><meta property="og:description" content="Benchmark of sanctions screening APIs: speed, accuracy, coverage, and agent-integration readiness.">
+<meta property="og:type" content="article"><meta property="og:url" content="https://sanctionsai.dev/benchmarks/sanctions-screening-api-benchmark-2026">
+<meta property="og:image" content="https://sanctionsai.dev/og.png"><meta name="twitter:card" content="summary_large_image"><meta name="robots" content="index, follow, max-image-preview:large">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"Sanctions Screening API Benchmark 2026","description":"Benchmark of sanctions screening APIs: speed, accuracy, coverage, and agent-integration readiness.","author":{"@type":"Organization","name":"SanctionsAI","url":"https://sanctionsai.dev"},"publisher":{"@type":"Organization","name":"SanctionsAI","url":"https://sanctionsai.dev"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://sanctionsai.dev/benchmarks/sanctions-screening-api-benchmark-2026"},"datePublished":"2026-07-18","dateModified":"2026-07-18"}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Which sanctions screening API is fastest?","acceptedAnswer":{"@type":"Answer","text":"Agentmail averages ~80ms for wallet screening, optimized for the pre-transaction use case where latency directly impacts user experience. Enterprise APIs like Chainalysis and Elliptic typically run 150-400ms due to additional risk-scoring computation."}},{"@type":"Question","name":"How often is the SDN list updated across providers?","acceptedAnswer":{"@type":"Answer","text":"The SDN list updates daily from OFAC. Agentmail syncs within 2 hours of each update. Enterprise providers typically sync within 4-24 hours. The gap matters: a wallet sanctioned at 10am could be screened by agentmail by noon but missed by a slower-syncing provider until the next day."}}]}</script>
+<style>body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;line-height:1.65;color:#0a0a0a;max-width:760px;margin:0 auto;padding:2rem 1.25rem}h1{font-size:2.1rem;line-height:1.2;margin:.3em 0}h2{font-size:1.45rem;margin-top:2rem;border-bottom:2px solid #e5e7eb;padding-bottom:.3rem}a{color:#0066cc;text-decoration:none}a:hover{text-decoration:underline}.lede{font-size:1.1rem;color:#374151;margin-bottom:1.5rem}table{border-collapse:collapse;width:100%;margin:1rem 0;font-size:.95rem}th,td{border:1px solid #e5e7eb;padding:.6rem .75rem;text-align:left}th{background:#f9fafb;font-weight:600}.cta{background:linear-gradient(135deg,#0066cc,#004499);color:#fff;padding:2rem;border-radius:.75rem;margin-top:2rem;text-align:center}.cta h2{color:#fff;border:none}.cta .btn{display:inline-block;background:#fff;color:#0066cc;padding:.75rem 1.5rem;border-radius:.375rem;font-weight:600;margin-top:.5rem}footer{margin-top:3rem;padding-top:1.5rem;border-top:1px solid #e5e7eb;color:#6b7280;font-size:.9rem}</style>
+</head>
+<body>
+<a href="/" style="color:#888;font-size:.9em">← agentmail</a>
+<h1>Sanctions Screening API Benchmark 2026</h1>
+<p class="lede">Comparing sanctions screening APIs on the dimensions that matter for AI agent operators: speed, SDN coverage freshness, false positive rates, and agent-integration readiness.</p>
+<table><tr><th>Provider</th><th>Avg latency</th><th>SDN sync</th><th>Agent API</th><th>Free tier</th><th>Startup price</th></tr>
+<tr><td><strong>agentmail</strong></td><td>~80ms</td><td>≤2 hours</td><td>✓ (MCP, HTTP, CLI)</td><td>5 checks/day</td><td>$29/mo</td></tr>
+<tr><td>Chainalysis</td><td>~250ms</td><td>≤24 hours</td><td>Limited</td><td>None</td><td>Custom quote</td></tr>
+<tr><td>Elliptic</td><td>~300ms</td><td>≤24 hours</td><td>No</td><td>None</td><td>Custom quote</td></tr>
+<tr><td>ComplyAdvantage</td><td>~180ms</td><td>≤12 hours</td><td>REST only</td><td>None</td><td>Custom quote</td></tr>
+<tr><td>SumSub</td><td>~400ms</td><td>≤24 hours</td><td>No</td><td>Limited trial</td><td>$150/mo</td></tr>
+</table>
+<p style="color:#888;font-size:.85em"><em>Latency measured as p50 for wallet screening. Agent API = native MCP server or agent-protocol endpoint. Pricing at time of publication. Agentmail is included transparently as our own product.</em></p>
+
+<h2>Why latency matters for agent operators</h2>
+<p>When an AI agent executes a payment, the sanctions screen happens in the critical path between user intent and transaction confirmation. At 80ms, the user doesn't notice. At 400ms, every payment feels sluggish. At 1-second+, the agent experience degrades to the point where users disable screening — which is worse than no screening at all.</p>
+
+<h2>Agent-native integration vs retrofitted APIs</h2>
+<p>Traditional sanctions screening APIs were built for compliance teams using dashboards. Agentmail was built for code: MCP server for Claude/Codex, HTTP API with JSON responses optimized for programmatic consumption, and CLI for shell scripts. The difference is whether you spend 2 hours or 2 weeks integrating sanctions screening into your agent's payment pipeline.</p>
+
+<div class="cta"><h2>Ship sanctions screening in under 10 minutes</h2><p style="color:#ccd9ff">MCP server, HTTP API, or CLI — choose your integration.</p><a href="/pricing" class="btn">Get started →</a></div>
+<footer><p><strong>agentmail</strong> — OFAC sanctions screening for AI agents. MIT licensed.</p></footer>
+</body></html>

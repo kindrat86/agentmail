@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Agent Sanctions Violation — What Happens When Your Agent Screens a Sanctioned Wallet | SanctionsAI</title>
+<meta name="description" content="What actually happens when an AI agent screens a sanctioned wallet or entity. The OFAC enforcement process, penalties, voluntary self-disclosure, and how agentmail prevents it.">
+<link rel="canonical" href="https://sanctionsai.dev/scenarios/ai-agent-sanctions-violation">
+<meta property="og:title" content="AI Agent Sanctions Violation — What Happens When Your Agent Screens a Sanctioned Wallet">
+<meta property="og:description" content="What happens when an AI agent interacts with a sanctioned wallet or entity. The full OFAC process from detection to resolution.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://sanctionsai.dev/scenarios/ai-agent-sanctions-violation">
+<meta property="og:image" content="https://sanctionsai.dev/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"AI Agent Sanctions Violation — What Happens When Your Agent Screens a Sanctioned Wallet","description":"What happens when an AI agent interacts with a sanctioned wallet or entity. The full OFAC process from detection to resolution.","author":{"@type":"Organization","name":"SanctionsAI","url":"https://sanctionsai.dev"},"publisher":{"@type":"Organization","name":"SanctionsAI","url":"https://sanctionsai.dev"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://sanctionsai.dev/scenarios/ai-agent-sanctions-violation"},"datePublished":"2026-07-18","dateModified":"2026-07-18"}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://sanctionsai.dev/"},{"@type":"ListItem","position":2,"name":"Scenarios","item":"https://sanctionsai.dev/scenarios"},{"@type":"ListItem","position":3,"name":"AI Agent Sanctions Violation","item":"https://sanctionsai.dev/scenarios/ai-agent-sanctions-violation"}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Is an AI agent operator liable if the agent accidentally transacts with a sanctioned wallet?","acceptedAnswer":{"@type":"Answer","text":"Yes. OFAC enforces strict liability — intent doesn't matter. If your agent executes a transaction with a sanctioned party, you are liable regardless of whether you knew or intended it. The maximum civil penalty is ~$368,000 per violation."}},{"@type":"Question","name":"What is voluntary self-disclosure and does it help?","acceptedAnswer":{"@type":"Answer","text":"Voluntary self-disclosure (VSD) is when you proactively report a sanctions violation to OFAC before they discover it. It's the single most effective mitigating factor — it can reduce penalties by 50% or more and is often the difference between a civil monetary penalty and criminal referral."}},{"@type":"Question","name":"How does agentmail prevent this scenario?","acceptedAnswer":{"@type":"Answer","text":"Agentmail screens every transaction before execution against the OFAC SDN list in real time. If a wallet or entity matches, the transaction is blocked and an alert is generated. The screening is done pre-transaction — the violation never occurs."}}]}</script>
+<style>
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;line-height:1.65;color:#0a0a0a;max-width:760px;margin:0 auto;padding:2rem 1.25rem}
+h1{font-size:2.1rem;line-height:1.2;margin:.3em 0}
+h2{font-size:1.45rem;margin-top:2rem;border-bottom:2px solid #e5e7eb;padding-bottom:.3rem}
+h3{font-size:1.15rem;margin-top:1.5rem}
+a{color:#0066cc;text-decoration:none}a:hover{text-decoration:underline}
+.lede{font-size:1.1rem;color:#374151;margin-bottom:1.5rem}
+.callout{background:#f0f7ff;border-left:4px solid #0066cc;padding:1rem 1.25rem;margin:1.5rem 0;border-radius:0 .375rem .375rem 0}
+.callout.warn{background:#fef3c7;border-left-color:#d97706}
+.callout.danger{background:#fee2e2;border-left-color:#dc2626}
+table{border-collapse:collapse;width:100%;margin:1rem 0;font-size:.95rem}
+th,td{border:1px solid #e5e7eb;padding:.6rem .75rem;text-align:left}
+th{background:#f9fafb;font-weight:600}
+.cta{background:linear-gradient(135deg,#0066cc,#004499);color:#fff;padding:2rem;border-radius:.75rem;margin-top:2rem;text-align:center}
+.cta h2{color:#fff;border:none}.cta .btn{display:inline-block;background:#fff;color:#0066cc;padding:.75rem 1.5rem;border-radius:.375rem;font-weight:600;margin-top:.5rem}
+footer{margin-top:3rem;padding-top:1.5rem;border-top:1px solid #e5e7eb;color:#6b7280;font-size:.9rem}
+</style>
+</head>
+<body>
+<a href="/" style="color:#888;font-size:.9em">← agentmail</a>
+<h1>What Happens When Your AI Agent Screens a Sanctioned Wallet</h1>
+<p class="lede">Your autonomous agent just tried to send a payment to a wallet on the OFAC SDN list. Here's exactly what happens next — and how to prevent it from happening in the first place.</p>
+
+<div class="callout danger">
+<h3 style="margin-top:0">⚠️ Strict liability applies</h3>
+<p style="margin-bottom:0">OFAC sanctions enforcement operates under strict liability. You are liable for violations by your AI agent regardless of whether you knew about the transaction, intended it, or had a compliance program in place. The maximum civil penalty is roughly <strong>$368,000 per violation</strong> — and criminal penalties can include up to 20 years imprisonment.</p>
+</div>
+
+<h2>The timeline: what actually happens</h2>
+<table>
+<tr><th>Stage</th><th>What happens</th><th>Timeline</th></tr>
+<tr><td>1. Detection</td><td>The transaction is flagged — either by your own screening system, a bank's compliance team, or a blockchain analytics firm monitoring the ledger.</td><td>Instant to 30 days</td></tr>
+<tr><td>2. Freeze</td><td>The receiving institution freezes the funds. Your agent's wallet may be flagged. Any linked accounts may also be frozen under the "domino effect" of compliance risk.</td><td>Hours to days</td></tr>
+<tr><td>3. OFAC notification</td><td>If the transaction went through, OFAC may be notified by the intermediary bank. If it was blocked, the blocking party files a blocked property report within 10 business days.</td><td>10 business days</td></tr>
+<tr><td>4. Investigation</td><td>OFAC investigates. They examine whether this was an isolated incident or part of a pattern, whether you had a compliance program, and whether you voluntarily self-disclosed.</td><td>6–18 months</td></tr>
+<tr><td>5. Enforcement action</td><td>OFAC issues a penalty notice or, in cases of voluntary self-disclosure with full cooperation, a cautionary letter with no monetary penalty.</td><td>12–24 months</td></tr>
+</table>
+
+<h2>The difference between "blocked" and "happened"</h2>
+<p>If your agent <strong>screens before transacting</strong> and blocks the payment, no violation has occurred. You file a blocked property report with OFAC and move on. This is the entire purpose of pre-transaction screening.</p>
+<p>If your agent <strong>doesn't screen and executes the transaction</strong>, you now have an actual sanctions violation on your hands. The money moved. The receiving wallet is a sanctioned entity. You are now in the investigation pipeline.</p>
+
+<h2>Voluntary self-disclosure: your best move</h2>
+<p>If a violation has occurred, OFAC's Enforcement Guidelines treat voluntary self-disclosure (VSD) as the single most powerful mitigating factor. When you self-disclose before OFAC discovers the violation, the base penalty is reduced by 50%. Combined with a documented compliance program and full cooperation, penalties can drop to zero in cases deemed "non-egregious."</p>
+<p>The catch: VSD must be filed promptly after discovery. Waiting "to see if OFAC notices" eliminates the VSD benefit entirely.</p>
+
+<h2>How agentmail prevents this scenario entirely</h2>
+<p>Agentmail is designed for exactly this workflow: every transaction your AI agent initiates is screened against the OFAC SDN list in real time, <strong>before</strong> execution. If a match is found, the transaction is blocked and an alert is generated. The violation never occurs because the transaction never executes.</p>
+<p>The screening takes under 100ms — fast enough to be invisible to your agent's workflow but thorough enough to satisfy OFAC's "reasonable precautions" standard.</p>
+
+<div class="cta">
+<h2>Prevent sanctions violations before they happen</h2>
+<p style="color:#ccd9ff">Screen every agent transaction against the OFAC SDN list in real time.</p>
+<a href="/pricing" class="btn">Get started →</a>
+</div>
+<footer><p><strong>agentmail</strong> — OFAC sanctions screening for AI agents. MIT licensed. Data from US Treasury & vile/ofac-sdn-list.</p></footer>
+</body></html>

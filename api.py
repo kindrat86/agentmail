@@ -1961,6 +1961,8 @@ Sitemap: https://sanctionsai.dev/sitemap.xml
             return self._sitemap_index_xml()
         if p.path == "/.well-known/assetlinks.json":
             return self._serve_file_content(".well-known/assetlinks.json", "application/json")
+        if p.path == "/87aaa199.txt":
+            return self._serve_text("87aaa199", "text/plain")
         if p.path == "/87aaa199acaf7d14c812e974ce115e32.txt":
             return self._serve_text("87aaa199acaf7d14c812e974ce115e32", "text/plain")
         if p.path == "/llms.txt":
