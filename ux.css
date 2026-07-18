@@ -1,7 +1,64 @@
 /* ═════════════════════════════════════════════════════════
    WORLD-CLASS UX ENHANCEMENT — Mobile-First, Accessible, Premium
-   Deployed across all 10 portfolio domains: R14
+   Deployed across all 10 portfolio domains: R16
+   Adds: CSS vars theming, gradient orbs, glassmorphism,
+   animated cards, gradient CTAs, reading progress, back-to-top,
+   safe-area insets, staggered animation, skeleton loading,
+   mobile bottom nav, sticky CTA bar, bottom sheets, toasts,
+   touch-active feedback, container queries, scroll-driven
+   animations, view transitions, text-wrap balance/pretty.
    ═════════════════════════════════════════════════════════ */
+
+/* ── 0. CSS CUSTOM PROPERTIES (DESIGN TOKENS) ───────── */
+:root {
+  color-scheme: light dark;
+
+  /* Colors — overridable per-site */
+  --ux-primary: #0066cc;
+  --ux-primary-light: #3388dd;
+  --ux-primary-dark: #004499;
+  --ux-accent: #7c3aed;
+  --ux-success: #10b981;
+  --ux-warning: #f59e0b;
+  --ux-danger: #ef4444;
+  --ux-bg: #ffffff;
+  --ux-bg-alt: #f8fafc;
+  --ux-surface: #ffffff;
+  --ux-border: #e2e8f0;
+  --ux-text: #0f172a;
+  --ux-text-muted: #64748b;
+  --ux-text-inverse: #ffffff;
+
+  /* Shadows */
+  --ux-shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+  --ux-shadow-md: 0 4px 6px -1px rgba(0,0,0,0.08), 0 2px 4px -2px rgba(0,0,0,0.05);
+  --ux-shadow-lg: 0 10px 25px -5px rgba(0,0,0,0.1), 0 8px 10px -6px rgba(0,0,0,0.05);
+  --ux-shadow-xl: 0 20px 50px -12px rgba(0,0,0,0.15);
+  --ux-shadow-glow: 0 0 30px rgba(0,102,204,0.15);
+
+  /* Radius */
+  --ux-radius-sm: 0.375rem;
+  --ux-radius-md: 0.5rem;
+  --ux-radius-lg: 0.75rem;
+  --ux-radius-xl: 1rem;
+  --ux-radius-2xl: 1.5rem;
+  --ux-radius-full: 9999px;
+
+  /* Transitions */
+  --ux-transition-fast: 150ms ease;
+  --ux-transition-base: 250ms ease;
+  --ux-transition-slow: 400ms ease;
+
+  /* Safe areas for notched phones */
+  --ux-safe-top: env(safe-area-inset-top, 0px);
+  --ux-safe-bottom: env(safe-area-inset-bottom, 0px);
+  --ux-safe-left: env(safe-area-inset-left, 0px);
+  --ux-safe-right: env(safe-area-inset-right, 0px);
+
+  /* Motion easing — expressive */
+  --ux-ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ux-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+}
 
 /* ── 1. CSS RESET & BOX-SIZING ─────────────────────── */
 *,
@@ -12,12 +69,14 @@
 
 /* ── 2. MOBILE-FIRST TYPOGRAPHY ────────────────────── */
 html {
-  font-size: 100%; /* 16px base — mobile friendly */
+  font-size: 100%;
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
   scroll-behavior: smooth;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  scroll-padding-top: 80px; /* offset for sticky nav */
+  overscroll-behavior-y: none; /* prevent accidental pull-to-refresh */
 }
 
 body {
@@ -27,6 +86,18 @@ body {
   overflow-x: hidden;
   min-height: 100vh;
   min-height: 100dvh;
+  color: var(--ux-text);
+  background: var(--ux-bg);
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Brand-themed text selection */
+::selection {
+  background: rgba(0, 102, 204, 0.2);
+  color: inherit;
+}
+::-moz-selection {
+  background: rgba(0, 102, 204, 0.2);
 }
 
 /* ── 3. RESPONSIVE HEADING SCALE ───────────────────── */
@@ -36,6 +107,14 @@ h3 { font-size: clamp(1.125rem, 3vw, 1.5rem); line-height: 1.3; }
 h4 { font-size: 1.125rem; line-height: 1.4; }
 h1, h2, h3, h4, h5, h6 { font-weight: 700; margin-top: 0; margin-bottom: 0.5em; }
 
+/* R16: Balanced headlines & pretty paragraphs (eliminates orphans) */
+@supports (text-wrap: balance) {
+  h1, h2, h3, h4 { text-wrap: balance; }
+}
+@supports (text-wrap: pretty) {
+  p, li { text-wrap: pretty; }
+}
+
 /* ── 4. TOUCH-FRIENDLY TARGETS ─────────────────────── */
 button, .btn, [role="button"],
 a.button, a.btn, .cta, input[type="submit"],
@@ -44,8 +123,8 @@ input[type="button"], select {
   padding: 0.625rem 1.25rem;
   font-size: 1rem;
   cursor: pointer;
-  border-radius: 0.5rem;
-  transition: all 0.2s ease;
+  border-radius: var(--ux-radius-md);
+  transition: transform var(--ux-transition-fast), background var(--ux-transition-fast), box-shadow var(--ux-transition-fast);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -53,11 +132,19 @@ input[type="button"], select {
   text-decoration: none;
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* R16: Native-app touch feedback — subtle scale on tap */
+button:active:not(:disabled), .btn:active:not(:disabled),
+[role="button"]:active, a.btn:active, a.button:active, .cta:active {
+  transform: scale(0.97);
 }
 
 /* ── 5. FOCUS STATES ───────────────────────────────── */
 :focus-visible {
-  outline: 3px solid #0066cc;
+  outline: 3px solid var(--ux-primary);
   outline-offset: 2px;
   border-radius: 4px;
 }
@@ -65,68 +152,731 @@ input[type="button"], select {
 
 /* ── 6. LINKS ──────────────────────────────────────── */
 a {
-  color: #0066cc;
+  color: var(--ux-primary);
   text-underline-offset: 0.2em;
   text-decoration-thickness: 0.08em;
-  transition: color 0.15s ease;
+  transition: color var(--ux-transition-fast);
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
 }
-a:hover { color: #004499; }
-a:active { color: #002266; }
+a:hover { color: var(--ux-primary-dark); }
+a:active { color: var(--ux-primary-dark); }
 
 /* ── 7. IMAGES — CLS PREVENTION ────────────────────── */
 img, video, iframe, embed { max-width: 100%; height: auto; display: block; }
 img:not([width]):not([height]) { aspect-ratio: 16/9; }
 img[loading="lazy"] { opacity: 0; transition: opacity 0.3s ease; }
+img[loading="lazy"].loaded { opacity: 1; }
 
 /* ── 8. FORM ELEMENTS ───────────────────────────────── */
 input, textarea, select {
-  font-size: 1rem;
+  font-size: 1rem; /* prevents iOS zoom */
   padding: 0.625rem 0.75rem;
-  border: 1.5px solid #d0d0d0;
-  border-radius: 0.5rem;
+  border: 1.5px solid var(--ux-border);
+  border-radius: var(--ux-radius-md);
   width: 100%;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  transition: border-color var(--ux-transition-fast), box-shadow var(--ux-transition-fast);
   font-family: inherit;
+  background: var(--ux-surface);
+  color: var(--ux-text);
 }
 input:focus, textarea:focus, select:focus {
-  border-color: #0066cc;
+  border-color: var(--ux-primary);
   box-shadow: 0 0 0 3px rgba(0,102,204,0.15);
   outline: none;
 }
 label { display: block; margin-bottom: 0.375rem; font-weight: 600; font-size: 0.9375rem; }
 
+/* R16: Auto-growing textareas (progressive) */
+@supports (field-sizing: content) {
+  textarea[data-auto-grow], textarea.ux-auto-grow {
+    field-sizing: content;
+    min-height: 5em;
+  }
+}
+
 /* ── 9. SPACING ─────────────────────────────────────── */
 section, .section { padding: clamp(2rem, 5vw, 4rem) 1.25rem; }
 p { margin-bottom: 1.25em; }
 
-/* ── 10. MOBILE BREAKPOINTS ────────────────────────── */
+/* ── 10. TABLES — MOBILE SCROLLABLE ────────────────── */
+table { border-collapse: collapse; max-width: 100%; }
+@media (max-width: 640px) {
+  table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+}
+th, td { text-align: left; padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--ux-border); }
+
+/* ════════════════════════════════════════════════════════
+   PREMIUM PATTERNS — R15/R16 ADDITIONS
+   ════════════════════════════════════════════════════════ */
+
+/* ── 11. SKIP-TO-CONTENT ───────────────────────────── */
+.skip-to-content {
+  position: absolute;
+  top: -100%;
+  left: 16px;
+  z-index: 10000;
+  padding: 0.75rem 1.25rem;
+  background: var(--ux-primary);
+  color: #fff;
+  border-radius: var(--ux-radius-md);
+  font-weight: 600;
+  font-size: 0.9375rem;
+  text-decoration: none;
+  transition: top var(--ux-transition-fast);
+}
+.skip-to-content:focus {
+  top: 16px;
+}
+
+/* ── 12. READING PROGRESS BAR ──────────────────────── */
+#ux-reading-progress {
+  position: fixed;
+  top: 0; left: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--ux-primary), var(--ux-accent));
+  z-index: 10001;
+  width: 0%;
+  transition: width 100ms linear;
+}
+
+/* ── 13. BACK-TO-TOP BUTTON ────────────────────────── */
+#ux-back-to-top {
+  position: fixed;
+  bottom: calc(24px + var(--ux-safe-bottom));
+  right: calc(24px + var(--ux-safe-right));
+  z-index: 9999;
+  width: 48px; height: 48px;
+  border-radius: 50%;
+  background: var(--ux-primary);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--ux-shadow-lg);
+  opacity: 0;
+  transform: translateY(20px);
+  pointer-events: none;
+  transition: opacity var(--ux-transition-base), transform var(--ux-transition-base);
+  font-size: 1.25rem;
+  min-width: unset;
+  min-height: unset;
+  padding: 0;
+}
+#ux-back-to-top.visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+#ux-back-to-top:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--ux-shadow-xl);
+  background: var(--ux-primary-light);
+}
+
+/* R16: Lift back-to-top when sticky CTA present */
+body.ux-has-sticky-cta #ux-back-to-top {
+  bottom: calc(76px + var(--ux-safe-bottom));
+}
+
+/* ── 14. GLASSMORPHISM CARDS ───────────────────────── */
+.glass-card {
+  background: rgba(255,255,255,0.6);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255,255,255,0.3);
+  border-radius: var(--ux-radius-xl);
+  box-shadow: var(--ux-shadow-md);
+  transition: all var(--ux-transition-base);
+}
+.glass-card:hover {
+  box-shadow: var(--ux-shadow-xl), var(--ux-shadow-glow);
+  border-color: rgba(0,102,204,0.2);
+}
+
+/* ── 15. GRADIENT TEXT ─────────────────────────────── */
+.gradient-text {
+  background: linear-gradient(135deg, var(--ux-primary), var(--ux-accent));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent; /* fallback */
+}
+
+/* ── 16. GRADIENT ORBS (DECORATIVE) ────────────────── */
+.gradient-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.15;
+  pointer-events: none;
+  z-index: 0;
+}
+.gradient-orb--primary {
+  background: var(--ux-primary);
+}
+.gradient-orb--accent {
+  background: var(--ux-accent);
+}
+
+/* ── 17. ANIMATED CARD HOVER ───────────────────────── */
+.card-hover {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--ux-radius-xl);
+  background: var(--ux-surface);
+  border: 1px solid var(--ux-border);
+  transition: all var(--ux-transition-base);
+}
+.card-hover::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(0,102,204,0.05), transparent);
+  opacity: 0;
+  transition: opacity var(--ux-transition-base);
+  z-index: 0;
+}
+.card-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--ux-shadow-lg);
+  border-color: var(--ux-primary);
+}
+.card-hover:hover::before {
+  opacity: 1;
+}
+.card-hover > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* R16: Touch devices use active state instead of hover */
+@media (hover: none) {
+  .card-hover:active {
+    transform: translateY(-1px) scale(0.99);
+    box-shadow: var(--ux-shadow-md);
+  }
+}
+
+/* ── 18. GRADIENT CTA SECTION ──────────────────────── */
+.cta-gradient {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--ux-radius-2xl);
+  background: linear-gradient(135deg, var(--ux-primary), var(--ux-accent));
+  color: var(--ux-text-inverse);
+  padding: clamp(2rem, 5vw, 4rem);
+  text-align: center;
+}
+.cta-gradient::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -20%;
+  width: 400px;
+  height: 400px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.08);
+  filter: blur(60px);
+  pointer-events: none;
+}
+.cta-gradient > * {
+  position: relative;
+}
+
+/* ── 19. STAGGERED FADE-IN (CSS-only) ──────────────── */
+@keyframes uxFadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.animate-stagger > * {
+  opacity: 0;
+  animation: uxFadeInUp 0.6s var(--ux-ease-out) forwards;
+}
+.animate-stagger > *:nth-child(1) { animation-delay: 0.05s; }
+.animate-stagger > *:nth-child(2) { animation-delay: 0.1s; }
+.animate-stagger > *:nth-child(3) { animation-delay: 0.15s; }
+.animate-stagger > *:nth-child(4) { animation-delay: 0.2s; }
+.animate-stagger > *:nth-child(5) { animation-delay: 0.25s; }
+.animate-stagger > *:nth-child(6) { animation-delay: 0.3s; }
+.animate-stagger > *:nth-child(7) { animation-delay: 0.35s; }
+.animate-stagger > *:nth-child(8) { animation-delay: 0.4s; }
+
+/* R16: Scroll-driven reveal (progressive — no JS needed) */
+@supports (animation-timeline: view()) {
+  .ux-reveal {
+    animation: uxFadeInUp 0.7s var(--ux-ease-out) both;
+    animation-timeline: view();
+    animation-range: entry 5% cover 30%;
+  }
+}
+
+/* ── 20. SKELETON LOADING ──────────────────────────── */
+@keyframes uxShimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+.skeleton {
+  background: linear-gradient(90deg, var(--ux-border) 25%, #e8ecf1 50%, var(--ux-border) 75%);
+  background-size: 200% 100%;
+  animation: uxShimmer 1.5s infinite;
+  border-radius: var(--ux-radius-md);
+  color: transparent !important;
+  user-select: none;
+  pointer-events: none;
+}
+.skeleton-text { height: 1em; margin-bottom: 0.5em; }
+.skeleton-heading { height: 2em; width: 60%; margin-bottom: 1em; }
+.skeleton-button { height: 44px; width: 160px; border-radius: var(--ux-radius-md); }
+.skeleton-avatar { width: 48px; height: 48px; border-radius: 50%; }
+.skeleton-card { height: 200px; border-radius: var(--ux-radius-xl); }
+
+/* ── 21. PULSE DOT (LIVE INDICATOR) ────────────────── */
+@keyframes uxPulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(1.1); }
+}
+.pulse-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--ux-success);
+  display: inline-block;
+  animation: uxPulse 2s ease-in-out infinite;
+}
+
+/* ── 22. BADGE PILLS ────────────────────────────────── */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: var(--ux-radius-full);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+.badge--primary {
+  background: rgba(0,102,204,0.1);
+  color: var(--ux-primary);
+  border: 1px solid rgba(0,102,204,0.2);
+}
+.badge--success {
+  background: rgba(16,185,129,0.1);
+  color: var(--ux-success);
+  border: 1px solid rgba(16,185,129,0.2);
+}
+.badge--warning {
+  background: rgba(245,158,11,0.1);
+  color: var(--ux-warning);
+  border: 1px solid rgba(245,158,11,0.2);
+}
+.badge--danger {
+  background: rgba(239,68,68,0.1);
+  color: var(--ux-danger);
+  border: 1px solid rgba(239,68,68,0.2);
+}
+
+/* ── 23. SCROLLBAR HIDE (FOR PILL ROWS) ────────────── */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* R16: Horizontally scrollable pill/tile row (snap) */
+.ux-scroll-row {
+  display: flex;
+  gap: 0.75rem;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  padding-bottom: 0.5rem;
+}
+.ux-scroll-row::-webkit-scrollbar { display: none; }
+.ux-scroll-row > * {
+  scroll-snap-align: start;
+  flex: 0 0 auto;
+}
+
+/* ── 24. SMOOTH ACCORDION (CSS GRID TRICK) ─────────── */
+.accordion-content {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows var(--ux-transition-base);
+  overflow: hidden;
+}
+.accordion-content.open {
+  grid-template-rows: 1fr;
+}
+.accordion-inner {
+  min-height: 0;
+}
+
+/* ── 25. DIVIDER ────────────────────────────────────── */
+.ux-divider {
+  border: none;
+  border-top: 1px solid var(--ux-border);
+  margin: clamp(1.5rem, 3vw, 3rem) 0;
+}
+
+/* ════════════════════════════════════════════════════════
+   R16 NEW — MOBILE-NATIVE COMPONENTS
+   ════════════════════════════════════════════════════════ */
+
+/* ── 26. MOBILE BOTTOM NAV BAR ─────────────────────── */
+.ux-mobile-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 9998;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 0.5rem calc(0.5rem + var(--ux-safe-left)) calc(0.5rem + var(--ux-safe-bottom)) calc(0.5rem + var(--ux-safe-right));
+  background: rgba(255,255,255,0.92);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-top: 1px solid var(--ux-border);
+  box-shadow: 0 -4px 20px rgba(0,0,0,0.06);
+  transform: translateY(100%);
+  transition: transform var(--ux-transition-base);
+}
+.ux-mobile-nav.visible {
+  transform: translateY(0);
+}
+.ux-mobile-nav a,
+.ux-mobile-nav button {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+  padding: 0.4rem 0.25rem;
+  min-height: unset;
+  min-width: unset;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: var(--ux-text-muted);
+  text-decoration: none;
+  background: none;
+  border: none;
+  border-radius: var(--ux-radius-md);
+  transition: color var(--ux-transition-fast);
+}
+.ux-mobile-nav a:active,
+.ux-mobile-nav button:active {
+  transform: scale(0.92);
+}
+.ux-mobile-nav a.active,
+.ux-mobile-nav button.active,
+.ux-mobile-nav a[aria-current="page"] {
+  color: var(--ux-primary);
+}
+.ux-mobile-nav .ux-nav-icon {
+  font-size: 1.35rem;
+  line-height: 1;
+}
+
+/* Hide on desktop */
+@media (min-width: 769px) {
+  .ux-mobile-nav { display: none; }
+}
+
+/* Add bottom padding to body when nav visible so content isn't hidden */
+body.ux-has-mobile-nav main,
+body.ux-has-mobile-nav .main,
+body.ux-has-mobile-nav #main,
+body.ux-has-mobile-nav footer {
+  padding-bottom: calc(70px + var(--ux-safe-bottom));
+}
+
+/* ── 27. STICKY MOBILE CTA BAR ─────────────────────── */
+.ux-sticky-cta {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 9997;
+  display: flex;
+  gap: 0.625rem;
+  padding: 0.625rem calc(1rem + var(--ux-safe-left)) calc(0.625rem + var(--ux-safe-bottom)) calc(1rem + var(--ux-safe-right));
+  background: rgba(255,255,255,0.95);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-top: 1px solid var(--ux-border);
+  box-shadow: 0 -4px 16px rgba(0,0,0,0.08);
+  transform: translateY(100%);
+  transition: transform var(--ux-transition-base);
+}
+.ux-sticky-cta.visible {
+  transform: translateY(0);
+}
+.ux-sticky-cta > a,
+.ux-sticky-cta > button,
+.ux-sticky-cta > .btn {
+  flex: 1;
+  margin: 0;
+}
+.ux-sticky-cta .ux-sticky-cta__primary {
+  background: linear-gradient(135deg, var(--ux-primary), var(--ux-accent));
+  color: #fff;
+  border: none;
+  font-weight: 700;
+}
+.ux-sticky-cta .ux-sticky-cta__secondary {
+  background: var(--ux-bg-alt);
+  color: var(--ux-text);
+  border: 1px solid var(--ux-border);
+  flex: 0 0 auto;
+  min-width: auto;
+}
+
+@media (min-width: 769px) {
+  .ux-sticky-cta { display: none; }
+}
+
+body.ux-has-sticky-cta main,
+body.ux-has-sticky-cta .main,
+body.ux-has-sticky-cta #main {
+  padding-bottom: calc(76px + var(--ux-safe-bottom));
+}
+
+/* If both mobile-nav and sticky-cta, stack: nav above cta */
+body.ux-has-mobile-nav.ux-has-sticky-cta .ux-sticky-cta {
+  bottom: calc(62px + var(--ux-safe-bottom));
+}
+body.ux-has-mobile-nav.ux-has-sticky-cta #ux-back-to-top {
+  bottom: calc(138px + var(--ux-safe-bottom));
+}
+
+/* ── 28. BOTTOM SHEET (mobile-native modal) ────────── */
+.ux-bottom-sheet-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10002;
+  background: rgba(0,0,0,0.5);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity var(--ux-transition-base), visibility var(--ux-transition-base);
+}
+.ux-bottom-sheet-overlay.open {
+  opacity: 1;
+  visibility: visible;
+}
+.ux-bottom-sheet {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 10003;
+  max-height: 85vh;
+  max-height: 85dvh;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  background: var(--ux-surface);
+  border-radius: var(--ux-radius-2xl) var(--ux-radius-2xl) 0 0;
+  padding: 0.5rem 1.25rem calc(1.5rem + var(--ux-safe-bottom));
+  box-shadow: 0 -10px 40px rgba(0,0,0,0.2);
+  transform: translateY(100%);
+  transition: transform var(--ux-transition-slow) var(--ux-ease-out);
+  visibility: hidden;
+}
+.ux-bottom-sheet.open {
+  transform: translateY(0);
+  visibility: visible;
+}
+.ux-bottom-sheet__handle {
+  width: 40px;
+  height: 4px;
+  background: var(--ux-border);
+  border-radius: 2px;
+  margin: 0.5rem auto 1rem;
+  cursor: pointer;
+}
+body.ux-sheet-open {
+  overflow: hidden;
+}
+
+/* ── 29. TOAST NOTIFICATIONS ───────────────────────── */
+.ux-toast-container {
+  position: fixed;
+  top: calc(16px + var(--ux-safe-top));
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10004;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: calc(100% - 32px);
+  max-width: 420px;
+  pointer-events: none;
+}
+.ux-toast {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  padding: 0.875rem 1rem;
+  background: var(--ux-surface);
+  border: 1px solid var(--ux-border);
+  border-left: 4px solid var(--ux-primary);
+  border-radius: var(--ux-radius-lg);
+  box-shadow: var(--ux-shadow-lg);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  pointer-events: auto;
+  opacity: 0;
+  transform: translateY(-12px);
+  animation: uxToastIn 0.3s var(--ux-ease-out) forwards;
+}
+.ux-toast.removing {
+  animation: uxToastOut 0.25s ease forwards;
+}
+.ux-toast--success { border-left-color: var(--ux-success); }
+.ux-toast--warning { border-left-color: var(--ux-warning); }
+.ux-toast--danger { border-left-color: var(--ux-danger); }
+.ux-toast__icon { font-size: 1.25rem; line-height: 1; }
+.ux-toast__close {
+  margin-left: auto;
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  color: var(--ux-text-muted);
+  cursor: pointer;
+  padding: 0 0.25rem;
+  min-height: unset;
+  min-width: unset;
+}
+@keyframes uxToastIn {
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes uxToastOut {
+  to { opacity: 0; transform: translateY(-12px); }
+}
+
+/* ── 30. CONTAINER QUERY UTILITY ───────────────────── */
+@supports (container-type: inline-size) {
+  .ux-container {
+    container-type: inline-size;
+    container-name: ux;
+  }
+}
+
+/* ── 31. VIEW TRANSITIONS API (opt-in) ─────────────── */
+@supports (view-transition-name: none) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: 0.25s;
+  }
+}
+
+/* ════════════════════════════════════════════════════════
+   RESPONSIVE BREAKPOINTS
+   ════════════════════════════════════════════════════════ */
+
+/* ── 32. MOBILE (< 768px) ──────────────────────────── */
 @media (max-width: 768px) {
   nav a, nav button { padding: 0.75rem 1rem; font-size: 1.0625rem; }
   body { font-size: 1rem; line-height: 1.6; }
   h1 { font-size: clamp(1.5rem, 6vw, 2.5rem); }
   h2 { font-size: clamp(1.25rem, 5vw, 1.75rem); }
   section, .section { padding: 1.5rem 1rem; }
+  .cta-gradient { border-radius: var(--ux-radius-xl); }
 }
 
-/* ── 11. DARK MODE ──────────────────────────────────── */
+/* ── 33. TABLET+ (≥768px) ──────────────────────────── */
+@media (min-width: 768px) {
+  h1 { font-size: clamp(2rem, 4vw, 3.5rem); }
+  h2 { font-size: clamp(1.5rem, 3vw, 2.5rem); }
+}
+
+/* ════════════════════════════════════════════════════════
+   ACCESSIBILITY & PREFERENCES
+   ════════════════════════════════════════════════════════ */
+
+/* ── 34. DARK MODE ──────────────────────────────────── */
 @media (prefers-color-scheme: dark) {
-  body { background-color: #0d1117; color: #e6edf3; }
+  :root {
+    --ux-bg: #0d1117;
+    --ux-bg-alt: #161b22;
+    --ux-surface: #161b22;
+    --ux-border: #30363d;
+    --ux-text: #e6edf3;
+    --ux-text-muted: #8b949e;
+    --ux-shadow-sm: 0 1px 2px rgba(0,0,0,0.3);
+    --ux-shadow-md: 0 4px 6px rgba(0,0,0,0.4);
+    --ux-shadow-lg: 0 10px 25px rgba(0,0,0,0.5);
+    --ux-shadow-xl: 0 20px 50px rgba(0,0,0,0.6);
+  }
+  body { background-color: var(--ux-bg); color: var(--ux-text); }
   a { color: #58a6ff; }
   a:hover { color: #79c0ff; }
-  input, textarea, select { background: #161b22; border-color: #30363d; color: #e6edf3; }
+  input, textarea, select { background: var(--ux-surface); border-color: var(--ux-border); color: var(--ux-text); }
   input:focus, textarea:focus, select:focus { border-color: #58a6ff; box-shadow: 0 0 0 3px rgba(88,166,255,0.15); }
+  .glass-card {
+    background: rgba(22,27,34,0.6);
+    border-color: rgba(48,54,61,0.5);
+  }
+  .skeleton {
+    background: linear-gradient(90deg, var(--ux-border) 25%, #21262d 50%, var(--ux-border) 75%);
+    background-size: 200% 100%;
+  }
+  .ux-mobile-nav,
+  .ux-sticky-cta {
+    background: rgba(22,27,34,0.92);
+  }
+  ::selection {
+    background: rgba(88,166,255,0.3);
+  }
 }
 
-/* ── 12. REDUCED MOTION ─────────────────────────────── */
+/* ── 35. REDUCED MOTION ─────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .ux-mobile-nav, .ux-sticky-cta, .ux-bottom-sheet {
+    transition: none !important;
+  }
 }
 
-/* ── 13. PRINT ──────────────────────────────────────── */
+/* ── 36. HIGH CONTRAST ──────────────────────────────── */
+@media (prefers-contrast: more) {
+  :root {
+    --ux-border: currentColor;
+  }
+  a { text-decoration: underline !important; }
+  button, .btn, [role="button"] {
+    border: 2px solid currentColor !important;
+  }
+  .glass-card { background: var(--ux-surface) !important; backdrop-filter: none !important; }
+}
+
+/* ── 37. PRINT ──────────────────────────────────────── */
 @media print {
-  body { font-size: 12pt; line-height: 1.5; color: #000; }
-  nav, .no-print { display: none !important; }
+  body { font-size: 12pt; line-height: 1.5; color: #000; background: #fff; }
+  nav, .no-print, #ux-reading-progress, #ux-back-to-top,
+  .ux-mobile-nav, .ux-sticky-cta, .ux-toast-container { display: none !important; }
   a { color: #000; text-decoration: underline; }
+  .glass-card, .card-hover, .cta-gradient {
+    box-shadow: none !important;
+    border: 1px solid #ccc !important;
+    background: #fff !important;
+    color: #000 !important;
+  }
 }
