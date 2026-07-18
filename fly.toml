@@ -22,7 +22,7 @@ primary_region = "fra"
 [http_service]
   internal_port = 8000
   force_https = true
-  auto_stop_machines = true      # scale to zero when idle (saves money)
+  auto_stop_machines = "suspend" # suspend (RAM snapshot, ~1s wake) — plain `true` = full stop with >15s cold starts that time out first requests
   auto_start_machines = true
   min_machines_running = 0
 

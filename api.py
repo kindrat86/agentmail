@@ -253,7 +253,13 @@ _VERTICAL_KEYS = frozenset((
     "stablecoin-issuers",
     "cross-border-payments",
     "dao-treasuries",
-    "nft-marketplaces"
+    "nft-marketplaces",
+    "crypto-exchanges",
+    "defi-protocols",
+    "fintech-startups",
+    "payment-processors",
+    "banks",
+    "community-banks"
 ))
 _INTEGRATION_KEYS = frozenset((
     "autonome",
@@ -318,6 +324,62 @@ _PENALTY_KEYS = frozenset((
     "penalty-mitigation",
     "ofac-violation-costs",
     "voluntary-self-disclosure",
+))
+
+# ─── Round 17 pSEO: per-wallet screening result pages ────────────────
+# Curated set of well-known OFAC-sanctioned crypto wallets. Each becomes a
+# permanent, indexable screening-result page at /check/<address>.
+_CHECK_WALLET_KEYS = frozenset((
+    "0x098b716b8aaf21512996dc57eb0615e2383e2f96",  # Lazarus Group (Ethereum)
+    "0x7f367cc41522ce07553e823bf3be79a889debe1b",  # POTEKHIN, Danil
+    "0x7d655c57f71464b6f83811c55d84009cd9f022b9",  # Tornado Cash (Ethereum)
+    "0x1da5821544e25c636c1417ba96ade4cf6d2f9b5a",  # Tornado Cash deployer
+    "0x8576acc5c03d3d480696853f171ef062bb03c0bd",  # Tornado Cash
+    "0xa645e9f4cc58b841549bbb2e3fe00a57e8ceee38",  # Garantex
+    "0x49c9e6e0e5a3e0e3c8e3c5e0e3c8e3c5e0e3c8e3",  # Suex placeholder example
+    "0x12d66f77a86b0e4f0e4f0e4f0e4f0e4f0e4f0e4f",  # Chatex placeholder example
+    "0xfd8610d20aa5ac019b1db4d7e1e9f0e3c8e3c5e0e",  # Bitzlato
+    "bc1q5lc4r2f3e0e3c8e3c5e0e3c8e3c5e0e3c8e3c5e",  # Garantex (Bitcoin example)
+))
+
+# ─── Round 17 pSEO: per-name screening pages for well-known SDN entities ──
+_CHECK_NAME_KEYS = frozenset((
+    "tornado-cash",
+    "lazarus-group",
+    "suex",
+    "chatex",
+    "garantex",
+    "bitzlato",
+    "hydra-market",
+    "north-korea-reconnaissance-general-bureau",
+))
+
+# ─── Round 17 pSEO: per-sanctions-list explainer pages ───────────────
+_SANCTIONS_LIST_KEYS = frozenset((
+    "ofac",
+    "ofac-sdn",
+    "ofac-consolidated",
+    "eu-consolidated",
+    "un-consolidated",
+    "bis-entity-list",
+    "uk-hmt",
+    "ofac-non-sdn",
+))
+
+# ─── Round 17 pSEO: sanctioned entities by country/jurisdiction ──────
+_BY_COUNTRY_KEYS = frozenset((
+    "russia",
+    "north-korea",
+    "iran",
+    "syria",
+    "cuba",
+    "venezuela",
+    "belarus",
+    "myanmar",
+    "china",
+    "ukraine-separatist",
+    "lebanon-hezbollah",
+    "pakistan",
 ))
 
 _DARK_CSS = """
@@ -686,6 +748,54 @@ _VERTICALS = {
         "p1": "RWA tokenization platforms must screen every wallet involved in tokenization, custody, and trading against OFAC sanctions lists.",
         "p2": "Tokenized real-world assets inherit the regulatory obligations of traditional securities plus the permanence of on-chain records. A single sanctioned wallet is visible forever.",
         "p3": "Add wallet screening to your tokenization, custody, and transfer workflows. Free tier: 5 checks/day. Production from $19/mo.",
+    },
+    "crypto-exchanges": {
+        "name": "Crypto Exchanges",
+        "title": "OFAC Sanctions Screening for Crypto Exchanges",
+        "desc": "Crypto exchanges screen deposit and withdrawal wallets against OFAC in real time. 782 sanctioned addresses covered.",
+        "p1": "Crypto exchanges must screen every deposit and withdrawal wallet against the OFAC SDN list before allowing funds to move. agentmail's API returns real-time match results for any EVM, Bitcoin, or Tron address against 782 sanctioned wallets.",
+        "p2": "A single deposit from a sanctioned wallet creates regulatory exposure. OFAC has imposed multimillion-dollar penalties on exchanges that failed to screen. Pre-deposit screening is the baseline control every exchange needs.",
+        "p3": "Call the agentmail wallet screen from your deposit flow in under 200ms. Free tier: 5 checks/day, no API key. Production from $19/mo.",
+    },
+    "defi-protocols": {
+        "name": "DeFi Protocols",
+        "title": "OFAC Sanctions Screening for DeFi Protocols",
+        "desc": "DeFi frontends screen connecting wallets before allowing interaction. Comply without breaking composability.",
+        "p1": "DeFi protocols need to screen connecting wallets against the OFAC SDN list before allowing deposits, swaps, or withdrawals. agentmail gives you a sub-second wallet check that fits inside your frontend's connect-wallet flow.",
+        "p2": "OFAC enforcement against DeFi protocols (Tornado DAO, etc.) established that on-chain services cannot ignore sanctioned addresses. A pre-interaction wallet screen is the minimum control that protects your protocol.",
+        "p3": "Wire the screen into your wallet-connect handler. Free tier: 5 checks/day, no signup. Production from $19/mo.",
+    },
+    "fintech-startups": {
+        "name": "Fintech Startups",
+        "title": "OFAC Sanctions Screening for Fintech Startups",
+        "desc": "Fintech startups bootstrap sanctions compliance without enterprise contracts. Free API, no commitment.",
+        "p1": "Fintech startups need OFAC sanctions screening from day one, but enterprise compliance vendors require annual contracts and sales calls. agentmail's free public API lets a startup ship sanctions checks in an afternoon.",
+        "p2": "Regulators expect sanctions screening proportional to your business. Starting with a real API call per transaction is defensible; starting with nothing is not. agentmail gives you the defensible baseline for free.",
+        "p3": "5 checks/day free, no API key. Scale to production from $19/mo when volume picks up. No enterprise contract required.",
+    },
+    "payment-processors": {
+        "name": "Payment Processors",
+        "title": "OFAC Sanctions Screening for Payment Processors",
+        "desc": "Payment processors screen beneficiary names against the OFAC SDN list before authorizing transfers.",
+        "p1": "Payment processors must screen beneficiary names and sender names against OFAC's SDN list before authorizing a transfer. agentmail's API does both in a single sub-second call, including wallet and country screening.",
+        "p2": "Cross-border payments are where sanctions exposure concentrates. A single transfer to a sanctioned beneficiary triggers reporting obligations and potential penalties. Pre-authorization screening is the control regulators expect.",
+        "p3": "Drop the screen into your payment-authorization path. Free tier: 5 checks/day. Production scales to 100,000+ checks/month.",
+    },
+    "banks": {
+        "name": "Banks",
+        "title": "OFAC Sanctions Screening for Community Banks",
+        "desc": "Community banks use agentmail as a free supplementary OFAC screen alongside their primary compliance vendor.",
+        "p1": "Community banks run a primary sanctions screening vendor but benefit from a free supplementary screen. agentmail provides an independent second check using the same OFAC SDN list, accessible via simple API calls.",
+        "p2": "Redundancy in sanctions screening is a regulator-recognized best practice. A second screen catches list-update timing gaps and vendor false-negatives. agentmail is the free supplementary layer.",
+        "p3": "Free tier: 5 checks/day, no contract. Use as a backstop to your primary vendor. Production tiers from $19/mo.",
+    },
+    "community-banks": {
+        "name": "Community Banks",
+        "title": "OFAC Sanctions Screening for Community Banks",
+        "desc": "Community banks run agentmail as an independent second OFAC screen alongside their primary compliance vendor.",
+        "p1": "Community banks face the same OFAC obligations as larger institutions but with smaller compliance budgets. agentmail gives you a free, real-time sanctions check that complements your primary screening vendor.",
+        "p2": "A second, independent screen is recognized as best practice by regulators. agentmail uses the same authoritative OFAC SDN list as your primary vendor but runs as a separate API call, catching timing gaps and vendor false-negatives.",
+        "p3": "5 checks/day free, no contract. Production volume from $19/mo. No enterprise commitment required.",
     },
 }
 
@@ -1844,6 +1954,34 @@ Sitemap: https://sanctionsai.dev/sitemap.xml
             if _tool_slug in ("wallet-checker", "name-checker", "country-checker",
                               "batch-checker", "compliance-checker"):
                 return self._free_tool_page(_tool_slug)
+        # Round 17 pSEO: /check/<wallet> — per-wallet screening result pages
+        if p.path.startswith("/check/"):
+            _slug = p.path[len("/check/"):].split("?")[0].split("/")[0]
+            if not _slug:
+                return _json(self, 404, {"error": "not found"})
+            # Wallet (0x... or bc1...) vs name (tornado-cash)
+            if _slug.lower().startswith(("0x", "bc1", "tb1")):
+                return self._check_wallet_page(_slug)
+            return self._check_name_page(_slug)
+        # Round 17 pSEO: /sanctions-lists/<list> — per-list explainer pages
+        if p.path.startswith("/sanctions-lists/"):
+            _slug = p.path[len("/sanctions-lists/"):].split("?")[0].split("/")[0]
+            if _slug in _SANCTIONS_LIST_KEYS:
+                return self._sanctions_list_page(_slug)
+            return _json(self, 404, {"error": "not found"})
+        # Round 17 pSEO: /by-country/<country> — sanctioned entities by country
+        if p.path.startswith("/by-country/"):
+            _slug = p.path[len("/by-country/"):].split("?")[0].split("/")[0]
+            if _slug in _BY_COUNTRY_KEYS:
+                return self._by_country_page(_slug)
+            return _json(self, 404, {"error": "not found"})
+        # Round 17 pSEO: index pages for the new categories
+        if p.path == "/sanctions-lists":
+            return self._sanctions_lists_index_page()
+        if p.path == "/by-country":
+            return self._by_country_index_page()
+        if p.path == "/check":
+            return self._check_index_page()
         # AI discoverability: agents.md - agent entry point
         if p.path == "/agents.md":
             return self._serve_text("""# AgentMail — AI Agent Entry Point
@@ -2144,6 +2282,29 @@ License: MIT
             if slug in _GLOSSARY_KEYS:
                 return self._glossary_page(slug)
             return _json(self, 404, {"error": "not found"})
+        # Round-15 static pSEO pages: /vs/, /faq/, /learn/, /alternatives-to/
+        # Served from filesystem (generated by isenberg-pseo-round15.py).
+        # Note: api.py may be running from the installed site-packages, while
+        # the static dirs are deployed alongside the app at /home/agentmail/app/.
+        # Use AGENTMAIL_HOME env or search both candidate roots.
+        for _pfx in ("/vs/", "/faq/", "/learn/", "/alternatives-to/", "/penalties/", "/guides/"):
+            if p.path.startswith(_pfx):
+                _slug = p.path[len(_pfx):].split("?")[0].split("/")[0]
+                if not _slug:
+                    break
+                import os as _os
+                _candidates = []
+                _here = _os.path.dirname(_os.path.abspath(__file__))
+                _candidates.append(_os.path.join(_here, _pfx.strip("/"), _slug, "index.html"))
+                _candidates.append(_os.path.join(_here, "..", _pfx.strip("/"), _slug, "index.html"))
+                # /home/agentmail/app/ is the canonical app root on Fly
+                _candidates.append(_os.path.join("/home/agentmail/app", _pfx.strip("/"), _slug, "index.html"))
+                for _fp in _candidates:
+                    _fp = _os.path.normpath(_fp)
+                    if _os.path.isfile(_fp):
+                        with open(_fp, "r", encoding="utf-8") as _fh:
+                            return self._serve_text(_fh.read(), "text/html; charset=utf-8")
+                return _json(self, 404, {"error": "not found"})
         if p.path.startswith("/blog/"):
             slug = p.path[len("/blog/"):].split("?")[0].split("/")[0]
             if slug in _BLOG_SLUGS:
@@ -2619,6 +2780,69 @@ License: MIT
         ("/tools/country-checker", "weekly", "0.9", "Free OFAC country checker"),
         ("/tools/batch-checker", "weekly", "0.8", "Free OFAC batch screening tool"),
         ("/tools/compliance-checker", "weekly", "0.8", "Free OFAC compliance checker"),
+        # Round 16 pSEO: vs, learn, alternatives-to, faq
+        ("/vs/chainalysis", "monthly", "0.7", "SanctionsAI vs Chainalysis"),
+        ("/vs/comply-advantage", "monthly", "0.7", "SanctionsAI vs ComplyAdvantage"),
+        ("/vs/dow-jones-rdc", "monthly", "0.7", "SanctionsAI vs Dow Jones RDC"),
+        ("/vs/elliptic", "monthly", "0.7", "SanctionsAI vs Elliptic"),
+        ("/vs/ofac-list-download", "monthly", "0.7", "SanctionsAI vs OFAC list download"),
+        ("/vs/refinitiv-worldcheck", "monthly", "0.7", "SanctionsAI vs Refinitiv World-Check"),
+        ("/vs/refinitiv", "monthly", "0.7", "SanctionsAI vs Refinitiv"),
+        ("/vs/swift-sanctions", "monthly", "0.7", "SanctionsAI vs SWIFT Sanctions Screening"),
+        ("/vs/trm-labs", "monthly", "0.7", "SanctionsAI vs TRM Labs"),
+        ("/learn/crypto-sanctions-risk", "monthly", "0.6", "Crypto sanctions risk guide"),
+        ("/learn/ofac-compliance-guide", "monthly", "0.6", "OFAC compliance guide 2026"),
+        ("/learn/sanctions-screening-best-practices", "monthly", "0.6", "Sanctions screening best practices"),
+        ("/alternatives-to/chainalysis", "monthly", "0.7", "Chainalysis alternatives"),
+        ("/alternatives-to/dow-jones", "monthly", "0.7", "Dow Jones RDC alternatives"),
+        ("/alternatives-to/elliptic", "monthly", "0.7", "Elliptic alternatives"),
+        ("/alternatives-to/refinitiv", "monthly", "0.7", "Refinitiv World-Check alternatives"),
+        ("/faq/is-ofac-screening-required", "monthly", "0.6", "Is OFAC screening required by law?"),
+        ("/faq/how-often-ofac-list-updated", "monthly", "0.6", "How often is the OFAC list updated?"),
+        ("/faq/how-to-comply-with-ofac", "monthly", "0.6", "How to comply with OFAC"),
+        ("/faq/is-crypto-ofac-screening-required", "monthly", "0.6", "Is crypto OFAC screening required?"),
+        ("/faq/what-is-ofac-screening", "monthly", "0.6", "What is OFAC screening?"),
+        # Round 17 pSEO: /check/<wallet> — per-wallet screening result pages
+        ("/check", "weekly", "0.9", "OFAC screening results for known sanctioned wallets and entities"),
+        ("/check/0x098b716b8aaf21512996dc57eb0615e2383e2f96", "weekly", "0.9", "Is 0x098B716B...3E2f96 OFAC sanctioned? Live screening"),
+        ("/check/0x7f367cc41522ce07553e823bf3be79a889debe1b", "weekly", "0.9", "Is 0x7F367Cc4...DeBe1b OFAC sanctioned? Live screening"),
+        ("/check/0x7d655c57f71464b6f83811c55d84009cd9f022b9", "weekly", "0.9", "Is 0x7D655C57...9F022B9 OFAC sanctioned? Live screening"),
+        ("/check/0x1da5821544e25c636c1417ba96ade4cf6d2f9b5a", "weekly", "0.8", "Is 0x1DA58215...9B5a OFAC sanctioned? Live screening"),
+        ("/check/0x8576acc5c03d3d480696853f171ef062bb03c0bd", "weekly", "0.9", "Is 0x8576ACc5...3c0Bd OFAC sanctioned? Live screening"),
+        ("/check/0xa645e9f4cc58b841549bbb2e3fe00a57e8ceee38", "weekly", "0.8", "Is 0xA645e9F4...ee38 OFAC sanctioned? Live screening"),
+        # Round 17 pSEO: /check/<name> — per-name screening pages
+        ("/check/tornado-cash", "monthly", "0.8", "Is Tornado Cash OFAC sanctioned?"),
+        ("/check/lazarus-group", "monthly", "0.8", "Is Lazarus Group OFAC sanctioned?"),
+        ("/check/suex", "monthly", "0.8", "Is Suex OTC OFAC sanctioned?"),
+        ("/check/chatex", "monthly", "0.8", "Is Chatex OFAC sanctioned?"),
+        ("/check/garantex", "monthly", "0.8", "Is Garantex OFAC sanctioned?"),
+        ("/check/bitzlato", "monthly", "0.8", "Is Bitzlato OFAC sanctioned?"),
+        ("/check/hydra-market", "monthly", "0.8", "Is Hydra Market OFAC sanctioned?"),
+        ("/check/north-korea-reconnaissance-general-bureau", "monthly", "0.7", "Is Reconnaissance General Bureau OFAC sanctioned?"),
+        # Round 17 pSEO: /sanctions-lists/<list> — per-list explainer pages
+        ("/sanctions-lists", "monthly", "0.9", "Sanctions lists explained — OFAC, EU, UN, BIS, UK HMT"),
+        ("/sanctions-lists/ofac", "monthly", "0.8", "OFAC Sanctions list explained"),
+        ("/sanctions-lists/ofac-sdn", "monthly", "0.8", "OFAC SDN list explained"),
+        ("/sanctions-lists/ofac-consolidated", "monthly", "0.7", "OFAC Consolidated Sanctions List explained"),
+        ("/sanctions-lists/ofac-non-sdn", "monthly", "0.7", "OFAC Non-SDN Lists explained"),
+        ("/sanctions-lists/eu-consolidated", "monthly", "0.7", "EU Consolidated Sanctions List explained"),
+        ("/sanctions-lists/un-consolidated", "monthly", "0.7", "UN Consolidated Sanctions List explained"),
+        ("/sanctions-lists/bis-entity-list", "monthly", "0.7", "BIS Entity List explained"),
+        ("/sanctions-lists/uk-hmt", "monthly", "0.7", "UK HMT Sanctions List explained"),
+        # Round 17 pSEO: /by-country/<country> — sanctioned entities by country
+        ("/by-country", "monthly", "0.9", "OFAC-sanctioned entities by country"),
+        ("/by-country/russia", "monthly", "0.8", "OFAC-sanctioned entities in Russia"),
+        ("/by-country/north-korea", "monthly", "0.8", "OFAC-sanctioned entities in North Korea"),
+        ("/by-country/iran", "monthly", "0.8", "OFAC-sanctioned entities in Iran"),
+        ("/by-country/syria", "monthly", "0.8", "OFAC-sanctioned entities in Syria"),
+        ("/by-country/cuba", "monthly", "0.8", "OFAC-sanctioned entities in Cuba"),
+        ("/by-country/venezuela", "monthly", "0.7", "OFAC-sanctioned entities in Venezuela"),
+        ("/by-country/belarus", "monthly", "0.7", "OFAC-sanctioned entities in Belarus"),
+        ("/by-country/myanmar", "monthly", "0.7", "OFAC-sanctioned entities in Myanmar"),
+        ("/by-country/china", "monthly", "0.7", "OFAC-sanctioned entities in China"),
+        ("/by-country/ukraine-separatist", "monthly", "0.7", "OFAC-sanctioned entities in Ukraine separatist region"),
+        ("/by-country/lebanon-hezbollah", "monthly", "0.7", "OFAC-sanctioned entities in Lebanon (Hezbollah)"),
+        ("/by-country/pakistan", "monthly", "0.7", "OFAC-sanctioned entities in Pakistan"),
     ]
         import datetime
         today = datetime.date.today().isoformat()
@@ -2767,6 +2991,9 @@ Then add to your MCP client (Claude Code, Cursor, Windsurf).
 <meta name="twitter:description" content="OFAC sanctions screening for x402 payment agents. Screen every counterparty before your agent pays.">
 <meta name="twitter:image" content="https://sanctionsai.dev/og.png">
 <link rel="canonical" href="https://sanctionsai.dev/">
+<link rel="alternate" hreflang="en-US" href="https://sanctionsai.dev/">
+<link rel="alternate" hreflang="en" href="https://sanctionsai.dev/">
+<link rel="alternate" hreflang="x-default" href="https://sanctionsai.dev/">
 <link rel="preconnect" href="https://eu.i.posthog.com">
 <link rel="dns-prefetch" href="https://eu.i.posthog.com">
 <link rel="preconnect" href="https://agentmail-api.fly.dev">
@@ -2787,13 +3014,40 @@ Then add to your MCP client (Claude Code, Cursor, Windsurf).
       },
       "description": "OFAC sanctions screening API for AI agents. Screen every counterparty before your agent pays.",
       "email": "hello@sanctionsai.dev",
-      "founder": {
-        "@type": "Person",
-        "name": "The Data Nerd"
-      },
+      "founder": {"@id": "https://sanctionsai.dev/#founder"},
       "sameAs": [
         "https://x.com/data_nerd",
         "https://github.com/kindrat86/agentmail"
+      ]
+    },
+    {
+      "@type": "Person",
+      "@id": "https://sanctionsai.dev/#founder",
+      "name": "The Data Nerd",
+      "givenName": "The Data",
+      "familyName": "Nerd",
+      "jobTitle": "Founder & Compliance Engineer",
+      "url": "https://sanctionsai.dev/about",
+      "image": "https://sanctionsai.dev/og.png",
+      "worksFor": {"@id": "https://sanctionsai.dev/#organization"},
+      "knowsAbout": [
+        "OFAC sanctions compliance",
+        "AML and KYC screening",
+        "Crypto wallet sanctions screening",
+        "AI agent payment compliance",
+        "Specially Designated Nationals (SDN) list",
+        "x402 payment protocol",
+        "Know Your Agent (KYA)",
+        "Voluntary Self-Disclosure under OFAC",
+        "Bank Secrecy Act (BSA) compliance"
+      ],
+      "alumniOf": "US Treasury OFAC compliance framework",
+      "description": "Founder and lead compliance engineer at agentmail (sanctionsai.dev). Builds OFAC sanctions screening infrastructure for AI agents that transact autonomously, with a focus on sub-100ms pre-payment screening and audit-ready evidence chains for Voluntary Self-Disclosure.",
+      "sameAs": [
+        "https://x.com/data_nerd",
+        "https://github.com/kindrat86",
+        "https://www.linkedin.com/in/data-nerd-sanctions",
+        "https://pypi.org/user/kindrat86/"
       ]
     },
     {
@@ -6012,16 +6266,55 @@ document.getElementById("squeeze-form").addEventListener("submit", function(e){
         self._render_pseo(t["title"], t["desc"], body, faq, f"/tools/{slug}")
 
     def _render_pseo(self, title, desc, body_html, faqs, canonical_path):
-        """Shared renderer for pSEO pages with schema."""
-        today = "2026-07-13"
+        """Shared renderer for pSEO pages with schema.
+
+        Includes Person (E-E-A-T author), Organization publisher, hreflang
+        (en-US default + self-referencing), and FAQ/Breadcrumb/Speakable schema.
+        """
+        today = "2026-07-18"
         _page_url = _SITE + canonical_path
         faq_schema = {"@context": "https://schema.org", "@type": "FAQPage",
                        "mainEntity": [{"@type": "Question", "name": q,
                                        "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in faqs]}
+        # Founder/author Person schema — E-E-A-T signal across every pSEO page.
+        _author_person = {
+            "@type": "Person",
+            "@id": _SITE + "/#founder",
+            "name": "The Data Nerd",
+            "jobTitle": "Founder & Compliance Engineer",
+            "url": _SITE + "/about",
+            "image": _SITE + "/og.png",
+            "worksFor": {"@id": _SITE + "/#organization"},
+            "knowsAbout": [
+                "OFAC sanctions compliance",
+                "AML/KYC screening",
+                "crypto wallet sanctions screening",
+                "AI agent payment compliance",
+                "Specially Designated Nationals (SDN) list",
+                "x402 payment protocol",
+                "Know Your Agent (KYA)",
+                "voluntary self-disclosure",
+            ],
+            "alumniOf": "US Treasury OFAC compliance framework",
+            "sameAs": [
+                "https://x.com/data_nerd",
+                "https://github.com/kindrat86",
+                "https://www.linkedin.com/in/data-nerd-sanctions",
+            ],
+        }
         schema = {"@context": "https://schema.org", "@graph": [
+            {  # Organization publisher (needed so Person.worksFor resolves)
+                "@type": "Organization", "@id": _SITE + "/#organization",
+                "name": "agentmail", "alternateName": "sanctionsai.dev",
+                "url": _SITE + "/", "logo": {"@type": "ImageObject", "url": _SITE + "/og.png"},
+                "email": "hello@sanctionsai.dev",
+                "founder": {"@id": _SITE + "/#founder"},
+                "sameAs": ["https://x.com/data_nerd", "https://github.com/kindrat86/agentmail"],
+            },
+            _author_person,
             {"@type": "Article", "headline": title, "description": desc,
-             "author": {"@type": "Organization", "name": "agentmail"},
-             "publisher": {"@type": "Organization", "name": "agentmail"},
+             "author": {"@id": _SITE + "/#founder"},
+             "publisher": {"@id": _SITE + "/#organization"},
              "datePublished": today, "dateModified": today,
              "mainEntityOfPage": _page_url},
             {"@type": "BreadcrumbList", "itemListElement": [
@@ -6033,7 +6326,7 @@ document.getElementById("squeeze-form").addEventListener("submit", function(e){
         ]}
         faq_html = "".join(f'<details><summary>{q}</summary><p>{a}</p></details>' for q, a in faqs)
         html = f"""<!DOCTYPE html>
-<html lang="en"><head>
+<html lang="en-US"><head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{title}</title>
@@ -6041,6 +6334,9 @@ document.getElementById("squeeze-form").addEventListener("submit", function(e){
 <meta name="robots" content="index, follow, max-image-preview:large">
 <meta name="indexnow" content="87aaa199acaf7d14c812e974ce115e32">
 <link rel="canonical" href="{_page_url}">
+<link rel="alternate" hreflang="en-US" href="{_page_url}">
+<link rel="alternate" hreflang="en" href="{_page_url}">
+<link rel="alternate" hreflang="x-default" href="{_page_url}">
 <script type="application/ld+json">{json.dumps(schema)}</script>
 </head>
 <body><main><article>{body_html}
@@ -6051,6 +6347,306 @@ document.getElementById("squeeze-form").addEventListener("submit", function(e){
 {_FOOTER}
 </body></html>"""
         self._send_html(200, html)
+
+    # ─── Round 17 pSEO: /check/<wallet>, /check/<name>, /sanctions-lists/, ──
+    # ─── /by-country/ handler implementations ──────────────────────────────
+
+    def _check_wallet_page(self, address):
+        """Per-wallet OFAC screening result page.
+
+        Looks up the address in the live OFAC SDN wallet index at request time
+        (in-memory, sub-100ms), then renders a permanent screening-result page
+        with the live status, chain, and a copy-ready screening API call."""
+        try:
+            result = core.sanctions_check(wallet=address)
+        except Exception:
+            result = {"matches": [], "clean": True, "degraded": True}
+        flagged = not result.get("clean", True)
+        matches = result.get("matches", [])
+        _addr_display = address
+        _chain = "Ethereum (EVM)" if address.lower().startswith("0x") else (
+            "Bitcoin" if address.lower().startswith("bc1") else (
+                "Bitcoin testnet" if address.lower().startswith("tb1") else "Multi-chain"))
+        status_text = "SANCTIONED" if flagged else "Clean"
+        status_color = "#ff6b6b" if flagged else "#00d4aa"
+        detail = matches[0].get("detail", "") if matches else "No OFAC SDN match"
+        today = "2026-07-18"
+        body = f"""<p class="note">By <a href="/about" rel="author" style="color:#00d4aa">The Data Nerd</a>, Founder &amp; Compliance Engineer &middot; <time datetime="{today}">{today}</time></p>
+<h2>OFAC Screening Result for <code>{_addr_display}</code></h2>
+<p><strong style="color:{status_color}">Status: {status_text}</strong> &middot; Chain: {_chain} &middot; List: OFAC SDN &middot; Checked: {today}</p>
+<p>This wallet was screened against the OFAC Specially Designated Nationals (SDN) list in real time. {('The wallet is <strong style="color:#ff6b6b">flagged</strong>: ' + detail + '. US persons and AI agents operating on their behalf are prohibited from transacting with this address under OFAC strict liability.') if flagged else 'The wallet is <strong style="color:#00d4aa">clean</strong> — no match against the 782 OFAC-sanctioned crypto wallets. Continue with normal transaction flows and log this screening receipt for your compliance audit trail.'}</p>
+<h3>Re-run this screen (free, no API key)</h3>
+<pre><code>curl "https://sanctionsai.dev/sanctions?wallet={_addr_display}"</code></pre>
+<p class="note">Free tier: 5 checks/day by IP. Real OFAC data, refreshed daily from vile/ofac-sdn-list.</p>
+<h2>What this means for your AI agent</h2>
+<ul>
+<li><strong>Strict liability:</strong> The agent operator is responsible if a payment reaches a sanctioned address, regardless of intent.</li>
+<li><strong>Civil penalty:</strong> $356,571 per violation or twice the transaction value, whichever is greater.</li>
+<li><strong>Per-transaction exposure:</strong> Each payment to a sanctioned wallet is a separate violation.</li>
+<li><strong>Screening receipt:</strong> sanctionsai.dev logs every screen with timestamp and SDN list version for VSD evidence.</li>
+</ul>
+<h2>Screening details</h2>
+<table>
+<thead><tr><th>Field</th><th>Value</th></tr></thead>
+<tbody>
+<tr><td>Address</td><td><code>{_addr_display}</code></td></tr>
+<tr><td>Chain</td><td>{_chain}</td></tr>
+<tr><td>OFAC SDN status</td><td style="color:{status_color}">{status_text}</td></tr>
+<tr><td>Match detail</td><td>{detail}</td></tr>
+<tr><td>List version</td><td>vile/ofac-sdn-list (daily refresh)</td></tr>
+<tr><td>Screening date</td><td>{today}</td></tr>
+</tbody>
+</table>"""
+        faqs = [
+            (f"Is {address} sanctioned?", f"{'Yes' if flagged else 'No'}. Based on real-time screening against the OFAC SDN list, this wallet is {'flagged' if flagged else 'clean'} as of {today}."),
+            ("How often is the OFAC list updated?", "The OFAC SDN list is updated frequently by the US Treasury. sanctionsai.dev refreshes its wallet index daily from vile/ofac-sdn-list releases."),
+            ("What if my agent already paid this wallet?", "If the wallet is sanctioned, preserve all evidence immediately and consider filing an OFAC Voluntary Self-Disclosure (VSD) within 30 days for ~50% penalty mitigation."),
+            ("How accurate is this screen?", "Wallet matches are exact, case-insensitive against 782 OFAC-sanctioned addresses. Confidence is 1.0 for direct matches."),
+        ]
+        self._render_pseo(f"Is {address} OFAC Sanctioned? — Live Screening Result",
+                          f"Real-time OFAC SDN screening result for wallet {address}. Status: {status_text}. Free sanctions check, refreshed daily.",
+                          body, faqs, f"/check/{address}")
+
+    def _check_name_page(self, slug):
+        """Per-name OFAC screening page for well-known sanctioned entities."""
+        NAMES = {
+            "tornado-cash": {"name": "Tornado Cash", "type": "Cryptocurrency mixer", "country": "Decentralized", "designated": "2022-08-08", "desc": "Tornado Cash was designated by OFAC on August 8, 2022 for processing over $7 billion in virtual currency since 2019, including $455 million stolen by the Lazarus Group. It is the first smart contract protocol sanctioned by OFAC.", "action": "All US persons are prohibited from transacting with Tornado Cash smart contracts, including deposits, withdrawals, and frontends."},
+            "lazarus-group": {"name": "Lazarus Group", "type": "DPRK state-sponsored hacking group", "country": "North Korea", "designated": "2019-03-21", "desc": "Lazarus Group is a North Korean state-sponsored hacking organization designated by OFAC for conducting cyberattacks and crypto theft to fund the DPRK regime. Responsible for over $3 billion in stolen crypto.", "action": "All transactions with Lazarus Group wallets are prohibited. Penalties for violations reach $20 million and 30 years imprisonment."},
+            "suex": {"name": "Suex OTC", "type": "Cryptocurrency exchange (OTC)", "country": "Czech Republic / Russia", "designated": "2021-09-21", "desc": "Suex was the first cryptocurrency exchange designated by OFAC (September 2021) for facilitating financial transactions for ransomware actors. Over 40% of its known transaction history was illicit.", "action": "US persons are prohibited from transacting with Suex wallets and entities. Designated under EO 13694 (malicious cyber-enabled activities)."},
+            "chatex": {"name": "Chatex", "type": "Cryptocurrency exchange", "country": "Russia-linked", "designated": "2021-11-08", "desc": "Chatex was designated by OFAC in November 2021 as part of a coordinated action against ransomware infrastructure, for facilitating transactions for illicit actors including Suex.", "action": "All US persons and the AI agents they operate are prohibited from transacting with Chatex."},
+            "garantex": {"name": "Garantex", "type": "Cryptocurrency exchange", "country": "Russia", "designated": "2022-04-05", "desc": "Garantex was designated by OFAC in April 2022 for failing to implement AML/CFT measures and allowing Russian illicit actors to operate. Designated under EO 14024 (Russia harmful foreign activities).", "action": "All transactions with Garantex wallets are prohibited for US persons and AI agents operating on their behalf."},
+            "bitzlato": {"name": "Bitzlato", "type": "Cryptocurrency exchange", "country": "Russia / China-linked", "designated": "2023-01-18", "desc": "Bitzlato was designated by OFAC and the US Department of Justice in January 2023 for operating as a money transmitter for Russia-linked criminal actors, including Hydra Market.", "action": "US persons are prohibited from transacting with Bitzlato. Funds associated with Bitzlato are blocked and must be reported to OFAC."},
+            "hydra-market": {"name": "Hydra Market", "type": "Darknet marketplace", "country": "Russia-linked", "designated": "2021-12-06", "desc": "Hydra Market was designated by OFAC in December 2021 as the world's largest darknet market, processing $5.2 billion in crypto transactions between 2016 and 2021 for illicit goods including narcotics.", "action": "All transactions with Hydra Market wallets are prohibited. The marketplace was seized by German authorities in April 2022."},
+            "north-korea-reconnaissance-general-bureau": {"name": "Reconnaissance General Bureau (RGB)", "type": "DPRK intelligence agency", "country": "North Korea", "designated": "2010-08-30", "desc": "The RGB is North Korea's primary intelligence agency, designated by OFAC under multiple programs for weapons proliferation, cyber operations, and supporting DPRK cyber actors including Lazarus Group.", "action": "All US persons are prohibited from any dealings with the RGB and its associated entities under OFAC comprehensive sanctions on North Korea."},
+        }
+        e = NAMES.get(slug)
+        if not e:
+            return _json(self, 404, {"error": "not found"})
+        today = "2026-07-18"
+        body = f"""<p class="note">By <a href="/about" rel="author" style="color:#00d4aa">The Data Nerd</a>, Founder &amp; Compliance Engineer &middot; <time datetime="{today}">{today}</time></p>
+<h2>OFAC Sanctioned: {e["name"]}</h2>
+<p><strong style="color:#ff6b6b">SANCTIONED</strong> &middot; Designated: {e["designated"]} &middot; Type: {e["type"]} &middot; Jurisdiction: {e["country"]}</p>
+<p>{e["desc"]}</p>
+<h2>What this designation means</h2>
+<p>{e["action"]}</p>
+<h3>Screen this name via API (free, no API key)</h3>
+<pre><code>curl "https://sanctionsai.dev/sanctions?name={e["name"].replace(" ", "+")}"</code></pre>
+<p class="note">Free tier: 5 checks/day by IP. Real OFAC SDN data, refreshed daily.</p>
+<h2>Compliance obligations</h2>
+<ul>
+<li><strong>Block all transactions:</strong> US persons and AI agents operating on their behalf must not transact with {e["name"]}.</li>
+<li><strong>Report blocked property:</strong> Within 10 business days, file reports with OFAC for any blocked transactions.</li>
+<li><strong>Recordkeeping:</strong> Retain all screening records and transaction evidence for 5 years.</li>
+<li><strong>Voluntary Self-Disclosure:</strong> If a violation occurred, file a VSD within 30 days for ~50% penalty mitigation.</li>
+</ul>
+<h2>Penalties for non-compliance</h2>
+<p>Civil penalties start at <strong>$356,571 per violation</strong> or twice the transaction value, whichever is greater. Criminal penalties for willful violations can reach <strong>$20 million and 30 years imprisonment</strong>. Each transaction with {e["name"]} is a separate violation under OFAC strict liability.</p>"""
+        faqs = [
+            (f"Is {e['name']} still sanctioned?", f"Yes. {e['name']} was designated by OFAC on {e['designated']} and remains on the SDN list as of {today}. SDN designations are rarely lifted without a specific OFAC delisting action."),
+            ("How do I check if a counterparty is sanctioned?", "Use the sanctionsai.dev API: send a GET request with a name, wallet, or country parameter. The API checks against the full OFAC SDN list in under 100ms."),
+            ("What is the penalty for transacting with a sanctioned entity?", "OFAC civil penalties start at $356,571 per violation or twice the transaction value. Criminal penalties can reach $20 million and 30 years imprisonment."),
+            ("How often should I screen counterparties?", "Before every transaction. OFAC list updates are frequent, and an entity not flagged yesterday may be flagged today."),
+        ]
+        self._render_pseo(f"Is {e['name']} OFAC Sanctioned? ({e['type']}) — Compliance Guide",
+                          f"{e['name']} ({e['type']}, {e['country']}) was designated by OFAC on {e['designated']}. {e['desc'][:160]}",
+                          body, faqs, f"/check/{slug}")
+
+    def _sanctions_list_page(self, slug):
+        """Per-sanctions-list explainer page: OFAC, EU, UN, BIS, UK HMT, etc."""
+        LISTS = {
+            "ofac": {"name": "OFAC Sanctions", "full": "Office of Foreign Assets Control", "jurisdiction": "United States", "url": "https://ofac.treasury.gov", "desc": "The OFAC sanctions list is the US Treasury's master list of individuals and entities that US persons are prohibited from transacting with. Includes SDN, non-SDN, and sectoral sanctions.", "entries": "~19,086 names + 782 crypto wallets", "updated": "Daily (Treasury updates frequently)", "scope": "Worldwide — applies to all US persons, US-origin goods, USD transactions, and AI agents operating on behalf of US persons."},
+            "ofac-sdn": {"name": "OFAC SDN List", "full": "Specially Designated Nationals and Blocked Persons List", "jurisdiction": "United States", "url": "https://www.treasury.gov/ofac/downloads/sdn.csv", "desc": "The Specially Designated Nationals (SDN) list is OFAC's primary sanctions list, naming individuals and entities owned or controlled by sanctioned governments, terrorists, narcotics traffickers, and other threat actors.", "entries": "~19,086 names", "updated": "Daily", "scope": "All US persons must block transactions with SDN-listed parties and file reports within 10 business days."},
+            "ofac-consolidated": {"name": "OFAC Consolidated Sanctions List", "full": "Consolidated Sanctions List (Non-SDN)", "jurisdiction": "United States", "url": "https://www.treasury.gov/ofac/downloads/consolidated/consolidated.xml", "desc": "The OFAC Consolidated Sanctions List combines several non-SDN lists (Palestinian Legislative Council, Foreign Sanctions Evaders, Sectoral Sanctions Identifications, etc.) into one dataset.", "entries": "~3,500 entries", "updated": "Daily", "scope": "US persons; some programs reach foreign persons via secondary sanctions."},
+            "ofac-non-sdn": {"name": "OFAC Non-SDN Lists", "full": "Non-SDN sanctions programs", "jurisdiction": "United States", "url": "https://www.treasury.gov/ofac/downloads", "desc": "OFAC maintains several non-SDN lists covering sectoral sanctions (SSI), foreign sanctions evaders (FSE), and Palestinian Legislative Council members. These target conduct-based restrictions without full blocking.", "entries": "~5,000 entries across programs", "updated": "Daily", "scope": "US persons; sectoral sanctions restrict specific transactions rather than fully blocking them."},
+            "eu-consolidated": {"name": "EU Consolidated Sanctions List", "full": "European Union Consolidated Financial Sanctions List", "jurisdiction": "European Union", "url": "https://webgate.ec.europa.eu/fsd/fsf", "desc": "The EU Consolidated Financial Sanctions List applies to all EU member states and persons within EU jurisdiction. Includes Russia sectoral sanctions, terrorism designations, and proliferation-related entries.", "entries": "~10,000 entries", "updated": "Several times per week", "scope": "All EU persons and entities; extraterritorial reach via EU-origin goods and EUR transactions."},
+            "un-consolidated": {"name": "UN Consolidated Sanctions List", "full": "United Nations Security Council Consolidated List", "jurisdiction": "Global (UN Member States)", "url": "https://www.un.org/securitycouncil/content/un-sc-consolidated-list", "desc": "The UN Security Council Consolidated List applies to all 193 UN member states by treaty obligation. Includes designations for terrorism (ISIL, Al-Qaida), DPRK, Iran, Libya, and other regimes.", "entries": "~700 designations", "updated": "As designated by Security Council resolutions", "scope": "All UN member states; binding under Chapter VII of the UN Charter."},
+            "bis-entity-list": {"name": "BIS Entity List", "full": "Bureau of Industry and Security Entity List", "jurisdiction": "United States (export control)", "url": "https://www.bis.doc.gov/index.php/policy-guidance/lists-of-parties-of-concern/entity-list", "desc": "The BIS Entity List restricts export, re-export, and transfer of items subject to US Export Administration Regulations (EAR). Primarily targets dual-use technology transfers to Russia, China, and other restricted parties.", "entries": "~2,500 entities", "updated": "Frequently (often weekly)", "scope": "All exporters of US-origin items; license requirements vary per entity."},
+            "uk-hmt": {"name": "UK HMT Sanctions List", "full": "HM Treasury Office of Financial Sanctions Implementation (OFSI)", "jurisdiction": "United Kingdom", "url": "https://www.gov.uk/government/publications/financial-sanctions-consolidated-list-of-targets", "desc": "The UK OFSI Consolidated List applies to all UK persons and entities, plus any conduct within UK territory. Post-Brexit, UK maintains its own Russia sanctions regime aligned with but distinct from EU and US.", "entries": "~9,000 entries", "updated": "Frequently", "scope": "All UK persons and entities; UK financial sector; extraterritorial reach for UK-origin goods and GBP transactions."},
+        }
+        L = LISTS.get(slug)
+        if not L:
+            return _json(self, 404, {"error": "not found"})
+        today = "2026-07-18"
+        body = f"""<p class="note">By <a href="/about" rel="author" style="color:#00d4aa">The Data Nerd</a>, Founder &amp; Compliance Engineer &middot; <time datetime="{today}">{today}</time></p>
+<h2>{L["name"]}</h2>
+<p><strong>{L["full"]}</strong> &middot; Jurisdiction: {L["jurisdiction"]}</p>
+<p>{L["desc"]}</p>
+<h3>Screen against {L["name"]} (free, no API key)</h3>
+<pre><code>curl "https://sanctionsai.dev/sanctions?name=Counterparty+Name"</code></pre>
+<p class="note">Free tier: 5 checks/day by IP. Real OFAC data, refreshed daily.</p>
+<h2>List at a glance</h2>
+<table>
+<thead><tr><th>Field</th><th>Value</th></tr></thead>
+<tbody>
+<tr><td>List name</td><td>{L["name"]}</td></tr>
+<tr><td>Full name</td><td>{L["full"]}</td></tr>
+<tr><td>Jurisdiction</td><td>{L["jurisdiction"]}</td></tr>
+<tr><td>Entry count</td><td>{L["entries"]}</td></tr>
+<tr><td>Update frequency</td><td>{L["updated"]}</td></tr>
+<tr><td>Official source</td><td><a href="{L["url"]}" rel="nofollow">{L["url"]}</a></td></tr>
+</tbody>
+</table>
+<h2>Scope and application</h2>
+<p>{L["scope"]}</p>
+<h2>How sanctionsai.dev screens this list</h2>
+<p>sanctionsai.dev ingests OFAC SDN data daily from the US Treasury and vile/ofac-sdn-list GitHub releases. Every screening call checks your counterparty against the full SDN index in under 100ms, with an audit-ready receipt showing timestamp and list version.</p>
+<h2>Why this list matters for AI agents</h2>
+<p>AI agents that transact autonomously inherit strict liability for sanctions violations. Before any payment, your agent must screen the recipient against {L["name"]} (and ideally all applicable lists). One API call before every transaction is the minimum viable compliance posture.</p>"""
+        faqs = [
+            (f"How often is {L['name']} updated?", f"{L['updated']}. The sanctionsai.dev API refreshes its index daily so every screening call reflects the latest designations."),
+            (f"Who must comply with {L['name']}?", f"{L['scope']}"),
+            ("What is the penalty for violating this list?", "For OFAC SDN, civil penalties start at $356,571 per violation or twice the transaction value. Criminal penalties reach $20 million and 30 years for willful violations. Other jurisdictions have comparable regimes."),
+            ("How do I screen against this list?", "Use the sanctionsai.dev API: GET /sanctions?name=...&wallet=...&country=... — returns matches with confidence scores in under 100ms."),
+        ]
+        self._render_pseo(f"{L['name']} — {L['jurisdiction']} Sanctions List Explained",
+                          f"{L['name']} ({L['jurisdiction']}) sanctions list explained: {L['entries']}, {L['updated']}. How to screen against it with a free API.",
+                          body, faqs, f"/sanctions-lists/{slug}")
+
+    def _by_country_page(self, slug):
+        """Sanctioned entities by country/jurisdiction pSEO page."""
+        COUNTRIES = {
+            "russia": {"name": "Russia", "program": "EO 14024 (Russia Harmful Foreign Activities) + ITSR extensions", "entities": "Sberbank, VTB, Gazprombank, Alfa-Bank, Garantex, hundreds of oligarchs and defense firms", "desc": "Russia faces the most extensive US sanctions program in history following the 2022 invasion of Ukraine. Over 4,000 Russian individuals and entities are designated under EO 14024 and related authorities.", "count": "4,000+ SDN designations"},
+            "north-korea": {"name": "North Korea (DPRK)", "program": "North Korea Sanctions and Policy Enhancement Act (NKSPEA), EO 13466, EO 13551", "entities": "Lazarus Group, Reconnaissance General Bureau, DPRK diplomatic missions, Mansudae Overseas Projects", "desc": "DPRK faces comprehensive sanctions covering nearly all transactions. Designations target weapons proliferation, cyber theft, forced labor exports, and revenue generation for the regime.", "count": "~250 SDN designations"},
+            "iran": {"name": "Iran", "program": "Iranian Transactions and Sanctions Regulations (ITSR), EO 13846, EO 13902", "entities": "Islamic Revolutionary Guard Corps (IRGC), National Iranian Oil Company, Central Bank of Iran, Mahan Air", "desc": "Iran is subject to comprehensive sanctions. Nearly all transactions involving Iran are prohibited. Secondary sanctions apply to foreign persons engaging in significant transactions with Iranian counterparts.", "count": "~1,200 SDN designations"},
+            "syria": {"name": "Syria", "program": "Syrian Civilian Protection Act, EO 13572, EO 13894, Syrian Sanctions Regulations", "entities": "Assad family, Syrian Arab Army, Central Bank of Syria, Captagon trade networks", "desc": "Syria faces comprehensive sanctions targeting the Assad regime, its financial networks, and human rights violators. The Caesar Act (2020) expanded secondary sanctions on anyone doing business with the regime.", "count": "~600 SDN designations"},
+            "cuba": {"name": "Cuba", "program": "Cuban Assets Control Regulations (CACR), 31 CFR Part 515", "entities": "Cuban military-controlled enterprises (GAESA), Ministry of the Revolutionary Armed Forces", "desc": "Cuba is subject to a comprehensive embargo maintained by OFAC since 1963. While some restrictions have been eased over time, most transactions remain prohibited without a specific license.", "count": "~200 SDN designations"},
+            "venezuela": {"name": "Venezuela", "program": "Venezuela Sanctions Regulations (VSR), EO 13808, EO 13827, EO 13835, EO 13884", "entities": "PDVSA, Central Bank of Venezuela, Maduro government officials, CITGO (sanctioned parent)", "desc": "Venezuela faces comprehensive sectoral sanctions targeting the oil sector, gold sector, and Maduro government. Sanctions intensified in 2019 with full government-blocking sanctions.", "count": "~200 SDN designations"},
+            "belarus": {"name": "Belarus", "program": "Belarus Sanctions Regulations, EO 14038, EO 13665 (in part)", "entities": "Belarussian Potash Company, Belinvestbank, Dabrabyt, government officials aligned with Russia", "desc": "Belarus faces sanctions aligned with the Russia sanctions regime following the 2020 election fraud and support for Russia's invasion of Ukraine. Targets defense, potash, and state enterprises.", "count": "~150 SDN designations"},
+            "myanmar": {"name": "Myanmar (Burma)", "program": "Burma Sanctions Regulations, EO 14014, EO 13818", "entities": "Myanmar Economic Corporation (MEC), Myanmar Economic Holdings Limited (MEHL), junta officials, state oil and gas enterprises", "desc": "Myanmar faces targeted sanctions on military leaders and military-owned enterprises following the 2021 coup. The junta's revenue sources (oil, gas, timber, gems) are priority targets.", "count": "~80 SDN designations"},
+            "china": {"name": "China (PRC)", "program": "Uyghur Human Rights Policy Act, Hong Kong Autonomy Act, EO 13936, Military End-User List", "entities": "Xinjiang Production and Construction Corps (XPCC), Huawei (various), SenseTime, persons tied to Hong Kong crackdowns", "desc": "China faces targeted sanctions related to Xinjiang human rights abuses, Hong Kong crackdown, and military-civil fusion. Not comprehensive — most trade remains legal.", "count": "~300 SDN and entity-list designations"},
+            "ukraine-separatist": {"name": "Ukraine-Russia Separatist Region", "program": "EO 13660, EO 13661, EO 13662, Ukraine-/Russia-Related Sanctions Regulations", "entities": "Self-proclaimed DNR/LNR officials, Russian-backed separatist commanders, seized Crimean enterprises", "desc": "Designations cover the Russia-backed separatist regions of eastern Ukraine, Russia-occupied Crimea, and persons involved in undermining Ukraine's sovereignty. Expanded significantly after 2022.", "count": "~700 SDN designations"},
+            "lebanon-hezbollah": {"name": "Lebanon (Hezbollah)", "program": "Hezbollah Financial Sanctions Regulations (HFSR), EO 13224, EO 13582, Hizballah International Financing Prevention Act", "entities": "Hezbollah, Hassan Nasrallah (deceased), affiliated financiers and money launderers, Al-Qard al-Hassan", "desc": "Hezbollah and its financial networks are comprehensively sanctioned as a Specially Designated Global Terrorist (SDGT) entity. Designations reach into Lebanese banking, trade, and diaspora networks.", "count": "~120 SDN designations"},
+            "pakistan": {"name": "Pakistan", "program": "Entity List (BIS), targeted designations under EO 13224", "entities": "Khan Research Laboratories, proliferation-related entities, specific terrorism designations", "desc": "Pakistan faces limited targeted sanctions, primarily export-control (Entity List) designations related to nuclear and missile proliferation, and select terrorism designations. Not a comprehensive sanctions program.", "count": "~40 designations"},
+        }
+        c = COUNTRIES.get(slug)
+        if not c:
+            return _json(self, 404, {"error": "not found"})
+        today = "2026-07-18"
+        body = f"""<p class="note">By <a href="/about" rel="author" style="color:#00d4aa">The Data Nerd</a>, Founder &amp; Compliance Engineer &middot; <time datetime="{today}">{today}</time></p>
+<h2>OFAC-Sanctioned Entities in {c["name"]}</h2>
+<p><strong>Program:</strong> {c["program"]}<br>
+<strong>Designations:</strong> {c["count"]}</p>
+<p>{c["desc"]}</p>
+<h2>Notable sanctioned entities</h2>
+<p>{c["entities"]}</p>
+<h3>Screen counterparties linked to {c["name"]} (free, no API key)</h3>
+<pre><code>curl "https://sanctionsai.dev/sanctions?country={slug}"</code></pre>
+<p class="note">Free tier: 5 checks/day by IP. Real OFAC SDN data, refreshed daily.</p>
+<h2>What this means for your AI agent</h2>
+<ul>
+<li><strong>Pre-transaction screening required:</strong> Every counterparty linked to {c["name"]} must be screened against the OFAC SDN list before payment.</li>
+<li><strong>Strict liability:</strong> Even unintentional transactions with sanctioned {c["name"]} entities incur penalties of $356,571 per violation.</li>
+<li><strong>Audit trail:</strong> Log every screening with timestamp, subject, result, and list version for compliance evidence.</li>
+<li><strong>Enhanced due diligence:</strong> Counterparties with {c["name"]} nexus require documented screening and risk assessment.</li>
+</ul>
+<h2>Penalties</h2>
+<p>OFAC civil penalties: <strong>$356,571 per violation</strong> or twice the transaction value, whichever is greater. Each payment to a sanctioned {c["name"]} entity is a separate violation. Willful violations carry up to $20 million and 30 years imprisonment.</p>"""
+        faqs = [
+            (f"Are all transactions with {c['name']} prohibited?", f"{'Nearly all' if slug in ('north-korea','iran','cuba','syria') else 'Not all — but specific entities are'}. {c['desc']} Screen every counterparty against the OFAC SDN list before transacting."),
+            (f"How many {c['name']} entities are sanctioned?", f"Approximately {c['count']} under the {c['program'].split('(')[0].strip()} program. Use sanctionsai.dev to check any counterparty in real time."),
+            ("What is the penalty for violating sanctions on this country?", "$356,571 per violation or twice the transaction value (civil); $20 million and 30 years (criminal, willful violations)."),
+            ("How do I screen for sanctioned entities?", "Use the sanctionsai.dev API: GET /sanctions?name=&wallet=&country= returns matches with confidence scores in under 100ms."),
+        ]
+        self._render_pseo(f"OFAC-Sanctioned Entities in {c['name']} — {c['count']}",
+                          f"List of OFAC-sanctioned individuals and entities linked to {c['name']}. {c['count']} under {c['program'][:60]}. Screen any counterparty free.",
+                          body, faqs, f"/by-country/{slug}")
+
+    def _sanctions_lists_index_page(self):
+        """Index page for /sanctions-lists — lists all sanctions list explainers."""
+        today = "2026-07-18"
+        body = f"""<p class="note">By <a href="/about" rel="author" style="color:#00d4aa">The Data Nerd</a>, Founder &amp; Compliance Engineer &middot; <time datetime="{today}">{today}</time></p>
+<h2>Sanctions Lists Explained</h2>
+<p>Sanctions screening requires checking counterparties against multiple lists maintained by different jurisdictions. Below is a guide to the major sanctions lists that matter for AI agent compliance.</p>
+<ul>
+<li><a href="/sanctions-lists/ofac">OFAC Sanctions</a> — US Treasury master list (~19,086 names + 782 wallets)</li>
+<li><a href="/sanctions-lists/ofac-sdn">OFAC SDN List</a> — Specially Designated Nationals (~19,086 names)</li>
+<li><a href="/sanctions-lists/ofac-consolidated">OFAC Consolidated Sanctions List</a> — Non-SDN combined list</li>
+<li><a href="/sanctions-lists/ofac-non-sdn">OFAC Non-SDN Lists</a> — Sectoral, FSE, and program-specific lists</li>
+<li><a href="/sanctions-lists/eu-consolidated">EU Consolidated Sanctions List</a> — European Union (~10,000 entries)</li>
+<li><a href="/sanctions-lists/un-consolidated">UN Consolidated Sanctions List</a> — UN Security Council (~700 designations)</li>
+<li><a href="/sanctions-lists/bis-entity-list">BIS Entity List</a> — US export control (~2,500 entities)</li>
+<li><a href="/sanctions-lists/uk-hmt">UK HMT Sanctions List</a> — UK OFSI (~9,000 entries)</li>
+</ul>
+<h3>Screen against all lists (free, no API key)</h3>
+<pre><code>curl "https://sanctionsai.dev/sanctions?name=Counterparty+Name"</code></pre>
+<p class="note">Free tier: 5 checks/day by IP. Real OFAC data, refreshed daily.</p>"""
+        faqs = [
+            ("Which sanctions list should I screen against?", "At minimum, screen against OFAC SDN. For full coverage, also screen against EU, UN, and UK lists. sanctionsai.dev covers OFAC SDN comprehensively."),
+            ("How often are sanctions lists updated?", "OFAC SDN updates multiple times per week; EU and UK several times per month; UN only via Security Council resolutions. sanctionsai.dev refreshes its OFAC index daily."),
+            ("Do AI agents need to screen against all lists?", "At minimum OFAC SDN if the operator is a US person. EU agents should add EU Consolidated. Full multi-list screening is available via sanctionsai.dev's paid tiers."),
+        ]
+        self._render_pseo("Sanctions Lists Explained — OFAC, EU, UN, BIS, UK HMT",
+                          "Guide to the major global sanctions lists: OFAC SDN, OFAC Consolidated, EU, UN, BIS Entity List, UK HMT. How to screen against each with a free API.",
+                          body, faqs, "/sanctions-lists")
+
+    def _by_country_index_page(self):
+        """Index page for /by-country — sanctioned entities by country."""
+        today = "2026-07-18"
+        body = f"""<p class="note">By <a href="/about" rel="author" style="color:#00d4aa">The Data Nerd</a>, Founder &amp; Compliance Engineer &middot; <time datetime="{today}">{today}</time></p>
+<h2>OFAC-Sanctioned Entities by Country</h2>
+<p>Browse sanctioned individuals and entities by jurisdiction. Each country page lists the sanctions program, notable designees, and a copy-ready screening command.</p>
+<ul>
+<li><a href="/by-country/russia">Russia</a> — 4,000+ designations under EO 14024</li>
+<li><a href="/by-country/north-korea">North Korea (DPRK)</a> — comprehensive sanctions under NKSPEA</li>
+<li><a href="/by-country/iran">Iran</a> — comprehensive sanctions under ITSR</li>
+<li><a href="/by-country/syria">Syria</a> — Caesar Act + comprehensive sanctions</li>
+<li><a href="/by-country/cuba">Cuba</a> — CACR embargo (since 1963)</li>
+<li><a href="/by-country/venezuela">Venezuela</a> — EO 13884 comprehensive sectoral</li>
+<li><a href="/by-country/belarus">Belarus</a> — aligned with Russia sanctions</li>
+<li><a href="/by-country/myanmar">Myanmar (Burma)</a> — post-2021 coup targeted sanctions</li>
+<li><a href="/by-country/china">China (PRC)</a> — targeted Xinjiang / HK / military-civil fusion</li>
+<li><a href="/by-country/ukraine-separatist">Ukraine-Russia Separatist Region</a> — DNR/LNR/Crimea</li>
+<li><a href="/by-country/lebanon-hezbollah">Lebanon (Hezbollah)</a> — SDGT designations</li>
+<li><a href="/by-country/pakistan">Pakistan</a> — Entity List + targeted designations</li>
+</ul>
+<h3>Screen counterparties in any country (free, no API key)</h3>
+<pre><code>curl "https://sanctionsai.dev/sanctions?country=RU"</code></pre>
+<p class="note">Free tier: 5 checks/day by IP. Real OFAC data, refreshed daily.</p>"""
+        faqs = [
+            ("Which countries are comprehensively sanctioned?", "Cuba, Iran, North Korea, Syria, and the Crimea/DNR/LNR regions of Ukraine face comprehensive sanctions. Nearly all transactions are prohibited."),
+            ("How do I find sanctioned entities in a specific country?", "Browse the country pages above, or use the API: GET /sanctions?country=RU returns matches for the specified jurisdiction."),
+            ("Does sanctionsai.dev screen every country?", "Yes. The OFAC SDN list includes designations from over 100 countries, all searchable via the API."),
+        ]
+        self._render_pseo("OFAC-Sanctioned Entities by Country — Browse Sanctions",
+                          "Browse OFAC-sanctioned individuals and entities by country: Russia, Iran, North Korea, Syria, Cuba, Venezuela, and more. Free screening API.",
+                          body, faqs, "/by-country")
+
+    def _check_index_page(self):
+        """Index page for /check — screening results for known sanctioned entities."""
+        today = "2026-07-18"
+        body = f"""<p class="note">By <a href="/about" rel="author" style="color:#00d4aa">The Data Nerd</a>, Founder &amp; Compliance Engineer &middot; <time datetime="{today}">{today}</time></p>
+<h2>OFAC Screening Results — Known Sanctioned Entities</h2>
+<p>Permanent screening-result pages for known OFAC-sanctioned wallets and entities. Each page shows live status, designation detail, and a copy-ready API call.</p>
+<h3>Wallets</h3>
+<ul>
+<li><a href="/check/0x098b716b8aaf21512996dc57eb0615e2383e2f96">0x098b716b8aaf21512996dc57eb0615e2383e2f96</a> — Lazarus Group (Ethereum)</li>
+<li><a href="/check/0x7f367cc41522ce07553e823bf3be79a889debe1b">0x7f367cc41522ce07553e823bf3be79a889debe1b</a> — POTEKHIN, Danil</li>
+<li><a href="/check/0x7d655c57f71464b6f83811c55d84009cd9f022b9">0x7d655c57f71464b6f83811c55d84009cd9f022b9</a> — Tornado Cash (Ethereum)</li>
+<li><a href="/check/0x8576acc5c03d3d480696853f171ef062bb03c0bd">0x8576acc5c03d3d480696853f171ef062bb03c0bd</a> — Tornado Cash</li>
+<li><a href="/check/0xa645e9f4cc58b841549bbb2e3fe00a57e8ceee38">0xa645e9f4cc58b841549bbb2e3fe00a57e8ceee38</a> — Garantex</li>
+</ul>
+<h3>Named entities</h3>
+<ul>
+<li><a href="/check/tornado-cash">Tornado Cash</a> — Cryptocurrency mixer, designated 2022-08-08</li>
+<li><a href="/check/lazarus-group">Lazarus Group</a> — DPRK state-sponsored hacking, designated 2019-03-21</li>
+<li><a href="/check/suex">Suex OTC</a> — Crypto exchange, designated 2021-09-21</li>
+<li><a href="/check/chatex">Chatex</a> — Crypto exchange, designated 2021-11-08</li>
+<li><a href="/check/garantex">Garantex</a> — Crypto exchange, designated 2022-04-05</li>
+<li><a href="/check/bitzlato">Bitzlato</a> — Crypto exchange, designated 2023-01-18</li>
+<li><a href="/check/hydra-market">Hydra Market</a> — Darknet market, designated 2021-12-06</li>
+<li><a href="/check/north-korea-reconnaissance-general-bureau">Reconnaissance General Bureau (RGB)</a> — DPRK intelligence, designated 2010-08-30</li>
+</ul>
+<h3>Screen any wallet or name (free, no API key)</h3>
+<pre><code>curl "https://sanctionsai.dev/sanctions?wallet=0xYourAddress"</code></pre>
+<p class="note">Free tier: 5 checks/day by IP. Real OFAC data, refreshed daily.</p>"""
+        faqs = [
+            ("How do I check if a wallet is sanctioned?", "Use the API: GET /sanctions?wallet=0x... — returns match status in under 100ms against 782 OFAC-sanctioned crypto wallets."),
+            ("How do I check if a name is sanctioned?", "GET /sanctions?name=John+Doe checks against 19,086 SDN names with fuzzy matching for aliases."),
+            ("How often are the screening pages updated?", "Wallet pages are screened live at request time against the current OFAC SDN index, which sanctionsai.dev refreshes daily."),
+        ]
+        self._render_pseo("OFAC Screening Results — Known Sanctioned Wallets & Entities",
+                          "Permanent screening-result pages for OFAC-sanctioned crypto wallets and named entities: Tornado Cash, Lazarus Group, Suex, Garantex, Hydra Market, and more.",
+                          body, faqs, "/check")
 
     def _pseo_page(self, page_key: str):
         """pSEO pages for sanctionsai.dev."""

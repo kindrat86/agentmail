@@ -11,6 +11,14 @@ COPY __init__.py core.py api.py cli.py mailtm.py otp.py mcp_server.py billing.py
 COPY compliance/ ./compliance/
 COPY sms/ ./sms/
 COPY email_templates/ ./email_templates/
+# Round-15 static pSEO pages (served by do_GET handler)
+COPY vs/ ./vs/
+COPY faq/ ./faq/
+COPY learn/ ./learn/
+COPY alternatives-to/ ./alternatives-to/
+# Round 16 new page types
+COPY penalties/ ./penalties/
+COPY guides/ ./guides/
 
 RUN pip install --no-cache-dir ".[mcp]" && \
     cp /home/agentmail/app/api.py /usr/local/lib/python3.11/site-packages/agentmail/api.py && \
