@@ -32,7 +32,7 @@ Deploy with a single Fly.io deployment — no config changes needed.
 | File | Purpose |
 |------|---------|
 | `~/workspace/agentmail/llms.txt` | Updated from stub to full content matching `_llms_txt()` handler |
-| `~/workspace/agentmail/ce9f9e4a3adae025cc9d72bdee04020f.txt` | IndexNow key file — submit to IndexNow after deploy |
+| `/87aaa199acaf7d14c812e974ce115e32.txt` (route) | IndexNow key — served dynamically by `api.py` (`_serve_text`), **not** a file on disk; submit to IndexNow after deploy |
 
 ---
 
@@ -57,8 +57,8 @@ curl -X POST "https://api.indexnow.org/IndexNow" \
   -H "Content-Type: application/json" \
   -d '{
     "host": "sanctionsai.dev",
-    "key": "ce9f9e4a3adae025cc9d72bdee04020f",
-    "keyLocation": "https://sanctionsai.dev/ce9f9e4a3adae025cc9d72bdee04020f.txt",
+    "key": "87aaa199acaf7d14c812e974ce115e32",
+    "keyLocation": "https://sanctionsai.dev/87aaa199acaf7d14c812e974ce115e32.txt",
     "urlList": [
       "https://sanctionsai.dev/",
       "https://sanctionsai.dev/llms.txt",
@@ -100,7 +100,7 @@ echo "=== rss.xml ==="
 curl -s https://sanctionsai.dev/rss.xml | head -5
 
 echo "=== IndexNow key ==="
-curl -s https://sanctionsai.dev/ce9f9e4a3adae025cc9d72bdee04020f.txt
+curl -s https://sanctionsai.dev/87aaa199acaf7d14c812e974ce115e32.txt
 
 echo "=== Existing assets (should still work) ==="
 curl -sI https://sanctionsai.dev/.well-known/agent-card.json | grep content-type
