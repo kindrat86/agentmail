@@ -67,15 +67,26 @@ footer{margin-top:3rem;padding-top:1.5rem;border-top:1px solid #e5e7eb;color:#6b
 <div class="callout"><strong>Automate it:</strong> SanctionsAI handles most of these checklist items automatically through its OFAC screening API workflow.</div>
 
 
-
-
 <!-- mesh-round19 -->
 <section class="mesh-links" style="background:#f9fafb;padding:1.25rem;border-radius:.5rem;margin-top:2rem">
 <h3 style="margin-top:0">Related resources</h3>
 <ul style="list-style:none;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:.4rem 1rem;font-size:.95rem">
 <li><a href="/checklists/sanctions-risk-assessment-checklist">Sanctions Risk Assessment Checklist [2026 Checklist]</a></li><li><a href="/checklists/ofac-compliance-checklist">OFAC Sanctions Compliance Checklist [2026 Checklist]</a></li><li><a href="/checklists/shipper-ofac-checklist">Shipping &amp; Trade OFAC Compliance Checklist [2026 Checklist]</a></li><li><a href="/cost-of/chainalysis-pricing">How Much Does Chainalysis Cost? [2026 Pricing]</a></li><li><a href="/penalties/kraken-ofac-2022">Kraken OFAC Penalty (2022) — $362,158 [Case Study]</a></li><li><a href="/faq/do-crypto-exchanges-need-ofac-screening">Do cryptocurrency exchanges need OFAC screening? [2026 Guide]</a></li>
 </ul>
-</section></article>
+</section>
+
+<p>If your product processes crypto payments, OFAC enforcement applies directly. Below are the crypto-specific compliance steps every operator should verify before deployment.</p>
+<h2>1. Screen wallet addresses before every transaction</h2>
+<p>OFAC has sanctioned 782+ specific crypto wallet addresses across EVM chains, Bitcoin, Solana, and Tron. Before your agent or platform signs any on-chain transaction, check the destination address against the full SDN wallet list. One payment to a sanctioned wallet is a separate violation with a base penalty of $330,944.</p>
+<h2>2. Do not rely on protocol-level screening</h2>
+<p>Smart contracts, bridges, and DEX routers do not screen counterparties. OFAC has sanctioned Tornado Cash smart contract addresses — demonstrating that protocol-level interaction is not exempt. Your application layer is responsible for screening before invoking any contract or transfer function.</p>
+<h2>3. Screen across all chains your product touches</h2>
+<p>OFAC sanctions lists cover addresses on Ethereum, Bitcoin, Tron, and Solana. If your product supports multiple chains, you must screen against the full multi-chain list. Screening only EVM addresses while allowing Bitcoin transfers creates a compliance gap.</p>
+<h2>4. Implement geo-blocking for embargoed jurisdictions</h2>
+<p>OFAC comprehensively sanctions 16 jurisdictions including Iran, North Korea, Cuba, Syria, Crimea, and others. If your product is accessible from these regions, implement IP-based or wallet-based geo-blocking in addition to counterparty screening. An agent that correctly screens the wallet but accepts transactions from an embargoed IP still carries exposure.</p>
+<h2>5. Maintain an audit trail</h2>
+<p>Record every screen result: wallet address, timestamp, match status, OFAC list version, and which agent/user initiated the check. In a voluntary self-disclosure scenario, this audit trail is your evidence that screening was in place. <a href="https://sanctionsai.dev">SanctionsAI</a> provides automatic audit logging on paid plans.</p>
+</article>
 <section class="cta"><h2>Try SanctionsAI</h2><p>Free OFAC sanctions screening API.</p><a href="https://sanctionsai.dev/" class="btn">Get started &rarr;</a></section>
 <footer><p>&copy; 2026 SanctionsAI. <a href="https://sanctionsai.dev/">sanctionsai.dev</a></p></footer>
 </body>

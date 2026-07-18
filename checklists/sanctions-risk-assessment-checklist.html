@@ -74,6 +74,17 @@ footer{margin-top:3rem;padding-top:1.5rem;border-top:1px solid #e5e7eb;color:#6b
 <li><a href="/checklists/ofac-compliance-checklist">OFAC Sanctions Compliance Checklist [2026 Checklist]</a></li><li><a href="/checklists/crypto-ofac-checklist">Crypto Sanctions Screening Checklist [2026 Checklist]</a></li><li><a href="/checklists/shipper-ofac-checklist">Shipping &amp; Trade OFAC Compliance Checklist [2026 Checklist]</a></li><li><a href="/penalties/societe-generale">Société Générale OFAC penalty</a></li><li><a href="/best/best-ofac-screening-apis">Best OFAC Sanctions Screening APIs in 2026 [2026]</a></li><li><a href="/vs/elliptic">SanctionsAI vs Elliptic: which is right for you?</a></li>
 </ul>
 </section>
+
+<h2>1. Velocity risk</h2>
+<p>How many unattended transactions can your agent execute per day? An agent processing 500 payments/day carries dramatically higher exposure than one processing 5/day — each payment to a sanctioned counterparty is a separate violation. Score this on the <a href="https://sanctionsai.dev/tools/sei-calculator">agentmail SEI calculator</a>.</p>
+<h2>2. Jurisdiction overlap</h2>
+<p>What percentage of your counterparties are in or near the 16 comprehensively embargoed jurisdictions? Even if your primary market is the US, if your agent can receive transactions from anywhere, your jurisdiction overlap is your total addressable geography. Rate this honestly — an "available globally" product has 100% jurisdiction overlap.</p>
+<h2>3. Asset class exposure</h2>
+<p>Crypto carries the highest SDN wallet coverage and the most OFAC enforcement activity. Fiat payments through regulated rails have lower screening exposure because banks perform some screening. If your agent handles stablecoins, native tokens, or cross-chain transfers, your asset class exposure is maximum.</p>
+<h2>4. Screening posture</h2>
+<p>Do you screen before every payment? After payment in batch? Not at all? Pre-payment inline screening with an audit trail is the gold standard. Batch screening after the fact means violations have already occurred. No screening at all is the highest-risk posture — OFAC treats this as operating without controls, which is an aggravating factor in penalty calculations.</p>
+<h2>5. Disclosure readiness</h2>
+<p>If OFAC contacted you today about a transaction from 3 months ago, could you produce the screening record, the counterparty identity, the payment amount, and the OFAC list version within 5 days? If the answer is no, your disclosure readiness is low. A timestamped audit trail is the single biggest lever for reducing this risk factor.</p>
 </article>
 <section class="cta"><h2>Try SanctionsAI</h2><p>Free OFAC sanctions screening API.</p><a href="https://sanctionsai.dev/" class="btn">Get started &rarr;</a></section>
 <footer><p>&copy; 2026 SanctionsAI. <a href="https://sanctionsai.dev/">sanctionsai.dev</a></p></footer>

@@ -67,15 +67,29 @@ footer{margin-top:3rem;padding-top:1.5rem;border-top:1px solid #e5e7eb;color:#6b
 <div class="callout"><strong>Automate it:</strong> SanctionsAI handles most of these checklist items automatically through its OFAC screening API workflow.</div>
 
 
-
-
 <!-- mesh-round19 -->
 <section class="mesh-links" style="background:#f9fafb;padding:1.25rem;border-radius:.5rem;margin-top:2rem">
 <h3 style="margin-top:0">Related resources</h3>
 <ul style="list-style:none;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:.4rem 1rem;font-size:.95rem">
 <li><a href="/checklists/shipper-ofac-checklist">Shipping &amp; Trade OFAC Compliance Checklist [2026 Checklist]</a></li><li><a href="/checklists/sanctions-risk-assessment-checklist">Sanctions Risk Assessment Checklist [2026 Checklist]</a></li><li><a href="/checklists/crypto-ofac-checklist">Crypto Sanctions Screening Checklist [2026 Checklist]</a></li><li><a href="/vs/ofac-list-download">SanctionsAI vs OFAC SDN list CSV: which is right for you?</a></li><li><a href="/penalties/bitfinex">Bitfinex OFAC penalty</a></li><li><a href="/penalties/ Société Générale">Société Générale OFAC penalty</a></li>
 </ul>
-</section></article>
+</section>
+
+<h2>1. Designate a compliance owner</h2>
+<p>OFAC expects to find a named person responsible for sanctions compliance. For solo operators, that is you. For companies, designate a specific individual and document their role in writing. This is the first question OFAC asks in any enforcement inquiry.</p>
+<h2>2. Map your transaction types</h2>
+<p>List every scenario where value moves: direct wallet payments, x402 micropayments, smart contract interactions that transfer tokens, tipping or donation functions, and subscription payments. Each path needs a pre-payment screening gate. An agent that screens wallet payments but not smart contract interactions has a gap.</p>
+<h2>3. Implement pre-payment screening</h2>
+<p>Add an inline sanctions check before every payment your agent authorizes. Screen the counterparty wallet, name, and jurisdiction. If flagged, halt the transaction and alert a human. <a href="https://sanctionsai.dev">SanctionsAI</a> provides this as a single API call under 100ms with a free tier of 5 checks/day.</p>
+<h2>4. Maintain an audit trail</h2>
+<p>Record every screen: timestamp, wallet/name/country checked, result, OFAC list version, and which agent initiated the check. A documented, timestamped audit trail is the single most powerful mitigating factor in any OFAC enforcement action. SanctionsAI paid plans include automatic audit logging in the compliance dashboard.</p>
+<h2>5. Set up escalation</h2>
+<p>Configure your agent to alert a human when a sanctions match occurs. A blocked transaction that sits silently in a log is useless. The human reviewer needs to assess the match within a reasonable time window and decide whether to escalate to legal counsel.</p>
+<h2>6. Document your compliance program</h2>
+<p>Write down what you built: which screening API you use, which payment paths are covered, who the compliance owner is, and how alerts are handled. OFAC's Enforcement Guidelines treat documented compliance programs as a significant mitigating factor. A one-page summary is sufficient for most deployments.</p>
+<h2>7. Review and rescreen</h2>
+<p>The OFAC SDN list changes daily. A wallet clean today may be sanctioned tomorrow. Never cache screening results — rescreen before every payment. Set a recurring monthly review to verify your screening pipeline still works end to end and that list updates are being consumed.</p>
+</article>
 <section class="cta"><h2>Try SanctionsAI</h2><p>Free OFAC sanctions screening API.</p><a href="https://sanctionsai.dev/" class="btn">Get started &rarr;</a></section>
 <footer><p>&copy; 2026 SanctionsAI. <a href="https://sanctionsai.dev/">sanctionsai.dev</a></p></footer>
 </body>
