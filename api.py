@@ -1884,6 +1884,12 @@ Sitemap: https://sanctionsai.dev/sitemap.xml
             return self._serve_text("google-site-verification: googlea30bb998b91eb6ac.html", "text/html")
         if p.path == "/sitemap.xml":
             return self._sitemap_xml()
+        if p.path == "/image-sitemap.xml":
+            return self._serve_file_content("image-sitemap.xml", "application/xml")
+        if p.path == "/sitemap-index.xml":
+            return self._serve_file_content("sitemap-index.xml", "application/xml")
+        if p.path == "/.well-known/assetlinks.json":
+            return self._serve_file_content(".well-known/assetlinks.json", "application/json")
         if p.path == "/87aaa199acaf7d14c812e974ce115e32.txt":
             return self._serve_text("87aaa199acaf7d14c812e974ce115e32", "text/plain")
         if p.path == "/llms.txt":
@@ -2946,6 +2952,21 @@ License: https://creativecommons.org/licenses/by/4.0/
         self.send_header("Strict-Transport-Security", "max-age=63072000; includeSubDomains; preload")
         self.end_headers()
         self.wfile.write(png_bytes)
+
+    def _serve_file_content(self, filename: str, content_type: str = "application/octet-stream"):
+        """Serve a static file from the app directory (for sitemaps, assetlinks, etc.)."""
+        import os as _os
+        filepath = _os.path.join(_os.getcwd(), filename)
+        try:
+            with open(filepath, "rb") as f:
+                body = f.read()
+        except (OSError, FileNotFoundError):
+            return self._serve_text("not found", "text/plain")
+        self.send_response(200)
+        self.send_header("Content-Type", f"{content_type}; charset=utf-8")
+        self.send_header("Content-Length", str(len(body)))
+        self.end_headers()
+        self.wfile.write(body)
 
     def _serve_text(self, text: str, content_type: str = "text/plain"):
         body = text.encode()
