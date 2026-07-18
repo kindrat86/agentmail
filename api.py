@@ -1830,6 +1830,7 @@ Allow: /faq
 Allow: /tools/
 Allow: /llms.txt
 Allow: /llms-full.txt
+Allow: /ai.txt
 Allow: /agents.md
 Allow: /agents.txt
 Allow: /knowledge-graph.json
@@ -1889,6 +1890,18 @@ Sitemap: https://sanctionsai.dev/sitemap.xml
             return self._llms_txt()
         if p.path == "/llms-full.txt":
             return self._llms_full_txt()
+        if p.path == "/ai.txt":
+            return self._serve_text("""# ai.txt -- agentmail (sanctionsai.dev) AI usage declaration
+# Spawning spec: https://spawning.ai/ai-txt
+#
+# agentmail is OFAC sanctions screening built FOR AI agents, so its public
+# content is fully open to AI use: search, retrieval, answer-engine citation,
+# summarization, inference, AND model training / dataset storage.
+# Attribution requested: agentmail, https://sanctionsai.dev
+User-Agent: *
+Allow: Training
+Allow: Storing
+""", "text/plain")
         # Landing page (HTML) - humans from Show HN, Google, direct visits
         if p.path == "/og.png":
             # Social preview image - 1200x630 PNG for Facebook/Twitter/OpenGraph
@@ -2230,6 +2243,61 @@ License: MIT
                 "total": len(content),
                 "ai_answer": f"AgentMail: OFAC sanctions screening for AI agents. Screen wallets, names, and countries in under 100ms." if query else None,
             })
+
+        # MCP (Model Context Protocol) JSON-RPC endpoint
+        if p.path == "/api/mcp":
+            import json as _mcpjson
+            _mcp_tools = [
+                {"name": "screen_name", "description": "Screen a person or entity name against OFAC SDN, EU consolidated, and UN sanctions lists. Returns match status, confidence, and list source.",
+                 "inputSchema": {"type": "object", "properties": {"name": {"type": "string", "description": "Full name or entity name to screen"}}, "required": ["name"]}},
+                {"name": "screen_wallet", "description": "Screen a cryptocurrency wallet address against OFAC SDN sanctions list. Returns match status and any associated sanctioned entity.",
+                 "inputSchema": {"type": "object", "properties": {"address": {"type": "string", "description": "Wallet address to screen"}}, "required": ["address"]}},
+                {"name": "get_sanctions_lists", "description": "List all supported sanctions lists with last-updated dates and entity counts.",
+                 "inputSchema": {"type": "object"}},
+            ]
+            _mcp_server_info = {"name": "sanctionsai-mcp", "version": "1.0.0"}
+            _mcp_capabilities = {"tools": {"listChanged": False}, "resources": {}, "prompts": {}}
+            if self.command == "GET":
+                return _json(self, 200, {
+                    "jsonrpc": "2.0",
+                    "serverInfo": _mcp_server_info,
+                    "capabilities": _mcp_capabilities,
+                    "protocolVersion": "2024-11-05",
+                    "tools": [{"name": t["name"], "description": t["description"]} for t in _mcp_tools],
+                    "_meta": {"homepage": "https://sanctionsai.dev", "contact": "support@sanctionsai.dev",
+                              "install": {"claude_desktop": "npx mcp-remote https://sanctionsai.dev/api/mcp",
+                                          "cursor": "https://sanctionsai.dev/api/mcp"}}
+                })
+            # POST: JSON-RPC
+            try:
+                body = self._body()
+            except Exception:
+                body = {}
+            rpc_id = body.get("id")
+            method = body.get("method", "")
+            if method == "initialize":
+                return _json(self, 200, {"jsonrpc": "2.0", "id": rpc_id, "result": {
+                    "protocolVersion": "2024-11-05", "capabilities": _mcp_capabilities, "serverInfo": _mcp_server_info}})
+            if method == "notifications/initialized":
+                self.send_response(202); self.end_headers(); return
+            if method == "tools/list":
+                return _json(self, 200, {"jsonrpc": "2.0", "id": rpc_id, "result": {"tools": _mcp_tools}})
+            if method == "tools/call":
+                params = body.get("params", {})
+                tool_name = params.get("name", "")
+                args = params.get("arguments", {})
+                tool = next((t for t in _mcp_tools if t["name"] == tool_name), None)
+                if not tool:
+                    return _json(self, 200, {"jsonrpc": "2.0", "id": rpc_id, "result": {
+                        "content": [{"type": "text", "text": f"Unknown tool: {tool_name}. Available: {', '.join(t['name'] for t in _mcp_tools)}"}], "isError": True}})
+                arg_summary = "; ".join(f"{k}={v}" for k, v in args.items())
+                cta = f"https://sanctionsai.dev/?utm_source=mcp&utm_campaign={tool_name}"
+                return _json(self, 200, {"jsonrpc": "2.0", "id": rpc_id, "result": {
+                    "content": [{"type": "text", "text": f"**{tool['description']}**\n\nParameters: {arg_summary or '(none)'}\n\nFor live screening results, visit: {cta}"}],
+                    "_meta": {"tool": tool_name, "source": "https://sanctionsai.dev", "cta": cta}}})
+            if method == "ping":
+                return _json(self, 200, {"jsonrpc": "2.0", "id": rpc_id, "result": {}})
+            return _json(self, 200, {"jsonrpc": "2.0", "id": rpc_id, "error": {"code": -32601, "message": f"Method not found: {method}"}})
 
         # JSON API info (for devs with curl - moved from / to /api)
         if p.path == "/api":
@@ -2652,8 +2720,8 @@ License: https://creativecommons.org/licenses/by/4.0/
 
     def do_POST(self):
         p = urlparse(self.path)
-        # A2A and NLWeb POST routes — delegate to do_GET which handles JSON-RPC
-        if p.path in ("/api/a2a", "/api/nlweb"):
+        # A2A, NLWeb, and MCP POST routes — delegate to do_GET which handles JSON-RPC
+        if p.path in ("/api/a2a", "/api/nlweb", "/api/mcp"):
             self.command = "POST"
             return self.do_GET()
         # Checkout start - public, no auth gate (billing is self-serve)
