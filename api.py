@@ -1895,9 +1895,19 @@ Disallow: /webhooks/
 # AI crawler directives — explicitly invite crawling by all major AI/LLM bots
 User-agent: GPTBot
 Disallow:
+User-agent: ChatGPT-User
+Disallow:
+User-agent: OAI-SearchBot
+Disallow:
+User-agent: ClaudeBot
+Disallow:
 User-agent: Claude-Web
 Disallow:
 User-agent: Claude-3
+Disallow:
+User-agent: Claude-SearchBot
+Disallow:
+User-agent: Claude-User
 Disallow:
 User-agent: anthropic-ai
 Disallow:
@@ -1909,7 +1919,23 @@ User-agent: Google-Extended
 Disallow:
 User-agent: PerplexityBot
 Disallow:
+User-agent: Perplexity-User
+Disallow:
 User-agent: Applebot-Extended
+Disallow:
+User-agent: Bingbot
+Disallow:
+User-agent: DuckAssistBot
+Disallow:
+User-agent: Amazonbot
+Disallow:
+User-agent: Bytespider
+Disallow:
+User-agent: Meta-ExternalAgent
+Disallow:
+User-agent: cohere-ai
+Disallow:
+User-agent: YouBot
 Disallow:
 
 # AI-friendly directives (per Google's AI crawler guidelines)
