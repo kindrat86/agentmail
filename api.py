@@ -4040,6 +4040,22 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
   <a href="/tools/sei-calculator" style="text-decoration:none"><span class="item"><span class="mk">&#9733;</span> SEI Calculator</span></a>
 </div></div></div>
 
+<!-- DREAM 100 / AUTHORITY BAR (Brunson Traffic Secrets Secret #2: surface the congregation) -->
+<div class="trust" style="border-top:none;padding:18px 0 22px;background:linear-gradient(180deg,rgba(0,212,170,.04),transparent)">
+  <div class="wrap">
+    <div class="row" style="gap:14px 30px;justify-content:center;flex-wrap:wrap;opacity:.92">
+      <span class="label" style="color:var(--teal2)">In the conversation with</span>
+      <span class="item"><span class="mk" style="color:var(--teal2)">&#9670;</span> x402 working group</span>
+      <span class="item"><span class="mk" style="color:var(--teal2)">&#9670;</span> Anthropic agent docs</span>
+      <span class="item"><span class="mk" style="color:var(--teal2)">&#9670;</span> Base / Coinbase AgentKit</span>
+      <span class="item"><span class="mk" style="color:var(--teal2)">&#9670;</span> LangChain ecosystem</span>
+      <span class="item"><span class="mk" style="color:var(--teal2)">&#9670;</span> OFAC SDN list (live mirror)</span>
+      <span class="item"><span class="mk" style="color:var(--teal2)">&#9670;</span> Model Context Protocol</span>
+    </div>
+    <p style="text-align:center;margin:12px 0 0;font-size:.85rem;color:var(--muted);opacity:.7">agentmail is built alongside the protocols that move agent money. We are not waiting for the first enforcement to make this mandatory.</p>
+  </div>
+</div>
+
 <!-- STORY -->
 <section class="sec story" id="story" tabindex="-1"><div class="wrap">
   <div class="sec-head reveal"><span class="eyebrow"><span class="dot"></span> The story</span>
@@ -4120,7 +4136,14 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
 <section class="sec" id="try-free" style="padding-top:0"><div class="wrap">
   <div class="capture reveal">
     <h2>Run your first check right now. Free.</h2>
-    <p class="lead">No signup, no API key, no credit card. Paste any wallet address and see the result instantly &mdash; or drop your email for a 5-day series on agent compliance.</p>
+    <p class="lead">No signup, no API key, no credit card. Paste any wallet address and see the result instantly &mdash; or drop your email and I'll send you the <b>5-day agent compliance Soap Opera</b>:</p>
+    <ol style="margin:6px 0 14px;font-size:.95rem;color:var(--muted);line-height:1.9;max-width:560px">
+      <li><b style="color:var(--text)">Day 1:</b> The wallet that almost cost me $356,000 (the epiphany)</li>
+      <li><b style="color:var(--text)">Day 2:</b> The 3-line curl that screens any wallet in 100&nbsp;ms</li>
+      <li><b style="color:var(--text)">Day 3:</b> Why x402, AgentKit and AP2 will never screen for you</li>
+      <li><b style="color:var(--text)">Day 4:</b> Wire it into your agent before production (copy-paste)</li>
+      <li><b style="color:var(--text)">Day 5:</b> The deployment checklist + the first real fine prediction</li>
+    </ol>
     <form class="form" id="free-tier-capture">
       <div class="row">
         <input type="email" id="free-email" inputmode="email" autocomplete="email" placeholder="you@example.com (optional &mdash; for the compliance series)" aria-label="Email address (optional)">
