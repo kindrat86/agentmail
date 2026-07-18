@@ -2044,6 +2044,15 @@ AgentMail is the compliance layer for autonomous agent payments. Before any agen
 | **Know Your Agent** | `POST /kya` | Verify AI agent identity: wallet, domain, wallet age, pubkey. |
 | **Dispute** | `POST /disputes` | File a dispute with audit trail + 7-day auto-escalation. |
 
+## MCP tools (exact names for tool-calls)
+
+The `sanctions-mcp` server exposes four tools — an agent calls them by these exact names:
+
+- `sanctions_check(name="", wallet="", country="")` — Screen a counterparty against OFAC/EU/UN/UK sanctions lists. Cheapest check, call first. Returns `{matches, clean}`.
+- `risk_score(counterparty_id, amount, currency="USDC", rail="x402", category="digital_goods")` — Score a transaction's fraud risk before authorizing payment. Returns `{score, recommendation: allow|review|decline, reasons, screen_id}`.
+- `kya_verify(agent_id, evidence)` — Know Your Agent: verify a counterparty agent before transacting. Returns `{trust_score, verified, flags, recommendation}`.
+- `dispute_open(transaction_id, reason, evidence=None)` — Open a dispute when an agent-paid transaction goes bad. Returns `{dispute_id, status, escalation_at}`.
+
 ## Quick Start
 
 ```bash
@@ -3186,6 +3195,12 @@ MIT license. All four tools run locally for free.
 MCP-compatible agents get native tool access. Install:
 pip install sanctions-mcp
 Then add to your MCP client (Claude Code, Cursor, Windsurf).
+
+The server exposes four tools (call by these exact names):
+- sanctions_check(name="", wallet="", country="") - Screen a counterparty against OFAC/EU/UN/UK sanctions lists. Cheapest check, call first. Returns {matches, clean}.
+- risk_score(counterparty_id, amount, currency="USDC", rail="x402", category="digital_goods") - Score a transaction's fraud risk before authorizing payment. Returns {score, recommendation: allow|review|decline, reasons, screen_id}.
+- kya_verify(agent_id, evidence) - Know Your Agent: verify a counterparty agent before transacting. Returns {trust_score, verified, flags, recommendation}.
+- dispute_open(transaction_id, reason, evidence=None) - Open a dispute when an agent-paid transaction goes bad. Returns {dispute_id, status, escalation_at}.
 
 ## Data Coverage
 - 782 OFAC-listed crypto wallet addresses (EVM, Bitcoin, Tron)
