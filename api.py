@@ -1958,7 +1958,7 @@ Sitemap: https://sanctionsai.dev/sitemap.xml
         if p.path == "/image-sitemap.xml":
             return self._serve_file_content("image-sitemap.xml", "application/xml")
         if p.path == "/sitemap-index.xml":
-            return self._serve_file_content("sitemap-index.xml", "application/xml")
+            return self._sitemap_index_xml()
         if p.path == "/.well-known/assetlinks.json":
             return self._serve_file_content(".well-known/assetlinks.json", "application/json")
         if p.path == "/87aaa199acaf7d14c812e974ce115e32.txt":
@@ -3309,6 +3309,17 @@ License: https://creativecommons.org/licenses/by/4.0/
         ("/research/agent-payment-sanctions-exposure-2026", "weekly", "0.9", "2026 Agent-Payment Sanctions Exposure Report — agentmail Sanctions Exposure Index (SEI)"),
         # Interactive SEI calculator
         ("/tools/sei-calculator", "weekly", "0.9", "SEI Calculator — agentmail Sanctions Exposure Index"),
+        # pSEO URLs (from sitemap-pseo.xml — now merged into main for discoverability)
+        ("/compare/trm-labs", "weekly", "0.8", "Compare TRM Labs"),
+        ("/for/nft-marketplaces", "weekly", "0.8", "OFAC sanctions for NFT marketplaces"),
+        ("/for/dao-treasuries", "weekly", "0.8", "OFAC sanctions for DAO treasuries"),
+        ("/for/cross-border-payments", "weekly", "0.8", "OFAC sanctions for cross-border payments"),
+        ("/for/stablecoin-issuers", "weekly", "0.8", "OFAC sanctions for stablecoin issuers"),
+        ("/for/kyc-providers", "weekly", "0.8", "OFAC sanctions for KYC providers"),
+        ("/for/rwa-tokenization", "weekly", "0.8", "OFAC sanctions for RWA tokenization"),
+        ("/for/crypto-exchanges", "weekly", "0.8", "OFAC sanctions for crypto exchanges"),
+        ("/for/defi-protocols", "weekly", "0.8", "OFAC sanctions for DeFi protocols"),
+        ("/for/fintech-startups", "weekly", "0.8", "OFAC sanctions for fintech startups"),
     ]
         import datetime
         today = datetime.date.today().isoformat()
@@ -3322,6 +3333,16 @@ License: https://creativecommons.org/licenses/by/4.0/
             xml += f'    <priority>{priority}</priority>\n'
             xml += f'  </url>\n'
         xml += '</urlset>\n'
+        self._serve_text(xml, "application/xml")
+
+    def _sitemap_index_xml(self):
+        import datetime
+        today = datetime.date.today().isoformat()
+        xml = '<?xml version="1.0" encoding="UTF-8"?>\\n'
+        xml += '<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\\n'
+        xml += f'  <sitemap>\\n    <loc>https://sanctionsai.dev/sitemap.xml</loc>\\n    <lastmod>{today}</lastmod>\\n  </sitemap>\\n'
+        xml += f'  <sitemap>\\n    <loc>https://sanctionsai.dev/image-sitemap.xml</loc>\\n    <lastmod>{today}</lastmod>\\n  </sitemap>\\n'
+        xml += '</sitemapindex>\\n'
         self._serve_text(xml, "application/xml")
 
     def _llms_txt(self):
