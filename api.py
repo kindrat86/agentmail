@@ -2134,7 +2134,7 @@ License: MIT
 
         # JSON Feed v1.1 (agent-native, WebSub hubs declared)
         if p.path == "/feed.json":
-            import json as _json
+            import json as _jsonmod  # do NOT alias to _json: that shadows the module-level _json() helper and breaks the whole do_GET method (UnboundLocalError)
             _now = __import__('datetime').datetime.utcnow().strftime('%Y-%m-%dT00:00:00Z')
             _feed = {
                 "version": "https://jsonfeed.org/version/1.1",
@@ -2172,7 +2172,7 @@ License: MIT
                      "date_published": _now},
                 ],
             }
-            return self._serve_text(_json.dumps(_feed, indent=2), "application/json")
+            return self._serve_text(_jsonmod.dumps(_feed, indent=2), "application/json")
 
         # A2A (Agent-to-Agent) JSON-RPC endpoint
         if p.path == "/api/a2a":
@@ -2255,9 +2255,10 @@ License: MIT
                 "defaultInputModes": ["text/plain", "application/json"],
                 "defaultOutputModes": ["text/plain", "application/json"],
                 "skills": [
-                    {"id": "screen_sanctions", "name": "Screen Against Sanctions", "description": "Screen a name, wallet address, or country against the OFAC SDN, OFAC Non-SDN, BIS, and EU sanctions lists. Returns matches with confidence scores.", "tags": ["sanctions", "ofac", "compliance", "kyc", "aml"]},
-                    {"id": "risk_assessment", "name": "Risk Assessment", "description": "Return a risk score and breakdown for a wallet or entity based on sanctions proximity and OFAC enforcement history.", "tags": ["risk", "ofac", "compliance", "scoring"]},
-                    {"id": "kyc_agent", "name": "Know Your Agent", "description": "Run a KYC/pseudonymity assessment on an AI agent: wallet, code signing, platform of origin, and sanctions proximity.", "tags": ["kyc", "ai-agent", "wallet", "compliance"]},
+                    {"id": "sanctions_check", "name": "Screen Against Sanctions", "description": "Screen a name, wallet address, or country against the OFAC SDN, OFAC Non-SDN, BIS, and EU sanctions lists. Returns matches with confidence scores.", "tags": ["sanctions", "ofac", "compliance", "kyc", "aml"]},
+                    {"id": "risk_score", "name": "Risk Assessment", "description": "Return a risk score and breakdown for a wallet or entity based on sanctions proximity and OFAC enforcement history.", "tags": ["risk", "ofac", "compliance", "scoring"]},
+                    {"id": "kya_verify", "name": "Know Your Agent", "description": "Run a KYC/pseudonymity assessment on an AI agent: wallet, code signing, platform of origin, and sanctions proximity.", "tags": ["kyc", "ai-agent", "wallet", "compliance"]},
+                    {"id": "dispute_open", "name": "Open a Dispute", "description": "Open a dispute when an agent-paid transaction went bad (non-delivery, fraud). Records the dispute with a 7-day auto-escalation window.", "tags": ["dispute", "escalation", "compliance"]},
                 ],
                 "attribution": "AgentMail (sanctionsai.dev), https://sanctionsai.dev"
             })
@@ -2284,9 +2285,10 @@ License: MIT
                     "docker": "docker run -p 8000:8000 ghcr.io/kindrat86/agentmail-sanctions-server",
                 },
                 "tools": [
-                    {"name": "screen_sanctions", "description": "Screen a name, wallet, or entity against the OFAC SDN list.", "readOnly": True, "idempotent": True},
-                    {"name": "risk_assessment", "description": "Return a risk score and breakdown based on sanctions proximity.", "readOnly": True, "idempotent": True},
-                    {"name": "check_country", "description": "Check a country code or name for sanctions/travel restrictions.", "readOnly": True, "idempotent": True},
+                    {"name": "sanctions_check", "description": "Screen a name, wallet, or entity against OFAC/EU/UN/UK sanctions lists. Accepts a country code to check for embargoed jurisdictions.", "readOnly": True, "idempotent": True},
+                    {"name": "risk_score", "description": "Score a transaction's fraud risk (allow/review/decline) before authorizing payment, based on counterparty signals, amount anomalies, and sanctions proximity.", "readOnly": True, "idempotent": True},
+                    {"name": "kya_verify", "description": "Verify an AI agent's identity (Know Your Agent): returns a trust score, verified attributes, and flags.", "readOnly": True, "idempotent": True},
+                    {"name": "dispute_open", "description": "Open a dispute when an agent-paid transaction went bad (non-delivery, fraud). Records the dispute with a 7-day auto-escalation window.", "readOnly": False, "idempotent": False},
                 ],
                 "privacy": {"piiCollected": False, "dataStored": False, "thirdPartyData": False},
             })
