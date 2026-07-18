@@ -5350,7 +5350,7 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
             '<a href="/checkout/dev" class="btn btn-primary">Start free</a>'
             '</section>'
             '<section><div class="prose">'
-            '<p class="note">By <span class="author" rel="author">agentmail team</span> · Reviewed July 2026 · <time datetime="2026-07-17">Updated July 17, 2026</time> · Based on public pricing pages and feature lists as of Q3 2026</p>'
+            '<p class="note">By <span class="author" rel="author">agentmail team</span> · Reviewed July 2026 · <time datetime="2026-07-18">Updated July 18, 2026</time> · Based on public pricing pages and feature lists as of Q3 2026</p>'
             '<h2>Feature comparison</h2>'
             '<table><thead><tr><th>Capability</th><th>agentmail</th><th>' + name + '</th></tr></thead>'
             '<tbody>' + rows + '</tbody></table>'
@@ -5403,7 +5403,7 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
 </section>
 <section><div class="prose">
 <p><strong>TL;DR:</strong> This is a REST API with four endpoints. <code>GET /sanctions</code> screens a name, wallet, or country against the OFAC SDN list (782 crypto addresses + 19,086 names + 16 embargoed jurisdictions). <code>POST /risk</code> scores transaction fraud risk. <code>POST /kya</code> verifies an AI agent's identity. <code>POST /disputes</code> opens a dispute record. All return JSON, run in under 100ms, and work with or without an API key. Start with the free tier: 5 checks/day, no signup.</p>
-<p class="note">By <span class="author" rel="author">agentmail team</span> · Reviewed against OFAC SDN list (July 2026, 19,086 entries) · <time datetime="2026-07-17">Updated July 17, 2026</time> · Data sourced from US Treasury OFAC sdn.csv and vile/ofac-sdn-list</p>
+<p class="note">By <span class="author" rel="author">agentmail team</span> · Reviewed against OFAC SDN list (July 2026, 19,086 entries) · <time datetime="2026-07-18">Updated July 18, 2026</time> · Data sourced from US Treasury OFAC sdn.csv and vile/ofac-sdn-list</p>
 <h2>Quick start — screen a wallet in one call</h2>
 <p>Screen any crypto wallet against the full OFAC list with a single GET request. No API key needed on the free tier:</p>
 <pre><code>curl "__SITE__/sanctions?wallet=0x098B716B8Aaf21512996dC57EB0615e2383E2f96"</code></pre>
