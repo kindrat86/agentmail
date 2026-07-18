@@ -29,10 +29,10 @@ startCommand:
     required: []
   # Launch via uv: install the package with the [mcp] extra, run the MCP module.
   commandFunction: |-
-    () => ({ command: "uv", args: ["run", "--with", "agentmail[mcp]", "python", "-m", "agentmail.mcp_server"] })
+    () => ({ command: "uv", args: ["run", "--with", "sanctions-mcp[mcp]", "python", "-m", "agentmail.mcp_server"] })
 
 # Dependencies Smithery installs before running.
 dependencies:
   python:
     - uv
-    - agentmail[mcp]
+    - sanctions-mcp[mcp]
