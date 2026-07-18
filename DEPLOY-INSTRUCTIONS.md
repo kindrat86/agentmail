@@ -32,7 +32,7 @@ Deploy with a single Fly.io deployment — no config changes needed.
 | File | Purpose |
 |------|---------|
 | `~/workspace/agentmail/llms.txt` | Updated from stub to full content matching `_llms_txt()` handler |
-| `~/workspace/agentmail/87aaa199acaf7d14c812e974ce115e32.txt` | IndexNow key file — submit to IndexNow after deploy |
+| `/87aaa199acaf7d14c812e974ce115e32.txt` (route) | IndexNow key — served dynamically by `api.py` (`_serve_text`), **not** a file on disk; submit to IndexNow after deploy |
 
 ---
 
