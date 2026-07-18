@@ -1,0 +1,7 @@
+New: The agentmail Sanctions Exposure Index (SEI) — a 5-factor framework for quantifying AI agent OFAC sanctions exposure.
+
+Score your agent in 30 seconds: sanctionsai.dev/tools/sei-calculator
+
+Full report (CC BY 4.0): sanctionsai.dev/research/agent-payment-sanctions-exposure-2026
+
+Real enforcement data. Free. Open source. https://sanctionsai.dev
