@@ -3338,11 +3338,11 @@ License: https://creativecommons.org/licenses/by/4.0/
     def _sitemap_index_xml(self):
         import datetime
         today = datetime.date.today().isoformat()
-        xml = '<?xml version="1.0" encoding="UTF-8"?>\\n'
-        xml += '<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\\n'
-        xml += f'  <sitemap>\\n    <loc>https://sanctionsai.dev/sitemap.xml</loc>\\n    <lastmod>{today}</lastmod>\\n  </sitemap>\\n'
-        xml += f'  <sitemap>\\n    <loc>https://sanctionsai.dev/image-sitemap.xml</loc>\\n    <lastmod>{today}</lastmod>\\n  </sitemap>\\n'
-        xml += '</sitemapindex>\\n'
+        xml = '<?xml version="1.0" encoding="UTF-8"?>\n'
+        xml += '<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+        xml += f'  <sitemap>\n    <loc>https://sanctionsai.dev/sitemap.xml</loc>\n    <lastmod>{today}</lastmod>\n  </sitemap>\n'
+        xml += f'  <sitemap>\n    <loc>https://sanctionsai.dev/image-sitemap.xml</loc>\n    <lastmod>{today}</lastmod>\n  </sitemap>\n'
+        xml += '</sitemapindex>\n'
         self._serve_text(xml, "application/xml")
 
     def _llms_txt(self):
