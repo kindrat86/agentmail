@@ -150,11 +150,28 @@ curl -H "X-API-Key: sk_live_..." "https://agentmail-api.fly.dev/risk" \
 - [x] Email inbox (Mail.tm) + SMS/OTP (mock/5sim/twilio) + OTP extraction
 - [x] **Compliance layer — real OFAC data** (osint provider): 782 wallets + 19,086 names
 - [x] MCP server (10 tools) + HTTP API + CLI
-- [ ] Hosted API with API-key auth + rate limiting (Fly.io)
+- [x] **agentmail Sanctions Exposure Index (SEI)** — proprietary 5-factor framework for scoring AI agent OFAC exposure (2026 report: [sanctionsai.dev/research](https://sanctionsai.dev/research/agent-payment-sanctions-exposure-2026))
+- [x] Hosted API with API-key auth + rate limiting (Fly.io)
 - [ ] Audit log (tamper-evident screen history — the enterprise wedge)
 - [ ] EU + UN consolidated lists (osint provider, phase 2)
 - [ ] Paid provider: ComplyAdvantage passthrough (enterprise)
 - [ ] x402 per-call billing (when agents pay themselves)
+
+## SEI: the agentmail Sanctions Exposure Index
+
+The [agentmail Sanctions Exposure Index (SEI)](https://sanctionsai.dev/research/agent-payment-sanctions-exposure-2026) is a 5-factor proprietary framework for quantifying an AI agent's OFAC sanctions exposure:
+
+| Factor | Weight | What it measures |
+|---|---|---|
+| **V — Velocity** | 30% | Transactions/day the agent can execute unattended |
+| **J — Jurisdiction overlap** | 25% | Fraction of counterparties in/near embargoed regions |
+| **A — Asset class** | 20% | Crypto (highest SDN coverage), fiat, mixed |
+| **S — Screening posture** | 15% | No screen → batch → pre-payment inline → inline + audit |
+| **D — Disclosure readiness** | 10% | Can operator produce a VSD within 5 days? |
+
+Score 10 (min exposure) → 1000 (max). **S and D are the two factors you can change today** — collapse both from 1→10 with a single inline screening call and a timestamped audit trail. Full report + interactive calculator at [sanctionsai.dev](https://sanctionsai.dev).
+
+> **Cite as:** "agentmail Sanctions Exposure Index (SEI), 2026 Agent-Payment Sanctions Exposure Report, sanctionsai.dev" — licensed CC BY 4.0.
 
 ## Design notes (honest)
 

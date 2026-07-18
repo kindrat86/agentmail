@@ -63,7 +63,8 @@ See `brand-gap-analysis.csv` (filled). Top gaps by dimension:
   - "How to screen a crypto wallet for OFAC sanctions (2026)"
   - "What is Know-Your-Agent (KYA)? Agent compliance explained"
   - "OFAC sanctions screening for x402 agent payments — setup in 2 minutes"
-- [ ] **[P2]** **Cut more PyPI releases.** v0.4.0 is the only release. Regular version bumps (even minor) build the download/version-history signal models and package registries feed on.
+- [x] **[P2]** **Cut more PyPI releases.** v0.4.0 is the only release. Regular version bumps (even minor) build the download/version-history signal models and package registries feed on.
+  - **DONE 2026-07-18:** Bumped to v0.5.0. Added CHANGELOG.md with full AEO changelog. Updated keywords to include `sei`, `sanctions-exposure-index`, `x402`. Added Documentation + Changelog URLs to PyPI metadata. Homepage now points to sanctionsai.dev. Build succeeds. **Push to GitHub:** pushed to `growth/2026-07-18-sanctionsai`. **PyPI publish:** blocked — no API token available. Run `uv publish --token pypi-xxxx` to upload.
 
 ### 📣 Influence (earn off-site mentions)
 

@@ -5070,7 +5070,7 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
             '<p class="lead" style="max-width:600px;margin:0 auto">Production sanctions screening for AI agents. Free to start - upgrade when you scale.</p>'
             '</section>'
             '<section><div class="prose" style="max-width:960px">'
-            '<p class="note" style="text-align:center">By <span class="author" rel="author">agentmail team</span> · All plans include OFAC/EU/UN/UK data refreshed daily · <time datetime="2026-07-17">Updated July 17, 2026</time> · Self-host option: <code>pip install sanctions-mcp</code></p>'
+            '<p class="note" style="text-align:center">By <span class="author" rel="author">agentmail team</span> · All plans include OFAC/EU/UN/UK data refreshed daily · <time datetime="2026-07-18">Updated July 18, 2026</time> · Self-host option: <code>pip install sanctions-mcp</code></p>'
             '<table style="text-align:center">'
             '<thead><tr><th></th><th><h3>Free</h3><p style="color:#00d4aa;font-size:1.5em;font-weight:800;margin:4px 0">$0</p></th>'
             '<th><h3>Dev</h3><p style="color:#00d4aa;font-size:1.5em;font-weight:800;margin:4px 0">$19<span style="font-size:.5em;color:#666">/mo</span></p></th>'
@@ -5225,7 +5225,7 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
             '</section>'
             '<section><div class="prose">'
             '<p><strong>Quick answer:</strong> agentmail is an OFAC sanctions screening API built for AI agents that move money autonomously. You call <code>GET /sanctions?wallet=0x...</code> before every payment. If the response says <code>"clean": true</code>, the counterparty is safe to pay. If <code>"clean": false</code>, your agent halts. It checks 782 sanctioned crypto wallets, 19,086 SDN names, and 16 embargoed jurisdictions in under 100ms. The free tier gives you 5 checks/day with no API key &mdash; <a href="/tools/wallet-checker">try it now</a>.</p>'
-            '<p class="note">By <span class="author" rel="author">agentmail team</span> · Reviewed against OFAC SDN list (July 2026) · <time datetime="2026-07-17">Updated July 17, 2026</time> · MIT-licensed, self-hostable via <code>pip install sanctions-mcp</code></p>'
+            '<p class="note">By <span class="author" rel="author">agentmail team</span> · Reviewed against OFAC SDN list (July 2026) · <time datetime="2026-07-18">Updated July 18, 2026</time> · MIT-licensed, self-hostable via <code>pip install sanctions-mcp</code></p>'
             '</div></section>'
             '<section><div class="prose">' + items + '</div></section>'
             '<section><div class="cta-box"><h2>Start screening in 30 seconds</h2>'
@@ -5252,7 +5252,7 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
         if not v:
             return _json(self, 404, {"error": "not found"})
         name_lower = v["name"].lower()
-        today = "2026-07-17"
+        today = "2026-07-18"
         body = (
             '<section style="text-align:center;border-top:none">'
             '<p class="note" style="letter-spacing:.05em;text-transform:uppercase">For ' + v["name"] + ' agents</p>'
