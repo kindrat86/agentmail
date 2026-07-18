@@ -1928,6 +1928,8 @@ User-agent: Perplexity-User
 Disallow:
 User-agent: Applebot-Extended
 Disallow:
+User-agent: Applebot
+Disallow:
 User-agent: Bingbot
 Disallow:
 User-agent: DuckAssistBot
@@ -1937,6 +1939,8 @@ Disallow:
 User-agent: Bytespider
 Disallow:
 User-agent: Meta-ExternalAgent
+Disallow:
+User-agent: FacebookBot
 Disallow:
 User-agent: cohere-ai
 Disallow:
