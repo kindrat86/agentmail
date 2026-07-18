@@ -24,7 +24,7 @@ primary_region = "fra"
   force_https = true
   auto_stop_machines = "suspend" # suspend (RAM snapshot, ~1s wake) — plain `true` = full stop with >15s cold starts that time out first requests
   auto_start_machines = true
-  min_machines_running = 0
+  min_machines_running = 1 # keep 1 machine always warm — a compliance/AEO-critical API must not cold-start-503 the first request (and AI crawlers drop 503s)
 
   [http_service.concurrency]
     type = "requests"
