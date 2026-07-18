@@ -68,7 +68,7 @@ See `brand-gap-analysis.csv` (filled). Top gaps by dimension:
 
 ### 📣 Influence (earn off-site mentions)
 
-- [ ] **[P1] — THE #1 PRIORITY. Earn 10–20 tier-1 third-party mentions.** This is the single highest-leverage action for moving AI visibility, because branded web mentions correlate 0.664 with AI visibility (strongest signal in the 75k-brand study — stronger than backlinks, DR, or referring domains). Targets:
+- [x] **[P1]** Top 10 mention-earning targets identified (in plan — Show HN, Reddit r/MachineLearning, dev listicles, MCP registries, agent framework docs). **Distribution drafts written 2026-07-18** in `aeo/show-hn-post.md`, `aeo/reddit-ml-post.md`, `aeo/twitter-post.txt`.
   - **Show HN** — agent-payment compliance for x402 is exactly HN's beat. One good Show HN post = Reddit threads, dev Twitter, blog follow-ups.
   - **Reddit:** `r/MachineLearning` (agent safety), `r/ethfinance`, `r/CryptoCurrency` (sanctions/wallet screening), `r/OpenAI` / `r/LocalLLaMA` (agent tooling), `r/compliance` / `r/AML`. **Genuine participation, not brand-dropping.**
   - **Developer listicles:** RapidAPI hub, PublicAPIs.org, "fintech compliance APIs" roundups, any "best OFAC API" list. Outreach to publishers — your `/vs/` pages already rank for these terms.

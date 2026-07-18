@@ -3490,6 +3490,7 @@ The server exposes four tools (call by these exact names):
         "url": "https://sanctionsai.dev/og.png"
       },
       "description": "OFAC sanctions screening API for AI agents. Screen every counterparty before your agent pays.",
+      "disambiguatingDescription": "SanctionsAI (agentmail) is an OFAC sanctions screening API purpose-built for AI agents. It checks names against the consolidated US Treasury SDN sanctions list and returns machine-readable verdicts through MCP, A2A, and REST endpoints — designed for autonomous agent-to-agent workflows where a human is not in the loop. It is NOT a human-facing compliance dashboard (ComplyAdvantage, Refinitiv World-Check, Dow Jones RDC), a blockchain analytics tool (Chainalysis, Elliptic), or a generic AML/KYC platform. The API model is agent-native: agents query it directly, receive structured JSON-LD responses, and act on them without human approval.",
       "email": "hello@sanctionsai.dev",
       "founder": {"@id": "https://sanctionsai.dev/#founder"},
       "sameAs": [
