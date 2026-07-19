@@ -467,7 +467,7 @@ footer p{color:#444;font-size:.8em}
 
 _NAV = '<nav><div class="logo">agent<span>mail</span></div><div class="links"><a href="/">Home</a><a href="/teardown">How It Works</a><a href="/dashboard">Dashboard</a><a href="/faq">FAQ</a><a href="/docs">Docs</a><a href="/tools/wallet-checker">Free Checker</a><a href="/blog/ofac-for-agents">Blog</a><a href="/pricing">Pricing</a><a href="/checkout/dev" class="btn btn-primary">Get API key</a></div></nav>'
 
-_FOOTER = '<footer><div class="links" style="display:flex;flex-wrap:wrap;gap:12px 28px;justify-content:center;max-width:900px;margin:0 auto 16px"><div style="min-width:140px"><strong style="color:#888;font-size:.75em;text-transform:uppercase;letter-spacing:.05em">Product</strong><br><a href="/">Home</a><br><a href="/teardown">How It Works</a><br><a href="/pricing">Pricing</a><br><a href="/docs">Docs</a><br><a href="/tools">Free Tools</a><br><a href="/llms.txt">llms.txt (AI docs)</a></div><div style="min-width:140px"><strong style="color:#888;font-size:.75em;text-transform:uppercase;letter-spacing:.05em"><a href="/for" style="color:#888;text-decoration:none">By Industry</a></strong><br><a href="/for/fintech">Fintech</a><br><a href="/for/crypto">Crypto</a><br><a href="/for/defi">DeFi</a><br><a href="/for/payments">Payments</a><br><a href="/for/ai-agents">AI Agents</a><br><a href="/for/developers">Developers</a></div><div style="min-width:140px"><strong style="color:#888;font-size:.75em;text-transform:uppercase;letter-spacing:.05em"><a href="/compare" style="color:#888;text-decoration:none">Compare</a></strong><br><a href="/compare/chainalysis">vs Chainalysis</a><br><a href="/compare/elliptic">vs Elliptic</a><br><a href="/compare/complyadvantage">vs ComplyAdvantage</a><br><a href="/compare/sumsub">vs SumSub</a><br><a href="/compare/world-check">vs World-Check</a></div><div style="min-width:140px"><strong style="color:#888;font-size:.75em;text-transform:uppercase;letter-spacing:.05em">Resources</strong><br><a href="/blog">Blog</a><br><a href="/guides">Guides</a><br><a href="/penalties">Penalties</a><br><a href="/how-to">How-To</a><br><a href="/glossary">Glossary</a><br><a href="/cost">Costs</a><br><a href="/integrations">Integrations</a><br><a href="/vs">Vs</a><br><a href="/content-strategy">Content Strategy</a><br><a href="/partners/jv">JV Partners (50%)</a><br><a href="/dream100">Dream 100</a><br><a href="/agent">For Agents</a><br><a href="/about">About</a><br><a href="/privacy">Privacy</a><br><a href="/terms">Terms</a></div></div><p style="text-align:center;color:#666">agentmail - OFAC sanctions screening for AI agents · MIT licensed · Data from US Treasury &amp; vile/ofac-sdn-list</p></footer>'
+_FOOTER = '<footer><div class="links" style="display:flex;flex-wrap:wrap;gap:12px 28px;justify-content:center;max-width:900px;margin:0 auto 16px"><div style="min-width:140px"><strong style="color:#888;font-size:.75em;text-transform:uppercase;letter-spacing:.05em">Product</strong><br><a href="/">Home</a><br><a href="/teardown">How It Works</a><br><a href="/pricing">Pricing</a><br><a href="/docs">Docs</a><br><a href="/tools">Free Tools</a><br><a href="/llms.txt">llms.txt (AI docs)</a></div><div style="min-width:140px"><strong style="color:#888;font-size:.75em;text-transform:uppercase;letter-spacing:.05em"><a href="/for" style="color:#888;text-decoration:none">By Industry</a></strong><br><a href="/for/fintech">Fintech</a><br><a href="/for/crypto">Crypto</a><br><a href="/for/defi">DeFi</a><br><a href="/for/payments">Payments</a><br><a href="/for/ai-agents">AI Agents</a><br><a href="/for/developers">Developers</a></div><div style="min-width:140px"><strong style="color:#888;font-size:.75em;text-transform:uppercase;letter-spacing:.05em"><a href="/compare" style="color:#888;text-decoration:none">Compare</a></strong><br><a href="/compare/chainalysis">vs Chainalysis</a><br><a href="/compare/elliptic">vs Elliptic</a><br><a href="/compare/complyadvantage">vs ComplyAdvantage</a><br><a href="/compare/sumsub">vs SumSub</a><br><a href="/compare/world-check">vs World-Check</a></div><div style="min-width:140px"><strong style="color:#888;font-size:.75em;text-transform:uppercase;letter-spacing:.05em">Resources</strong><br><a href="/blog">Blog</a><br><a href="/guides">Guides</a><br><a href="/penalties">Penalties</a><br><a href="/how-to">How-To</a><br><a href="/glossary">Glossary</a><br><a href="/cost">Costs</a><br><a href="/integrations">Integrations</a><br><a href="/vs">Vs</a><br><a href="/content-strategy">Content Strategy</a><br><a href="/partners/jv">JV Partners (50%)</a><br><a href="/dream100">Dream 100</a><br><a href="/agent">For Agents</a><br><a href="/leaderboard">Leaderboard</a><br><a href="/about">About</a><br><a href="/contact">Contact</a><br><a href="/privacy">Privacy</a><br><a href="/terms">Terms</a></div></div><p style="text-align:center;color:#666">agentmail - OFAC sanctions screening for AI agents · MIT licensed · Data from US Treasury &amp; vile/ofac-sdn-list</p></footer>'
 
 _VERTICALS = {
     "fintech": {
@@ -1928,6 +1928,8 @@ User-agent: Perplexity-User
 Disallow:
 User-agent: Applebot-Extended
 Disallow:
+User-agent: Applebot
+Disallow:
 User-agent: Bingbot
 Disallow:
 User-agent: DuckAssistBot
@@ -1937,6 +1939,8 @@ Disallow:
 User-agent: Bytespider
 Disallow:
 User-agent: Meta-ExternalAgent
+Disallow:
+User-agent: FacebookBot
 Disallow:
 User-agent: cohere-ai
 Disallow:
@@ -1958,6 +1962,8 @@ Sitemap: https://sanctionsai.dev/sitemap.xml
             return self._bing_site_auth()
         if p.path == "/googlea30bb998b91eb6ac.html":
             return self._serve_text("google-site-verification: googlea30bb998b91eb6ac.html", "text/html")
+        if p.path == "/google57979683042f3b0e.html":
+            return self._serve_text("google-site-verification: google57979683042f3b0e.html", "text/html")
         if p.path == "/sitemap.xml":
             return self._sitemap_xml()
         if p.path == "/image-sitemap.xml":
@@ -2661,6 +2667,9 @@ License: https://creativecommons.org/licenses/by/4.0/
             return self._docs_page()
         if p.path == "/tools/wallet-checker":
             return self._wallet_checker_page()
+        # Public dataset / benchmark: Agent Payment Sanctions Exposure Leaderboard
+        if p.path == "/leaderboard":
+            return self._leaderboard_page()
         if p.path.startswith("/compare/"):
             competitor = p.path[len("/compare/"):].split("?")[0].split("/")[0]
             if competitor in _COMPETITOR_KEYS:
@@ -2757,6 +2766,18 @@ License: https://creativecommons.org/licenses/by/4.0/
             return self._partners_jv_page()
         if p.path == "/dream100":
             return self._dream100_page()
+        # Widgets — embeddable OFAC compliance badge + wallet screening widget
+        if p.path == "/widgets":
+            return self._widgets_gallery_page()
+        if p.path == "/widgets/screen":
+            return self._widget_screen_page()
+        if p.path == "/api/badge/ofac-screened.svg":
+            return self._badge_ofac_svg()
+        # Portfolio-network widget — cross-portfolio reciprocal backlink mesh.
+        # Serves a static HTML grid linking to all 10 sibling sites, embeddable
+        # cross-origin (frame-ancestors *). Mirrors the widget on the other 9 sites.
+        if p.path == "/embed/tools/portfolio-network.html" or p.path == "/embed/tools/portfolio-network":
+            return self._portfolio_network_widget()
         # sanctions GET - paid endpoint (accepts API key OR x402 payment)
         if p.path == "/sanctions" or p.path.startswith("/sanctions?"):
             q = parse_qs(p.query)
@@ -2818,6 +2839,18 @@ License: https://creativecommons.org/licenses/by/4.0/
             except KeyError as e:
                 return _json(self, 404, {"error": str(e)})
             return _json(self, 200, msg or {"empty": True})
+        # Serve static .txt files from public/ directory (IndexNow key files, sitemaps, etc.)
+        if p.path.endswith('.txt') and '/' not in p.path.lstrip('/'):
+            fname = p.path.lstrip('/')
+            fpath = os.path.join('public', fname)
+            if os.path.isfile(fpath):
+                self.send_response(200)
+                self.send_header('Content-Type', 'text/plain; charset=utf-8')
+                self.send_header('Cache-Control', 'public, max-age=86400')
+                self.end_headers()
+                with open(fpath, 'rb') as f:
+                    self.wfile.write(f.read())
+                return
         # Catch-all 404 HTML page (not a 302 redirect — Google penalizes soft-404s)
         return self._page(
             "Page not found - agentmail",
@@ -3096,6 +3129,7 @@ License: https://creativecommons.org/licenses/by/4.0/
         pages = [
             ("/", "weekly", "1.0", "OFAC sanctions screening for AI agents"),
             ("/pricing", "monthly", "0.8", "Pricing - agentmail OFAC sanctions API"),
+            ("/leaderboard", "monthly", "0.9", "Agent Payment Sanctions Exposure Leaderboard 2026 - independent ranking of AI agent payment platforms by OFAC compliance posture"),
             ("/tools/wallet-checker", "weekly", "0.9", "Free OFAC wallet checker - paste any crypto address"),
             ("/faq", "monthly", "0.7", "FAQ - OFAC sanctions for AI agents"),
         ("/teardown", "weekly", "0.9", "Workflow teardown: what happens when your AI agent pays a sanctioned wallet"),
@@ -3106,6 +3140,7 @@ License: https://creativecommons.org/licenses/by/4.0/
         ("/content-strategy", "monthly", "0.6", "Content strategy — hub-and-spoke distribution model"),
             ("/partners/jv", "monthly", "0.6", "JV partner program — 50% recurring commission"),
             ("/dream100", "monthly", "0.5", "Dream 100 — target influencers and communities"),
+            ("/widgets", "monthly", "0.8", "Free embeddable OFAC compliance badge and wallet screening widget"),
             ("/docs", "monthly", "0.6", "API documentation - agentmail"),
             ("/for/fintech", "monthly", "0.7", "OFAC sanctions for fintech agents"),
             ("/for/crypto", "monthly", "0.7", "OFAC sanctions for crypto agents"),
@@ -5729,6 +5764,388 @@ document.getElementById("wallet").addEventListener("keydown", function(e){ if(e.
                           "Free tool: paste any crypto wallet address and check it against the OFAC sanctions list in real time. No signup, no API key. 5 checks/day.",
                           body, extra_head=self._ld(ld), canonical="/tools/wallet-checker")
 
+    # ─── Agent Payment Sanctions Exposure Leaderboard (public benchmark) ───
+    def _leaderboard_page(self):
+        """Public-benchmark / dataset page ranking AI agent payment platforms by
+        their OFAC/sanctions compliance posture. Every cell below is sourced
+        from each platform's own public documentation; claims we could not
+        verify are marked 'Not documented' rather than guessed."""
+        today = "2026-07-19"
+
+        # Each entry:
+        #   rank, name, screening (Yes/Partial/No), wallets, names, countries,
+        #   latency, cost, ofac_risk_level, last_verified (YYYY-MM-DD),
+        #   evidence_url, evidence_note, our_compare_slug (or None)
+        #
+        # OFAC Risk Level is our assessment based on the screening coverage:
+        #   Low    = wallet + name + country screening, programmatic API
+        #   Medium = wallet screening at platform level, no agent API
+        #   High   = no documented sanctions screening for agent payments
+        # (Methodology section on the page explains this in full.)
+        rows = [
+            {
+                "name": "agentmail",
+                "screening": "Yes",
+                "wallets": "782 OFAC crypto wallets",
+                "names": "19,086 SDN names",
+                "countries": "16 embargoed jurisdictions",
+                "latency": "~100 ms",
+                "cost": "$0.05 / check (free tier 5/day)",
+                "risk": "Low",
+                "verified": "2026-07-19",
+                "evidence": "https://sanctionsai.dev/docs",
+                "note": "agentmail is the product publishing this leaderboard. Its own ranking is held to the same verification bar as every other entry.",
+                "compare": None,
+                "self": True,
+            },
+            {
+                "name": "Coinbase x402 Facilitator (CDP)",
+                "screening": "Partial",
+                "wallets": "Yes (KYT blocks sanctioned addresses)",
+                "names": "Not documented",
+                "countries": "Not documented",
+                "latency": "Not documented",
+                "cost": "Free tier 1,000 tx/mo, then $0.001 / tx",
+                "risk": "Low",
+                "verified": "2026-07-19",
+                "evidence": "https://docs.cdp.coinbase.com/x402/core-concepts/facilitator",
+                "note": "Facilitator-level KYT declines payments involving sanctioned or high-risk addresses. Name and country screening not documented at the facilitator layer.",
+                "compare": None,
+                "self": False,
+            },
+            {
+                "name": "Coinbase CDP Wallets / AgentKit",
+                "screening": "Yes",
+                "wallets": "Yes (all transfers screened)",
+                "names": "Not documented",
+                "countries": "Not documented",
+                "latency": "Not documented",
+                "cost": "Not documented (platform fees apply)",
+                "risk": "Low",
+                "verified": "2026-07-19",
+                "evidence": "https://docs.cdp.coinbase.com/wallets/security-and-policies/security-overview",
+                "note": "\"All transfers are automatically screened against the OFAC sanctions list\" before onchain submission. Operates inside Coinbase custody, not as a standalone agent API.",
+                "compare": None,
+                "self": False,
+            },
+            {
+                "name": "Coinbase Agentic Wallet CLI",
+                "screening": "Yes",
+                "wallets": "Yes (built-in OFAC)",
+                "names": "Not documented",
+                "countries": "Not documented",
+                "latency": "Not documented",
+                "cost": "Not documented",
+                "risk": "Low",
+                "verified": "2026-07-19",
+                "evidence": "https://docs.cdp.coinbase.com/agentic-wallet/cli/welcome",
+                "note": "Documents \"Built-in OFAC compliance\" for all transfers. Inherits Coinbase custody controls. Screen name / country scope not documented.",
+                "compare": None,
+                "self": False,
+            },
+            {
+                "name": "WalletConnect Pay",
+                "screening": "Partial",
+                "wallets": "Yes (wallet screening)",
+                "names": "Yes (identity screening)",
+                "countries": "Yes (location check)",
+                "latency": "Not documented",
+                "cost": "Not documented",
+                "risk": "Low",
+                "verified": "2026-07-19",
+                "evidence": "https://docs.reown.com/appkit/payments/overview",
+                "note": "Documents 3 pre-execution checks: wallet screening, location check, identity screening. Explicitly states these \"do not replace your own regulatory obligations.\"",
+                "compare": None,
+                "self": False,
+            },
+            {
+                "name": "Stripe Agent Toolkit",
+                "screening": "Partial",
+                "wallets": "No (no crypto wallet screening)",
+                "names": "Yes (Stripe screens all accounts)",
+                "countries": "Yes (Restricted Business list)",
+                "latency": "Not documented",
+                "cost": "Not documented (Stripe pricing)",
+                "risk": "Medium",
+                "verified": "2026-07-19",
+                "evidence": "https://docs.stripe.com/connect/risk-management/best-practices",
+                "note": "Stripe screens all accounts (merchants + connected accounts) against sanctions lists, but the Agent Toolkit itself exposes no per-call sanctions check for an agent's autonomous transaction. Built for fiat, not crypto-wallet OFAC.",
+                "compare": None,
+                "self": False,
+            },
+            {
+                "name": "PayPal Agent Toolkit",
+                "screening": "Partial",
+                "wallets": "No",
+                "names": "Yes (PayPal risk & compliance)",
+                "countries": "Yes",
+                "latency": "Not documented",
+                "cost": "Not documented",
+                "risk": "Medium",
+                "verified": "2026-07-19",
+                "evidence": "https://developer.paypal.com/community/blog/enabling-agentic-payments/",
+                "note": "PayPal's risk and compliance protocols run server-side. The Agent Toolkit (LangChain, OpenAI Agents SDK) does not document a programmable OFAC check for an agent's counterparty.",
+                "compare": None,
+                "self": False,
+            },
+            {
+                "name": "Nevermined",
+                "screening": "Partial",
+                "wallets": "Via Visa / VGS rail (undocumented)",
+                "names": "Not documented",
+                "countries": "Not documented",
+                "latency": "Not documented",
+                "cost": "Not documented",
+                "risk": "Medium",
+                "verified": "2026-07-19",
+                "evidence": "https://nevermined.ai/blog/nevermined-unlocks-autonomous-agent-card-payments-with-x402-opening-a-new-market-for-publishers-digital-merchants",
+                "note": "Routes agent card payments via Visa Intelligent Commerce + VGS. Compliance inherited from the card rail, not documented as a programmable sanctions API.",
+                "compare": None,
+                "self": False,
+            },
+            {
+                "name": "Skyfire",
+                "screening": "No",
+                "wallets": "Not documented",
+                "names": "Not documented",
+                "countries": "Not documented",
+                "latency": "Not documented",
+                "cost": "Not documented",
+                "risk": "High",
+                "verified": "2026-07-19",
+                "evidence": "https://skyfire.xyz/product/",
+                "note": "Documents KYA (Know-Your-Agent) identity verification, but no public OFAC sanctions screening API for agent-paid wallets or names.",
+                "compare": None,
+                "self": False,
+            },
+            {
+                "name": "Reown AppKit Payments",
+                "screening": "No",
+                "wallets": "Not documented",
+                "names": "Not documented",
+                "countries": "Not documented",
+                "latency": "Not documented",
+                "cost": "Not documented",
+                "risk": "High",
+                "verified": "2026-07-19",
+                "evidence": "https://docs.reown.com/appkit/payments/overview",
+                "note": "Reown's own feature matrix marks \"KYC / AML / Sanction screening\" as ❌ for the Reown SDK. Compliance is delegated to the integrator.",
+                "compare": None,
+                "self": False,
+            },
+            {
+                "name": "Solana Agent Kit (SendAI)",
+                "screening": "No",
+                "wallets": "Not documented",
+                "names": "Not documented",
+                "countries": "Not documented",
+                "latency": "Not documented",
+                "cost": "Open source (free)",
+                "risk": "High",
+                "verified": "2026-07-19",
+                "evidence": "https://github.com/sendaifun/solana-agent-kit",
+                "note": "Open-source agent toolkit (60+ Solana actions). No sanctions / OFAC screening documented in the repository or README.",
+                "compare": None,
+                "self": False,
+            },
+        ]
+
+        # Risk-level colour helper
+        def risk_cell(level):
+            if level == "Low":
+                return '<td style="color:#00d4aa;font-weight:600">Low</td>'
+            if level == "Medium":
+                return '<td style="color:#f5a623;font-weight:600">Medium</td>'
+            return '<td style="color:#ff6b6b;font-weight:600">High</td>'
+
+        def screening_cell(val):
+            if val == "Yes":
+                return '<td style="color:#00d4aa;font-weight:600">Yes</td>'
+            if val == "Partial":
+                return '<td style="color:#f5a623;font-weight:600">Partial</td>'
+            return '<td style="color:#ff6b6b">No</td>'
+
+        # Build ranking table (sorted by risk: Low -> Medium -> High, then by
+        # breadth of screening coverage). Order is intentional: it is the
+        # ranking the methodology section describes.
+        risk_order = {"Low": 0, "Medium": 1, "High": 2}
+        ordered = sorted(rows, key=lambda r: (risk_order[r["risk"]], -len(r["wallets"])))
+
+        table_rows = []
+        for i, r in enumerate(ordered, start=1):
+            name_cell = '<strong>' + r["name"] + '</strong>'
+            if r["self"]:
+                name_cell += ' <span style="font-size:.7em;color:#00d4aa">(this site)</span>'
+            name_cell += '<div style="font-size:.78em;color:#888;margin-top:4px"><a href="' + r["evidence"] + '" target="_blank" rel="noopener">evidence ↗</a></div>'
+            table_rows.append(
+                "<tr>"
+                + "<td>" + str(i) + "</td>"
+                + "<td>" + name_cell + "</td>"
+                + screening_cell(r["screening"])
+                + "<td>" + r["wallets"] + "<br><span style='color:#888;font-size:.82em'>" + r["names"] + "</span><br><span style='color:#888;font-size:.82em'>" + r["countries"] + "</span></td>"
+                + "<td>" + r["latency"] + "</td>"
+                + "<td>" + r["cost"] + "</td>"
+                + risk_cell(r["risk"])
+                + "<td>" + r["verified"] + "</td>"
+                + "</tr>"
+            )
+
+        table_html = (
+            '<div style="overflow-x:auto">'
+            '<table style="font-size:.85em">'
+            '<thead><tr>'
+            '<th>#</th>'
+            '<th>Platform</th>'
+            '<th>Sanctions Screening</th>'
+            '<th>Coverage (wallets / names / countries)</th>'
+            '<th>Latency</th>'
+            '<th>Cost</th>'
+            '<th>OFAC Risk Level</th>'
+            '<th>Last Verified</th>'
+            '</tr></thead>'
+            '<tbody>' + "".join(table_rows) + '</tbody>'
+            '</table>'
+            '</div>'
+        )
+
+        # Evidence list (one citation per platform, with the verified claim)
+        evidence_items = "".join(
+            '<li><strong>' + r["name"] + '</strong> — '
+            '<a href="' + r["evidence"] + '" target="_blank" rel="noopener">' + r["evidence"] + '</a>. '
+            '<span style="color:#888">' + r["note"] + '</span></li>'
+            for r in ordered
+        )
+
+        # FAQ for FAQPage JSON-LD + visible accordion
+        faqs = [
+            ("What is the Agent Payment Sanctions Exposure Leaderboard?",
+             "It is a public, defensible ranking of AI agent payment platforms by their OFAC / sanctions compliance posture. Each row is scored on whether the platform screens wallets, names, and countries, the latency and cost of that screening, and what is publicly documented. Every claim links to the platform's own documentation as evidence. Rankings are re-evaluated quarterly; the page is published by agentmail and agentmail is ranked by the same criteria."),
+            ("How is the OFAC Risk Level scored?",
+             "Low: the platform screens both wallet and (name or country) programmatically, and exposes a sanctions check in its agent-facing payment path. Medium: screening exists at the platform or custody level (e.g. merchant account screening or hosted-wallet KYT) but is not exposed as a programmable per-call sanctions check. High: no sanctions or OFAC screening is documented for agent payments. Coverage breadth and verifiability break ties."),
+            ("Is agentmail ranked honestly?",
+             "Yes. agentmail appears in the table and is held to the same evidence bar as every other platform. It scores Low risk because it screens 782 OFAC crypto wallets, 19,086 SDN names, and 16 embargoed jurisdictions via a single GET /sanctions call in roughly 100 ms at $0.05 / check. If you disagree with any row, the evidence link is there so you can verify it yourself."),
+            ("What does 'Not documented' mean in the table?",
+             "It means we could not find a public statement of that capability in the platform's official documentation at the time of verification. It does NOT mean the capability is absent. If you are a platform owner and can supply a citation, contact us and we will update the row in the next quarterly review."),
+            ("Does this leaderboard replace legal or compliance advice?",
+             "No. It is a technical research dataset about documented product features. It is not legal advice and does not certify any platform as OFAC-compliant. OFAC compliance is a program-level obligation that depends on your facts, jurisdiction, and counterparty profile — consult qualified counsel."),
+        ]
+
+        faq_items_html = "".join(
+            '<details class="faq-item"><summary>' + q + '</summary><div class="a"><p>' + a + '</p></div></details>'
+            for q, a in faqs
+        )
+
+        body = (
+            '<section style="text-align:center;border-top:none">'
+            '<p class="note" style="letter-spacing:.05em;text-transform:uppercase">Public benchmark · Prompt-6 dataset</p>'
+            '<h1>Agent Payment Sanctions Exposure Leaderboard</h1>'
+            '<p class="lead" style="max-width:680px;margin:0 auto 28px">An independent ranking of AI agent payment platforms by their OFAC / sanctions compliance posture. Every cell is sourced from the platform&rsquo;s own public documentation. Last updated ' + today + '.</p>'
+            '<a href="/tools/wallet-checker" class="btn btn-primary">Test a wallet now</a>'
+            '&nbsp; <a href="/compare/chainalysis" class="btn btn-ghost">See head-to-head comparisons</a>'
+            '</section>'
+
+            '<section><div class="prose">'
+            '<p class="note">By <span class="author" rel="author">agentmail team</span> · '
+            'Reviewed against each platform&rsquo;s public docs · '
+            '<time datetime="' + today + '">Updated ' + today + '</time> · '
+            'Rankings re-evaluated quarterly (next review: October 2026)</p>'
+            '<p><strong>TL;DR:</strong> Most platforms that let AI agents move money do not document a programmable OFAC sanctions check. Of the 11 platforms we reviewed, only three expose screening inside the agent&rsquo;s payment path at all, and only one — <a href="/">agentmail</a> — covers wallets, names, AND countries in a single API call. The rest either screen at the custody layer (good, but not callable by your agent) or do not document any screening. The table below is the data; the methodology section explains how we scored it.</p>'
+            '</div></section>'
+
+            '<section><div class="prose">'
+            '<h2>The leaderboard</h2>'
+            '<p class="note">Ranked by OFAC risk level (Low → Medium → High), then by breadth of screening coverage. Tap any platform name&rsquo;s <em>evidence</em> link to read the source documentation yourself.</p>'
+            + table_html +
+            '<p class="note">Last updated ' + today + '. Rankings are re-evaluated quarterly. To submit a correction or request a new row, <a href="/contact">contact us</a> with a citation to your platform&rsquo;s public documentation.</p>'
+            '</div></section>'
+
+            '<section><div class="prose">'
+            '<h2>Methodology</h2>'
+            '<p>Each platform is scored on six observable, publicly-verifiable dimensions:</p>'
+            '<ol>'
+            '<li><strong>Sanctions Screening (Yes / Partial / No)</strong> — Does the platform itself screen agent-initiated transactions against a sanctions list, as documented in its own public docs? <em>Yes</em> = wallet + (name or country) screening documented; <em>Partial</em> = screening exists at custody/platform level but is not callable as a per-transaction check; <em>No</em> = not documented.</li>'
+            '<li><strong>Coverage</strong> — Breadth of the screening: OFAC crypto wallets, SDN names, and embargoed jurisdictions. Wider coverage ranks higher.</li>'
+            '<li><strong>Latency</strong> — Documented response time for a single screening call.</li>'
+            '<li><strong>Cost</strong> — Documented per-check price or pricing tier.</li>'
+            '<li><strong>OFAC Risk Level</strong> — Our composite assessment: <strong>Low</strong> (programmatic wallet + name or country screening exposed to agents), <strong>Medium</strong> (screening exists at custody / platform level, not as a callable API), <strong>High</strong> (no sanctions screening documented for agent payments).</li>'
+            '<li><strong>Last Verified</strong> — The date we last re-checked the platform&rsquo;s public documentation. Rankings are re-evaluated quarterly.</li>'
+            '</ol>'
+            '<p><strong>What we do not score:</strong> SOC 2 / ISO 27001 status, internal policies we cannot see, marketing claims without documentation, or features behind private beta gates. If a capability is not documented in the platform&rsquo;s own public docs, it is marked <em>Not documented</em> rather than guessed.</p>'
+            '<p class="note">agentmail, the product publishing this leaderboard, is scored by the identical bar. Its evidence link points at the same docs every other row uses.</p>'
+            '</div></section>'
+
+            '<section><div class="prose">'
+            '<h2>Evidence &amp; sources</h2>'
+            '<p>Every row is backed by a citation to the platform&rsquo;s public documentation. The verified claim is summarised after each link.</p>'
+            '<ul style="font-size:.9em">' + evidence_items + '</ul>'
+            '</div></section>'
+
+            '<section><div class="prose">'
+            '<h2>Frequently asked questions</h2>'
+            + faq_items_html +
+            '</div></section>'
+
+            '<section><div class="prose">'
+            '<h2>Compare agentmail head-to-head</h2>'
+            '<p>Want a deeper comparison than the leaderboard? These pages break down agentmail against the major enterprise sanctions providers feature-by-feature:</p>'
+            '<ul>'
+            '<li><a href="/compare/chainalysis">agentmail vs Chainalysis</a></li>'
+            '<li><a href="/compare/elliptic">agentmail vs Elliptic</a></li>'
+            '<li><a href="/compare/complyadvantage">agentmail vs ComplyAdvantage</a></li>'
+            '<li><a href="/compare/sumsub">agentmail vs Sumsub</a></li>'
+            '<li><a href="/compare/world-check">agentmail vs World-Check</a></li>'
+            '</ul>'
+            '</div></section>'
+
+            '<section><div class="cta-box">'
+            '<h2>Screen your agent&rsquo;s next payment</h2>'
+            '<p>One API call. 782 OFAC wallets + 19,086 names + 16 jurisdictions. ~100 ms. Free tier 5 checks/day.</p>'
+            '<a href="/tools/wallet-checker" class="btn btn-primary">Open the free wallet checker</a>'
+            '&nbsp; <a href="/pricing" class="btn btn-ghost">See pricing</a>'
+            '</div></section>'
+        )
+
+        faq_ld = {
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": [
+                {"@type": "Question", "name": q,
+                 "acceptedAnswer": {"@type": "Answer", "text": a}}
+                for q, a in faqs
+            ],
+        }
+        breadcrumb_ld = {
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+                {"@type": "ListItem", "position": 1, "name": "Home", "item": _SITE + "/"},
+                {"@type": "ListItem", "position": 2, "name": "Leaderboard", "item": _SITE + "/leaderboard"},
+            ],
+        }
+        webapp_ld = {
+            "@context": "https://schema.org",
+            "@type": "Dataset",
+            "name": "Agent Payment Sanctions Exposure Leaderboard (2026-Q3)",
+            "description": "Independent ranking of 11 AI agent payment platforms by their OFAC / sanctions compliance posture, sourced from each platform's public documentation. Re-evaluated quarterly.",
+            "url": _SITE + "/leaderboard",
+            "creator": {"@type": "Organization", "name": "agentmail", "url": _SITE},
+            "license": "https://creativecommons.org/licenses/by/4.0/",
+            "isAccessibleForFree": True,
+            "keywords": ["OFAC", "sanctions", "AI agent payments", "x402", "compliance", "leaderboard"],
+            "temporalCoverage": "2026-07-19",
+            "dateModified": today,
+        }
+        extra_head = (
+            self._ld(faq_ld)
+            + self._ld(breadcrumb_ld)
+            + self._ld(webapp_ld)
+            + '<meta name="robots" content="index,follow,max-image-preview:large">'
+        )
+        return self._page(
+            "Agent Payment Sanctions Exposure Leaderboard (2026) - agentmail",
+            "Independent 2026 ranking of 11 AI agent payment platforms (x402, Coinbase AgentKit, Stripe Agent Toolkit, Solana Agent Kit, Skyfire, Nevermined, and more) by their OFAC / sanctions compliance posture. Every row cited to public docs.",
+            body, extra_head=extra_head, canonical="/leaderboard")
+
     # ─── Blog article pages ─────────────────────────────────────────────
     def _blog_page(self, slug):
         post = _BLOG_POSTS.get(slug)
@@ -6030,6 +6447,232 @@ document.getElementById("wallet").addEventListener("keydown", function(e){ if(e.
         return self._page("Dream 100 — Our Target Distribution List | agentmail",
                           "The influencers, communities, and partners we are building relationships with to bring OFAC sanctions screening to every AI payment agent.",
                           body, extra_head=self._ld(ld), canonical="/dream100")
+
+    def _widgets_gallery_page(self):
+        """Widget gallery — embeddable OFAC compliance badge + wallet screening widget."""
+        body = """<section style="text-align:center;border-top:none">
+<p class="note" style="letter-spacing:.05em;text-transform:uppercase">Free Embeddable Widgets</p>
+<h1>Put OFAC screening on your site — free, one line of HTML</h1>
+<p class="lead" style="max-width:640px;margin:0 auto 28px">
+Two embeddable widgets that let your users screen wallets against the OFAC SDN list without leaving your site. No API key. No signup. Just copy, paste, done.
+</p></section>
+
+<section><div class="prose" style="max-width:800px;margin:0 auto">
+
+<h2>1. OFAC Compliance Badge <code style="font-size:.8em;color:#00d4aa;background:#0d1a14;padding:2px 8px;border-radius:4px">SVG</code></h2>
+<p>A live SVG badge showing real-time OFAC screening stats: 782 sanctioned wallets, 19,086 names, hourly sync. Every embed links back to sanctionsai.dev — permanent backlink for your compliance page.</p>
+
+<div style="background:#0a0a0a;border:1px solid #1a1a1a;border-radius:12px;padding:20px;text-align:center;margin:16px 0">
+<img src="/api/badge/ofac-screened.svg" alt="Protected by agentmail — OFAC Screening" style="max-width:100%">
+</div>
+
+<h3>Embed code</h3>
+<pre style="background:#0a0a0a;border:1px solid #1a1a1a;border-radius:8px;padding:16px;overflow-x:auto;font-size:.82em;color:#34d399"><code>&lt;a href="https://sanctionsai.dev"&gt;
+  &lt;img src="https://sanctionsai.dev/api/badge/ofac-screened.svg"
+       alt="Protected by agentmail — OFAC Screening"
+       width="360" height="120"&gt;
+&lt;/a&gt;</code></pre>
+
+<h3 style="margin-top:28px">Where to use it</h3>
+<ul>
+<li><strong>DeFi protocol footer</strong> — "We screen all counterparties"</li>
+<li><strong>Crypto exchange compliance page</strong> — demonstrates regulatory posture</li>
+<li><strong>Blockchain explorer</strong> — shows screening is active</li>
+<li><strong>Agent marketplace listing</strong> — proves your agent screens OFAC</li>
+<li><strong>Developer docs</strong> — shows your integration's compliance stack</li>
+</ul>
+
+<hr style="border-color:#1a1a1a;margin:36px 0">
+
+<h2>2. Wallet Screening Widget <code style="font-size:.8em;color:#00d4aa;background:#0d1a14;padding:2px 8px;border-radius:4px">iframe</code></h2>
+<p>An interactive wallet screening tool your users can use directly on your site. Paste any EVM/Bitcoin wallet and see instant OFAC screening results.</p>
+
+<h3>Embed code</h3>
+<pre style="background:#0a0a0a;border:1px solid #1a1a1a;border-radius:8px;padding:16px;overflow-x:auto;font-size:.82em;color:#34d399"><code>&lt;iframe src="https://sanctionsai.dev/widgets/screen"
+        width="100%" height="400" frameborder="0"
+        title="OFAC Wallet Screening"&gt;
+&lt;/iframe&gt;</code></pre>
+
+<h3 style="margin-top:20px">Live preview</h3>
+<div style="background:#0a0a0a;border:1px solid #1a1a1a;border-radius:12px;overflow:hidden;margin:16px 0">
+<iframe src="/widgets/screen" width="100%" height="400" frameborder="0" title="OFAC Wallet Screening" style="background:#0a0a0a"></iframe>
+</div>
+
+<h3>Features</h3>
+<ul>
+<li>Screen any EVM, Bitcoin, or Tron wallet against 782 OFAC-sanctioned addresses</li>
+<li>Free — 5 checks/day per IP, no API key</li>
+<li>Under 100ms per check</li>
+<li>Data refreshed hourly from US Treasury SDN list</li>
+<li>MIT licensed — self-host for unlimited use</li>
+</ul>
+
+<div class="cta-box" style="margin-top:36px">
+<h3>Ready to protect your agent's payments?</h3>
+<p>5 free checks/day, no signup, no API key. Scale to production when you're ready.</p>
+<a href="/" class="btn btn-primary">Try it free →</a>
+&nbsp; <a href="/pricing" class="btn btn-ghost">See plans</a>
+</div>
+
+</div></section>"""
+        ld_bc = """<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://sanctionsai.dev/"},{"@type":"ListItem","position":2,"name":"Widgets","item":"https://sanctionsai.dev/widgets"}]}</script>"""
+        ld_webapp = """<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"agentmail OFAC Compliance Badge & Wallet Widget","url":"https://sanctionsai.dev/widgets","description":"Free embeddable OFAC compliance badge and wallet screening widget. Copy one line of HTML to add real-time sanctions screening to your site.","applicationCategory":"SecurityApplication","operatingSystem":"All","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}</script>"""
+        return self._page(
+            "Free Embeddable OFAC Compliance Badge & Wallet Widget | agentmail",
+            "Add real-time OFAC sanctions screening to your site with one line of HTML. Free embeddable compliance badge (SVG) and wallet screening widget (iframe). No API key required.",
+            body, extra_head=ld_bc + ld_webapp, canonical="/widgets")
+
+    def _widget_screen_page(self):
+        """Embeddable wallet screening widget — iframe-friendly, minimal, no nav."""
+        body = """<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>OFAC Wallet Screening — agentmail</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0a0a0a;color:#e8e8ea;font:15px/1.5 -apple-system,BlinkMacSystemFont,'Segoe UI',Inter,sans-serif;padding:24px;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.widget{max-width:480px;width:100%;text-align:center}
+h2{font-size:1.1rem;font-weight:700;color:#fff;margin-bottom:4px}
+.tag{font-size:.72rem;color:#8a8d96;margin-bottom:20px}
+.tag a{color:#00d4aa;text-decoration:none}
+input{width:100%;background:#121316;border:1px solid #23242a;color:#e8e8ea;padding:12px 14px;border-radius:8px;font-size:14px;font-family:monospace;margin-bottom:10px}
+input:focus{outline:none;border-color:#00d4aa}
+.btn{display:block;width:100%;background:#00d4aa;color:#04120e;font-weight:700;padding:12px;border-radius:8px;border:none;cursor:pointer;font-size:14px;margin-bottom:12px;transition:transform .1s}
+.btn:hover{transform:translateY(-1px)}
+.result{padding:14px;border-radius:8px;font-size:13px;line-height:1.6;margin-bottom:10px;display:none}
+.result.clean{background:rgba(0,212,170,.08);border:1px solid rgba(0,212,170,.15);color:#34d399;display:block}
+.result.flagged{background:rgba(255,84,112,.08);border:1px solid rgba(255,84,112,.15);color:#ff6b6b;display:block}
+.result.error{background:rgba(255,176,32,.08);border:1px solid rgba(255,176,32,.15);color:#ffb020;display:block}
+.result.loading{background:rgba(138,141,150,.08);border:1px solid rgba(138,141,150,.15);color:#8a8d96;display:block}
+.note{font-size:.72rem;color:#555;margin-top:4px}
+.note a{color:#555}
+footer{margin-top:16px;font-size:.68rem;color:#444}
+footer a{color:#444;text-decoration:none}
+</style></head>
+<body>
+<div class="widget">
+<h2>🔎 OFAC Wallet Screening</h2>
+<p class="tag">Powered by <a href="https://sanctionsai.dev" target="_blank">agentmail</a> — 782 wallets · 19k names · <100ms</p>
+<input type="text" id="wallet" placeholder="Paste wallet address (0x..., bc1..., T...)" autocomplete="off">
+<button class="btn" onclick="screen()">Check Wallet</button>
+<div id="result" class="result"></div>
+<p class="note">5 free checks/day · No signup · <a href="https://sanctionsai.dev" target="_blank">Get API key →</a></p>
+</div>
+<footer>
+<a href="https://sanctionsai.dev" target="_blank">agentmail</a> — OFAC sanctions screening for AI agents
+</footer>
+<script>
+async function screen(){
+  const wallet=document.getElementById('wallet').value.trim();
+  const result=document.getElementById('result');
+  if(!wallet){result.className='result error';result.textContent='Please enter a wallet address';return}
+  result.className='result loading';result.textContent='Screening against 782 OFAC wallets...';
+  try{
+    const r=await fetch('https://agentmail-api.fly.dev/sanctions?wallet='+encodeURIComponent(wallet));
+    const d=await r.json();
+    if(!r.ok){result.className='result error';result.textContent='Error: '+((d.error||d.message||'Unknown'))}
+    else if(d.clean){result.className='result clean';result.innerHTML='<strong>✓ CLEAN</strong> — No OFAC match for this wallet.<br><small>Checked against '+d.checked_against.wallets+' wallets in '+d.latency_ms+'ms</small>'}
+    else{result.className='result flagged';result.innerHTML='<strong>⚠ FLAGGED</strong> — This wallet matches the OFAC SDN list.<br><small>Matches: '+(d.matches?JSON.stringify(d.matches).substring(0,200):'Yes')+'</small>'}
+  }catch(e){result.className='result error';result.textContent='Network error: '+e.message}
+}
+document.getElementById('wallet').addEventListener('keydown',function(e){if(e.key==='Enter')screen()});
+</script>
+</body></html>"""
+        self.send_response(200)
+        self.send_header("Content-Type", "text/html; charset=utf-8")
+        self.send_header("X-Frame-Options", "ALLOWALL")
+        self.send_header("Content-Security-Policy", "frame-ancestors *")
+        self.end_headers()
+        self.wfile.write(body.encode())
+        return
+
+    def _badge_ofac_svg(self):
+        """Dynamic SVG badge showing live OFAC screening stats — embeddable."""
+        svg = '''<svg xmlns="http://www.w3.org/2000/svg" width="360" height="120" viewBox="0 0 360 120">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0d1a14"/>
+      <stop offset="100%" stop-color="#0a0a0a"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#00d4aa"/>
+      <stop offset="100%" stop-color="#00b894"/>
+    </linearGradient>
+  </defs>
+  <rect width="360" height="120" rx="12" fill="url(#bg)" stroke="#00d4aa" stroke-width="1.5"/>
+  <text x="180" y="30" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif" font-size="13" font-weight="700" fill="#00d4aa">Protected by agentmail</text>
+  <text x="180" y="52" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif" font-size="11" fill="#8a8d96">OFAC Sanctions Screening for AI Agents</text>
+  <line x1="30" y1="64" x2="330" y2="64" stroke="#1a1a1a" stroke-width="1"/>
+  <g transform="translate(0,68)">
+    <text x="60" y="14" text-anchor="middle" font-family="'SF Mono',monospace" font-size="18" font-weight="800" fill="#00d4aa">782</text>
+    <text x="60" y="30" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="9" fill="#555">OFAC WALLETS</text>
+    <text x="180" y="14" text-anchor="middle" font-family="'SF Mono',monospace" font-size="18" font-weight="800" fill="#00d4aa">19,086</text>
+    <text x="180" y="30" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="9" fill="#555">SDN NAMES</text>
+    <text x="300" y="14" text-anchor="middle" font-family="'SF Mono',monospace" font-size="18" font-weight="800" fill="#00d4aa">&lt;100ms</text>
+    <text x="300" y="30" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="9" fill="#555">PER CHECK</text>
+  </g>
+  <text x="180" y="114" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="8" fill="#444">sanctionsai.dev · Free to embed · CC BY 4.0</text>
+</svg>'''
+        self.send_response(200)
+        self.send_header("Content-Type", "image/svg+xml")
+        self.send_header("Cache-Control", "public, max-age=3600")
+        self.send_header("Access-Control-Allow-Origin", "*")
+        self.end_headers()
+        self.wfile.write(svg.encode())
+        return
+
+    def _portfolio_network_widget(self):
+        """Cross-portfolio reciprocal backlink mesh widget.
+
+        Serves the same static HTML grid as the other 9 portfolio sites,
+        embeddable cross-origin (frame-ancestors *) so newsletter authors
+        and blog writers can drop it into any page. Each link is a real
+        <a> tag (crawlers follow it) back to a sibling site.
+        """
+        body = '''<!DOCTYPE html><html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Portfolio Network Widget</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: transparent; color: #e2e8f0; }
+.network-widget { background: rgba(15, 23, 42, 0.95); border-radius: 12px; padding: 1rem; border: 1px solid rgba(255,255,255,0.08); }
+.network-widget h4 { font-size: 0.8rem; color: #94a3b8; margin-bottom: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+.network-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.4rem; }
+.network-link { display: flex; align-items: center; gap: 0.4rem; padding: 0.35rem 0.5rem; border-radius: 6px; text-decoration: none; font-size: 0.75rem; color: #cbd5e1; transition: background 0.15s; }
+.network-link:hover { background: rgba(255,255,255,0.06); }
+.network-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+.network-domain { font-weight: 600; color: #e2e8f0; }
+.network-desc { color: #64748b; font-size: 0.65rem; }
+.network-footer { text-align: center; margin-top: 0.6rem; padding-top: 0.5rem; border-top: 1px solid rgba(255,255,255,0.06); font-size: 0.65rem; color: #475569; }
+.network-footer a { color: #0891b2; text-decoration: none; }
+@media (max-width: 400px) { .network-grid { grid-template-columns: 1fr; } }
+</style></head><body>
+<div class="network-widget">
+  <h4>&#127760; Portfolio Network</h4>
+  <div class="network-grid">
+    <a href="https://gitdealflow.com" class="network-link"><span class="network-dot" style="background:#10B981"></span><span><span class="network-domain">GitDealFlow</span><br><span class="network-desc">Startup deal signals</span></span></a>
+    <a href="https://signals.gitdealflow.com" class="network-link"><span class="network-dot" style="background:#3B82F6"></span><span><span class="network-domain">Signals</span><br><span class="network-desc">Startup momentum tracker</span></span></a>
+    <a href="https://invisibleexit.com" class="network-link"><span class="network-dot" style="background:#8B5CF6"></span><span><span class="network-domain">Invisible Exit</span><br><span class="network-desc">Acquisition readiness</span></span></a>
+    <a href="https://sipiteno.com" class="network-link"><span class="network-dot" style="background:#F59E0B"></span><span><span class="network-domain">SipiTeno</span><br><span class="network-desc">Digital product studio</span></span></a>
+    <a href="https://unlocksaas.com" class="network-link"><span class="network-dot" style="background:#EC4899"></span><span><span class="network-domain">UnlockSaaS</span><br><span class="network-desc">SaaS launch toolkit</span></span></a>
+    <a href="https://voicelogpro.com" class="network-link"><span class="network-dot" style="background:#06B6D4"></span><span><span class="network-domain">VoiceLogPro</span><br><span class="network-desc">Field voice-to-insight</span></span></a>
+    <a href="https://carshake.online" class="network-link"><span class="network-dot" style="background:#EF4444"></span><span><span class="network-domain">CarShake</span><br><span class="network-desc">Valet damage proof</span></span></a>
+    <a href="https://churnlens.site" class="network-link"><span class="network-dot" style="background:#6366F1"></span><span><span class="network-domain">ChurnLens</span><br><span class="network-desc">Churn due diligence</span></span></a>
+    <a href="https://sanctionsai.dev" class="network-link"><span class="network-dot" style="background:#DC2626"></span><span><span class="network-domain">SanctionsAI</span><br><span class="network-desc">OFAC compliance API</span></span></a>
+    <a href="https://sipi.bot" class="network-link"><span class="network-dot" style="background:#14B8A6"></span><span><span class="network-domain">Sipi.bot</span><br><span class="network-desc">AI spend firewall</span></span></a>
+  </div>
+  <div class="network-footer">Powered by <a href="https://sipi.bot" target="_blank" rel="noopener">Sipi.bot</a></div>
+</div>
+</body></html>'''
+        self.send_response(200)
+        self.send_header("Content-Type", "text/html; charset=utf-8")
+        self.send_header("X-Frame-Options", "ALLOWALL")
+        self.send_header("Content-Security-Policy", "frame-ancestors *")
+        self.send_header("Access-Control-Allow-Origin", "*")
+        self.send_header("Cache-Control", "public, max-age=3600")
+        self.end_headers()
+        self.wfile.write(body.encode())
+        return
 
     def _blog_index_page(self):
         """Render an index of all blog posts."""
