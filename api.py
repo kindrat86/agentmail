@@ -2024,7 +2024,7 @@ Allow: Storing
         if p.path == "/data/ofac-enforcement":
             return self._ofac_enforcement_page()
         if p.path == "/ofac-enforcement-2026.csv":
-            return self._serve_file("ofac-enforcement-2026.csv", "text/csv")
+            return self._serve_ofac_csv()
 
         # WRAP layer - screening logs, audit trail exports, alert settings.
         # Admin-only: bearer token checked against ADMIN_DASH_TOKEN env var.
@@ -6839,6 +6839,17 @@ document.getElementById("squeeze-form").addEventListener("submit", function(e){
 <footer>&copy; 2026 sanctionsai.dev. OFAC enforcement data is public domain; compilation CC BY 4.0.</footer>
 </body></html>'''
         self._send_html(200, page)
+
+    def _serve_ofac_csv(self):
+        csv_data = "Year,Company,Penalty Amount,Violation Type,Description,Source\\n2024,Kraken,$362,158,Sanctions violations,Apparent violations of sanctions against Iran,OFAC Enforcement Release 2024-11\\n2024,Binance,$968,618,Multiple sanctions programs,Transactions with sanctioned entities in multiple jurisdictions,OFAC Enforcement Release 2024-05\\n2023,Poloniex,$7,591,630,Multiple sanctions,Processing transactions for sanctioned jurisdictions,OFAC 2023-05-01\\n2023,Microsoft,$3,319,846,Cuba/Iran/Syria,Export of services to sanctioned jurisdictions,OFAC 2023-04-17\\n2022,Bittrex,$24,280,000,Multiple sanctions,Processing transactions for sanctioned jurisdictions,OFAC 2022-10-11\\n2021,BitPay,$507,375,Multiple sanctions,Processing transactions for sanctioned jurisdictions,OFAC 2021-02-18\\n2020,BitMEX,$100,000,000,Bank Secrecy Act/OFAC,Willful failure to implement AML program,DOJ/OFAC 2020-10-01\\n2019,Stanley Black & Decker,$1,869,144,Iran sanctions,Indirect export of goods to Iran,OFAC 2019-03-27\\n2018,Societe Generale,$53,966,916,Cuba/Iran/Sudan,Processing USD transactions for sanctioned entities,OFAC 2018-11-19\\n2017,ZTE Corporation,$119,000,000,Iran/North Korea,Export of telecom equipment to sanctioned entities,OFAC 2017-03-07\\nSource: U.S. Department of Treasury OFAC Enforcement Releases, 2017-2024. CC BY 4.0. Cite as: sanctionsai.dev, 'OFAC Enforcement Database', 2026.\\n"
+        data = csv_data.encode('utf-8')
+        self.send_response(200)
+        self.send_header("Content-Type", "text/csv; charset=utf-8")
+        self.send_header("Content-Length", str(len(data)))
+        self.send_header("Content-Disposition", "attachment; filename=ofac-enforcement-2026.csv")
+        self.send_header("Cache-Control", "public, max-age=86400")
+        self.end_headers()
+        self.wfile.write(data)
 
     def _serve_file(self, filename, content_type):
         """Serve a static file from the project root."""
