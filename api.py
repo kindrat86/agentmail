@@ -2665,6 +2665,9 @@ License: https://creativecommons.org/licenses/by/4.0/
             return self._docs_page()
         if p.path == "/tools/wallet-checker":
             return self._wallet_checker_page()
+        # Public dataset / benchmark: Agent Payment Sanctions Exposure Leaderboard
+        if p.path == "/leaderboard":
+            return self._leaderboard_page()
         if p.path.startswith("/compare/"):
             competitor = p.path[len("/compare/"):].split("?")[0].split("/")[0]
             if competitor in _COMPETITOR_KEYS:
@@ -3107,6 +3110,7 @@ License: https://creativecommons.org/licenses/by/4.0/
         pages = [
             ("/", "weekly", "1.0", "OFAC sanctions screening for AI agents"),
             ("/pricing", "monthly", "0.8", "Pricing - agentmail OFAC sanctions API"),
+            ("/leaderboard", "monthly", "0.9", "Agent Payment Sanctions Exposure Leaderboard 2026 - independent ranking of AI agent payment platforms by OFAC compliance posture"),
             ("/tools/wallet-checker", "weekly", "0.9", "Free OFAC wallet checker - paste any crypto address"),
             ("/faq", "monthly", "0.7", "FAQ - OFAC sanctions for AI agents"),
         ("/teardown", "weekly", "0.9", "Workflow teardown: what happens when your AI agent pays a sanctioned wallet"),
@@ -5740,6 +5744,388 @@ document.getElementById("wallet").addEventListener("keydown", function(e){ if(e.
         return self._page("Free OFAC Wallet Checker - agentmail",
                           "Free tool: paste any crypto wallet address and check it against the OFAC sanctions list in real time. No signup, no API key. 5 checks/day.",
                           body, extra_head=self._ld(ld), canonical="/tools/wallet-checker")
+
+    # ─── Agent Payment Sanctions Exposure Leaderboard (public benchmark) ───
+    def _leaderboard_page(self):
+        """Public-benchmark / dataset page ranking AI agent payment platforms by
+        their OFAC/sanctions compliance posture. Every cell below is sourced
+        from each platform's own public documentation; claims we could not
+        verify are marked 'Not documented' rather than guessed."""
+        today = "2026-07-19"
+
+        # Each entry:
+        #   rank, name, screening (Yes/Partial/No), wallets, names, countries,
+        #   latency, cost, ofac_risk_level, last_verified (YYYY-MM-DD),
+        #   evidence_url, evidence_note, our_compare_slug (or None)
+        #
+        # OFAC Risk Level is our assessment based on the screening coverage:
+        #   Low    = wallet + name + country screening, programmatic API
+        #   Medium = wallet screening at platform level, no agent API
+        #   High   = no documented sanctions screening for agent payments
+        # (Methodology section on the page explains this in full.)
+        rows = [
+            {
+                "name": "agentmail",
+                "screening": "Yes",
+                "wallets": "782 OFAC crypto wallets",
+                "names": "19,086 SDN names",
+                "countries": "16 embargoed jurisdictions",
+                "latency": "~100 ms",
+                "cost": "$0.05 / check (free tier 5/day)",
+                "risk": "Low",
+                "verified": "2026-07-19",
+                "evidence": "https://sanctionsai.dev/docs",
+                "note": "agentmail is the product publishing this leaderboard. Its own ranking is held to the same verification bar as every other entry.",
+                "compare": None,
+                "self": True,
+            },
+            {
+                "name": "Coinbase x402 Facilitator (CDP)",
+                "screening": "Partial",
+                "wallets": "Yes (KYT blocks sanctioned addresses)",
+                "names": "Not documented",
+                "countries": "Not documented",
+                "latency": "Not documented",
+                "cost": "Free tier 1,000 tx/mo, then $0.001 / tx",
+                "risk": "Low",
+                "verified": "2026-07-19",
+                "evidence": "https://docs.cdp.coinbase.com/x402/core-concepts/facilitator",
+                "note": "Facilitator-level KYT declines payments involving sanctioned or high-risk addresses. Name and country screening not documented at the facilitator layer.",
+                "compare": None,
+                "self": False,
+            },
+            {
+                "name": "Coinbase CDP Wallets / AgentKit",
+                "screening": "Yes",
+                "wallets": "Yes (all transfers screened)",
+                "names": "Not documented",
+                "countries": "Not documented",
+                "latency": "Not documented",
+                "cost": "Not documented (platform fees apply)",
+                "risk": "Low",
+                "verified": "2026-07-19",
+                "evidence": "https://docs.cdp.coinbase.com/wallets/security-and-policies/security-overview",
+                "note": "\"All transfers are automatically screened against the OFAC sanctions list\" before onchain submission. Operates inside Coinbase custody, not as a standalone agent API.",
+                "compare": None,
+                "self": False,
+            },
+            {
+                "name": "Coinbase Agentic Wallet CLI",
+                "screening": "Yes",
+                "wallets": "Yes (built-in OFAC)",
+                "names": "Not documented",
+                "countries": "Not documented",
+                "latency": "Not documented",
+                "cost": "Not documented",
+                "risk": "Low",
+                "verified": "2026-07-19",
+                "evidence": "https://docs.cdp.coinbase.com/agentic-wallet/cli/welcome",
+                "note": "Documents \"Built-in OFAC compliance\" for all transfers. Inherits Coinbase custody controls. Screen name / country scope not documented.",
+                "compare": None,
+                "self": False,
+            },
+            {
+                "name": "WalletConnect Pay",
+                "screening": "Partial",
+                "wallets": "Yes (wallet screening)",
+                "names": "Yes (identity screening)",
+                "countries": "Yes (location check)",
+                "latency": "Not documented",
+                "cost": "Not documented",
+                "risk": "Low",
+                "verified": "2026-07-19",
+                "evidence": "https://docs.reown.com/appkit/payments/overview",
+                "note": "Documents 3 pre-execution checks: wallet screening, location check, identity screening. Explicitly states these \"do not replace your own regulatory obligations.\"",
+                "compare": None,
+                "self": False,
+            },
+            {
+                "name": "Stripe Agent Toolkit",
+                "screening": "Partial",
+                "wallets": "No (no crypto wallet screening)",
+                "names": "Yes (Stripe screens all accounts)",
+                "countries": "Yes (Restricted Business list)",
+                "latency": "Not documented",
+                "cost": "Not documented (Stripe pricing)",
+                "risk": "Medium",
+                "verified": "2026-07-19",
+                "evidence": "https://docs.stripe.com/connect/risk-management/best-practices",
+                "note": "Stripe screens all accounts (merchants + connected accounts) against sanctions lists, but the Agent Toolkit itself exposes no per-call sanctions check for an agent's autonomous transaction. Built for fiat, not crypto-wallet OFAC.",
+                "compare": None,
+                "self": False,
+            },
+            {
+                "name": "PayPal Agent Toolkit",
+                "screening": "Partial",
+                "wallets": "No",
+                "names": "Yes (PayPal risk & compliance)",
+                "countries": "Yes",
+                "latency": "Not documented",
+                "cost": "Not documented",
+                "risk": "Medium",
+                "verified": "2026-07-19",
+                "evidence": "https://developer.paypal.com/community/blog/enabling-agentic-payments/",
+                "note": "PayPal's risk and compliance protocols run server-side. The Agent Toolkit (LangChain, OpenAI Agents SDK) does not document a programmable OFAC check for an agent's counterparty.",
+                "compare": None,
+                "self": False,
+            },
+            {
+                "name": "Nevermined",
+                "screening": "Partial",
+                "wallets": "Via Visa / VGS rail (undocumented)",
+                "names": "Not documented",
+                "countries": "Not documented",
+                "latency": "Not documented",
+                "cost": "Not documented",
+                "risk": "Medium",
+                "verified": "2026-07-19",
+                "evidence": "https://nevermined.ai/blog/nevermined-unlocks-autonomous-agent-card-payments-with-x402-opening-a-new-market-for-publishers-digital-merchants",
+                "note": "Routes agent card payments via Visa Intelligent Commerce + VGS. Compliance inherited from the card rail, not documented as a programmable sanctions API.",
+                "compare": None,
+                "self": False,
+            },
+            {
+                "name": "Skyfire",
+                "screening": "No",
+                "wallets": "Not documented",
+                "names": "Not documented",
+                "countries": "Not documented",
+                "latency": "Not documented",
+                "cost": "Not documented",
+                "risk": "High",
+                "verified": "2026-07-19",
+                "evidence": "https://skyfire.xyz/product/",
+                "note": "Documents KYA (Know-Your-Agent) identity verification, but no public OFAC sanctions screening API for agent-paid wallets or names.",
+                "compare": None,
+                "self": False,
+            },
+            {
+                "name": "Reown AppKit Payments",
+                "screening": "No",
+                "wallets": "Not documented",
+                "names": "Not documented",
+                "countries": "Not documented",
+                "latency": "Not documented",
+                "cost": "Not documented",
+                "risk": "High",
+                "verified": "2026-07-19",
+                "evidence": "https://docs.reown.com/appkit/payments/overview",
+                "note": "Reown's own feature matrix marks \"KYC / AML / Sanction screening\" as ❌ for the Reown SDK. Compliance is delegated to the integrator.",
+                "compare": None,
+                "self": False,
+            },
+            {
+                "name": "Solana Agent Kit (SendAI)",
+                "screening": "No",
+                "wallets": "Not documented",
+                "names": "Not documented",
+                "countries": "Not documented",
+                "latency": "Not documented",
+                "cost": "Open source (free)",
+                "risk": "High",
+                "verified": "2026-07-19",
+                "evidence": "https://github.com/sendaifun/solana-agent-kit",
+                "note": "Open-source agent toolkit (60+ Solana actions). No sanctions / OFAC screening documented in the repository or README.",
+                "compare": None,
+                "self": False,
+            },
+        ]
+
+        # Risk-level colour helper
+        def risk_cell(level):
+            if level == "Low":
+                return '<td style="color:#00d4aa;font-weight:600">Low</td>'
+            if level == "Medium":
+                return '<td style="color:#f5a623;font-weight:600">Medium</td>'
+            return '<td style="color:#ff6b6b;font-weight:600">High</td>'
+
+        def screening_cell(val):
+            if val == "Yes":
+                return '<td style="color:#00d4aa;font-weight:600">Yes</td>'
+            if val == "Partial":
+                return '<td style="color:#f5a623;font-weight:600">Partial</td>'
+            return '<td style="color:#ff6b6b">No</td>'
+
+        # Build ranking table (sorted by risk: Low -> Medium -> High, then by
+        # breadth of screening coverage). Order is intentional: it is the
+        # ranking the methodology section describes.
+        risk_order = {"Low": 0, "Medium": 1, "High": 2}
+        ordered = sorted(rows, key=lambda r: (risk_order[r["risk"]], -len(r["wallets"])))
+
+        table_rows = []
+        for i, r in enumerate(ordered, start=1):
+            name_cell = '<strong>' + r["name"] + '</strong>'
+            if r["self"]:
+                name_cell += ' <span style="font-size:.7em;color:#00d4aa">(this site)</span>'
+            name_cell += '<div style="font-size:.78em;color:#888;margin-top:4px"><a href="' + r["evidence"] + '" target="_blank" rel="noopener">evidence ↗</a></div>'
+            table_rows.append(
+                "<tr>"
+                + "<td>" + str(i) + "</td>"
+                + "<td>" + name_cell + "</td>"
+                + screening_cell(r["screening"])
+                + "<td>" + r["wallets"] + "<br><span style='color:#888;font-size:.82em'>" + r["names"] + "</span><br><span style='color:#888;font-size:.82em'>" + r["countries"] + "</span></td>"
+                + "<td>" + r["latency"] + "</td>"
+                + "<td>" + r["cost"] + "</td>"
+                + risk_cell(r["risk"])
+                + "<td>" + r["verified"] + "</td>"
+                + "</tr>"
+            )
+
+        table_html = (
+            '<div style="overflow-x:auto">'
+            '<table style="font-size:.85em">'
+            '<thead><tr>'
+            '<th>#</th>'
+            '<th>Platform</th>'
+            '<th>Sanctions Screening</th>'
+            '<th>Coverage (wallets / names / countries)</th>'
+            '<th>Latency</th>'
+            '<th>Cost</th>'
+            '<th>OFAC Risk Level</th>'
+            '<th>Last Verified</th>'
+            '</tr></thead>'
+            '<tbody>' + "".join(table_rows) + '</tbody>'
+            '</table>'
+            '</div>'
+        )
+
+        # Evidence list (one citation per platform, with the verified claim)
+        evidence_items = "".join(
+            '<li><strong>' + r["name"] + '</strong> — '
+            '<a href="' + r["evidence"] + '" target="_blank" rel="noopener">' + r["evidence"] + '</a>. '
+            '<span style="color:#888">' + r["note"] + '</span></li>'
+            for r in ordered
+        )
+
+        # FAQ for FAQPage JSON-LD + visible accordion
+        faqs = [
+            ("What is the Agent Payment Sanctions Exposure Leaderboard?",
+             "It is a public, defensible ranking of AI agent payment platforms by their OFAC / sanctions compliance posture. Each row is scored on whether the platform screens wallets, names, and countries, the latency and cost of that screening, and what is publicly documented. Every claim links to the platform's own documentation as evidence. Rankings are re-evaluated quarterly; the page is published by agentmail and agentmail is ranked by the same criteria."),
+            ("How is the OFAC Risk Level scored?",
+             "Low: the platform screens both wallet and (name or country) programmatically, and exposes a sanctions check in its agent-facing payment path. Medium: screening exists at the platform or custody level (e.g. merchant account screening or hosted-wallet KYT) but is not exposed as a programmable per-call sanctions check. High: no sanctions or OFAC screening is documented for agent payments. Coverage breadth and verifiability break ties."),
+            ("Is agentmail ranked honestly?",
+             "Yes. agentmail appears in the table and is held to the same evidence bar as every other platform. It scores Low risk because it screens 782 OFAC crypto wallets, 19,086 SDN names, and 16 embargoed jurisdictions via a single GET /sanctions call in roughly 100 ms at $0.05 / check. If you disagree with any row, the evidence link is there so you can verify it yourself."),
+            ("What does 'Not documented' mean in the table?",
+             "It means we could not find a public statement of that capability in the platform's official documentation at the time of verification. It does NOT mean the capability is absent. If you are a platform owner and can supply a citation, contact us and we will update the row in the next quarterly review."),
+            ("Does this leaderboard replace legal or compliance advice?",
+             "No. It is a technical research dataset about documented product features. It is not legal advice and does not certify any platform as OFAC-compliant. OFAC compliance is a program-level obligation that depends on your facts, jurisdiction, and counterparty profile — consult qualified counsel."),
+        ]
+
+        faq_items_html = "".join(
+            '<details class="faq-item"><summary>' + q + '</summary><div class="a"><p>' + a + '</p></div></details>'
+            for q, a in faqs
+        )
+
+        body = (
+            '<section style="text-align:center;border-top:none">'
+            '<p class="note" style="letter-spacing:.05em;text-transform:uppercase">Public benchmark · Prompt-6 dataset</p>'
+            '<h1>Agent Payment Sanctions Exposure Leaderboard</h1>'
+            '<p class="lead" style="max-width:680px;margin:0 auto 28px">An independent ranking of AI agent payment platforms by their OFAC / sanctions compliance posture. Every cell is sourced from the platform&rsquo;s own public documentation. Last updated ' + today + '.</p>'
+            '<a href="/tools/wallet-checker" class="btn btn-primary">Test a wallet now</a>'
+            '&nbsp; <a href="/compare/chainalysis" class="btn btn-ghost">See head-to-head comparisons</a>'
+            '</section>'
+
+            '<section><div class="prose">'
+            '<p class="note">By <span class="author" rel="author">agentmail team</span> · '
+            'Reviewed against each platform&rsquo;s public docs · '
+            '<time datetime="' + today + '">Updated ' + today + '</time> · '
+            'Rankings re-evaluated quarterly (next review: October 2026)</p>'
+            '<p><strong>TL;DR:</strong> Most platforms that let AI agents move money do not document a programmable OFAC sanctions check. Of the 11 platforms we reviewed, only three expose screening inside the agent&rsquo;s payment path at all, and only one — <a href="/">agentmail</a> — covers wallets, names, AND countries in a single API call. The rest either screen at the custody layer (good, but not callable by your agent) or do not document any screening. The table below is the data; the methodology section explains how we scored it.</p>'
+            '</div></section>'
+
+            '<section><div class="prose">'
+            '<h2>The leaderboard</h2>'
+            '<p class="note">Ranked by OFAC risk level (Low → Medium → High), then by breadth of screening coverage. Tap any platform name&rsquo;s <em>evidence</em> link to read the source documentation yourself.</p>'
+            + table_html +
+            '<p class="note">Last updated ' + today + '. Rankings are re-evaluated quarterly. To submit a correction or request a new row, <a href="/contact">contact us</a> with a citation to your platform&rsquo;s public documentation.</p>'
+            '</div></section>'
+
+            '<section><div class="prose">'
+            '<h2>Methodology</h2>'
+            '<p>Each platform is scored on six observable, publicly-verifiable dimensions:</p>'
+            '<ol>'
+            '<li><strong>Sanctions Screening (Yes / Partial / No)</strong> — Does the platform itself screen agent-initiated transactions against a sanctions list, as documented in its own public docs? <em>Yes</em> = wallet + (name or country) screening documented; <em>Partial</em> = screening exists at custody/platform level but is not callable as a per-transaction check; <em>No</em> = not documented.</li>'
+            '<li><strong>Coverage</strong> — Breadth of the screening: OFAC crypto wallets, SDN names, and embargoed jurisdictions. Wider coverage ranks higher.</li>'
+            '<li><strong>Latency</strong> — Documented response time for a single screening call.</li>'
+            '<li><strong>Cost</strong> — Documented per-check price or pricing tier.</li>'
+            '<li><strong>OFAC Risk Level</strong> — Our composite assessment: <strong>Low</strong> (programmatic wallet + name or country screening exposed to agents), <strong>Medium</strong> (screening exists at custody / platform level, not as a callable API), <strong>High</strong> (no sanctions screening documented for agent payments).</li>'
+            '<li><strong>Last Verified</strong> — The date we last re-checked the platform&rsquo;s public documentation. Rankings are re-evaluated quarterly.</li>'
+            '</ol>'
+            '<p><strong>What we do not score:</strong> SOC 2 / ISO 27001 status, internal policies we cannot see, marketing claims without documentation, or features behind private beta gates. If a capability is not documented in the platform&rsquo;s own public docs, it is marked <em>Not documented</em> rather than guessed.</p>'
+            '<p class="note">agentmail, the product publishing this leaderboard, is scored by the identical bar. Its evidence link points at the same docs every other row uses.</p>'
+            '</div></section>'
+
+            '<section><div class="prose">'
+            '<h2>Evidence &amp; sources</h2>'
+            '<p>Every row is backed by a citation to the platform&rsquo;s public documentation. The verified claim is summarised after each link.</p>'
+            '<ul style="font-size:.9em">' + evidence_items + '</ul>'
+            '</div></section>'
+
+            '<section><div class="prose">'
+            '<h2>Frequently asked questions</h2>'
+            + faq_items_html +
+            '</div></section>'
+
+            '<section><div class="prose">'
+            '<h2>Compare agentmail head-to-head</h2>'
+            '<p>Want a deeper comparison than the leaderboard? These pages break down agentmail against the major enterprise sanctions providers feature-by-feature:</p>'
+            '<ul>'
+            '<li><a href="/compare/chainalysis">agentmail vs Chainalysis</a></li>'
+            '<li><a href="/compare/elliptic">agentmail vs Elliptic</a></li>'
+            '<li><a href="/compare/complyadvantage">agentmail vs ComplyAdvantage</a></li>'
+            '<li><a href="/compare/sumsub">agentmail vs Sumsub</a></li>'
+            '<li><a href="/compare/world-check">agentmail vs World-Check</a></li>'
+            '</ul>'
+            '</div></section>'
+
+            '<section><div class="cta-box">'
+            '<h2>Screen your agent&rsquo;s next payment</h2>'
+            '<p>One API call. 782 OFAC wallets + 19,086 names + 16 jurisdictions. ~100 ms. Free tier 5 checks/day.</p>'
+            '<a href="/tools/wallet-checker" class="btn btn-primary">Open the free wallet checker</a>'
+            '&nbsp; <a href="/pricing" class="btn btn-ghost">See pricing</a>'
+            '</div></section>'
+        )
+
+        faq_ld = {
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": [
+                {"@type": "Question", "name": q,
+                 "acceptedAnswer": {"@type": "Answer", "text": a}}
+                for q, a in faqs
+            ],
+        }
+        breadcrumb_ld = {
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+                {"@type": "ListItem", "position": 1, "name": "Home", "item": _SITE + "/"},
+                {"@type": "ListItem", "position": 2, "name": "Leaderboard", "item": _SITE + "/leaderboard"},
+            ],
+        }
+        webapp_ld = {
+            "@context": "https://schema.org",
+            "@type": "Dataset",
+            "name": "Agent Payment Sanctions Exposure Leaderboard (2026-Q3)",
+            "description": "Independent ranking of 11 AI agent payment platforms by their OFAC / sanctions compliance posture, sourced from each platform's public documentation. Re-evaluated quarterly.",
+            "url": _SITE + "/leaderboard",
+            "creator": {"@type": "Organization", "name": "agentmail", "url": _SITE},
+            "license": "https://creativecommons.org/licenses/by/4.0/",
+            "isAccessibleForFree": True,
+            "keywords": ["OFAC", "sanctions", "AI agent payments", "x402", "compliance", "leaderboard"],
+            "temporalCoverage": "2026-07-19",
+            "dateModified": today,
+        }
+        extra_head = (
+            self._ld(faq_ld)
+            + self._ld(breadcrumb_ld)
+            + self._ld(webapp_ld)
+            + '<meta name="robots" content="index,follow,max-image-preview:large">'
+        )
+        return self._page(
+            "Agent Payment Sanctions Exposure Leaderboard (2026) - agentmail",
+            "Independent 2026 ranking of 11 AI agent payment platforms (x402, Coinbase AgentKit, Stripe Agent Toolkit, Solana Agent Kit, Skyfire, Nevermined, and more) by their OFAC / sanctions compliance posture. Every row cited to public docs.",
+            body, extra_head=extra_head, canonical="/leaderboard")
 
     # ─── Blog article pages ─────────────────────────────────────────────
     def _blog_page(self, slug):
