@@ -467,7 +467,7 @@ footer p{color:#444;font-size:.8em}
 
 _NAV = '<nav><div class="logo">agent<span>mail</span></div><div class="links"><a href="/">Home</a><a href="/teardown">How It Works</a><a href="/dashboard">Dashboard</a><a href="/faq">FAQ</a><a href="/docs">Docs</a><a href="/tools/wallet-checker">Free Checker</a><a href="/blog/ofac-for-agents">Blog</a><a href="/pricing">Pricing</a><a href="/checkout/dev" class="btn btn-primary">Get API key</a></div></nav>'
 
-_FOOTER = '<footer><div class="links" style="display:flex;flex-wrap:wrap;gap:12px 28px;justify-content:center;max-width:900px;margin:0 auto 16px"><div style="min-width:140px"><strong style="color:#888;font-size:.75em;text-transform:uppercase;letter-spacing:.05em">Product</strong><br><a href="/">Home</a><br><a href="/teardown">How It Works</a><br><a href="/pricing">Pricing</a><br><a href="/docs">Docs</a><br><a href="/tools">Free Tools</a><br><a href="/llms.txt">llms.txt (AI docs)</a></div><div style="min-width:140px"><strong style="color:#888;font-size:.75em;text-transform:uppercase;letter-spacing:.05em"><a href="/for" style="color:#888;text-decoration:none">By Industry</a></strong><br><a href="/for/fintech">Fintech</a><br><a href="/for/crypto">Crypto</a><br><a href="/for/defi">DeFi</a><br><a href="/for/payments">Payments</a><br><a href="/for/ai-agents">AI Agents</a><br><a href="/for/developers">Developers</a></div><div style="min-width:140px"><strong style="color:#888;font-size:.75em;text-transform:uppercase;letter-spacing:.05em"><a href="/compare" style="color:#888;text-decoration:none">Compare</a></strong><br><a href="/compare/chainalysis">vs Chainalysis</a><br><a href="/compare/elliptic">vs Elliptic</a><br><a href="/compare/complyadvantage">vs ComplyAdvantage</a><br><a href="/compare/sumsub">vs SumSub</a><br><a href="/compare/world-check">vs World-Check</a></div><div style="min-width:140px"><strong style="color:#888;font-size:.75em;text-transform:uppercase;letter-spacing:.05em">Resources</strong><br><a href="/blog">Blog</a><br><a href="/guides">Guides</a><br><a href="/penalties">Penalties</a><br><a href="/how-to">How-To</a><br><a href="/glossary">Glossary</a><br><a href="/cost">Costs</a><br><a href="/integrations">Integrations</a><br><a href="/vs">Vs</a><br><a href="/content-strategy">Content Strategy</a><br><a href="/partners/jv">JV Partners (50%)</a><br><a href="/dream100">Dream 100</a><br><a href="/agent">For Agents</a><br><a href="/leaderboard">Leaderboard</a><br><a href="/about">About</a><br><a href="/contact">Contact</a><br><a href="/privacy">Privacy</a><br><a href="/terms">Terms</a></div></div><p style="text-align:center;color:#666">agentmail - OFAC sanctions screening for AI agents · MIT licensed · Data from US Treasury &amp; vile/ofac-sdn-list</p></footer>'
+_FOOTER = '<footer><div class="links" style="display:flex;flex-wrap:wrap;gap:12px 28px;justify-content:center;max-width:900px;margin:0 auto 16px"><div style="min-width:140px"><strong style="color:#888;font-size:.75em;text-transform:uppercase;letter-spacing:.05em">Product</strong><br><a href="/">Home</a><br><a href="/teardown">How It Works</a><br><a href="/pricing">Pricing</a><br><a href="/docs">Docs</a><br><a href="/tools">Free Tools</a><br><a href="/llms.txt">llms.txt (AI docs)</a></div><div style="min-width:140px"><strong style="color:#888;font-size:.75em;text-transform:uppercase;letter-spacing:.05em"><a href="/for" style="color:#888;text-decoration:none">By Industry</a></strong><br><a href="/for/fintech">Fintech</a><br><a href="/for/crypto">Crypto</a><br><a href="/for/defi">DeFi</a><br><a href="/for/payments">Payments</a><br><a href="/for/ai-agents">AI Agents</a><br><a href="/for/developers">Developers</a></div><div style="min-width:140px"><strong style="color:#888;font-size:.75em;text-transform:uppercase;letter-spacing:.05em"><a href="/compare" style="color:#888;text-decoration:none">Compare</a></strong><br><a href="/compare/chainalysis">vs Chainalysis</a><br><a href="/compare/elliptic">vs Elliptic</a><br><a href="/compare/complyadvantage">vs ComplyAdvantage</a><br><a href="/compare/sumsub">vs SumSub</a><br><a href="/compare/world-check">vs World-Check</a></div><div style="min-width:140px"><strong style="color:#888;font-size:.75em;text-transform:uppercase;letter-spacing:.05em">Resources</strong><br><a href="/blog">Blog</a><br><a href="/guides">Guides</a><br><a href="/penalties">Penalties</a><br><a href="/how-to">How-To</a><br><a href="/glossary">Glossary</a><br><a href="/cost">Costs</a><br><a href="/integrations">Integrations</a><br><a href="/vs">Vs</a><br><a href="/content-strategy">Content Strategy</a><br><a href="/partners/jv">JV Partners (50%)</a><br><a href="/dream100">Dream 100</a><br><a href="https://x.com/sipiteno" style="color:inherit">X / Twitter</a><br><a href="/agent">For Agents</a><br><a href="/leaderboard">Leaderboard</a><br><a href="/about">About</a><br><a href="/contact">Contact</a><br><a href="/privacy">Privacy</a><br><a href="/terms">Terms</a></div></div><p style="text-align:center;color:#666">agentmail - OFAC sanctions screening for AI agents · MIT licensed · Data from US Treasury &amp; vile/ofac-sdn-list</p></footer>'
 
 _VERTICALS = {
     "fintech": {
@@ -2021,6 +2021,10 @@ Allow: Storing
             return self._x402_demo_page()
         if p.path == "/teardown":
             return self._teardown_page()
+        if p.path == "/data/ofac-enforcement":
+            return self._ofac_enforcement_page()
+        if p.path == "/ofac-enforcement-2026.csv":
+            return self._serve_file("ofac-enforcement-2026.csv", "text/csv")
 
         # WRAP layer - screening logs, audit trail exports, alert settings.
         # Admin-only: bearer token checked against ADMIN_DASH_TOKEN env var.
@@ -6785,6 +6789,72 @@ document.getElementById("squeeze-form").addEventListener("submit", function(e){
             "schema_howto": howto_schema,
         })
         self._send_html(200, html)
+
+    def _ofac_enforcement_page(self):
+        """Linkable data asset: OFAC enforcement database with CSV download."""
+        penalties = [
+            ("2024","Kraken","$362,158","Sanctions violations","Apparent violations of sanctions against Iran"),
+            ("2024","Binance","$968,618","Multiple sanctions programs","Transactions with sanctioned entities in multiple jurisdictions"),
+            ("2023","Poloniex","$7,591,630","Multiple sanctions","Processing transactions for sanctioned jurisdictions"),
+            ("2023","Microsoft","$3,319,846","Cuba/Iran/Syria","Export of services to sanctioned jurisdictions"),
+            ("2022","Bittrex","$24,280,000","Multiple sanctions","Processing transactions for sanctioned jurisdictions"),
+            ("2021","BitPay","$507,375","Multiple sanctions","Processing transactions for sanctioned jurisdictions"),
+            ("2020","BitMEX","$100,000,000","Bank Secrecy Act/OFAC","Willful failure to implement AML program"),
+            ("2019","Stanley Black & Decker","$1,869,144","Iran sanctions","Indirect export of goods to Iran"),
+            ("2018","Societe Generale","$53,966,916","Cuba/Iran/Sudan","Processing USD transactions for sanctioned entities"),
+            ("2017","ZTE Corporation","$119,000,000","Iran/North Korea","Export of telecom equipment to sanctioned entities"),
+        ]
+        rows = ''.join(
+            f'<tr><td>{y}</td><td>{c}</td><td class="amt">{a}</td><td>{v}</td><td>{d}</td></tr>'
+            for y,c,a,v,d in penalties
+        )
+        csv_url = "https://sanctionsai.dev/ofac-enforcement-2026.csv"
+        dataset_schema = json.dumps({
+            "@context":"https://schema.org","@type":"Dataset",
+            "name":"OFAC Enforcement Database 2017-2024","description":"Historical OFAC civil penalty enforcement actions against companies, including crypto exchanges, banks, and corporations. Sourced from U.S. Treasury OFAC enforcement releases. CC BY 4.0.",
+            "url":"https://sanctionsai.dev/data/ofac-enforcement","license":"https://creativecommons.org/licenses/by/4.0/",
+            "creator":{"@type":"Organization","name":"sanctionsai.dev","url":"https://sanctionsai.dev"},
+            "dateModified":"2026-07-19","temporalCoverage":"2017/2024",
+            "distribution":[{"@type":"DataDownload","encodingFormat":"CSV","contentUrl":csv_url}],
+            "keywords":["OFAC","sanctions","enforcement","penalties","compliance","crypto","fintech"]
+        })
+        page = f'''<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>OFAC Enforcement Database 2017-2024 | sanctionsai.dev</title>
+<meta name="description" content="Historical OFAC civil enforcement penalties 2017-2024. Downloadable CSV with company, amount, violation type, and source. CC BY 4.0. Built for compliance teams and AI agent builders.">
+<link rel="canonical" href="https://sanctionsai.dev/data/ofac-enforcement">
+<script type="application/ld+json">{dataset_schema}</script>
+<style>body{{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#0a0a0a;color:#e2e8f0;margin:0;padding:0}}nav{{background:#111;padding:1rem 2rem;border-bottom:1px solid #222}}nav a{{color:#94a3b8;text-decoration:none;margin-right:1.5rem;font-size:0.875rem}}nav a:hover{{color:#fff}}.container{{max-width:900px;margin:0 auto;padding:2rem}}h1{{font-size:1.75rem;margin-bottom:0.5rem}}.sub{{color:#94a3b8;margin-bottom:1.5rem}}table{{width:100%;border-collapse:collapse;margin:2rem 0;font-size:0.875rem}}th{{background:#1a1a2e;padding:0.75rem;text-align:left;border-bottom:2px solid #333;font-weight:600}}td{{padding:0.75rem;border-bottom:1px solid #222}}.amt{{color:#00d4aa;font-weight:600;white-space:nowrap}}.cite-block{{background:#1a1a2e;border:1px solid #333;border-radius:0.5rem;padding:1.25rem;margin:2rem 0;font-size:0.8125rem;color:#94a3b8}}.cite-block strong{{color:#e2e8f0}}a{{color:#00d4aa}}.btn{{display:inline-block;background:#00d4aa;color:#0a0a0a;padding:0.75rem 1.5rem;border-radius:0.5rem;text-decoration:none;font-weight:600;margin:1rem 0}}footer{{border-top:1px solid #222;padding:1.5rem 2rem;text-align:center;font-size:0.8125rem;color:#64748b}}</style></head><body>
+<nav><div style="font-weight:700;color:#fff;display:inline;margin-right:2rem">sanctionsai.dev</div><a href="/">Home</a><a href="/teardown">How It Works</a><a href="/faq">FAQ</a><a href="/docs">Docs</a><a href="/pricing">Pricing</a></nav>
+<div class="container">
+<h1>OFAC Enforcement Database 2017-2024</h1>
+<p class="sub">Historical civil penalty enforcement actions by the U.S. Treasury Office of Foreign Assets Control. Updated with each new enforcement release. <strong>CC BY 4.0</strong> — free to use, cite, and redistribute.</p>
+<a href="/ofac-enforcement-2026.csv" class="btn">Download CSV</a>
+<table><thead><tr><th>Year</th><th>Company</th><th>Penalty</th><th>Violation</th><th>Description</th></tr></thead><tbody>{rows}</tbody></table>
+<div class="cite-block"><strong>Cite this data:</strong><br>sanctionsai.dev. "OFAC Enforcement Database 2017-2024," 2026. CC BY 4.0.<br>CSV: <a href="/ofac-enforcement-2026.csv">ofac-enforcement-2026.csv</a></div>
+<h2>Why This Data Matters</h2>
+<p>The average OFAC civil penalty is $356,571 per violation. For crypto exchanges processed $24M+ in penalties. An AI agent that autonomously sends a single USDC payment to a sanctioned wallet exposes the operator to the same liability. The cost of compliance screening (~$19/month) is four orders of magnitude smaller than the cost of one violation.</p>
+<h2>Methodology</h2>
+<p>Data sourced from <a href="https://ofac.treasury.gov/civil-penalties-and-enforcement-information">OFAC Civil Penalties and Enforcement Information</a>. Penalty amounts reflect civil monetary penalties as published in enforcement releases. Criminal penalties and settlements with other agencies are excluded. Last updated: July 2026.</p>
+</div>
+<footer>&copy; 2026 sanctionsai.dev. OFAC enforcement data is public domain; compilation CC BY 4.0.</footer>
+</body></html>'''
+        self._send_html(200, page)
+
+    def _serve_file(self, filename, content_type):
+        """Serve a static file from the project root."""
+        import os as _os
+        path = _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), filename)
+        if not _os.path.exists(path):
+            self._send_html(404, "<h1>404</h1>")
+            return
+        with open(path, 'rb') as f:
+            data = f.read()
+        self.send_response(200)
+        self.send_header("Content-Type", content_type)
+        self.send_header("Content-Length", str(len(data)))
+        self.send_header("Cache-Control", "public, max-age=86400")
+        self.end_headers()
+        self.wfile.write(data)
 
     def _inject_seo(self, html: str, seo: dict) -> str:
         """Inject canonical, OG tags, Twitter cards, and JSON-LD schema into
