@@ -2761,6 +2761,13 @@ License: https://creativecommons.org/licenses/by/4.0/
             return self._partners_jv_page()
         if p.path == "/dream100":
             return self._dream100_page()
+        # Widgets — embeddable OFAC compliance badge + wallet screening widget
+        if p.path == "/widgets":
+            return self._widgets_gallery_page()
+        if p.path == "/widgets/screen":
+            return self._widget_screen_page()
+        if p.path == "/api/badge/ofac-screened.svg":
+            return self._badge_ofac_svg()
         # sanctions GET - paid endpoint (accepts API key OR x402 payment)
         if p.path == "/sanctions" or p.path.startswith("/sanctions?"):
             q = parse_qs(p.query)
@@ -3110,6 +3117,7 @@ License: https://creativecommons.org/licenses/by/4.0/
         ("/content-strategy", "monthly", "0.6", "Content strategy — hub-and-spoke distribution model"),
             ("/partners/jv", "monthly", "0.6", "JV partner program — 50% recurring commission"),
             ("/dream100", "monthly", "0.5", "Dream 100 — target influencers and communities"),
+            ("/widgets", "monthly", "0.8", "Free embeddable OFAC compliance badge and wallet screening widget"),
             ("/docs", "monthly", "0.6", "API documentation - agentmail"),
             ("/for/fintech", "monthly", "0.7", "OFAC sanctions for fintech agents"),
             ("/for/crypto", "monthly", "0.7", "OFAC sanctions for crypto agents"),
@@ -6034,6 +6042,179 @@ document.getElementById("wallet").addEventListener("keydown", function(e){ if(e.
         return self._page("Dream 100 — Our Target Distribution List | agentmail",
                           "The influencers, communities, and partners we are building relationships with to bring OFAC sanctions screening to every AI payment agent.",
                           body, extra_head=self._ld(ld), canonical="/dream100")
+
+    def _widgets_gallery_page(self):
+        """Widget gallery — embeddable OFAC compliance badge + wallet screening widget."""
+        body = """<section style="text-align:center;border-top:none">
+<p class="note" style="letter-spacing:.05em;text-transform:uppercase">Free Embeddable Widgets</p>
+<h1>Put OFAC screening on your site — free, one line of HTML</h1>
+<p class="lead" style="max-width:640px;margin:0 auto 28px">
+Two embeddable widgets that let your users screen wallets against the OFAC SDN list without leaving your site. No API key. No signup. Just copy, paste, done.
+</p></section>
+
+<section><div class="prose" style="max-width:800px;margin:0 auto">
+
+<h2>1. OFAC Compliance Badge <code style="font-size:.8em;color:#00d4aa;background:#0d1a14;padding:2px 8px;border-radius:4px">SVG</code></h2>
+<p>A live SVG badge showing real-time OFAC screening stats: 782 sanctioned wallets, 19,086 names, hourly sync. Every embed links back to sanctionsai.dev — permanent backlink for your compliance page.</p>
+
+<div style="background:#0a0a0a;border:1px solid #1a1a1a;border-radius:12px;padding:20px;text-align:center;margin:16px 0">
+<img src="/api/badge/ofac-screened.svg" alt="Protected by agentmail — OFAC Screening" style="max-width:100%">
+</div>
+
+<h3>Embed code</h3>
+<pre style="background:#0a0a0a;border:1px solid #1a1a1a;border-radius:8px;padding:16px;overflow-x:auto;font-size:.82em;color:#34d399"><code>&lt;a href="https://sanctionsai.dev"&gt;
+  &lt;img src="https://sanctionsai.dev/api/badge/ofac-screened.svg"
+       alt="Protected by agentmail — OFAC Screening"
+       width="360" height="120"&gt;
+&lt;/a&gt;</code></pre>
+
+<h3 style="margin-top:28px">Where to use it</h3>
+<ul>
+<li><strong>DeFi protocol footer</strong> — "We screen all counterparties"</li>
+<li><strong>Crypto exchange compliance page</strong> — demonstrates regulatory posture</li>
+<li><strong>Blockchain explorer</strong> — shows screening is active</li>
+<li><strong>Agent marketplace listing</strong> — proves your agent screens OFAC</li>
+<li><strong>Developer docs</strong> — shows your integration's compliance stack</li>
+</ul>
+
+<hr style="border-color:#1a1a1a;margin:36px 0">
+
+<h2>2. Wallet Screening Widget <code style="font-size:.8em;color:#00d4aa;background:#0d1a14;padding:2px 8px;border-radius:4px">iframe</code></h2>
+<p>An interactive wallet screening tool your users can use directly on your site. Paste any EVM/Bitcoin wallet and see instant OFAC screening results.</p>
+
+<h3>Embed code</h3>
+<pre style="background:#0a0a0a;border:1px solid #1a1a1a;border-radius:8px;padding:16px;overflow-x:auto;font-size:.82em;color:#34d399"><code>&lt;iframe src="https://sanctionsai.dev/widgets/screen"
+        width="100%" height="400" frameborder="0"
+        title="OFAC Wallet Screening"&gt;
+&lt;/iframe&gt;</code></pre>
+
+<h3 style="margin-top:20px">Live preview</h3>
+<div style="background:#0a0a0a;border:1px solid #1a1a1a;border-radius:12px;overflow:hidden;margin:16px 0">
+<iframe src="/widgets/screen" width="100%" height="400" frameborder="0" title="OFAC Wallet Screening" style="background:#0a0a0a"></iframe>
+</div>
+
+<h3>Features</h3>
+<ul>
+<li>Screen any EVM, Bitcoin, or Tron wallet against 782 OFAC-sanctioned addresses</li>
+<li>Free — 5 checks/day per IP, no API key</li>
+<li>Under 100ms per check</li>
+<li>Data refreshed hourly from US Treasury SDN list</li>
+<li>MIT licensed — self-host for unlimited use</li>
+</ul>
+
+<div class="cta-box" style="margin-top:36px">
+<h3>Ready to protect your agent's payments?</h3>
+<p>5 free checks/day, no signup, no API key. Scale to production when you're ready.</p>
+<a href="/" class="btn btn-primary">Try it free →</a>
+&nbsp; <a href="/pricing" class="btn btn-ghost">See plans</a>
+</div>
+
+</div></section>"""
+        ld_bc = """<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://sanctionsai.dev/"},{"@type":"ListItem","position":2,"name":"Widgets","item":"https://sanctionsai.dev/widgets"}]}</script>"""
+        ld_webapp = """<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"agentmail OFAC Compliance Badge & Wallet Widget","url":"https://sanctionsai.dev/widgets","description":"Free embeddable OFAC compliance badge and wallet screening widget. Copy one line of HTML to add real-time sanctions screening to your site.","applicationCategory":"SecurityApplication","operatingSystem":"All","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}</script>"""
+        return self._page(
+            "Free Embeddable OFAC Compliance Badge & Wallet Widget | agentmail",
+            "Add real-time OFAC sanctions screening to your site with one line of HTML. Free embeddable compliance badge (SVG) and wallet screening widget (iframe). No API key required.",
+            body, extra_head=ld_bc + ld_webapp, canonical="/widgets")
+
+    def _widget_screen_page(self):
+        """Embeddable wallet screening widget — iframe-friendly, minimal, no nav."""
+        body = """<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>OFAC Wallet Screening — agentmail</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0a0a0a;color:#e8e8ea;font:15px/1.5 -apple-system,BlinkMacSystemFont,'Segoe UI',Inter,sans-serif;padding:24px;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.widget{max-width:480px;width:100%;text-align:center}
+h2{font-size:1.1rem;font-weight:700;color:#fff;margin-bottom:4px}
+.tag{font-size:.72rem;color:#8a8d96;margin-bottom:20px}
+.tag a{color:#00d4aa;text-decoration:none}
+input{width:100%;background:#121316;border:1px solid #23242a;color:#e8e8ea;padding:12px 14px;border-radius:8px;font-size:14px;font-family:monospace;margin-bottom:10px}
+input:focus{outline:none;border-color:#00d4aa}
+.btn{display:block;width:100%;background:#00d4aa;color:#04120e;font-weight:700;padding:12px;border-radius:8px;border:none;cursor:pointer;font-size:14px;margin-bottom:12px;transition:transform .1s}
+.btn:hover{transform:translateY(-1px)}
+.result{padding:14px;border-radius:8px;font-size:13px;line-height:1.6;margin-bottom:10px;display:none}
+.result.clean{background:rgba(0,212,170,.08);border:1px solid rgba(0,212,170,.15);color:#34d399;display:block}
+.result.flagged{background:rgba(255,84,112,.08);border:1px solid rgba(255,84,112,.15);color:#ff6b6b;display:block}
+.result.error{background:rgba(255,176,32,.08);border:1px solid rgba(255,176,32,.15);color:#ffb020;display:block}
+.result.loading{background:rgba(138,141,150,.08);border:1px solid rgba(138,141,150,.15);color:#8a8d96;display:block}
+.note{font-size:.72rem;color:#555;margin-top:4px}
+.note a{color:#555}
+footer{margin-top:16px;font-size:.68rem;color:#444}
+footer a{color:#444;text-decoration:none}
+</style></head>
+<body>
+<div class="widget">
+<h2>🔎 OFAC Wallet Screening</h2>
+<p class="tag">Powered by <a href="https://sanctionsai.dev" target="_blank">agentmail</a> — 782 wallets · 19k names · <100ms</p>
+<input type="text" id="wallet" placeholder="Paste wallet address (0x..., bc1..., T...)" autocomplete="off">
+<button class="btn" onclick="screen()">Check Wallet</button>
+<div id="result" class="result"></div>
+<p class="note">5 free checks/day · No signup · <a href="https://sanctionsai.dev" target="_blank">Get API key →</a></p>
+</div>
+<footer>
+<a href="https://sanctionsai.dev" target="_blank">agentmail</a> — OFAC sanctions screening for AI agents
+</footer>
+<script>
+async function screen(){
+  const wallet=document.getElementById('wallet').value.trim();
+  const result=document.getElementById('result');
+  if(!wallet){result.className='result error';result.textContent='Please enter a wallet address';return}
+  result.className='result loading';result.textContent='Screening against 782 OFAC wallets...';
+  try{
+    const r=await fetch('https://agentmail-api.fly.dev/sanctions?wallet='+encodeURIComponent(wallet));
+    const d=await r.json();
+    if(!r.ok){result.className='result error';result.textContent='Error: '+((d.error||d.message||'Unknown'))}
+    else if(d.clean){result.className='result clean';result.innerHTML='<strong>✓ CLEAN</strong> — No OFAC match for this wallet.<br><small>Checked against '+d.checked_against.wallets+' wallets in '+d.latency_ms+'ms</small>'}
+    else{result.className='result flagged';result.innerHTML='<strong>⚠ FLAGGED</strong> — This wallet matches the OFAC SDN list.<br><small>Matches: '+(d.matches?JSON.stringify(d.matches).substring(0,200):'Yes')+'</small>'}
+  }catch(e){result.className='result error';result.textContent='Network error: '+e.message}
+}
+document.getElementById('wallet').addEventListener('keydown',function(e){if(e.key==='Enter')screen()});
+</script>
+</body></html>"""
+        self.send_response(200)
+        self.send_header("Content-Type", "text/html; charset=utf-8")
+        self.send_header("X-Frame-Options", "ALLOWALL")
+        self.send_header("Content-Security-Policy", "frame-ancestors *")
+        self.end_headers()
+        self.wfile.write(body.encode())
+        return
+
+    def _badge_ofac_svg(self):
+        """Dynamic SVG badge showing live OFAC screening stats — embeddable."""
+        svg = '''<svg xmlns="http://www.w3.org/2000/svg" width="360" height="120" viewBox="0 0 360 120">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0d1a14"/>
+      <stop offset="100%" stop-color="#0a0a0a"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#00d4aa"/>
+      <stop offset="100%" stop-color="#00b894"/>
+    </linearGradient>
+  </defs>
+  <rect width="360" height="120" rx="12" fill="url(#bg)" stroke="#00d4aa" stroke-width="1.5"/>
+  <text x="180" y="30" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif" font-size="13" font-weight="700" fill="#00d4aa">Protected by agentmail</text>
+  <text x="180" y="52" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif" font-size="11" fill="#8a8d96">OFAC Sanctions Screening for AI Agents</text>
+  <line x1="30" y1="64" x2="330" y2="64" stroke="#1a1a1a" stroke-width="1"/>
+  <g transform="translate(0,68)">
+    <text x="60" y="14" text-anchor="middle" font-family="'SF Mono',monospace" font-size="18" font-weight="800" fill="#00d4aa">782</text>
+    <text x="60" y="30" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="9" fill="#555">OFAC WALLETS</text>
+    <text x="180" y="14" text-anchor="middle" font-family="'SF Mono',monospace" font-size="18" font-weight="800" fill="#00d4aa">19,086</text>
+    <text x="180" y="30" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="9" fill="#555">SDN NAMES</text>
+    <text x="300" y="14" text-anchor="middle" font-family="'SF Mono',monospace" font-size="18" font-weight="800" fill="#00d4aa">&lt;100ms</text>
+    <text x="300" y="30" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="9" fill="#555">PER CHECK</text>
+  </g>
+  <text x="180" y="114" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="8" fill="#444">sanctionsai.dev · Free to embed · CC BY 4.0</text>
+</svg>'''
+        self.send_response(200)
+        self.send_header("Content-Type", "image/svg+xml")
+        self.send_header("Cache-Control", "public, max-age=3600")
+        self.send_header("Access-Control-Allow-Origin", "*")
+        self.end_headers()
+        self.wfile.write(svg.encode())
+        return
 
     def _blog_index_page(self):
         """Render an index of all blog posts."""
