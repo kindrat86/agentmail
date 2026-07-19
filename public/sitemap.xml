@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>_robots_txt</loc></url>
-  <url><loc>_sitemap</loc></url>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
   <url><loc>https://sanctionsai.dev</loc></url>
   <url><loc>https://sanctionsai.dev/about</loc></url>
   <url><loc>https://sanctionsai.dev/agent</loc></url>
@@ -66,7 +64,6 @@
   <url><loc>https://sanctionsai.dev/glossary/strict-liability</loc></url>
   <url><loc>https://sanctionsai.dev/glossary/voluntary-self-disclosure</loc></url>
   <url><loc>https://sanctionsai.dev/guides</loc></url>
-  <url><loc>https://sanctionsai.dev/guides/choose-sanctions-api</loc></url>
   <url><loc>https://sanctionsai.dev/guides/recordkeeping-requirements</loc></url>
   <url><loc>https://sanctionsai.dev/guides/risk-assessment-guide</loc></url>
   <url><loc>https://sanctionsai.dev/guides/sanctions-compliance-program</loc></url>
