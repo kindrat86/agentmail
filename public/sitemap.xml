@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
   <url><loc>https://sanctionsai.dev</loc></url>
   <url><loc>https://sanctionsai.dev/about</loc></url>
   <url><loc>https://sanctionsai.dev/agent</loc></url>
@@ -13,6 +13,7 @@
   <url><loc>https://sanctionsai.dev/blog</loc></url>
   <url><loc>https://sanctionsai.dev/blog/agent-compliance-checklist</loc></url>
   <url><loc>https://sanctionsai.dev/blog/how-to-screen-wallet-agent</loc></url>
+  <url><loc>https://sanctionsai.dev/blog/know-your-agent</loc></url>
   <url><loc>https://sanctionsai.dev/blog/ofac-for-agents</loc></url>
   <url><loc>https://sanctionsai.dev/checklists/crypto-ofac-checklist</loc></url>
   <url><loc>https://sanctionsai.dev/checklists/ofac-compliance-checklist</loc></url>
@@ -24,6 +25,7 @@
   <url><loc>https://sanctionsai.dev/compare/elliptic</loc></url>
   <url><loc>https://sanctionsai.dev/compare/sumsub</loc></url>
   <url><loc>https://sanctionsai.dev/compare/world-check</loc></url>
+  <url><loc>https://sanctionsai.dev/contact</loc></url>
   <url><loc>https://sanctionsai.dev/content-strategy</loc></url>
   <url><loc>https://sanctionsai.dev/cost</loc></url>
   <url><loc>https://sanctionsai.dev/cost-of/chainalysis-pricing</loc></url>
@@ -66,10 +68,10 @@
   <url><loc>https://sanctionsai.dev/guides/recordkeeping-requirements</loc></url>
   <url><loc>https://sanctionsai.dev/guides/risk-assessment-guide</loc></url>
   <url><loc>https://sanctionsai.dev/guides/sanctions-compliance-program</loc></url>
-  <url><loc>https://sanctionsai.dev/guides/setup-ofac-screening</loc></url>
   <url><loc>https://sanctionsai.dev/guides/voluntary-self-disclosure</loc></url>
   <url><loc>https://sanctionsai.dev/how-to</loc></url>
   <url><loc>https://sanctionsai.dev/integrations</loc></url>
+  <url><loc>https://sanctionsai.dev/leaderboard</loc></url>
   <url><loc>https://sanctionsai.dev/learn/crypto-compliance-guide</loc></url>
   <url><loc>https://sanctionsai.dev/learn/crypto-sanctions-risk</loc></url>
   <url><loc>https://sanctionsai.dev/learn/ofac-compliance-guide</loc></url>
@@ -88,7 +90,6 @@
   <url><loc>https://sanctionsai.dev/penalties/kraken</loc></url>
   <url><loc>https://sanctionsai.dev/penalties/kraken-ofac-2022</loc></url>
   <url><loc>https://sanctionsai.dev/penalties/ofac-acd-penalties-2023</loc></url>
-  <url><loc>https://sanctionsai.dev/penalties/ofac-violation-costs</loc></url>
   <url><loc>https://sanctionsai.dev/penalties/ripple</loc></url>
   <url><loc>https://sanctionsai.dev/penalties/societe-generale</loc></url>
   <url><loc>https://sanctionsai.dev/penalties/standard-chartered</loc></url>
@@ -98,6 +99,9 @@
   <url><loc>https://sanctionsai.dev/teardown</loc></url>
   <url><loc>https://sanctionsai.dev/terms</loc></url>
   <url><loc>https://sanctionsai.dev/tools</loc></url>
+  <url><loc>https://sanctionsai.dev/tools/batch-checker</loc></url>
+  <url><loc>https://sanctionsai.dev/tools/compliance-checker</loc></url>
+  <url><loc>https://sanctionsai.dev/tools/country-checker</loc></url>
   <url><loc>https://sanctionsai.dev/tools/sei-calculator</loc></url>
   <url><loc>https://sanctionsai.dev/tools/wallet-checker</loc></url>
   <url><loc>https://sanctionsai.dev/vs</loc></url>
