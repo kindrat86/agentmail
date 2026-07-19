@@ -2025,6 +2025,9 @@ Allow: Storing
             return self._ofac_enforcement_page()
         if p.path == "/ofac-enforcement-2026.csv":
             return self._serve_ofac_csv()
+        # IndexNow key verification files
+        if p.path.endswith(".txt") and len(p.path) == 34:  # /<32-hex>.txt
+            return self._serve_file_content(p.path[1:], "text/plain")
 
         # WRAP layer - screening logs, audit trail exports, alert settings.
         # Admin-only: bearer token checked against ADMIN_DASH_TOKEN env var.
