@@ -2001,9 +2001,9 @@ Allow: Storing
             self._send_png(200, _OG_PNG)
             return
         if p.path == "/ux.css":
-            # Pages style themselves inline; this valid empty stylesheet stops
-            # the render-blocking 404 for any cached HTML that still links it.
-            return self._serve_text("/* intentionally empty - all styles are inline */", "text/css")
+            return self._serve_file_content("ux.css", "text/css")
+        if p.path == "/ux.js":
+            return self._serve_file_content("ux.js", "application/javascript")
         if p.path == "/favicon.ico" or p.path == "/favicon.svg":
             svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#0f172a"/><stop offset="100%" stop-color="#0d1a14"/></linearGradient></defs><rect width="32" height="32" rx="7" fill="url(#g)" stroke="#00d4aa" stroke-width="1.8"/><text x="16" y="22" font-family="system-ui,sans-serif" font-size="18" font-weight="800" fill="#00d4aa" text-anchor="middle" letter-spacing="-0.5">a</text><circle cx="24" cy="7" r="3.5" fill="#00d4aa" opacity="0.85"/></svg>'
             self._send_svg(200, svg, cache_max_age=604800)
@@ -2699,7 +2699,7 @@ License: https://creativecommons.org/licenses/by/4.0/
         # Note: api.py may be running from the installed site-packages, while
         # the static dirs are deployed alongside the app at /home/agentmail/app/.
         # Use AGENTMAIL_HOME env or search both candidate roots.
-        for _pfx in ("/vs/", "/faq/", "/learn/", "/alternatives-to/", "/penalties/", "/guides/", "/checklists/", "/cost-of/", "/best/", "/templates/"):
+        for _pfx in ("/vs/", "/faq/", "/learn/", "/alternatives-to/", "/penalties/", "/guides/", "/checklists/", "/cost-of/", "/best/", "/templates/", "/stats/"):
             if p.path.startswith(_pfx):
                 _slug = p.path[len(_pfx):].split("?")[0].split("/")[0]
                 if not _slug:
@@ -2750,6 +2750,8 @@ License: https://creativecommons.org/licenses/by/4.0/
             return self._glossary_index_page()
         if p.path == "/tools":
             return self._tools_index_page()
+        if p.path in ("/stats", "/stats/"):
+            return self._serve_stats_page()
         if p.path == "/compare":
             return self._compare_index_page()
         if p.path == "/integrations":
@@ -2860,6 +2862,24 @@ License: https://creativecommons.org/licenses/by/4.0/
                 with open(fpath, 'rb') as f:
                     self.wfile.write(f.read())
                 return
+        # Network hub + widget + feed (cross-portfolio intelligence mesh)
+        if p.path in ("/network", "/network/"):
+            return self._serve_file_content("network/index.html", "text/html")
+        if p.path == "/network/widget.html" or p.path == "/network-widget":
+            return self._serve_file_content("network/widget.html", "text/html")
+        if p.path == "/network/feed.json" or p.path == "/network-feed":
+            return self._serve_file_content("network/feed.json", "application/json")
+        # AI Answer Syndication pages
+        if p.path == "/answers/" or p.path == "/answers":
+            return self._serve_file_content("answers/index.html", "text/html")
+        if p.path == "/answers/feed.json":
+            return self._serve_file_content("answers/feed.json", "application/json")
+        if p.path.startswith("/answers/") and len(p.path) > 9:
+            slug_path = p.path.rstrip("/") + "/index.html"
+            return self._serve_file_content("answers/" + slug_path.split("answers/")[1], "text/html")
+        # NLWeb discovery manifest
+        if p.path == "/.well-known/nlweb.json":
+            return self._serve_file_content(".well-known/nlweb.json", "application/json")
         # Catch-all 404 HTML page (not a 302 redirect — Google penalizes soft-404s)
         return self._page(
             "Page not found - agentmail",
@@ -3064,11 +3084,13 @@ License: https://creativecommons.org/licenses/by/4.0/
         else:
             self.send_header("Content-Length", str(len(body)))
         self.send_header("X-Content-Type-Options", "nosniff")
-        self.send_header("Content-Security-Policy", "default-src 'self'; script-src 'self' 'unsafe-inline' https://eu.i.posthog.com https://js.stripe.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self' https://eu.i.posthog.com https://api.stripe.com; frame-ancestors 'none'; frame-src https://js.stripe.com https://hooks.stripe.com; object-src 'none'; base-uri 'self'")
+        self.send_header("Content-Security-Policy", "default-src 'self'; script-src 'self' 'unsafe-inline' https://eu.i.posthog.com https://js.stripe.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self' https://eu.i.posthog.com https://api.stripe.com; frame-ancestors 'none'; frame-src https://js.stripe.com https://hooks.stripe.com; object-src 'none'; base-uri 'self'; require-trusted-types-for 'script'")
         self.send_header("Permissions-Policy", "camera=(), microphone=(), geolocation=(), payment=(), usb=(), browsing-topics=(), interest-cohort=()")
         self.send_header("X-Frame-Options", "SAMEORIGIN")
         self.send_header("Referrer-Policy", "strict-origin-when-cross-origin")
         self.send_header("Strict-Transport-Security", "max-age=63072000; includeSubDomains; preload")
+        self.send_header("Cross-Origin-Opener-Policy", "same-origin")
+        self.send_header("Cross-Origin-Embedder-Policy", "credentialless")
         self.send_header("Cache-Control", "public, max-age=60")
         self.send_header("Vary", "Accept-Encoding")
         self.send_header("X-Robots-Tag", "index, follow, max-snippet:-1, max-image-preview:large")
@@ -3184,6 +3206,7 @@ License: https://creativecommons.org/licenses/by/4.0/
         ("/for/developers", "monthly", "0.8", "OFAC sanctions API for developers building AI agents"),
         ("/for/kyc-aml", "monthly", "0.7", "OFAC sanctions for KYC and AML teams"),
         ("/integrations/coinbase-agentkit", "monthly", "0.7", "OFAC screening for Coinbase AgentKit agents"),
+        ("/data/ofac-enforcement", "weekly", "0.8", "OFAC Enforcement Database 2017-2024 - historical civil penalties"),
         ("/integrations/langchain", "monthly", "0.7", "OFAC screening for LangChain agents"),
         ("/integrations/crewai", "monthly", "0.7", "OFAC screening for CrewAI agents"),
         ("/integrations/claude-code", "monthly", "0.7", "OFAC screening for Claude Code"),
@@ -3567,7 +3590,16 @@ The server exposes four tools (call by these exact names):
       "founder": {"@id": "https://sanctionsai.dev/#founder"},
       "sameAs": [
         "https://x.com/sipiteno",
-        "https://github.com/kindrat86/agentmail"
+        "https://github.com/kindrat86/agentmail",
+        "https://gitdealflow.com",
+        "https://sipiteno.com",
+        "https://signals.gitdealflow.com",
+        "https://invisibleexit.com",
+        "https://unlocksaas.com",
+        "https://voicelogpro.com",
+        "https://carshake.online",
+        "https://churnlens.site",
+        "https://sipi.bot"
       ]
     },
     {
@@ -7445,6 +7477,20 @@ document.getElementById("squeeze-form").addEventListener("submit", function(e){
         return self._page("Free OFAC Screening Tools — agentmail",
                           "Free OFAC screening tools: wallet checker, name checker, country checker, batch checker, and compliance checker. No API key required.",
                           body, canonical="/tools")
+
+    def _serve_stats_page(self):
+        """Serve the /stats/ page from filesystem."""
+        import os as _os2
+        _candidates = [
+            _os2.path.join(_os2.path.dirname(_os2.path.abspath(__file__)), "stats", "index.html"),
+            _os2.path.join("/home/agentmail/app", "stats", "index.html"),
+        ]
+        for _fp in _candidates:
+            _fp = _os2.path.normpath(_fp)
+            if _os2.path.isfile(_fp):
+                with open(_fp, "r", encoding="utf-8") as _fh:
+                    return self._serve_text(_fh.read(), "text/html; charset=utf-8")
+        return _json(self, 404, {"error": "stats page not found"})
 
     def _vs_index_page(self):
         """Index of all vendor comparison pages."""
