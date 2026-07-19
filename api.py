@@ -7086,8 +7086,16 @@ document.getElementById("squeeze-form").addEventListener("submit", function(e){
                 {"@type": "ListItem", "position": 2, "name": "Integrations", "item": _SITE + "/integrations/" + slug},
             ]
         }
+        faq_schema = ""
+        if i.get("faq"):
+            faq_ld = {
+                "@context": "https://schema.org",
+                "@type": "FAQPage",
+                "mainEntity": [{"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in i["faq"]]
+            }
+            faq_schema = self._ld(faq_ld)
         return self._page(i["title"], i["desc"], body,
-                          extra_head=self._ld(ld) + self._ld(bc), canonical="/integrations/" + slug)
+                          extra_head=self._ld(ld) + self._ld(bc) + faq_schema, canonical="/integrations/" + slug)
 
     def _glossary_page(self, slug):
         g = _GLOSSARY.get(slug)
