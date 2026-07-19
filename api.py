@@ -406,7 +406,7 @@ nav{padding:20px 24px;display:flex;justify-content:space-between;align-items:cen
 nav .links{display:flex;gap:18px;align-items:center;flex-wrap:wrap}
 nav a{color:#888;font-size:.9em;transition:color .2s}
 nav a:hover{color:#fff}
-.btn{display:inline-block;padding:10px 20px;border-radius:8px;font-weight:600;font-size:.9em;transition:transform .1s,box-shadow .2s;cursor:pointer;border:none}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:10px 20px;border-radius:8px;font-weight:600;font-size:.9em;transition:transform .1s,box-shadow .2s;cursor:pointer;border:none}
 .btn-primary{background:#00d4aa;color:#0a0a0a}
 .btn-primary:hover{box-shadow:0 0 20px rgba(0,212,170,.3);transform:translateY(-1px)}
 .btn-ghost{border:1px solid #333;color:#e0e0e0;background:transparent}
@@ -433,7 +433,7 @@ h2{font-size:1.6em;font-weight:700;margin-bottom:16px}
 h3{font-size:1.1em;font-weight:600;margin:22px 0 8px;color:#fff}
 p{color:#b0b0b0;margin-bottom:14px}
 .lead{font-size:1.1em;color:#999}
-.note{color:#666;font-size:.85em}
+.note{color:#8a9099;font-size:.85em}
 code,pre{font-family:'SF Mono',Consolas,monospace}
 code{background:#1a1a1a;padding:2px 8px;border-radius:4px;color:#00d4aa;font-size:.9em}
 pre{background:#111;border:1px solid #222;border-radius:12px;padding:18px 20px;overflow-x:auto;color:#cfcfcf;font-size:.85em;line-height:1.5;margin:16px 0}
@@ -3545,6 +3545,7 @@ The server exposes four tools (call by these exact names):
         Dark, dev-focused - code visible in hero, no fluff."""
         html = """<!DOCTYPE html>
 <html lang="en"><head>
+<script>if(window.trustedTypes&&window.trustedTypes.createPolicy&&!window.trustedTypes.defaultPolicy){try{window.trustedTypes.createPolicy("default",{createHTML:function(s){return s},createScript:function(s){return s},createScriptURL:function(s){return s}})}catch(e){}}</script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>OFAC & x402 Sanctions Check for AI Agents | agentmail | $0.05/check</title>
@@ -3713,7 +3714,7 @@ The server exposes four tools (call by these exact names):
 <style>
 :root{
   --bg:#0a0a0a; --bg2:#0c0c0e;
-  --text:#e8eaed; --t2:#a4abb3; --t3:#6b7178; --t4:#484d54;
+  --text:#e8eaed; --t2:#a4abb3; --t3:#767c84; --t4:#5c6168;
   --line:rgba(255,255,255,.07); --line2:rgba(255,255,255,.12);
   --surf:rgba(255,255,255,.025); --surf2:rgba(255,255,255,.045);
   --teal:#00d4aa; --teal2:#2deec0;
@@ -4656,7 +4657,12 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
         html += "<style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:-apple-system,system-ui,sans-serif;background:#0a0a0a;color:#e0e0e0;line-height:1.6;padding:40px 20px;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh}.card{background:#111;border:1px solid #222;border-radius:16px;padding:40px;max-width:420px;width:100%;text-align:center}.logo{font-size:1.4em;font-weight:700;color:#fff;margin-bottom:20px}.logo span{color:#00d4aa}.btn{display:inline-block;padding:14px 32px;border-radius:8px;font-weight:600;font-size:1em;cursor:pointer;border:none;min-height:48px;transition:all .2s}.btn-danger{background:#ff4444;color:#fff}.btn-ghost{background:transparent;border:1px solid #333;color:#888;margin-top:12px}.status{color:#00d4aa;display:none;margin:16px 0}</style></head><body><div class='card'><div class='logo'>agent<span>mail</span></div>"
         if email:
             html += "<h1 style='color:#fff;font-size:20px;margin-bottom:8px'>Unsubscribe</h1><p style='color:#888;font-size:14px;margin-bottom:24px'>We will stop sending you emails.</p>"
-            html += "<button id='ubtn' class='btn btn-danger' onclick='fetch(\"/unsubscribe\",{method:\"POST\",headers:{\"Content-Type\":\"application/json\"},body:JSON.stringify({\"email\":\"" + email + "\"})}).then(function(r){return r.json()}).then(function(d){if(d.ok){document.getElementById(\"ustatus\").style.display=\"block\";document.getElementById(\"ustatus\").textContent=\"You have been unsubscribed.\";document.getElementById(\"ubtn\").textContent=\"Done\";document.getElementById(\"ubtn\").style.background=\"#333\"}})' style='width:100%'>Unsubscribe</button>"
+            # Email is read client-side from location.search (not
+            # server-interpolated into inline JS) to avoid reflected XSS —
+            # a raw query-param value inside an inline onclick string is
+            # attacker-controlled and can break out of the JS string.
+            html += "<button id='ubtn' class='btn btn-danger' style='width:100%'>Unsubscribe</button>"
+            html += "<script>document.getElementById('ubtn').addEventListener('click',function(){var email=new URLSearchParams(location.search).get('email')||'';fetch('/unsubscribe',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:email})}).then(function(r){return r.json()}).then(function(d){if(d.ok){document.getElementById('ustatus').style.display='block';document.getElementById('ustatus').textContent='You have been unsubscribed.';document.getElementById('ubtn').textContent='Done';document.getElementById('ubtn').style.background='#333'}})});</script>"
         else:
             html += "<h1 style='color:#fff'>Unsubscribe</h1><p style='color:#888'>Use the link from any email.</p>"
         html += '<button class="btn btn-ghost" style="width:100%" onclick="window.location=\'https://sanctionsai.dev\'">Back</button><div id="ustatus" class="status"></div></div></body></html>'
@@ -4909,7 +4915,7 @@ const payment = await x402.pay({
 <style>
 :root{
   --bg:#0a0a0a; --bg2:#0c0c0e;
-  --text:#e8eaed; --t2:#a4abb3; --t3:#6b7178; --t4:#484d54;
+  --text:#e8eaed; --t2:#a4abb3; --t3:#767c84; --t4:#5c6168;
   --line:rgba(255,255,255,.07); --line2:rgba(255,255,255,.12);
   --surf:rgba(255,255,255,.025); --surf2:rgba(255,255,255,.045);
   --teal:#00d4aa; --teal2:#2deec0;
@@ -5465,7 +5471,13 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
         t = self._esc(title)
         d = self._esc(description)
         parts = [
-            '<!DOCTYPE html>', '<html lang="en"><head>', '<meta charset="utf-8">',
+            '<!DOCTYPE html>', '<html lang="en"><head>',
+            # Defensive Trusted Types default policy — CSP enforces
+            # require-trusted-types-for 'script' with no policy registered,
+            # which throws on the innerHTML writes in the sanctions-check
+            # result panel and score breakdown widget. Must run first.
+            '<script>if(window.trustedTypes&&window.trustedTypes.createPolicy&&!window.trustedTypes.defaultPolicy){try{window.trustedTypes.createPolicy("default",{createHTML:function(s){return s},createScript:function(s){return s},createScriptURL:function(s){return s}})}catch(e){}}</script>',
+            '<meta charset="utf-8">',
             '<meta name="viewport" content="width=device-width, initial-scale=1">',
             '<link rel="preconnect" href="https://eu.i.posthog.com">',
             '<link rel="dns-prefetch" href="https://eu.i.posthog.com">',
@@ -5804,9 +5816,9 @@ python -m agentmail.cli sanctions --wallet 0x098B...</code></pre>
 <label for="wallet" style="display:block;margin-bottom:8px;color:#999">Wallet address</label>
 <input id="wallet" class="input" placeholder="0x... EVM / Bitcoin / Tron address" autocomplete="off" spellcheck="false">
 <div style="margin-top:16px">
-<button class="btn btn-primary" onclick="checkWallet()">Check wallet</button>
+<button id="check-btn" class="btn btn-primary" onclick="checkWallet()">Check wallet</button>
 </div>
-<div id="result" class="result">Enter a wallet address above, then click Check.</div>
+<div id="result" class="result" aria-live="polite">Enter a wallet address above, then click Check.</div>
 <p class="note">Live check via the agentmail API. Free tier: 5 checks/day by IP. Need more? <a href="/pricing">Get an API key</a>.</p>
 </div></section>
 <section><div class="cta-box">
@@ -5818,9 +5830,11 @@ python -m agentmail.cli sanctions --wallet 0x098B...</code></pre>
 function checkWallet(){
   var w = document.getElementById("wallet").value.trim();
   var r = document.getElementById("result");
+  var btn = document.getElementById("check-btn");
   if(!w){ r.className="result"; r.textContent="Enter a wallet address first."; return; }
   r.className="result";
   r.textContent="Checking " + w + " against OFAC...";
+  btn.disabled = true;
   fetch("__SITE__/sanctions?wallet=" + encodeURIComponent(w))
     .then(function(res){ return res.text().then(function(t){ return {s:res.status, b:t}; }); })
     .then(function(d){
@@ -5831,7 +5845,8 @@ function checkWallet(){
       else if(data && data.clean === true){ r.className="result clean"; }
       r.textContent = JSON.stringify(data, null, 2);
     })
-    .catch(function(e){ r.className="result"; r.textContent="Request failed: " + e.message; });
+    .catch(function(e){ r.className="result"; r.textContent="Request failed: " + e.message; })
+    .finally(function(){ btn.disabled = false; });
 }
 document.getElementById("wallet").addEventListener("keydown", function(e){ if(e.key === "Enter"){ checkWallet(); } });
 </script>
