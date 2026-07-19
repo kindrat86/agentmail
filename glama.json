@@ -1,0 +1,23 @@
+{
+  "$schema": "https://glama.ai/mcp/schemas/server.json",
+  "maintainers": ["kindrat86"],
+  "name": "agentmail",
+  "description": "OFAC sanctions screening for AI agents that transact autonomously. Screen names, crypto wallets (782 OFAC-listed across EVM/BTC/Tron), and entities against the SDN list (19,086 names, 16 jurisdictions) in under 100ms. MCP + HTTP + CLI. MIT-licensed, self-hostable.",
+  "type": "mcp_server",
+  "status": "production",
+  "framework": "Python 3.11+",
+  "tools": 8,
+  "transport": ["stdio", "http"],
+  "keywords": [
+    "mcp",
+    "mcp-server",
+    "ofac",
+    "sanctions",
+    "compliance",
+    "ai-agents",
+    "kya",
+    "risk",
+    "agent-economy",
+    "verification"
+  ]
+}
