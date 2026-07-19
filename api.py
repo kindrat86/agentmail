@@ -3564,7 +3564,7 @@ The server exposes four tools (call by these exact names):
       "email": "hello@sanctionsai.dev",
       "founder": {"@id": "https://sanctionsai.dev/#founder"},
       "sameAs": [
-        "https://x.com/data_nerd",
+        "https://x.com/sipiteno",
         "https://github.com/kindrat86/agentmail"
       ]
     },
@@ -3589,7 +3589,7 @@ The server exposes four tools (call by these exact names):
       ],
       "description": "Founder and lead compliance engineer at agentmail (sanctionsai.dev). Builds OFAC sanctions screening infrastructure for AI agents that transact autonomously, with a focus on sub-100ms pre-payment screening and audit-ready evidence chains for Voluntary Self-Disclosure.",
       "sameAs": [
-        "https://x.com/data_nerd",
+        "https://x.com/sipiteno",
         "https://github.com/kindrat86",
         "https://pypi.org/user/kindrat86/"
       ]
@@ -8305,7 +8305,7 @@ compute();
             ],
             "alumniOf": "US Treasury OFAC compliance framework",
             "sameAs": [
-                "https://x.com/data_nerd",
+                "https://x.com/sipiteno",
                 "https://github.com/kindrat86",
                 "https://www.linkedin.com/in/data-nerd-sanctions",
             ],
@@ -8317,7 +8317,7 @@ compute();
                 "url": _SITE + "/", "logo": {"@type": "ImageObject", "url": _SITE + "/og.png"},
                 "email": "hello@sanctionsai.dev",
                 "founder": {"@id": _SITE + "/#founder"},
-                "sameAs": ["https://x.com/data_nerd", "https://github.com/kindrat86/agentmail"],
+                "sameAs": ["https://x.com/sipiteno", "https://github.com/kindrat86/agentmail"],
             },
             _author_person,
             {"@type": "Article", "headline": title, "description": desc,
