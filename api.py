@@ -1791,7 +1791,7 @@ class Handler(BaseHTTPRequestHandler):
         host = self.headers.get('Host', '') or self.headers.get('host', '')
         if host.startswith('www.'):
             target = 'https://' + host[4:] + self.path
-            self.send_response(301)
+            self.send_response(308)
             self.send_header('Location', target)
             self.end_headers()
             return
@@ -1972,6 +1972,8 @@ Sitemap: https://sanctionsai.dev/sitemap.xml
             return self._sitemap_index_xml()
         if p.path == "/.well-known/assetlinks.json":
             return self._serve_file_content(".well-known/assetlinks.json", "application/json")
+        if p.path == "/.well-known/security.txt":
+            return self._serve_text("Contact: mailto:security@sanctionsai.dev\nExpires: 2027-07-19T00:00:00Z\nCanonical: https://sanctionsai.dev/.well-known/security.txt\n", "text/plain")
         if p.path == "/87aaa199.txt":
             return self._serve_text("87aaa199", "text/plain")
         if p.path == "/87aaa199acaf7d14c812e974ce115e32.txt":
@@ -4006,6 +4008,52 @@ footer{padding-bottom:max(40px,env(safe-area-inset-bottom))}
       }
     }
   ]
+}
+</script>
+<!-- BreadcrumbList standalone -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "@id": "https://sanctionsai.dev/#breadcrumb-standalone",
+  "itemListElement": [
+    {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://sanctionsai.dev/"},
+    {"@type": "ListItem", "position": 2, "name": "Tools", "item": "https://sanctionsai.dev/tools"},
+    {"@type": "ListItem", "position": 3, "name": "Pricing", "item": "https://sanctionsai.dev/pricing"}
+  ]
+}
+</script>
+<!-- Article -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "@id": "https://sanctionsai.dev/#article",
+  "headline": "OFAC Sanctions Screening API for AI Agents — Real-Time Wallet & Name Checks Under 100ms",
+  "description": "agentmail (sanctionsai.dev) provides sub-100ms OFAC sanctions screening for AI agents. Screen crypto wallets, names, and countries before your autonomous agent pays. Free tier + $0.05/check via x402 payment protocol.",
+  "author": {"@type": "Person", "name": "The Data Nerd", "url": "https://sanctionsai.dev/about"},
+  "publisher": {"@type": "Organization", "name": "agentmail", "url": "https://sanctionsai.dev/"},
+  "datePublished": "2025-05-24",
+  "dateModified": "2026-07-18",
+  "mainEntityOfPage": {"@type": "WebPage", "@id": "https://sanctionsai.dev/"}
+}
+</script>
+<!-- WebApplication standalone -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "@id": "https://sanctionsai.dev/#webapp-standalone",
+  "name": "agentmail OFAC Sanctions Screening API",
+  "url": "https://sanctionsai.dev/",
+  "description": "Real-time OFAC sanctions screening API for AI agents. Screen crypto wallets, names, and countries in under 100ms.",
+  "applicationCategory": "SecurityApplication",
+  "operatingSystem": "Web, Linux, macOS",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  }
 }
 </script>
 <!-- PostHog -->
