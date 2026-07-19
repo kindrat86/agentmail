@@ -467,7 +467,7 @@ footer p{color:#444;font-size:.8em}
 
 _NAV = '<nav><div class="logo">agent<span>mail</span></div><div class="links"><a href="/">Home</a><a href="/teardown">How It Works</a><a href="/dashboard">Dashboard</a><a href="/faq">FAQ</a><a href="/docs">Docs</a><a href="/tools/wallet-checker">Free Checker</a><a href="/blog/ofac-for-agents">Blog</a><a href="/pricing">Pricing</a><a href="/checkout/dev" class="btn btn-primary">Get API key</a></div></nav>'
 
-_FOOTER = '<footer><div class="links" style="display:flex;flex-wrap:wrap;gap:12px 28px;justify-content:center;max-width:900px;margin:0 auto 16px"><div style="min-width:140px"><strong style="color:#888;font-size:.75em;text-transform:uppercase;letter-spacing:.05em">Product</strong><br><a href="/">Home</a><br><a href="/teardown">How It Works</a><br><a href="/pricing">Pricing</a><br><a href="/docs">Docs</a><br><a href="/tools">Free Tools</a><br><a href="/llms.txt">llms.txt (AI docs)</a></div><div style="min-width:140px"><strong style="color:#888;font-size:.75em;text-transform:uppercase;letter-spacing:.05em"><a href="/for" style="color:#888;text-decoration:none">By Industry</a></strong><br><a href="/for/fintech">Fintech</a><br><a href="/for/crypto">Crypto</a><br><a href="/for/defi">DeFi</a><br><a href="/for/payments">Payments</a><br><a href="/for/ai-agents">AI Agents</a><br><a href="/for/developers">Developers</a></div><div style="min-width:140px"><strong style="color:#888;font-size:.75em;text-transform:uppercase;letter-spacing:.05em"><a href="/compare" style="color:#888;text-decoration:none">Compare</a></strong><br><a href="/compare/chainalysis">vs Chainalysis</a><br><a href="/compare/elliptic">vs Elliptic</a><br><a href="/compare/complyadvantage">vs ComplyAdvantage</a><br><a href="/compare/sumsub">vs SumSub</a><br><a href="/compare/world-check">vs World-Check</a></div><div style="min-width:140px"><strong style="color:#888;font-size:.75em;text-transform:uppercase;letter-spacing:.05em">Resources</strong><br><a href="/blog">Blog</a><br><a href="/guides">Guides</a><br><a href="/penalties">Penalties</a><br><a href="/how-to">How-To</a><br><a href="/glossary">Glossary</a><br><a href="/cost">Costs</a><br><a href="/integrations">Integrations</a><br><a href="/vs">Vs</a><br><a href="/content-strategy">Content Strategy</a><br><a href="/partners/jv">JV Partners (50%)</a><br><a href="/dream100">Dream 100</a><br><a href="/agent">For Agents</a><br><a href="/about">About</a><br><a href="/privacy">Privacy</a><br><a href="/terms">Terms</a></div></div><p style="text-align:center;color:#666">agentmail - OFAC sanctions screening for AI agents · MIT licensed · Data from US Treasury &amp; vile/ofac-sdn-list</p></footer>'
+_FOOTER = '<footer><div class="links" style="display:flex;flex-wrap:wrap;gap:12px 28px;justify-content:center;max-width:900px;margin:0 auto 16px"><div style="min-width:140px"><strong style="color:#888;font-size:.75em;text-transform:uppercase;letter-spacing:.05em">Product</strong><br><a href="/">Home</a><br><a href="/teardown">How It Works</a><br><a href="/pricing">Pricing</a><br><a href="/docs">Docs</a><br><a href="/tools">Free Tools</a><br><a href="/llms.txt">llms.txt (AI docs)</a></div><div style="min-width:140px"><strong style="color:#888;font-size:.75em;text-transform:uppercase;letter-spacing:.05em"><a href="/for" style="color:#888;text-decoration:none">By Industry</a></strong><br><a href="/for/fintech">Fintech</a><br><a href="/for/crypto">Crypto</a><br><a href="/for/defi">DeFi</a><br><a href="/for/payments">Payments</a><br><a href="/for/ai-agents">AI Agents</a><br><a href="/for/developers">Developers</a></div><div style="min-width:140px"><strong style="color:#888;font-size:.75em;text-transform:uppercase;letter-spacing:.05em"><a href="/compare" style="color:#888;text-decoration:none">Compare</a></strong><br><a href="/compare/chainalysis">vs Chainalysis</a><br><a href="/compare/elliptic">vs Elliptic</a><br><a href="/compare/complyadvantage">vs ComplyAdvantage</a><br><a href="/compare/sumsub">vs SumSub</a><br><a href="/compare/world-check">vs World-Check</a></div><div style="min-width:140px"><strong style="color:#888;font-size:.75em;text-transform:uppercase;letter-spacing:.05em">Resources</strong><br><a href="/blog">Blog</a><br><a href="/guides">Guides</a><br><a href="/penalties">Penalties</a><br><a href="/how-to">How-To</a><br><a href="/glossary">Glossary</a><br><a href="/cost">Costs</a><br><a href="/integrations">Integrations</a><br><a href="/vs">Vs</a><br><a href="/content-strategy">Content Strategy</a><br><a href="/partners/jv">JV Partners (50%)</a><br><a href="/dream100">Dream 100</a><br><a href="/agent">For Agents</a><br><a href="/leaderboard">Leaderboard</a><br><a href="/about">About</a><br><a href="/contact">Contact</a><br><a href="/privacy">Privacy</a><br><a href="/terms">Terms</a></div></div><p style="text-align:center;color:#666">agentmail - OFAC sanctions screening for AI agents · MIT licensed · Data from US Treasury &amp; vile/ofac-sdn-list</p></footer>'
 
 _VERTICALS = {
     "fintech": {
@@ -1962,6 +1962,8 @@ Sitemap: https://sanctionsai.dev/sitemap.xml
             return self._bing_site_auth()
         if p.path == "/googlea30bb998b91eb6ac.html":
             return self._serve_text("google-site-verification: googlea30bb998b91eb6ac.html", "text/html")
+        if p.path == "/google57979683042f3b0e.html":
+            return self._serve_text("google-site-verification: google57979683042f3b0e.html", "text/html")
         if p.path == "/sitemap.xml":
             return self._sitemap_xml()
         if p.path == "/image-sitemap.xml":
@@ -2771,6 +2773,11 @@ License: https://creativecommons.org/licenses/by/4.0/
             return self._widget_screen_page()
         if p.path == "/api/badge/ofac-screened.svg":
             return self._badge_ofac_svg()
+        # Portfolio-network widget — cross-portfolio reciprocal backlink mesh.
+        # Serves a static HTML grid linking to all 10 sibling sites, embeddable
+        # cross-origin (frame-ancestors *). Mirrors the widget on the other 9 sites.
+        if p.path == "/embed/tools/portfolio-network.html" or p.path == "/embed/tools/portfolio-network":
+            return self._portfolio_network_widget()
         # sanctions GET - paid endpoint (accepts API key OR x402 payment)
         if p.path == "/sanctions" or p.path.startswith("/sanctions?"):
             q = parse_qs(p.query)
@@ -2832,6 +2839,18 @@ License: https://creativecommons.org/licenses/by/4.0/
             except KeyError as e:
                 return _json(self, 404, {"error": str(e)})
             return _json(self, 200, msg or {"empty": True})
+        # Serve static .txt files from public/ directory (IndexNow key files, sitemaps, etc.)
+        if p.path.endswith('.txt') and '/' not in p.path.lstrip('/'):
+            fname = p.path.lstrip('/')
+            fpath = os.path.join('public', fname)
+            if os.path.isfile(fpath):
+                self.send_response(200)
+                self.send_header('Content-Type', 'text/plain; charset=utf-8')
+                self.send_header('Cache-Control', 'public, max-age=86400')
+                self.end_headers()
+                with open(fpath, 'rb') as f:
+                    self.wfile.write(f.read())
+                return
         # Catch-all 404 HTML page (not a 302 redirect — Google penalizes soft-404s)
         return self._page(
             "Page not found - agentmail",
@@ -6600,6 +6619,59 @@ document.getElementById('wallet').addEventListener('keydown',function(e){if(e.ke
         self.send_header("Access-Control-Allow-Origin", "*")
         self.end_headers()
         self.wfile.write(svg.encode())
+        return
+
+    def _portfolio_network_widget(self):
+        """Cross-portfolio reciprocal backlink mesh widget.
+
+        Serves the same static HTML grid as the other 9 portfolio sites,
+        embeddable cross-origin (frame-ancestors *) so newsletter authors
+        and blog writers can drop it into any page. Each link is a real
+        <a> tag (crawlers follow it) back to a sibling site.
+        """
+        body = '''<!DOCTYPE html><html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Portfolio Network Widget</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: transparent; color: #e2e8f0; }
+.network-widget { background: rgba(15, 23, 42, 0.95); border-radius: 12px; padding: 1rem; border: 1px solid rgba(255,255,255,0.08); }
+.network-widget h4 { font-size: 0.8rem; color: #94a3b8; margin-bottom: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+.network-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.4rem; }
+.network-link { display: flex; align-items: center; gap: 0.4rem; padding: 0.35rem 0.5rem; border-radius: 6px; text-decoration: none; font-size: 0.75rem; color: #cbd5e1; transition: background 0.15s; }
+.network-link:hover { background: rgba(255,255,255,0.06); }
+.network-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+.network-domain { font-weight: 600; color: #e2e8f0; }
+.network-desc { color: #64748b; font-size: 0.65rem; }
+.network-footer { text-align: center; margin-top: 0.6rem; padding-top: 0.5rem; border-top: 1px solid rgba(255,255,255,0.06); font-size: 0.65rem; color: #475569; }
+.network-footer a { color: #0891b2; text-decoration: none; }
+@media (max-width: 400px) { .network-grid { grid-template-columns: 1fr; } }
+</style></head><body>
+<div class="network-widget">
+  <h4>&#127760; Portfolio Network</h4>
+  <div class="network-grid">
+    <a href="https://gitdealflow.com" class="network-link"><span class="network-dot" style="background:#10B981"></span><span><span class="network-domain">GitDealFlow</span><br><span class="network-desc">Startup deal signals</span></span></a>
+    <a href="https://signals.gitdealflow.com" class="network-link"><span class="network-dot" style="background:#3B82F6"></span><span><span class="network-domain">Signals</span><br><span class="network-desc">Startup momentum tracker</span></span></a>
+    <a href="https://invisibleexit.com" class="network-link"><span class="network-dot" style="background:#8B5CF6"></span><span><span class="network-domain">Invisible Exit</span><br><span class="network-desc">Acquisition readiness</span></span></a>
+    <a href="https://sipiteno.com" class="network-link"><span class="network-dot" style="background:#F59E0B"></span><span><span class="network-domain">SipiTeno</span><br><span class="network-desc">Digital product studio</span></span></a>
+    <a href="https://unlocksaas.com" class="network-link"><span class="network-dot" style="background:#EC4899"></span><span><span class="network-domain">UnlockSaaS</span><br><span class="network-desc">SaaS launch toolkit</span></span></a>
+    <a href="https://voicelogpro.com" class="network-link"><span class="network-dot" style="background:#06B6D4"></span><span><span class="network-domain">VoiceLogPro</span><br><span class="network-desc">Field voice-to-insight</span></span></a>
+    <a href="https://carshake.online" class="network-link"><span class="network-dot" style="background:#EF4444"></span><span><span class="network-domain">CarShake</span><br><span class="network-desc">Valet damage proof</span></span></a>
+    <a href="https://churnlens.site" class="network-link"><span class="network-dot" style="background:#6366F1"></span><span><span class="network-domain">ChurnLens</span><br><span class="network-desc">Churn due diligence</span></span></a>
+    <a href="https://sanctionsai.dev" class="network-link"><span class="network-dot" style="background:#DC2626"></span><span><span class="network-domain">SanctionsAI</span><br><span class="network-desc">OFAC compliance API</span></span></a>
+    <a href="https://sipi.bot" class="network-link"><span class="network-dot" style="background:#14B8A6"></span><span><span class="network-domain">Sipi.bot</span><br><span class="network-desc">AI spend firewall</span></span></a>
+  </div>
+  <div class="network-footer">Powered by <a href="https://sipi.bot" target="_blank" rel="noopener">Sipi.bot</a></div>
+</div>
+</body></html>'''
+        self.send_response(200)
+        self.send_header("Content-Type", "text/html; charset=utf-8")
+        self.send_header("X-Frame-Options", "ALLOWALL")
+        self.send_header("Content-Security-Policy", "frame-ancestors *")
+        self.send_header("Access-Control-Allow-Origin", "*")
+        self.send_header("Cache-Control", "public, max-age=3600")
+        self.end_headers()
+        self.wfile.write(body.encode())
         return
 
     def _blog_index_page(self):
