@@ -43,13 +43,17 @@ TIERS = {
         "label": "Team",
         "price": "$99/mo",
     },
-    "pro": {
-        "price_id_env": "STRIPE_PRICE_PRO",
-        "monthly_limit": 0,
-        "rate_limit": 0,
-        "label": "Pro",
-        "price": "$499/mo",
-    },
+    # NOTE: "pro" tier ($499/mo) is disabled — STRIPE_PRICE_PRO was never set.
+    # To re-enable: create the product in Stripe, set STRIPE_PRICE_PRO via
+    # `flyctl secrets set STRIPE_PRICE_PRO=price_... --app agentmail-api`,
+    # then uncomment the block below.
+    # "pro": {
+    #     "price_id_env": "STRIPE_PRICE_PRO",
+    #     "monthly_limit": 0,
+    #     "rate_limit": 0,
+    #     "label": "Pro",
+    #     "price": "$499/mo",
+    # },
 }
 
 _STRIPE_SECRET = os.environ.get("STRIPE_SECRET_KEY", "")
