@@ -23,6 +23,14 @@ COPY guides/ ./guides/
 COPY checklists/ ./checklists/
 COPY cost-of/ ./cost-of/
 COPY best/ ./best/
+# Embeddable statistics hub page
+COPY stats/ ./stats/
+# Interactive shareable tools (compliance-check, ai-spend-optimizer)
+COPY tools/ ./tools/
+# R17 UX system — shared design system across portfolio
+COPY ux.css ux.js ./
+# Public static assets (related-tools hub, network, answers, badge, verification files)
+COPY public/ ./public/
 
 RUN pip install --no-cache-dir ".[mcp]" && \
     cp /home/agentmail/app/api.py /usr/local/lib/python3.11/site-packages/agentmail/api.py && \

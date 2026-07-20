@@ -467,7 +467,7 @@ footer p{color:#444;font-size:.8em}
 
 _NAV = '<nav><div class="logo">agent<span>mail</span></div><div class="links"><a href="/">Home</a><a href="/teardown">How It Works</a><a href="/dashboard">Dashboard</a><a href="/faq">FAQ</a><a href="/docs">Docs</a><a href="/tools/wallet-checker">Free Checker</a><a href="/blog/ofac-for-agents">Blog</a><a href="/pricing">Pricing</a><a href="/checkout/dev" class="btn btn-primary">Get API key</a></div></nav>'
 
-_FOOTER = '<footer><div class="links" style="display:flex;flex-wrap:wrap;gap:12px 28px;justify-content:center;max-width:900px;margin:0 auto 16px"><div style="min-width:140px"><strong style="color:#888;font-size:.75em;text-transform:uppercase;letter-spacing:.05em">Product</strong><br><a href="/">Home</a><br><a href="/teardown">How It Works</a><br><a href="/pricing">Pricing</a><br><a href="/docs">Docs</a><br><a href="/tools">Free Tools</a><br><a href="/llms.txt">llms.txt (AI docs)</a></div><div style="min-width:140px"><strong style="color:#888;font-size:.75em;text-transform:uppercase;letter-spacing:.05em"><a href="/for" style="color:#888;text-decoration:none">By Industry</a></strong><br><a href="/for/fintech">Fintech</a><br><a href="/for/crypto">Crypto</a><br><a href="/for/defi">DeFi</a><br><a href="/for/payments">Payments</a><br><a href="/for/ai-agents">AI Agents</a><br><a href="/for/developers">Developers</a></div><div style="min-width:140px"><strong style="color:#888;font-size:.75em;text-transform:uppercase;letter-spacing:.05em"><a href="/compare" style="color:#888;text-decoration:none">Compare</a></strong><br><a href="/compare/chainalysis">vs Chainalysis</a><br><a href="/compare/elliptic">vs Elliptic</a><br><a href="/compare/complyadvantage">vs ComplyAdvantage</a><br><a href="/compare/sumsub">vs SumSub</a><br><a href="/compare/world-check">vs World-Check</a></div><div style="min-width:140px"><strong style="color:#888;font-size:.75em;text-transform:uppercase;letter-spacing:.05em">Resources</strong><br><a href="/blog">Blog</a><br><a href="/guides">Guides</a><br><a href="/penalties">Penalties</a><br><a href="/how-to">How-To</a><br><a href="/glossary">Glossary</a><br><a href="/cost">Costs</a><br><a href="/integrations">Integrations</a><br><a href="/vs">Vs</a><br><a href="/content-strategy">Content Strategy</a><br><a href="/partners/jv">JV Partners (50%)</a><br><a href="/dream100">Dream 100</a><br><a href="https://x.com/sipiteno" style="color:inherit">X / Twitter</a><br><a href="/agent">For Agents</a><br><a href="/leaderboard">Leaderboard</a><br><a href="/about">About</a><br><a href="/contact">Contact</a><br><a href="/privacy">Privacy</a><br><a href="/terms">Terms</a></div></div><p style="text-align:center;color:#666">agentmail - OFAC sanctions screening for AI agents · MIT licensed · Data from US Treasury &amp; vile/ofac-sdn-list</p></footer>'
+_FOOTER = '<footer><div class="links" style="display:flex;flex-wrap:wrap;gap:12px 28px;justify-content:center;max-width:900px;margin:0 auto 16px"><div style="min-width:140px"><strong style="color:#888;font-size:.75em;text-transform:uppercase;letter-spacing:.05em">Product</strong><br><a href="/">Home</a><br><a href="/teardown">How It Works</a><br><a href="/pricing">Pricing</a><br><a href="/docs">Docs</a><br><a href="/tools">Free Tools</a><br><a href="/llms.txt">llms.txt (AI docs)</a></div><div style="min-width:140px"><strong style="color:#888;font-size:.75em;text-transform:uppercase;letter-spacing:.05em"><a href="/for" style="color:#888;text-decoration:none">By Industry</a></strong><br><a href="/for/fintech">Fintech</a><br><a href="/for/crypto">Crypto</a><br><a href="/for/defi">DeFi</a><br><a href="/for/payments">Payments</a><br><a href="/for/ai-agents">AI Agents</a><br><a href="/for/developers">Developers</a></div><div style="min-width:140px"><strong style="color:#888;font-size:.75em;text-transform:uppercase;letter-spacing:.05em"><a href="/compare" style="color:#888;text-decoration:none">Compare</a></strong><br><a href="/compare/chainalysis">vs Chainalysis</a><br><a href="/compare/elliptic">vs Elliptic</a><br><a href="/compare/complyadvantage">vs ComplyAdvantage</a><br><a href="/compare/sumsub">vs SumSub</a><br><a href="/compare/world-check">vs World-Check</a></div><div style="min-width:140px"><strong style="color:#888;font-size:.75em;text-transform:uppercase;letter-spacing:.05em">Resources</strong><br><a href="/blog">Blog</a><br><a href="/guides">Guides</a><br><a href="/penalties">Penalties</a><br><a href="/how-to">How-To</a><br><a href="/glossary">Glossary</a><br><a href="/cost">Costs</a><br><a href="/integrations">Integrations</a><br><a href="/vs">Vs</a><br><a href="/stats">Stats</a><br><a href="/content-strategy">Content Strategy</a><br><a href="/partners/jv">JV Partners (50%)</a><br><a href="/dream100">Dream 100</a><br><a href="https://x.com/sipiteno" style="color:inherit">X / Twitter</a><br><a href="/agent">For Agents</a><br><a href="/leaderboard">Leaderboard</a><br><a href="/about">About</a><br><a href="/contact">Contact</a><br><a href="/privacy">Privacy</a><br><a href="/terms">Terms</a></div></div><p style="text-align:center;color:#666">agentmail - OFAC sanctions screening for AI agents · MIT licensed · Data from US Treasury &amp; vile/ofac-sdn-list</p></footer>'
 
 _VERTICALS = {
     "fintech": {
@@ -958,7 +958,7 @@ const agent = createAgent({
     "x402": {
         "name": "x402",
         "emoji": "💲",
-        "title": "OFAC Screening for x402 Micropayment Protocol",
+        "title": "OFAC Sanctions Check for AI Agents | $0.05/screen",
         "desc": "Pre-payment OFAC screening for x402 agents. The agentmail x402 demo server screens wallets before paymentRequirements are generated.",
         "og_title": "OFAC Screening for x402 Protocol | agentmail",
         "og_desc": "Pre-payment sanctions checks for x402 micropayments. Screen wallets before the 402 is generated.",
@@ -1406,10 +1406,11 @@ _COMPETITORS = {
             ("Open-source self-host", True, False),
             ("Per-call x402 / USDC payments", True, False),
             ("Real-time crypto wallet screening", True, False),
-            ("PEP & adverse media screening", False, True),
+            ("PEP and adverse media screening", False, True),
             ("Enterprise compliance workflow", False, True),
         ],
         "when_to_pick": "Pick agentmail for real-time, agent-native sanctions screening with a free tier and developer API. Pick World-Check if you are an enterprise compliance department that needs PEP screening and already has a Refinitiv contract.",
+        "deep_dive": "<h2>World-Check pricing and access model</h2><p>Refinitiv World-Check (now owned by LSEG, the London Stock Exchange Group) is an enterprise subscription product. Pricing is not public, but industry estimates put it at $50,000 to $250,000 per year depending on organization size and data feeds. Access requires a sales conversation, contract negotiation, and onboarding. There is no free tier, no developer sandbox, and no self-serve signup.</p><p>agentmail takes the opposite approach: free tier with 5 checks per day, no signup, no API key. Developer pricing starts at $19/month. Self-host the open-source version if you want full control. This makes agentmail viable for AI agent builders, solo developers, and early-stage fintechs who cannot justify a five-figure annual compliance contract.</p><h2>World-Check data coverage</h2><p>World-Check aggregates PEP (Politically Exposed Persons), sanctions lists, regulatory enforcement lists, and adverse media from thousands of sources. It is a broad-spectrum compliance database designed for KYC and due diligence workflows at banks and large financial institutions. Coverage includes over 4 million profiles across 240 countries.</p><p>agentmail focuses specifically on OFAC SDN data: 19,086 names, 782 crypto wallet addresses, and 16 embargoed jurisdictions. This is narrower by design. If you are screening an AI agent's crypto payment before it executes, you do not need PEP data. You need to know if the wallet is sanctioned. That check runs in under 100ms on agentmail, compared to batch API calls on World-Check.</p><h2>World-Check integration complexity</h2><p>World-Check integrates through the Refinitiv API or bulk data feeds. Integration typically takes weeks and requires dedicated compliance engineers. The API uses SOAP or REST with complex authentication, rate limiting tied to the contract, and response structures built for batch processing, not real-time pre-payment screening.</p><p>agentmail integrates with a single HTTP call, an MCP tool for AI agent frameworks, or a CLI for scripts. A developer can add OFAC screening to an AI agent in under 5 minutes. The response includes a <code>clean</code> boolean: <code>true</code> means proceed, <code>false</code> means halt. That is the entire integration surface.</p><h2>World-Check use cases vs agentmail use cases</h2><p><strong>Use World-Check when:</strong> You are a bank, exchange, or regulated financial institution that needs full KYC including PEP screening, adverse media, and regulatory enforcement data. You have a compliance team and budget for enterprise tooling. You need SOC 2 and ISO 27001 certified infrastructure.</p><p><strong>Use agentmail when:</strong> You are building an AI agent that sends payments and needs pre-transaction OFAC screening. You are a developer or small team. You want a free tier to test with. You need crypto wallet screening, not PEP data. You want to integrate in minutes, not weeks.</p><h2>Refinitiv World-Check One vs agentmail</h2><p>Refinitiv World-Check One is the screening interface for the World-Check database. It provides batch screening, case management, and audit trails for compliance officers. agentmail provides none of that. It is a screening API, not a compliance workflow tool. If your compliance team needs case management, audit trails, and escalation workflows, World-Check One is the right tool. If your AI agent needs to check a wallet address before sending USDC, agentmail is faster, cheaper, and easier to integrate.</p>",
     },
     "identitymind": {
         "name": "IdentityMind (Onfido/Entrust)",
@@ -2109,6 +2110,11 @@ Allow: Storing
             if _tool_slug in ("wallet-checker", "name-checker", "country-checker",
                               "batch-checker", "compliance-checker"):
                 return self._free_tool_page(_tool_slug)
+            # Interactive shareable tools (static HTML)
+            if _tool_slug in ("compliance-check", "compliance-check/"):
+                return self._serve_file_content("tools/compliance-check/index.html", "text/html")
+            if _tool_slug in ("ai-spend-optimizer", "ai-spend-optimizer/"):
+                return self._serve_file_content("tools/ai-spend-optimizer/index.html", "text/html")
         # Round 17 pSEO: /check/<wallet> — per-wallet screening result pages
         if p.path.startswith("/check/"):
             _slug = p.path[len("/check/"):].split("?")[0].split("/")[0]
@@ -2297,19 +2303,58 @@ License: MIT
 
         # A2A (Agent-to-Agent) JSON-RPC endpoint
         if p.path == "/api/a2a":
-            agent_card = {
-                "name": "AgentMail",
-                "description": "OFAC sanctions screening for AI agents. Screen wallets, names, and countries against OFAC SDN, EU, UN sanctions lists in under 100ms.",
-                "url": "https://sanctionsai.dev",
-                "version": "1.0.0",
-                "capabilities": {"streaming": False, "pushNotifications": False},
-                "authentication": {"type": "none", "freeTier": "5 checks/day"},
-                "content": [
-                    {"title": "AgentMail — OFAC Sanctions Screening", "url": "https://sanctionsai.dev/", "description": "Real-time OFAC sanctions screening for AI agents.", "type": "homepage"},
-                    {"title": "Pricing", "url": "https://sanctionsai.dev/pricing", "description": "Free tier: 5 checks/day. Dev: $19/mo. Pro: $99/mo.", "type": "pricing"},
-                    {"title": "API Docs", "url": "https://sanctionsai.dev/docs", "description": "REST API documentation for sanctions screening.", "type": "docs"},
+            host = self.headers.get("Host", "")
+            is_sipi_bot = "sipi.bot" in host
+            if is_sipi_bot:
+                agent_card = {
+                    "protocolVersion": "0.3.0",
+                    "name": "sipi.bot Spend Firewall Agent",
+                    "description": "The spend firewall for autonomous AI agents. Evaluate every transaction against configurable rules before spending. Prevent runaway agent costs.",
+                    "url": "https://sipi.bot/api/a2a",
+                    "preferredTransport": "JSONRPC",
+                    "version": "1.0.0",
+                    "capabilities": {"streaming": False, "pushNotifications": False, "stateTransitionHistory": False},
+                    "defaultInputModes": ["text/plain", "application/json"],
+                    "defaultOutputModes": ["text/plain", "application/json"],
+                    "skills": [
+                        {"id": "evaluate_spend", "name": "Evaluate Transaction", "description": "Evaluate an agent-initiated transaction against configurable spend rules: amount limits, vendor allowlists, frequency caps.", "tags": ["spend", "firewall", "ai-agent", "transaction"]},
+                        {"id": "set_spend_rules", "name": "Configure Spend Rules", "description": "Set up spend rules: max per-transaction, monthly budget, vendor whitelist/blacklist, human approval thresholds.", "tags": ["rules", "budget", "configuration"]},
+                        {"id": "audit_spend", "name": "Audit Agent Spend", "description": "Review all agent-initiated transactions with approvals, declines, and risk assessments.", "tags": ["audit", "spend", "reporting"]},
+                    ],
+                }
+                faqs = [
+                    {"q": "What is an AI agent spend firewall?", "a": "sipi.bot evaluates every transaction an autonomous AI agent tries to make against rules you configure — preventing runaway costs and unauthorized spending."},
+                    {"q": "How do spend rules work?", "a": "You set per-transaction limits, monthly budgets, vendor allowlists, and approval thresholds. sipi.bot intercepts transactions and approves/declines based on your rules."},
+                    {"q": "Can I approve transactions manually?", "a": "Yes, transactions above your approval threshold are held for manual review. You can approve or decline via the dashboard or API."},
                 ]
-            }
+            else:
+                agent_card = {
+                    "protocolVersion": "0.3.0",
+                    "name": "AgentMail Sanctions Agent",
+                    "description": "OFAC sanctions screening for AI agents. Screen names, wallets, countries, and entities against the OFAC SDN list. Free tier: 5 checks/day by IP.",
+                    "url": "https://sanctionsai.dev/api/a2a",
+                    "preferredTransport": "JSONRPC",
+                    "version": "1.0.0",
+                    "capabilities": {"streaming": False, "pushNotifications": False, "stateTransitionHistory": False},
+                    "defaultInputModes": ["text/plain", "application/json"],
+                    "defaultOutputModes": ["text/plain", "application/json"],
+                    "skills": [
+                        {"id": "sanctions_check", "name": "Screen Against Sanctions", "description": "Screen a name, wallet address, or country against the OFAC SDN, Non-SDN, BIS, and EU sanctions lists.", "tags": ["sanctions", "ofac", "compliance", "kyc", "aml"]},
+                        {"id": "risk_score", "name": "Risk Assessment", "description": "Return a risk score and breakdown for a wallet or entity based on sanctions proximity and OFAC enforcement history.", "tags": ["risk", "ofac", "compliance", "scoring"]},
+                        {"id": "kya_verify", "name": "Know Your Agent", "description": "Run a KYC/pseudonymity assessment on an AI agent: wallet, code signing, platform of origin.", "tags": ["kyc", "ai-agent", "wallet", "compliance"]},
+                    ],
+                    "authentication": {"type": "none", "freeTier": "5 checks/day"},
+                    "content": [
+                        {"title": "AgentMail — OFAC Sanctions Screening", "url": "https://sanctionsai.dev/", "description": "Real-time OFAC sanctions screening for AI agents.", "type": "homepage"},
+                        {"title": "Pricing", "url": "https://sanctionsai.dev/pricing", "description": "Free tier: 5 checks/day. Dev: $19/mo. Pro: $99/mo.", "type": "pricing"},
+                        {"title": "API Docs", "url": "https://sanctionsai.dev/docs", "description": "REST API documentation for sanctions screening.", "type": "docs"},
+                    ]
+                }
+                faqs = [
+                    {"q": "What is OFAC sanctions screening?", "a": "OFAC (Office of Foreign Assets Control) maintains lists of sanctioned individuals, entities, and countries. Screening checks your counterparty against these lists to ensure compliance."},
+                    {"q": "How fast is the screening?", "a": "AgentMail screens complete in under 100ms. The free tier allows 5 checks/day by IP. Paid plans support unlimited checks at sub-50ms."},
+                    {"q": "Which sanctions lists do you check?", "a": "We screen against OFAC SDN, OFAC Non-SDN, BIS Entity List, EU Consolidated Sanctions, UN Security Council sanctions, and UK sanctions lists."},
+                ]
             if self.command == "GET":
                 return _json(self, 200, agent_card)
             # POST: JSON-RPC
@@ -2319,11 +2364,21 @@ License: MIT
                 body = {}
             method = body.get("method", "")
             rpc_id = body.get("id", None)
+            if method in ("rpc.discover", "agent/card"):
+                return _json(self, 200, {"jsonrpc": "2.0", "result": agent_card, "id": rpc_id})
+            if method == "faq.search":
+                query = ""
+                params = body.get("params")
+                if isinstance(params, dict):
+                    query = params.get("query", "") or ""
+                query_lower = query.lower()
+                matches = [f for f in faqs if query_lower in f["q"].lower() or query_lower in f["a"].lower()]
+                return _json(self, 200, {"jsonrpc": "2.0", "result": {"faqs": matches, "total": len(matches)}, "id": rpc_id})
             if method in ("agent/info", "agent.describe"):
                 return _json(self, 200, {"jsonrpc": "2.0", "result": agent_card, "id": rpc_id})
             elif method in ("agent/capabilities", "agent/query", "agent/search"):
-                return _json(self, 200, {"jsonrpc": "2.0", "result": {"capabilities": agent_card["capabilities"], "content": agent_card["content"]}, "id": rpc_id})
-            return _json(self, 200, {"jsonrpc": "2.0", "error": {"code": -32601, "message": f"Method not found: {method}"}, "id": rpc_id})
+                return _json(self, 200, {"jsonrpc": "2.0", "result": {"capabilities": agent_card.get("capabilities", {}), "content": agent_card.get("content", [])}, "id": rpc_id})
+            return _json(self, 200, {"jsonrpc": "2.0", "result": {"agent": agent_card["name"], "description": agent_card["description"], "skills": agent_card["skills"]}, "id": rpc_id})
 
         # NLWeb endpoint
         if p.path == "/api/nlweb":
@@ -2420,6 +2475,24 @@ License: MIT
             return _json(self, 200, _SERVER_CARD)
         # AI-discoverability: Agent Card (A2A), MCP manifest, OpenAI plugin, agents.md, manifest
         if p.path == "/.well-known/agent-card.json":
+            host = self.headers.get("Host", "")
+            if "sipi.bot" in host:
+                return _json(self, 200, {
+                    "protocolVersion": "0.3.0",
+                    "name": "sipi.bot Spend Firewall Agent",
+                    "description": "The spend firewall for autonomous AI agents. Evaluate every transaction against configurable rules before spending. Prevent runaway agent costs.",
+                    "url": "https://sipi.bot/api/a2a",
+                    "preferredTransport": "JSONRPC",
+                    "version": "1.0.0",
+                    "capabilities": {"streaming": False, "pushNotifications": False, "stateTransitionHistory": False},
+                    "defaultInputModes": ["text/plain", "application/json"],
+                    "defaultOutputModes": ["text/plain", "application/json"],
+                    "skills": [
+                        {"id": "evaluate_spend", "name": "Evaluate Transaction", "description": "Evaluate an agent-initiated transaction against configurable spend rules: amount limits, vendor allowlists, frequency caps.", "tags": ["spend", "firewall", "ai-agent", "transaction"]},
+                        {"id": "set_spend_rules", "name": "Configure Spend Rules", "description": "Set up spend rules: max per-transaction, monthly budget, vendor whitelist/blacklist, human approval thresholds.", "tags": ["rules", "budget", "configuration"]},
+                        {"id": "audit_spend", "name": "Audit Agent Spend", "description": "Review all agent-initiated transactions with approvals, declines, and risk assessments.", "tags": ["audit", "spend", "reporting"]},
+                    ],
+                })
             return _json(self, 200, {
                 "protocolVersion": "0.3.0",
                 "name": "AgentMail Sanctions Agent",
@@ -2643,6 +2716,9 @@ License: https://creativecommons.org/licenses/by/4.0/
         # Pricing page (public)
         if p.path == "/pricing":
             return self._pricing_page()
+        # Walkthrough / masterclass (public) — Expert Secrets Ch 8
+        if p.path == "/walkthrough":
+            return self._walkthrough_page()
         # Billing status (public, for monitoring)
         if p.path == "/billing/status":
             return _json(self, 200, billing.billing_status())
@@ -2880,6 +2956,9 @@ License: https://creativecommons.org/licenses/by/4.0/
         # NLWeb discovery manifest
         if p.path == "/.well-known/nlweb.json":
             return self._serve_file_content(".well-known/nlweb.json", "application/json")
+        # Related tools hub page (cross-portfolio widget)
+        if p.path in ("/related-tools", "/related-tools/"):
+            return self._serve_file_content("public/related-tools.html", "text/html")
         # Catch-all 404 HTML page (not a 302 redirect — Google penalizes soft-404s)
         return self._page(
             "Page not found - agentmail",
@@ -3548,19 +3627,19 @@ The server exposes four tools (call by these exact names):
 <script>if(window.trustedTypes&&window.trustedTypes.createPolicy&&!window.trustedTypes.defaultPolicy){try{window.trustedTypes.createPolicy("default",{createHTML:function(s){return s},createScript:function(s){return s},createScriptURL:function(s){return s}})}catch(e){}}</script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>OFAC & x402 Sanctions Check for AI Agents | agentmail | $0.05/check</title>
-<meta name="description" content="OFAC sanctions screening for x402 payment agents. Screen every counterparty before your agent pays - 782 crypto wallets, 19,086 names, under 100ms. Free tier + $0.05/check x402.">
+<title>OFAC Sanctions Check for AI Agents | $0.05/screen</title>
+<meta name="description" content="OFAC sanctions screening for x402 payment agents. Screen every counterparty before your agent pays — 782 wallets, 19,086 names, under 100ms. Free tier.">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <meta name="theme-color" content="#0a0a0a">
 <meta name="indexnow" content="87aaa199acaf7d14c812e974ce115e32">
-<meta property="og:title" content="OFAC &amp; x402 Sanctions Check for AI Agents | agentmail | $0.05/check">
-<meta property="og:description" content="OFAC sanctions screening for x402 payment agents. Screen every counterparty before your agent pays - 782 crypto wallets, 19,086 names, under 100ms.">
+<meta property="og:title" content="OFAC Sanctions Check for AI Agents | $0.05/screen">
+<meta property="og:description" content="OFAC sanctions screening for x402 payment agents. Screen every counterparty before your agent pays — 782 wallets, 19,086 names, under 100ms.">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="agentmail">
 <meta property="og:url" content="https://sanctionsai.dev/">
 <meta property="og:image" content="https://sanctionsai.dev/og.png">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="OFAC &amp; x402 Sanctions Check for AI Agents | agentmail | $0.05/check">
+<meta name="twitter:title" content="OFAC Sanctions Check for AI Agents | $0.05/screen">
 <meta name="twitter:description" content="OFAC sanctions screening for x402 payment agents. Screen every counterparty before your agent pays.">
 <meta name="twitter:image" content="https://sanctionsai.dev/og.png">
 <link rel="canonical" href="https://sanctionsai.dev/">
@@ -4095,6 +4174,8 @@ footer{padding-bottom:max(40px,env(safe-area-inset-bottom))}
 /* AEO: auto-capture AI-engine referrals — tells us when ChatGPT/Perplexity/Gemini drive traffic */
 var ref=document.referrer||'';if(ref){var aiHosts=['chatgpt.com','chat.openai.com','perplexity.ai','you.com','poe.com','gemini.google.com','copilot.microsoft.com','claude.ai','bing.com/chat','duckduckgo.com/chat','phind.com','kagi.com','wrtn.ai','deepseek.com','grok.x.ai','x.com/i/grok'];for(var i=0;i<aiHosts.length;i++){if(ref.indexOf(aiHosts[i])>-1){p.capture('ai_referral_detected',{ai_source:aiHosts[i],referrer:ref,landing_page:pg,timestamp:new Date().toISOString()});p.identify&&p.identify({ai_referred:true,ai_source:aiHosts[i]});break;}}var socialHosts=['reddit.com','news.ycombinator.com','twitter.com','x.com'];for(var j=0;j<socialHosts.length;j++){if(ref.indexOf(socialHosts[j])>-1){p.capture('social_referral_detected',{social_source:socialHosts[j],referrer:ref,landing_page:pg});break;}}}
 document.addEventListener('click',function(e){var a=e.target.closest&&e.target.closest('a[href],button.btn,.btn');if(!a)return;var href=a.getAttribute('href')||'';var txt=(a.textContent||'').trim().slice(0,40);var cls=a.classList||{};var tier=cls.contains('btn-primary')?'primary':(cls.contains('btn-ghost')?'secondary':'text');if(href.indexOf('/checkout/')>-1){p.capture('cta_checkout',{cta:txt,href:href,page:pg,tier:tier});}else if(href.indexOf('/tools/wallet-checker')>-1){p.capture('cta_run_check',{cta:txt,href:href,page:pg,tier:tier});}else if(href.indexOf('github.com/kindrat86')>-1){p.capture('cta_github',{cta:txt,href:href,page:pg});}},true);var f=document.getElementById('free-tier-capture');if(f){f.addEventListener('submit',function(){p.capture('cta_free_signup',{page:pg});});}});</script>
+<link rel="stylesheet" href="/ux.css">
+<script src="/ux.js" defer></script>
     </head>
 <body>
 <a href="#story" class="skip-link">Skip to content</a>
@@ -4408,7 +4489,7 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
         <li><span class="ck">&#10003;</span> Custom OFAC list sync</li>
         <li><span class="ck">&#10003;</span> Priority support + SLA</li>
       </ul>
-      <a href="/checkout/pro" class="btn btn-primary">Get Compliance Pro &rarr;</a>
+      <a href="/pricing" class="btn btn-primary">Get Compliance Pro &rarr;</a>
       <p class="guar">$10K guarantee. Unlimited screening. Cancel anytime.</p>
     </div>
   </div>
@@ -5665,7 +5746,8 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
             '<tbody>' + rows + '</tbody></table>'
             '<h3>Which should you pick?</h3>'
             '<p>' + c["when_to_pick"] + '</p>'
-            '</div></section>'
+            + c.get("deep_dive", "")
+            + '</div></section>'
             # Cross-links to other comparison + related pages
             '<section><div class="prose">'
             '<h3>Related comparisons</h3>'
@@ -6859,6 +6941,120 @@ document.getElementById("squeeze-form").addEventListener("submit", function(e){
         return self._page("Agent Compliance Playbook - Free PDF | agentmail",
                           "Free PDF: 7 patterns for adding OFAC sanctions screening to AI agents. Download now.",
                           html, canonical="/start")
+
+    def _walkthrough_page(self):
+        """Expert Secrets Ch 8: Hook → Story → Offer masterclass — OFAC sanctions for AI agents."""
+        html = """<section style="border-top:none;text-align:center;padding-bottom:32px">
+<span style="display:inline-block;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:#00d4aa;border:1px solid rgba(0,212,170,.3);border-radius:100px;padding:6px 14px;margin-bottom:24px">Free Walkthrough &middot; 7 minutes</span>
+<h1 style="font-size:clamp(28px,5vw,44px);line-height:1.1;margin-bottom:16px">The One Curl Call That Saves You $356,000</h1>
+<p class="lead" style="max-width:640px;margin:0 auto 20px">Hook &rarr; Story &rarr; Offer. The complete walkthrough showing how one API call before every payment stops your agent from touching a sanctioned wallet.</p>
+<p style="font-size:14px;color:#8a8d96">By Maryan &mdash; founder, agentmail &middot; 7-min read</p>
+</section>
+
+<!-- SECRET #1: THE HOOK -->
+<section style="border-bottom:1px solid #1e293b">
+<div class="prose" style="max-width:720px;margin:0 auto">
+<div style="font-size:12px;font-weight:700;padding:3px 9px;border-radius:6px;background:rgba(239,68,68,.14);color:#ef4444;display:inline-block;margin-bottom:12px">SECRET #1 &mdash; The Hook</div>
+<h2>The One Thing Every Agent Payment Needs Before Money Moves</h2>
+<p>Most developers deploy payment agents with a budget and a prayer. They set a spending limit in the prompt. They assume the payment rails handle compliance. Then their agent sends USDC to a wallet address&mdash;and nobody checked whether that wallet belongs to a sanctioned entity.</p>
+<p>The problem isn&rsquo;t the agent. The problem is that <strong>nobody built the compliance layer for autonomous payments.</strong> Chainalysis and Elliptic exist&mdash;but they were built for human compliance teams with $50,000+/year contracts. Your agent needs an answer in under 100 milliseconds, not a PDF report in 72 hours.</p>
+<div style="border-left:3px solid #00d4aa;padding:4px 0 4px 18px;margin:24px 0">
+<p style="font-style:italic;font-size:17px;line-height:1.7">"Your agent doesn&rsquo;t need a compliance department. It needs one curl call. Before every payment. In under 100ms. That returns clean or flagged. Everything else is paperwork."</p>
+<p style="color:#00d4aa;margin-top:8px;font-size:15px">&mdash; Maryan, founder</p>
+</div>
+<div style="background:#0f172a;border:1px solid #1e293b;border-radius:12px;padding:20px">
+<h3 style="color:#00d4aa;margin-bottom:12px">The Hook Test</h3>
+<p style="color:#94a3b8;margin-bottom:10px">Ask yourself: if your agent sends USDC to a wallet right now&mdash;do you know whether that wallet is on the OFAC SDN list? If the answer is "I&rsquo;d check manually" or "Stripe handles compliance," you don&rsquo;t have a compliance layer. You have a wish.</p>
+<p><strong>The One Thing:</strong> One HTTP call before every payment that screens the counterparty against 782 sanctioned wallets, 19,086 SDN names, and 16 embargoed jurisdictions&mdash;in under 100ms.</p>
+</div>
+</div>
+</section>
+
+<!-- SECRET #2: THE STORY -->
+<section style="background:rgba(0,212,170,.03);border-bottom:1px solid #1e293b">
+<div class="prose" style="max-width:720px;margin:0 auto">
+<div style="font-size:12px;font-weight:700;padding:3px 9px;border-radius:6px;background:rgba(245,158,11,.14);color:#f59e0b;display:inline-block;margin-bottom:12px">SECRET #2 &mdash; The Story</div>
+<h2>Test #47: The $356,000 Wake-Up Call</h2>
+<p>I was building an agent that pays invoices autonomously. It read emails, extracted amounts, and paid them in USDC. I&rsquo;d tested it 46 times with test wallets. Everything worked perfectly.</p>
+<p>Then test #47 sent USDC to a wallet I did not recognize.</p>
+
+<div style="display:flex;flex-direction:column;gap:18px;margin:24px 0">
+<div style="background:#0f172a;border:1px solid #1e293b;border-radius:16px;padding:24px">
+<h3 style="color:#ef4444;margin-bottom:8px">The Old Way: Hope</h3>
+<p style="color:#94a3b8">You deploy the agent. It reads invoices. It pays them. You assume the payment rails handle compliance. Then at 3 AM, your agent pays a sanctioned wallet. Monday morning, the OFAC notice lands on your desk. The fine starts at $356,000 per violation. It is not the protocol&rsquo;s liability. It is not the wallet&rsquo;s. It is yours.</p>
+<p style="color:#ef4444;margin-top:6px"><strong>Result:</strong> $356,000 fine. Bank account frozen. Legal fees. Your agent payment project is dead.</p>
+</div>
+<div style="background:#0f172a;border:1px solid #1e293b;border-radius:16px;padding:24px">
+<h3 style="color:#f59e0b;margin-bottom:8px">The Realization: Nobody Built This Layer</h3>
+<p style="color:#94a3b8">I checked the wallet against the OFAC SDN list manually. It was clean&mdash;this time. But I realized: the agent would have paid it anyway. It had no compliance check. None of the payment rails (x402, AP2, ACP) screen for sanctions. Chainalysis costs $50,000+/year and is built for human analysts. There was no tool for an agent to call before paying.</p>
+<p style="color:#f59e0b;margin-top:6px"><strong>The gap:</strong> Every payment rail for AI agents is live. Not one of them screens for OFAC sanctions before money moves.</p>
+</div>
+<div style="background:#0f172a;border:1px solid #1e293b;border-radius:16px;padding:24px">
+<h3 style="color:#22c55e;margin-bottom:8px">The New Way: agentmail</h3>
+<p style="color:#94a3b8">One curl call before every payment. Pass a wallet, a name, or a country. agentmail screens it against the OFAC SDN list in under 100ms and returns clean or flagged. Free tier with 5 checks/day. No API key needed. MIT-licensed for self-hosting. Built for agents&mdash;not for human compliance teams.</p>
+<p style="color:#22c55e;margin-top:6px"><strong>Result:</strong> $0.05/check. Under 100ms latency. 782 wallets + 19,086 names + 16 jurisdictions covered. Your agent never pays a sanctioned counterparty.</p>
+</div>
+</div>
+</div>
+</section>
+
+<!-- SECRET #3: THE OFFER (Stack + Close) -->
+<section>
+<div class="prose" style="max-width:720px;margin:0 auto">
+<div style="font-size:12px;font-weight:700;padding:3px 9px;border-radius:6px;background:rgba(34,197,94,.14);color:#22c55e;display:inline-block;margin-bottom:12px">SECRET #3 &mdash; The Offer</div>
+<h2>Four Primitives. One API. $0 to Start.</h2>
+<p>Here&rsquo;s what you actually get. Not a dashboard. Not a report. A verdict&mdash;before the money moves.</p>
+
+<!-- Value Stack -->
+<div style="background:#0f172a;border:1px solid #1e293b;border-radius:16px;padding:28px;margin-bottom:24px">
+<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid #1e293b"><span>OFAC sanctions screen &mdash; wallet + name + country</span><span style="color:#00d4aa;font-weight:700">$5,000/mo value</span></div>
+<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid #1e293b"><span>Transaction risk score &mdash; allow / review / decline</span><span style="color:#00d4aa;font-weight:700">$3,000/mo value</span></div>
+<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid #1e293b"><span>Know-Your-Agent (KYA) trust verification</span><span style="color:#00d4aa;font-weight:700">$2,000/mo value</span></div>
+<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid #1e293b"><span>Dispute resolution with 7-day escalation</span><span style="color:#00d4aa;font-weight:700">$1,500/mo value</span></div>
+<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid #1e293b"><span>&#127873; BONUS: MCP server + CLI + self-host option</span><span style="color:#00d4aa;font-weight:700">INCLUDED</span></div>
+<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;margin-top:4px"><span style="font-weight:700">Total value</span><span style="color:#94a3b8;text-decoration:line-through;font-size:18px">$11,500/mo</span></div>
+<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0"><span style="font-weight:700;font-size:20px">You pay</span><span style="color:#00d4aa;font-weight:800;font-size:28px">Free &mdash; 5 checks/day</span></div>
+</div>
+
+<!-- Guarantee -->
+<div style="text-align:center;background:rgba(0,212,170,.08);border:1px solid rgba(0,212,170,.3);border-radius:12px;padding:18px;margin-bottom:24px">
+<p style="font-size:15px;margin-bottom:6px">&#x1f6e1;&#xfe0f; <strong>Guarantee:</strong> If agentmail misses an OFAC-listed counterparty that is on the published SDN list, your next month is free.</p>
+</div>
+
+<!-- Code Demo -->
+<div style="background:#000;border:1px solid #1e293b;border-radius:12px;padding:18px;overflow-x:auto;font-size:13.5px;color:#cfd2d8;margin-bottom:32px;text-align:left">
+<span style="color:#6b7280"># One curl call. 92ms. Your agent is protected.</span><br>
+curl "https://agentmail-api.fly.dev/sanctions?wallet=<span style="color:#f59e0b">0x742d35Cc6634C0532925a3b844Bc9e7595f0bEbb</span>"<br><br>
+<span style="color:#6b7280"># agentmail returns:</span><br>
+{ <span style="color:#00d4aa">"clean"</span>: true, <span style="color:#00d4aa">"action"</span>: <span style="color:#f59e0b">"ALLOW"</span>, <span style="color:#00d4aa">"checked_against"</span>: { <span style="color:#00d4aa">"wallets"</span>: 782, <span style="color:#00d4aa">"names"</span>: 19086 }, <span style="color:#00d4aa">"latency_ms"</span>: 92 }
+</div>
+
+<!-- CTA -->
+<div style="text-align:center">
+<a href="/tools/wallet-checker" class="btn btn-primary" style="font-size:18px;padding:16px 36px">Try a free wallet check &rarr;</a>
+<p style="color:#94a3b8;font-size:14px;margin-top:14px">5 checks/day free &middot; No API key &middot; <a href="https://github.com/kindrat86/agentmail">MIT-licensed on GitHub</a></p>
+</div>
+</div>
+</section>
+
+<!-- THE MOVEMENT -->
+<section style="background:rgba(0,212,170,.03);text-align:center">
+<div class="prose" style="max-width:680px;margin:0 auto">
+<h2>We are building the compliance layer before the first massive fine makes agent payments illegal.</h2>
+<p style="color:#94a3b8;max-width:560px;margin:0 auto 32px">A quiet movement of builders who refuse to ship autonomous agents without a sanctions check. We screen before we pay&mdash;because the fine is ours, not the protocol&rsquo;s.</p>
+<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;max-width:560px;margin:24px auto 0">
+<div style="background:#0f172a;border:1px solid #1e293b;border-radius:14px;padding:20px;text-align:center"><div style="font-size:30px;font-weight:800;color:#00d4aa">782</div><div style="font-size:13px;color:#94a3b8;margin-top:4px">sanctioned wallets tracked</div></div>
+<div style="background:#0f172a;border:1px solid #1e293b;border-radius:14px;padding:20px;text-align:center"><div style="font-size:30px;font-weight:800;color:#00d4aa">92ms</div><div style="font-size:13px;color:#94a3b8;margin-top:4px">average response time</div></div>
+<div style="background:#0f172a;border:1px solid #1e293b;border-radius:14px;padding:20px;text-align:center"><div style="font-size:30px;font-weight:800;color:#00d4aa">$0</div><div style="font-size:13px;color:#94a3b8;margin-top:4px">to start</div></div>
+</div>
+<div style="margin-top:32px">
+<a href="/tools/wallet-checker" class="btn btn-primary">Screen your first wallet &rarr;</a>
+</div>
+</div>
+</section>"""
+        return self._page("The One Curl Call That Stops OFAC Fines — Walkthrough | agentmail",
+                          "Hook → Story → Offer. The complete walkthrough: how one API call before every payment stops your AI agent from touching a sanctioned wallet. 7-minute read.",
+                          html, canonical="/walkthrough")
 
     def _teardown_page(self):
         """Isenberg-style workflow teardown: show the old way (make it hurt),

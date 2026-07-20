@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Spend Optimizer — Sipi.Bot</title>
+<meta name="description" content="Analyze your AI agent spending and find optimization opportunities. Compare your costs to industry benchmarks and get concrete savings recommendations.">
+<meta property="og:title" content="AI Spend Optimizer">
+<meta property="og:description" content="Analyze your AI agent spending and find optimization opportunities. Compare your costs to industry benchmarks and get concrete savings recommendations.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://sipi.bot/tools/ai-spend-optimizer/">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://sipi.bot/tools/ai-spend-optimizer/">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": ["SoftwareApplication", "WebApplication"],
+  "name": "AI Spend Optimizer",
+  "description": "Analyze your AI agent spending and find optimization opportunities. Compare your costs to industry benchmarks and get concrete savings recommendations.",
+  "applicationCategory": "AI/ML",
+  "operatingSystem": "Web",
+  "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"},
+  "author": {"@type": "Organization", "name": "Sipi.Bot", "url": "https://sipi.bot/"},
+  "url": "https://sipi.bot/tools/ai-spend-optimizer/",
+  "browserRequirements": "Requires JavaScript"
+}
+</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0b0f19;color:#e2e8f0;line-height:1.6;min-height:100vh}
+.container{max-width:800px;margin:0 auto;padding:2rem 1.5rem}
+header{text-align:center;margin-bottom:2.5rem}
+header h1{font-size:2rem;font-weight:700;color:#f1f5f9;margin-bottom:0.5rem;background:linear-gradient(135deg,#60a5fa,#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+header p{color:#94a3b8;font-size:1.05rem;max-width:600px;margin:0 auto}
+.card{background:linear-gradient(135deg,#1e293b,#1a2332);border:1px solid #334155;border-radius:16px;padding:2rem;margin-bottom:1.5rem}
+.card h2{font-size:1.15rem;color:#94a3b8;margin-bottom:1.5rem;font-weight:500;text-transform:uppercase;letter-spacing:0.05em}
+.input-group{margin-bottom:1.2rem}
+.input-group label{display:block;font-size:0.9rem;color:#cbd5e1;margin-bottom:0.4rem;font-weight:500}
+.input-field,.input-range{width:100%;padding:0.7rem 0.9rem;background:#0f172a;border:1px solid #334155;border-radius:10px;color:#e2e8f0;font-size:0.95rem;transition:border-color 0.2s}
+.input-field:focus,.input-range:focus{outline:none;border-color:#60a5fa;box-shadow:0 0 0 3px rgba(96,165,250,0.15)}
+select.input-field{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2394a3b8' fill='none' stroke-width='1.5'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 1rem center;padding-right:2.5rem}
+.range-val{color:#60a5fa;font-weight:600;font-size:0.85rem;margin-left:0.5rem}
+.unit{color:#64748b;font-size:0.8rem;font-weight:400}
+.btn{display:block;width:100%;padding:0.9rem;background:linear-gradient(135deg,#3b82f6,#6366f1);color:white;border:none;border-radius:12px;font-size:1.05rem;font-weight:600;cursor:pointer;transition:transform 0.15s,box-shadow 0.15s;margin-top:1rem}
+.btn:hover{transform:translateY(-1px);box-shadow:0 8px 25px rgba(59,130,246,0.3)}
+.btn:active{transform:translateY(0)}
+.result{display:none}
+.result.show{display:block}
+.score-circle{width:140px;height:140px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1.5rem;font-size:2.8rem;font-weight:800;border:4px solid;flex-direction:column}
+.score-circle .label{font-size:0.7rem;font-weight:500;text-transform:uppercase;letter-spacing:0.1em;margin-top:0.2rem}
+.score-high{background:rgba(34,197,94,0.12);border-color:#22c55e;color:#4ade80}
+.score-mid{background:rgba(234,179,8,0.12);border-color:#eab308;color:#facc15}
+.score-low{background:rgba(239,68,68,0.12);border-color:#ef4444;color:#f87171}
+.verdict{text-align:center;font-size:1.2rem;font-weight:600;margin-bottom:1.5rem}
+.metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:0.8rem;margin-bottom:1.5rem}
+.metric{background:#0f172a;border-radius:10px;padding:1rem;text-align:center}
+.metric .val{font-size:1.5rem;font-weight:700;color:#f1f5f9}
+.metric .lbl{font-size:0.75rem;color:#64748b;margin-top:0.2rem;text-transform:uppercase}
+.recommendations{background:#0f172a;border-radius:10px;padding:1.2rem;margin-top:1rem}
+.recommendations h3{font-size:0.85rem;color:#94a3b8;margin-bottom:0.8rem;text-transform:uppercase;letter-spacing:0.05em}
+.recommendations li{color:#cbd5e1;font-size:0.9rem;margin-bottom:0.4rem;padding-left:1.2rem;position:relative}
+.recommendations li::before{content:'→';position:absolute;left:0;color:#60a5fa}
+.share-bar{display:flex;gap:0.6rem;margin-top:1.5rem;flex-wrap:wrap;justify-content:center}
+.share-btn{padding:0.5rem 1rem;border-radius:8px;font-size:0.85rem;font-weight:500;cursor:pointer;border:1px solid #334155;background:#1e293b;color:#cbd5e1;transition:all 0.15s;white-space:nowrap}
+.share-btn:hover{border-color:#60a5fa;color:#e2e8f0}
+.share-btn.copy{background:#1e3a5f;border-color:#3b82f6}
+.embed-card{background:#0f172a;border:1px dashed #334155;border-radius:10px;padding:1rem;margin-top:1rem}
+.embed-card textarea{width:100%;background:#020617;color:#94a3b8;border:1px solid #1e293b;border-radius:8px;padding:0.7rem;font-family:'SF Mono',monospace;font-size:0.8rem;resize:vertical;height:80px}
+.embed-card .label{font-size:0.75rem;color:#64748b;margin-bottom:0.5rem;text-transform:uppercase;letter-spacing:0.05em}
+.powered-by{text-align:center;margin-top:2rem;color:#475569;font-size:0.8rem}
+.powered-by a{color:#60a5fa;text-decoration:none}
+footer{text-align:center;padding:2rem;color:#475569;font-size:0.8rem}
+@media(max-width:600px){.container{padding:1rem}.card{padding:1.2rem}header h1{font-size:1.5rem}}
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <h1>AI Spend Optimizer</h1>
+    <p>Analyze your AI agent spending and find optimization opportunities. Compare your costs to industry benchmarks and get concrete savings recommendations.</p>
+  </header>
+
+  <div class="card" id="input-card">
+    <h2>⚙️ Your Details</h2>
+    
+            <div class="input-group">
+              <label for="monthly_spend">Monthly AI Spend ($) <span class="unit">$</span></label>
+              <input type="number" id="monthly_spend" value="500" min="10" max="100000" step="10" class="input-field">
+            </div>
+            <div class="input-group">
+              <label for="primary_provider">Primary Provider</label>
+              <select id="primary_provider" class="input-field">              <option value="OpenAI" selected>OpenAI</option>
+              <option value="Anthropic">Anthropic</option>
+              <option value="Google (Gemini)">Google (Gemini)</option>
+              <option value="DeepSeek">DeepSeek</option>
+              <option value="Together AI">Together AI</option>
+              <option value="Self-hosted (Ollama/vLLM)">Self-hosted (Ollama/vLLM)</option>
+              <option value="Multiple providers">Multiple providers</option>
+              </select>
+            </div>
+            <div class="input-group">
+              <label for="use_case">Primary Use Case</label>
+              <select id="use_case" class="input-field">              <option value="Coding Assistant" selected>Coding Assistant</option>
+              <option value="Customer Support Bot">Customer Support Bot</option>
+              <option value="Content Generation">Content Generation</option>
+              <option value="Data Analysis">Data Analysis</option>
+              <option value="Research Agent">Research Agent</option>
+              <option value="Multi-Agent Workflow">Multi-Agent Workflow</option>
+              </select>
+            </div>
+            <div class="input-group">
+              <label for="cache_hit_rate">Approximate Cache Hit Rate (%) <span class="range-val" id="cache_hit_rate-val">20%</span></label>
+              <input type="range" id="cache_hit_rate" min="0" max="90" step="5" value="20" class="input-range">
+            </div>
+            <div class="input-group">
+              <label for="prompt_optimization">Prompt Optimization Level</label>
+              <select id="prompt_optimization" class="input-field">              <option value="No optimization (raw prompts)">No optimization (raw prompts)</option>
+              <option value="Basic (system prompt only)">Basic (system prompt only)</option>
+              <option value="Moderate (few-shot + instructions)" selected>Moderate (few-shot + instructions)</option>
+              <option value="Advanced (structured output, caching, token-aware)">Advanced (structured output, caching, token-aware)</option>
+              </select>
+            </div>
+    <button class="btn" onclick="calculate()">Calculate Results →</button>
+  </div>
+
+  <div class="card result" id="result-card">
+    <div id="result-content"></div>
+    
+    <div class="share-bar">
+      <button class="share-btn copy" onclick="copyLink()">📋 Copy Share Link</button>
+      <button class="share-btn" onclick="shareTwitter()">𝕏 Share on X</button>
+      <button class="share-btn" onclick="shareLinkedIn()">💼 Share on LinkedIn</button>
+    </div>
+    
+    <div class="embed-card">
+      <div class="label">🔗 Embed this tool on your site</div>
+      <textarea readonly onclick="this.select()" id="embed-code">&lt;iframe src="https://sipi.bot/tools/ai-spend-optimizer/" width="100%" height="700" frameborder="0" style="border-radius:12px;background:#0b0f19"&gt;&lt;/iframe&gt;</textarea>
+    </div>
+  </div>
+  
+  <div class="powered-by">
+    Powered by <a href="https://sipi.bot/">Sipi.Bot</a> — free to use, no signup required
+  </div>
+</div>
+
+<footer>
+  <a href="https://sipi.bot/llms.txt">llms.txt</a> · <a href="https://sipi.bot/sitemap.xml">Sitemap</a>
+</footer>
+
+<script>
+function encodeState(obj) {
+  const compressed = btoa(encodeURIComponent(JSON.stringify(obj)));
+  window.location.hash = compressed;
+  return compressed;
+}
+
+function decodeState() {
+  try {
+    const hash = window.location.hash.slice(1);
+    if (!hash) return null;
+    return JSON.parse(decodeURIComponent(atob(hash)));
+  } catch(e) { return null; }
+}
+
+function calculate() {
+  const monthly_spend = parseInt(document.getElementById('monthly_spend').value) || 500;
+  const primary_provider = document.getElementById('primary_provider').value || "OpenAI";
+  const use_case = document.getElementById('use_case').value || "Coding Assistant";
+  const cache_hit_rate = parseInt(document.getElementById('cache_hit_rate').value) || 20;
+  const prompt_optimization = document.getElementById('prompt_optimization').value || "Moderate (few-shot + instructions)";
+  
+  // Encode inputs for sharing
+  const inputState = {};
+  inputState['monthly_spend'] = monthly_spend;
+  inputState['primary_provider'] = primary_provider;
+  inputState['use_case'] = use_case;
+  inputState['cache_hit_rate'] = cache_hit_rate;
+  inputState['prompt_optimization'] = prompt_optimization;
+  encodeState({inputs: inputState});
+  
+
+  const benchmarks = {
+    'Coding Assistant': {avg: 320, p25: 120, p75: 600, p90: 1200},
+    'Customer Support Bot': {avg: 450, p25: 200, p75: 900, p90: 2000},
+    'Content Generation': {avg: 380, p25: 150, p75: 750, p90: 1500},
+    'Data Analysis': {avg: 280, p25: 100, p75: 500, p90: 1000},
+    'Research Agent': {avg: 520, p25: 250, p75: 1100, p90: 2500},
+    'Multi-Agent Workflow': {avg: 850, p25: 400, p75: 1800, p90: 4000}
+  };
+  const bench = benchmarks[use_case] || {avg: 400, p25: 150, p75: 800, p90: 1600};
+  
+  const optimismMap = {
+    'No optimization (raw prompts)': 0,
+    'Basic (system prompt only)': 0.15,
+    'Moderate (few-shot + instructions)': 0.30,
+    'Advanced (structured output, caching, token-aware)': 0.50
+  };
+  
+  const cache_savings = cache_hit_rate / 100 * 0.5;
+  const prompt_savings = (optimismMap[prompt_optimization] || 0);
+  const total_savings_potential = (cache_savings + prompt_savings) * monthly_spend;
+  
+  const percentile = monthly_spend <= bench.p25 ? '25th' : monthly_spend <= bench.p75 ? '50th-75th' : monthly_spend <= bench.p90 ? '75th-90th' : '90th+';
+  const vs_average = Math.round((monthly_spend / bench.avg - 1) * 100);
+  
+  const recommendations = [];
+  if (cache_hit_rate < 40) recommendations.push('Enable prompt caching — could save ' + Math.round((0.4 - cache_hit_rate/100) * 0.5 * monthly_spend) + '/mo');
+  if (prompt_optimization.includes('No') || prompt_optimization.includes('Basic')) recommendations.push('Optimize prompts with structured output and token-aware design');
+  if (primary_provider === 'OpenAI' && monthly_spend > 300) recommendations.push('Consider DeepSeek for non-critical tasks — 90% cheaper for comparable quality');
+  if (monthly_spend > bench.p90) recommendations.push('Your spend is in the 90th+ percentile for ' + use_case + ' — audit for inefficiencies');
+  
+  return {
+    percentile_vs_peers: percentile,
+    vs_average_pct: vs_average > 0 ? '+' + vs_average + '% above avg' : Math.abs(vs_average) + '% below avg',
+    potential_monthly_savings: Math.round(total_savings_potential),
+    potential_annual_savings: Math.round(total_savings_potential * 12),
+    benchmark_avg: bench.avg,
+    recommendations: recommendations
+  };
+
+  
+  displayResults(result);
+  document.getElementById('result-card').classList.add('show');
+  document.getElementById('result-card').scrollIntoView({behavior:'smooth'});
+}
+
+function displayResults(r) {
+  if (r.error) {
+    document.getElementById('result-content').innerHTML = '<div class="verdict" style="color:#f87171">' + r.error + '</div>';
+    return;
+  }
+  
+  let html = '';
+  
+  // Score circle if present
+  const scoreVal = r.score || r.risk_score || r.overall;
+  if (scoreVal !== undefined) {
+    const scoreClass = scoreVal >= 80 ? 'score-high' : scoreVal >= 50 ? 'score-mid' : 'score-low';
+    const scoreLabel = r.score !== undefined ? 'SCORE' : r.risk_score !== undefined ? 'RISK' : 'RATING';
+    html += '<div class="score-circle ' + scoreClass + '">' + scoreVal + '<span class="label">' + scoreLabel + '</span></div>';
+  }
+  
+  // Verdict
+  if (r.verdict || r.tier) {
+    html += '<div class="verdict">' + (r.verdict || r.tier) + '</div>';
+  }
+  
+  // Key metrics
+  html += '<div class="metrics">';
+  const skipKeys = ['score', 'risk_score', 'verdict', 'tier', 'error', 'providers', 'scenarios', 'alternatives', 'dimensions', 'recommendations', 'red_flags', 'recommendation', 'gaps', 'key_action', 'username', 'disclaimer', 'note', 'method', 'type', 'agent_risk_level', 'cheapest', 'savings_vs_most_expensive'];
+  
+  // Show key numeric/string results
+  for (const [k, v] of Object.entries(r)) {
+    if (skipKeys.includes(k)) continue;
+    if (typeof v === 'object' || Array.isArray(v)) continue;
+    const label = k.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+    html += '<div class="metric"><div class="val">' + v + '</div><div class="lbl">' + label + '</div></div>';
+  }
+  
+  // Provider table for cost calculators
+  if (r.providers) {
+    html += '</div><div style="margin-top:1rem">';
+    html += '<table style="width:100%;border-collapse:collapse;font-size:0.85rem">';
+    html += '<tr style="color:#64748b;text-align:left"><th style="padding:0.5rem">Provider</th><th style="padding:0.5rem;text-align:right">Monthly</th><th style="padding:0.5rem;text-align:right">Annual</th></tr>';
+    for (const p of r.providers) {
+      html += '<tr style="border-top:1px solid #1e293b"><td style="padding:0.5rem;color:#e2e8f0">' + p.name + '</td><td style="padding:0.5rem;text-align:right;font-weight:600;color:#60a5fa">' + p.monthly + '</td><td style="padding:0.5rem;text-align:right;color:#94a3b8">' + p.annual + '</td></tr>';
+    }
+    html += '</table>';
+  }
+  
+  // Scenarios table
+  if (r.scenarios) {
+    html += '</div><div style="margin-top:1rem">';
+    for (const s of r.scenarios) {
+      html += '<div class="metric"><div class="val">$' + Number(s.proceeds).toLocaleString() + '</div><div class="lbl">' + s.label + '</div></div>';
+    }
+  }
+  
+  // Alternatives
+  if (r.alternatives) {
+    html += '</div><div style="margin-top:1rem">';
+    for (const a of r.alternatives) {
+      html += '<div class="metric"><div class="val">$' + Number(a.cost).toLocaleString() + '</div><div class="lbl">' + a.shop + '</div></div>';
+    }
+  }
+  
+  html += '</div>';
+  
+  // Recommendations
+  if (r.recommendations && r.recommendations.length > 0) {
+    html += '<div class="recommendations"><h3>💡 Recommendations</h3><ul>';
+    for (const rec of r.recommendations) {
+      html += '<li>' + rec + '</li>';
+    }
+    html += '</ul></div>';
+  } else if (r.recommendation) {
+    html += '<div class="recommendations"><h3>💡 Recommendation</h3><p style="color:#cbd5e1;font-size:0.9rem">' + r.recommendation + '</p></div>';
+  }
+  
+  // Red flags
+  if (r.red_flags && r.red_flags.length > 0) {
+    html += '<div class="recommendations" style="border:1px solid #7f1d1d"><h3 style="color:#f87171">🚩 Red Flags</h3><ul>';
+    for (const f of r.red_flags) {
+      html += '<li style="color:#fca5a5">' + f + '</li>';
+    }
+    html += '</ul></div>';
+  }
+  
+  // Gaps
+  if (r.gaps && r.gaps.length > 0) {
+    html += '<div class="recommendations"><h3>⚠️ Gaps to Address</h3><ul>';
+    for (const g of r.gaps) {
+      html += '<li>' + g.replace(/_/g, ' ') + '</li>';
+    }
+    html += '</ul></div>';
+  }
+  
+  document.getElementById('result-content').innerHTML = html;
+}
+
+function copyLink() {
+  const url = window.location.href;
+  navigator.clipboard.writeText(url).then(() => {
+    const btn = event.target;
+    const orig = btn.textContent;
+    btn.textContent = '✅ Copied!';
+    btn.style.background = '#14532d';
+    btn.style.borderColor = '#22c55e';
+    setTimeout(() => { btn.textContent = orig; btn.style.background = '#1e3a5f'; btn.style.borderColor = '#3b82f6'; }, 2000);
+  });
+}
+
+function shareTwitter() {
+  const text = encodeURIComponent(document.title + ' — Check your score:');
+  const url = encodeURIComponent(window.location.href);
+  window.open('https://x.com/intent/tweet?text=' + text + '&url=' + url, '_blank');
+}
+
+function shareLinkedIn() {
+  const url = encodeURIComponent(window.location.href);
+  const title = encodeURIComponent(document.title);
+  window.open('https://www.linkedin.com/sharing/share-offsite/?url=' + url, '_blank');
+}
+
+// Range input live updates
+document.querySelectorAll('.input-range').forEach(el => {
+  el.addEventListener('input', function() {
+    const valSpan = document.getElementById(this.id + '-val');
+    if (valSpan) {
+      const unit = valSpan.textContent.replace(/[0-9.-]/g, '');
+      valSpan.textContent = this.value + (unit || '');
+    }
+  });
+});
+
+// Restore state from URL hash on load
+window.addEventListener('DOMContentLoaded', function() {
+  const state = decodeState();
+  if (state && state.inputs) {
+    for (const [key, val] of Object.entries(state.inputs)) {
+      const el = document.getElementById(key);
+      if (el) {
+        if (el.type === 'range') {
+          el.value = val;
+          const vs = document.getElementById(key + '-val');
+          if (vs) vs.textContent = val + (vs.textContent.replace(/[0-9.-]/g, '') || '');
+        } else {
+          el.value = val;
+        }
+      }
+    }
+    // Auto-calculate on page load with shared state
+    calculate();
+  }
+});
+</script>
+</body>
+</html>
