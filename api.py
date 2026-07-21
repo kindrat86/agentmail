@@ -3035,6 +3035,7 @@ License: https://creativecommons.org/licenses/by/4.0/
         # Subscribe - public, no auth gate
         if p.path == "/subscribe":
             try:
+                import json
                 ct = self.headers.get("Content-Type", "")
                 n = int(self.headers.get("Content-Length", 0) or 0)
                 raw = self.rfile.read(n) if n else b""
