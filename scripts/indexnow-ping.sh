@@ -3,9 +3,9 @@
 # Key file: https://sanctionsai.dev/89ce69c8d5e147dda9a4e6e9e5372f22.txt
 set -euo pipefail
 
-KEY="89ce69c8d5e147dda9a4e6e9e5372f22.txt"
+KEY="89ce69c8d5e147dda9a4e6e9e5372f22"
 HOST="sanctionsai.dev"
-KEY_LOCATION="https://${HOST}/${KEY}"
+KEY_LOCATION="https://${HOST}/${KEY}.txt"
 
 # Submit sitemap URLs
 SITEMAP_URLS=(
