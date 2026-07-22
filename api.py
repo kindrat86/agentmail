@@ -4494,7 +4494,7 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
       <div class="amt">$0<small> /check</small></div>
       <p class="desc">For kicking the tires.</p>
       <ul>
-        <li><span class="ck">&#10003;</span> 5 checks / day</li>
+        <li><span class="ck">&#10003;</span> 50 checks / day</li>
         <li><span class="ck">&#10003;</span> <code style="color:var(--teal)">sanctions_check</code></li>
         <li><span class="ck">&#10003;</span> Rate limited</li>
         <li><span class="ck">&#10003;</span> No signup needed</li>
