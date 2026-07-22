@@ -624,7 +624,7 @@ _VERTICALS = {
         "desc": "Real-time OFAC screening with examiner-ready audit trails. Screen wallets, names, and countries before every transaction. CSV export for VSD filings.",
         "p1": "KYC and AML compliance teams deploying AI agents need screening that produces evidence examiners and regulators will accept. agentmail screens every counterparty against the OFAC SDN list and produces a tamper-evident audit trail: timestamp, subject, result, list version, and latency for every check.",
         "p2": "When OFAC asks whether you screened a transaction, you need proof. agentmail logs every screen automatically and exports to CSV for Voluntary Self-Disclosure filings, compliance examinations, and internal audits. The dashboard gives your compliance team real-time visibility into every check your agents make, with alerts when a transaction is flagged.",
-        "p3": "Deploy via MCP for your compliance agents, HTTP API for your existing systems, or CLI for manual checks. Export your full audit trail at any time from the compliance dashboard. Free tier: 50 checks per day. Compliance Pro: $499/month for unlimited screening with full audit trail and priority alerts.",
+        "p3": "Deploy via MCP for your compliance agents, HTTP API for your existing systems, or CLI for manual checks. Export your full audit trail at any time from the compliance dashboard. Free tier: 50 checks per day. Team plan: $99/month for 100,000 checks with full audit trail and priority SLA.",
     },
     "law-firm": {
         "name": "Law Firm",
@@ -632,7 +632,7 @@ _VERTICALS = {
         "desc": "Law firms and legal AI agents screen clients, counterparties, settlement wallets, and cross-border payees against OFAC before disbursing funds or filing motions.",
         "p1": "Legal AI agents that manage settlements, trust disbursements, or cross-border client funds need the same OFAC screening humans do - and the same strict liability applies. agentmail gives legal agents a sub-second check on every payee, wallet, and jurisdiction before funds move.",
         "p2": "A law firm that disburses settlement funds to a sanctioned wallet - or files a motion on behalf of a blocked party - faces regulatory exposure. Your legal AI agent cannot rely on the counterparty self-identifying as blocked; it must screen. agentmail turns that obligation into an automatic prevent-block.",
-        "p3": "Integrate into client-onboarding, settlement, and disbursement workflows via MCP, HTTP, or CLI. Free tier to validate; Compliance Pro for unlimited matter-level screening with full audit trails.",
+        "p3": "Integrate into client-onboarding, settlement, and disbursement workflows via MCP, HTTP, or CLI. Free tier to validate; Team plan for production screening with full audit trails.",
     },
     "accountant": {
         "name": "Accountant",
@@ -640,7 +640,7 @@ _VERTICALS = {
         "desc": "CPA firms and accounting AI agents screen vendor wallets, cross-border payees, and beneficial owners against OFAC before every disbursement or tax-related payment.",
         "p1": "Accounting firms that authorize cross-border payments, vendor disbursements, or trust distributions inherit the OFAC screening obligation for every party on the payment chain. agentmail gives your accounting AI agent real-time screening of payees, beneficial owners, and jurisdictions before the transfer is signed.",
         "p2": "A single payment to a sanctioned beneficial owner or blocked entity can trigger OFAC penalties even when routed through an intermediary. Automated agents that skip screening because the payee looks routine are the highest-risk vectors. Embed the check in your AP and trust workflow instead.",
-        "p3": "One API call per payee or wallet, sub-second, with CSV export for year-end review and VSD filings. Start free, scale to Compliance Pro for unlimited checks and priority support.",
+        "p3": "One API call per payee or wallet, sub-second, with CSV export for year-end review and VSD filings. Start free, scale to Team plan for production volume and priority support.",
     },
     "family-office": {
         "name": "Family Office",
@@ -648,7 +648,7 @@ _VERTICALS = {
         "desc": "Family offices deploying AI agents for wealth transfers, LP calls, and cross-border distributions screen beneficiaries and wallets against OFAC before every disbursement.",
         "p1": "Family office AI agents that authorize capital calls, LP distributions, or cross-border wealth transfers need screening that is both real-time and audit-ready. agentmail screens beneficiary names, payout wallets, and destination jurisdictions against OFAC before any transfer executes.",
         "p2": "The stakes are asymmetric: one sanctioned beneficiary or intermediary wallet can freeze assets and trigger an OFAC examination. Family offices are not exempt from strict liability, and the automated nature of agent-led distributions makes preventive screening a governance requirement.",
-        "p3": "Integrate into your capital-call and distribution agents via MCP or HTTP. Free tier for pilot workflows; Compliance Pro for unlimited screens with full audit logs and custom list sync.",
+        "p3": "Integrate into your capital-call and distribution agents via MCP or HTTP. Free tier for pilot workflows; Team plan for production screening with full audit logs and custom list sync.",
     },
     "charity-nonprofit": {
         "name": "Charity / Nonprofit",
@@ -656,7 +656,7 @@ _VERTICALS = {
         "desc": "501(c)(3) and nonprofit AI agents screen grantees, Field partners, and disbursement wallets against OFAC before releasing international aid or grant funds.",
         "p1": "Nonprofit AI agents that distribute aid, grants, or field payments globally must ensure no funds reach an embargoed jurisdiction or sanctioned individual. agentmail screens grantees, Field partners, and wallets against OFAC in real time so your organization can prove due diligence.",
         "p2": "OFAC penalties for sanctions violations apply regardless of intent, and nonprofit status does not create an exemption. A single wire to a blocked party - even routed through an intermediary - can result in fines and reputational damage. Screening before disbursement is your only reliable control.",
-        "p3": "Wire sanctions checks into your grant-approval and payout agents. Free tier covers pilot programs; Compliance Pro supports unlimited screening with audit exports for regulator and board review.",
+        "p3": "Wire sanctions checks into your grant-approval and payout agents. Free tier covers pilot programs; Team plan supports production screening with audit exports for regulator and board review.",
     },
     "broker-dealer": {
         "name": "Broker-Dealer",
@@ -664,7 +664,7 @@ _VERTICALS = {
         "desc": "Broker-dealers deploying AI agents for trade execution, settlement, and customer onboarding screen counterparties and wallets against OFAC before every transaction.",
         "p1": "Broker-dealer AI agents that route trades, settle transactions, or onboard clients must comply with OFAC, BSA, and SEC rules simultaneously. agentmail gives your trading and settlement agents a sub-second sanctions screen on counterparty names, wallets, and jurisdictions before execution.",
         "p2": "A single trade with a sanctioned counterparty can freeze the entire settlement chain and trigger regulatory scrutiny. FINRA and OFAC expect broker-dealers to know their counterparty; an autonomous agent that accepts an order from a blocked account transfers that liability to the firm.",
-        "p3": "Integrate sanctions checks into order-routing, settlement, and onboarding workflows via MCP, HTTP, or CLI. Compliance Pro tier includes priority SLA and custom rule sets for production trading workflows.",
+        "p3": "Integrate sanctions checks into order-routing, settlement, and onboarding workflows via MCP, HTTP, or CLI. Team plan includes priority SLA and custom rule sets for production trading workflows.",
     },
     "hedge-fund": {
         "name": "Hedge Fund",
@@ -672,7 +672,7 @@ _VERTICALS = {
         "desc": "Hedge funds deploying AI agents for trade execution, LP distributions, and cross-border settlement screen counterparties and wallets against OFAC before every transaction.",
         "p1": "Hedge fund AI agents that execute trades, settle cross-border transactions, or distribute LP capital need screening that keeps pace with automated decision-making. agentmail screens every counterparty wallet, name, and jurisdiction against OFAC in real time so the trade is blocked before it happens, not reviewed after.",
         "p2": "The penalty asymmetry in hedge-fund trading is severe: one sanctioned counterparty can freeze assets, generate an OFAC examination, and destroy LPs' confidence. Autonomous execution without screening is exactly the scenario regulators are preparing for. agentmail is the control that keeps your fund inside the compliance boundary.",
-        "p3": "Add the screen to execution, settlement, and distribution agents via MCP, HTTP, or CLI. Free tier for validation; Compliance Pro for production-grade SLA, unlimited screens, and custom list sync.",
+        "p3": "Add the screen to execution, settlement, and distribution agents via MCP, HTTP, or CLI. Free tier for validation; Team plan for production-grade SLA, volume screening, and custom list sync.",
     },
     "consultant": {
         "name": "Consultant",
@@ -680,7 +680,7 @@ _VERTICALS = {
         "desc": "Consultants deploying AI agents for enterprise clients add OFAC screening to the agent stack so the consultant is not liable for an agent-driven sanctions violation.",
         "p1": "Consultants that deploy AI agents for regulated clients are responsible for the compliance controls they put in place. agentmail lets you add OFAC sanctions screening to any agent workflow before go-live, with a clean audit trail you can hand to the client's compliance team.",
         "p2": "When your agent pays a blocked party on behalf of a client, both you and the client face OFAC strict liability. A pre-deployment sanctions screen for every payment-capable agent is the control that protects your consulting relationship and your liability cap.",
-        "p3": "Standardize across client engagements with a shared MCP server or HTTP wrapper. Free tier to test client workflows; Compliance Pro for unlimited screens, priority support, and white-glove onboarding.",
+        "p3": "Standardize across client engagements with a shared MCP server or HTTP wrapper. Free tier to test client workflows; Team plan for production volume, priority support, and white-glove onboarding.",
     },
     "legal-compliance": {
         "name": "Legal & Compliance",
@@ -2743,7 +2743,7 @@ License: https://creativecommons.org/licenses/by/4.0/
         # Checkout redirects from pricing page (/checkout/dev, /checkout/team)
         if p.path.startswith("/checkout/"):
             plan = p.path.split("/checkout/", 1)[1].split("?")[0]
-            # Redirect /checkout/pro to team (pro tier not yet live)
+            # Redirect /checkout/pro to team (Compliance Pro tier removed from billing.py)
             if plan == "pro":
                 plan = "team"
             qs = parse_qs(p.query)
@@ -4530,21 +4530,7 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
       <a href="/checkout/team" class="btn btn-ghost">Get your API key &rarr;</a>
       <p class="guar">Same $10K guarantee. Priority SLA. Custom risk rules for production teams.</p>
     </div>
-    <div class="pcard reveal">
-      <span class="pop" style="background:linear-gradient(135deg,#ff6b6b,#ff9b9b)">Compliance dept</span>
-      <h3>Compliance Pro</h3>
-      <div class="amt">$499<small> /mo</small></div>
-      <p class="desc">Unlimited screening. Dedicated compliance for agents.</p>
-      <ul>
-        <li><span class="ck">&#10003;</span> Unlimited checks / month</li>
-        <li><span class="ck">&#10003;</span> All 4 tools + priority</li>
-        <li><span class="ck">&#10003;</span> Dedicated compliance dashboard</li>
-        <li><span class="ck">&#10003;</span> Custom OFAC list sync</li>
-        <li><span class="ck">&#10003;</span> Priority support + SLA</li>
-      </ul>
-      <a href="/pricing" class="btn btn-primary">Get Compliance Pro &rarr;</a>
-      <p class="guar">$10K guarantee. Unlimited screening. Cancel anytime.</p>
-    </div>
+    <!-- Compliance Pro tier removed — not yet available. Contact us for enterprise pricing. -->
   </div>
 </div></section>
 
@@ -6693,7 +6679,6 @@ document.getElementById("wallet").addEventListener("keydown",function(e){if(e.ke
             '<tr style="border-bottom:1px solid var(--line2)"><th style="text-align:left;padding:10px">Plan</th><th style="text-align:left;padding:10px">Price/mo</th><th style="text-align:left;padding:10px">Your 50% / mo</th><th style="text-align:left;padding:10px">12-month value</th></tr>'
             '<tr style="border-bottom:1px solid var(--line)"><td style="padding:10px"><strong>Dev</strong></td><td style="padding:10px">$19</td><td style="padding:10px;color:var(--teal2)">$9.50</td><td style="padding:10px;color:var(--teal2)"><strong>$114</strong></td></tr>'
             '<tr style="border-bottom:1px solid var(--line)"><td style="padding:10px"><strong>Pro</strong></td><td style="padding:10px">$99</td><td style="padding:10px;color:var(--teal2)">$49.50</td><td style="padding:10px;color:var(--teal2)"><strong>$594</strong></td></tr>'
-            '<tr><td style="padding:10px"><strong>Compliance Pro</strong></td><td style="padding:10px">$499</td><td style="padding:10px;color:var(--teal2)">$249.50</td><td style="padding:10px;color:var(--teal2)"><strong>$2,994</strong></td></tr>'
             '</table>'
             '<p class="note">Example: 5 Pro referrals = $2,970/year. 10 Dev referrals = $1,140/year. Recurring, not one-time.</p>'
 
@@ -8753,7 +8738,7 @@ compute();
             "ofac-settlement-costs": {"title": "OFAC Settlement Costs", "amount": "Varies", "desc": "Settlement amounts vary based on voluntary disclosure, cooperation, and remediation. VSD can reduce penalties by ~50%."},
             "cost-of-non-compliance": {"title": "The True Cost of OFAC Non-Compliance", "amount": "$356K+ per violation", "desc": "Beyond fines, non-compliance brings legal costs, reputational damage, loss of banking access, and potential criminal charges."},
             "ofac-penalty-multiplier": {"title": "How OFAC Penalties Multiply Per Transaction", "amount": "Per-violation", "desc": "Each transaction with a sanctioned party is a separate violation. A bot making 100 payments to one sanctioned wallet = 100 violations."},
-            "cost-of-sanctions-screening": {"title": "How Much Does OFAC Sanctions Screening Cost?", "amount": "$0 to $499/mo", "desc": "Free tier: 50 checks/day. Dev: $19/mo for 10,000 checks/month. Compliance Pro: $499/mo for unlimited."},
+            "cost-of-sanctions-screening": {"title": "How Much Does OFAC Sanctions Screening Cost?", "amount": "$0 to $99/mo", "desc": "Free tier: 50 checks/day. Dev: $19/mo for 10,000 checks/month. Team: $99/mo for 100,000 checks/month."},
             "ofac-enforcement-actions": {"title": "Recent OFAC Enforcement Actions and Fines", "amount": "Millions", "desc": "Recent OFAC enforcement actions include fines against Binance ($968M), BitGo ($98K), and others for sanctions violations."},
         }
         c = COSTS.get(slug)
@@ -8806,7 +8791,7 @@ compute();
         faq = [
             ("Is this really free?", "Yes. 50 checks per day with no signup, no API key, and no credit card. Upgrade to $19/mo for 10,000 checks/month."),
             ("What data does this use?", "Real OFAC SDN list data from the US Treasury, refreshed daily from the official SDN.xml feed and vile/ofac-sdn-list."),
-            ("Can I use this for my business?", "Yes. The free tier is suitable for testing and low-volume use. For production volume, upgrade to the Dev plan ($19/mo) or Compliance Pro ($499/mo)."),
+            ("Can I use this for my business?", "Yes. The free tier is suitable for testing and low-volume use. For production volume, upgrade to the Dev plan ($19/mo) or Team plan ($99/mo)."),
         ]
         self._render_pseo(t["title"], t["desc"], body, faq, f"/tools/{slug}")
 
@@ -10078,7 +10063,7 @@ def _send_post_purchase_email(email: str, plan: str = "dev") -> dict:
     webhook checkout.session.completed handler and marks the transition from prospect
     to customer: receipt + first-value + next-steps + upsell anchor.
     """
-    plan_label = {"dev": "Dev ($19/mo)", "team": "Pro ($99/mo)", "pro": "Compliance Pro ($499/mo)"}.get(plan, plan)
+    plan_label = {"dev": "Dev ($19/mo)", "team": "Pro ($99/mo)"}.get(plan, plan)
     subject = f"You're in. Your {plan_label} agentmail key is live."
     html = f'''<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"></head>
 <body style="margin:0;padding:0;background:#0a0a0a;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif">
