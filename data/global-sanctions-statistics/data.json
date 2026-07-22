@@ -1,0 +1,52 @@
+[
+  {
+    "label": "Active OFAC SDN designations (as of 2026)",
+    "value": "~12,000+",
+    "source": "U.S. Treasury OFAC SDN List"
+  },
+  {
+    "label": "OFAC enforcement actions (2025)",
+    "value": "23 actions",
+    "source": "OFAC Annual Enforcement Report 2025"
+  },
+  {
+    "label": "Total OFAC penalties (2025)",
+    "value": "$1.5B",
+    "source": "OFAC Civil Penalties Information"
+  },
+  {
+    "label": "Global AML compliance spending (2025)",
+    "value": "$274B",
+    "source": "LexisNexis True Cost of AML Compliance 2025"
+  },
+  {
+    "label": "FATF grey-listed jurisdictions (2026)",
+    "value": "24 countries",
+    "source": "FATF Grey List Monitoring"
+  },
+  {
+    "label": "UN Security Council sanctions regimes (active)",
+    "value": "14 regimes",
+    "source": "UN Security Council Sanctions Committees"
+  },
+  {
+    "label": "EU autonomous sanctions regimes",
+    "value": "40+ regimes",
+    "source": "EU Sanctions Map 2026"
+  },
+  {
+    "label": "Average AML fine per institution (2025)",
+    "value": "$145M",
+    "source": "Fenergo Global Enforcement Report 2025"
+  },
+  {
+    "label": "Suspicious Activity Reports filed (US, 2025)",
+    "value": "~4.2M",
+    "source": "FinCEN SAR Statistics"
+  },
+  {
+    "label": "Sanctions screening false-positive rate (industry avg)",
+    "value": "95%",
+    "source": "Accuity Sanctions Screening Survey 2025"
+  }
+]

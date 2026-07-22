@@ -1,0 +1,18 @@
+{
+  "version": "https://jsonfeed.org/version/1.1",
+  "title": "SanctionsAI Research Datasets",
+  "home_page_url": "https://sanctionsai.dev/data/",
+  "feed_url": "https://sanctionsai.dev/data/feed.json",
+  "description": "Free, downloadable industry datasets from SanctionsAI. CC BY 4.0.",
+  "icon": "https://sanctionsai.dev/favicon.ico",
+  "items": [
+    {
+      "id": "https://sanctionsai.dev/data/global-sanctions-statistics/",
+      "url": "https://sanctionsai.dev/data/global-sanctions-statistics/",
+      "title": "Global Sanctions & Compliance Statistics 2026",
+      "content_text": "Key statistics on global sanctions programs, enforcement actions, and compliance spending. Data from OFAC, UN, EU, FATF, and industry reports.",
+      "date_published": "2026-07-20T00:00:00Z",
+      "date_modified": "2026-07-20T00:00:00Z"
+    }
+  ]
+}

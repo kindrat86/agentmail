@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OFAC Sanctions Badge — Embed on your site</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,system-ui,sans-serif;background:#0a0a0a;color:#e0e0e0;line-height:1.6;padding:40px 20px;max-width:720px;margin:0 auto}
+h1{font-size:1.8em;margin-bottom:8px;color:#fff}
+h1 span{color:#00d4aa}
+.subtitle{color:#999;margin-bottom:32px;font-size:1.05em}
+pre{background:#111;border:1px solid #222;border-radius:12px;padding:18px;overflow-x:auto;margin:12px 0;color:#cfcfcf;font-size:.9em}
+code{background:#1a1a1a;padding:2px 6px;border-radius:4px;color:#00d4aa;font-size:.9em}
+.badge-preview{border:1px solid #1a1a1a;border-radius:16px;padding:24px;margin:24px 0;text-align:center;background:#111}
+.badge-preview iframe{border:none;margin:0 auto}
+.step{margin:24px 0;padding:20px;background:#111;border:1px solid #1a1a1a;border-radius:12px}
+.step h3{color:#00d4aa;margin-bottom:8px}
+.step p{color:#999;margin:8px 0}
+.step code{display:block;margin:8px 0}
+.footer{text-align:center;margin-top:40px;color:#555;font-size:.85em}
+.footer a{color:#00d4aa}
+</style>
+    <script>!function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.crossOrigin="anonymous",p.async=!0,p.src=s.api_host.replace(".i.posthog.com","-assets.i.posthog.com")+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags getFeatureFlag getFeatureFlagPayload reloadFeatureFlags group updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures getActiveMatchingSurveys getSurveys".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=!0}(document,window.posthog||[]);posthog.init("phc_lyZCgvTpicjLzAO3rY2GhxuX5WUc5jQjP8ZVwwJqauX",{api_host:"https://eu.i.posthog.com",person_profiles:"identified_only"})</script>
+</head>
+<body>
+
+<h1><span>◈</span> OFAC Sanctions Badge</h1>
+<p class="subtitle">Show your users you're not on any sanctions list. One line of HTML — updates automatically.</p>
+
+<div class="badge-preview">
+  <p style="color:#666;margin-bottom:12px;font-size:.9em">Live preview:</p>
+  <iframe src="https://sanctionsai.dev/badge/verified-clean" width="240" height="64" style="border:none" title="OFAC Sanctions Check"></iframe>
+</div>
+
+<div class="step">
+  <h3>Step 1: Copy this code</h3>
+  <p>Paste anywhere in your site's HTML — footer, About page, or compliance section:</p>
+  <pre>&lt;iframe src="https://sanctionsai.dev/badge/verified-clean" 
+        width="240" height="64" 
+        style="border:none" 
+        title="OFAC Sanctions Check"&gt;&lt;/iframe&gt;</pre>
+</div>
+
+<div class="step">
+  <h3>Step 2: Link back (optional, appreciated)</h3>
+  <p>Add a small attribution link below the badge:</p>
+  <pre>&lt;p style="font-size:12px;color:#888"&gt;
+  Sanctions check by &lt;a href="https://sanctionsai.dev"&gt;SanctionsAI&lt;/a&gt;
+&lt;/p&gt;</pre>
+</div>
+
+<div class="step">
+  <h3>How it works</h3>
+  <p>The badge checks the embedding page's domain against OFAC SDN, EU, UN, and UK sanctions lists. If the domain or associated entities appear on any list, the badge shows a warning. If clean, it shows "Verified Clean" with a timestamp.</p>
+  <p>No API key needed. No JavaScript. Pure server-side check via the iframe.</p>
+</div>
+
+<div class="footer">
+  <p>Powered by <a href="https://sanctionsai.dev">SanctionsAI</a> — OFAC screening for AI agents and autonomous payments.</p>
+  <p>Data from US Treasury OFAC SDN list · Updated daily · MIT licensed</p>
+</div>
+
+</body>
+</html>

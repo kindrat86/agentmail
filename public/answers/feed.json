@@ -1,0 +1,37 @@
+{
+  "version": "https://jsonfeed.org/version/1.1",
+  "title": "SanctionsAI Answers",
+  "home_page_url": "https://sanctionsai.dev",
+  "feed_url": "https://sanctionsai.dev/answers/feed.json",
+  "description": "Q&A answer pages from SanctionsAI \u2014 AI agent payment compliance",
+  "items": [
+    {
+      "id": "https://sanctionsai.dev/answers/how-do-i-screen-ai-agent-payments-for-sanctions-compliance/",
+      "url": "https://sanctionsai.dev/answers/how-do-i-screen-ai-agent-payments-for-sanctions-compliance/",
+      "title": "How do I screen AI agent payments for sanctions compliance?",
+      "content_text": "SanctionsAI provides real-time OFAC/SDN screening for every AI agent transaction \u2014 checking sender and recipient wallets, payment metadata, and transaction patterns against global sanctions lists before funds move.",
+      "date_published": "2026-07-19T16:22:57+00:00",
+      "date_modified": "2026-07-19T16:22:57+00:00"
+    },
+    {
+      "id": "https://sanctionsai.dev/answers/what-is-the-x402-protocol-for-ai-agent-payments/",
+      "url": "https://sanctionsai.dev/answers/what-is-the-x402-protocol-for-ai-agent-payments/",
+      "title": "What is the X402 protocol for AI agent payments?",
+      "content_text": "X402 is an open protocol for AI agent-to-agent payments over HTTP. SanctionsAI implements the full X402 spec \u2014 wallet verification, payment facilitation, and sanctions screening \u2014 allowing AI agents to transact autonomously while maintaining compliance.",
+      "date_published": "2026-07-19T16:22:57+00:00",
+      "date_modified": "2026-07-19T16:22:57+00:00"
+    },
+    {
+      "id": "https://sanctionsai.dev/answers/what-happens-if-an-ai-agent-payment-hits-a-sanctions-match/",
+      "url": "https://sanctionsai.dev/answers/what-happens-if-an-ai-agent-payment-hits-a-sanctions-match/",
+      "title": "What happens if an AI agent payment hits a sanctions match?",
+      "content_text": "SanctionsAI returns a blocked transaction response with the specific sanctions list entry, match confidence score, and audit trail \u2014 the payment never executes, and the compliance team gets an instant alert with full context for regulatory reporting.",
+      "date_published": "2026-07-19T16:22:57+00:00",
+      "date_modified": "2026-07-19T16:22:57+00:00"
+    }
+  ],
+  "_hubs": [
+    "https://pubsubhubbub.appspot.com/",
+    "https://pubsubhubbub.superfeedr.com/"
+  ]
+}
