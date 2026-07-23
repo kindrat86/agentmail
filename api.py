@@ -10144,14 +10144,30 @@ def _send_resend(to_email: str, subject: str, html_body: str) -> dict:
     req = urllib.request.Request(
         "https://api.resend.com/emails",
         data=payload,
-        headers={"Authorization": f"Bearer {_RESEND_API_KEY}", "Content-Type": "application/json"},
+        # Explicit User-Agent: Cloudflare (fronting Resend's API) 403s
+        # urllib's default UA with a plaintext "error code: 1010" body —
+        # the same issue already documented in this portfolio's sync
+        # scripts. Without this, every send silently dies here.
+        headers={
+            "Authorization": f"Bearer {_RESEND_API_KEY}",
+            "Content-Type": "application/json",
+            "User-Agent": "agentmail-sanctionsai/1.0 (+curl-compatible)",
+        },
         method="POST",
     )
     try:
         with urllib.request.urlopen(req, timeout=15) as resp:
             return {"ok": True, "id": json.loads(resp.read()).get("id")}
     except urllib.error.HTTPError as e:
-        err = json.loads(e.read()).get("message", e.read().decode())
+        # Resend returns JSON errors, but a blocked/proxied request (e.g. the
+        # Cloudflare case above) can return a plaintext body instead. Parsing
+        # that as JSON threw an unrelated JSONDecodeError that masked the
+        # real error — surface the raw body when it isn't JSON.
+        raw = e.read()
+        try:
+            err = json.loads(raw).get("message", raw.decode())
+        except (json.JSONDecodeError, UnicodeDecodeError):
+            err = raw.decode(errors="replace")
         raise RuntimeError(f"Resend error {e.code}: {err}")
 
 # Manually trigger sending all sequence emails for review
