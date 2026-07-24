@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Affiliate Program — SanctionsAI</title>
+  <meta name="description" content="Earn 25% commission referring compliance teams and fintech companies to SanctionsAI screening tools.">
+  <link rel="canonical" href="https://sanctionsai.dev/affiliate">
+  <style>
+    :root { --bg:#0a0a0a; --card:#1a1a2e; --accent:#e94560; --text:#e0e0e0; --muted:#777; }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { background:var(--bg); color:var(--text); font-family:system-ui,sans-serif; line-height:1.7; padding:2rem; max-width:800px; margin:0 auto; }
+    h1 { font-size:2.2rem; margin-bottom:0.5rem; color:#fff; }
+    h2 { font-size:1.3rem; color:var(--accent); margin:2.5rem 0 1rem; }
+    .hero { font-size:1.1rem; color:var(--muted); margin-bottom:2rem; }
+    .stat-row { display:flex; gap:2rem; margin:2rem 0; flex-wrap:wrap; }
+    .stat { background:var(--card); padding:1.5rem; border-radius:12px; text-align:center; min-width:140px; flex:1; }
+    .stat-num { font-size:2rem; font-weight:700; color:var(--accent); }
+    .stat-label { color:var(--muted); font-size:0.85rem; margin-top:0.25rem; }
+    .cta { display:inline-block; background:var(--accent); color:#fff; padding:0.9rem 2rem; border-radius:8px; text-decoration:none; font-weight:700; margin-top:1rem; }
+    footer { margin-top:4rem; padding-top:1rem; border-top:1px solid #222; color:var(--muted); font-size:0.8rem; }
+    footer a { color:var(--accent); }
+    ul { padding-left:1.5rem; }
+    li { margin-bottom:0.5rem; color:var(--text); }
+  </style>
+</head>
+<body>
+  <h1>🛡️ SanctionsAI Affiliate Program</h1>
+  <p class="hero">Earn 25% recurring commission referring fintech compliance teams, sanctions screening professionals, and AML officers to SanctionsAI.</p>
+
+  <div class="stat-row">
+    <div class="stat"><div class="stat-num">25%</div><div class="stat-label">Recurring Commission</div></div>
+    <div class="stat"><div class="stat-num">90 Days</div><div class="stat-label">Cookie Window</div></div>
+    <div class="stat"><div class="stat-num">$0</div><div class="stat-label">To Join</div></div>
+  </div>
+
+  <h2>Who This Works For</h2>
+  <ul>
+    <li>AML/compliance bloggers and LinkedIn voices</li>
+    <li>Fintech newsletters and communities</li>
+    <li>RegTech content creators</li>
+    <li>Compliance training platforms</li>
+  </ul>
+
+  <a href="mailto:imani@sanctionsai.dev?subject=Affiliate%20Application" class="cta">Apply Now →</a>
+
+  <footer>
+    <p>SanctionsAI Affiliate Program · <a href="https://sanctionsai.dev">← Back to SanctionsAI</a></p>
+  </footer>
+</body>
+</html>

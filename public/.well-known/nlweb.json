@@ -1,0 +1,16 @@
+{
+  "name": "SanctionsAI",
+  "description": "Sanctions screening for AI agent payments. Real-time OFAC/SDN checks, X402 protocol compliance, and audit trails for autonomous agent transactions.",
+  "url": "https://sanctionsai.dev",
+  "api": {
+    "type": "nlweb",
+    "version": "0.1",
+    "endpoint": "https://sanctionsai.dev/answers/"
+  },
+  "feeds": [
+    {
+      "type": "jsonfeed",
+      "url": "https://sanctionsai.dev/answers/feed.json"
+    }
+  ]
+}

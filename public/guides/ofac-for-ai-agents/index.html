@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OFAC Screening for AI Agents: What Developers Need to Know (2026)</title>
+<meta name="description" content="AI agents that send payments must screen counterparties against OFAC sanctions. What developers need to know: free tier, API integration, MCP tools, and compliance requirements. Updated 2026.">
+<link rel="canonical" href="https://sanctionsai.dev/guides/ofac-for-ai-agents/">
+<meta name="robots" content="index, follow">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [{
+    "@type": "Article",
+    "headline": "OFAC Screening for AI Agents: What Developers Need to Know",
+    "description": "AI agents that send payments must screen counterparties against OFAC sanctions before money moves.",
+    "datePublished": "2026-07-20",
+    "author": {"@type": "Organization", "name": "agentmail"},
+    "publisher": {"@type": "Organization", "name": "agentmail", "url": "https://sanctionsai.dev"}
+  },{
+    "@type": "FAQPage",
+    "mainEntity": [
+      {"@type": "Question", "name": "Why do AI agents need OFAC screening?", "acceptedAnswer": {"@type": "Answer", "text": "An autonomous agent that pays a sanctioned wallet has committed a federal violation. OFAC civil penalties start at $356,000 per violation. The operator is responsible regardless of whether the agent knew. One API call before every payment prevents this."}},
+      {"@type": "Question", "name": "What does agentmail screen against?", "acceptedAnswer": {"@type": "Answer", "text": "agentmail screens counterparties against the OFAC SDN list: 19,086 names, 782 crypto wallet addresses, and 16 embargoed jurisdictions. It also checks against EU, UN, and UK sanctions lists."}},
+      {"@type": "Question", "name": "Is there a free tier?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. agentmail has a free tier with 5 checks per day, no API key required. Paid plans start at $19/month for 10,000 checks. The core is open source (MIT) and self-hostable via pip install sanctions-mcp."}},
+      {"@type": "Question", "name": "How fast is the screening API?", "acceptedAnswer": {"@type": "Answer", "text": "Under 100ms per check. The screening runs against an in-memory dataset, so there is no external API call latency. The response includes a clean boolean: true means proceed, false means halt."}}
+    ]
+  }]
+}
+</script>
+<style>
+  :root{--bg:#0a0a0f;--card:#141420;--border:#1e1e30;--text:#e4e4ec;--muted:#8888a0;--accent:#00d4aa}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.7;max-width:800px;margin:0 auto;padding:2rem 1.5rem}
+  h1{font-size:1.8rem;font-weight:800;margin-bottom:.75rem;color:#fff}
+  h2{font-size:1.25rem;font-weight:700;margin:1.5rem 0 .5rem;color:#f1f5f9}
+  p{color:var(--muted);margin-bottom:1rem}
+  .code{background:#0d0d1a;border:1px solid var(--border);border-radius:8px;padding:1rem;font-family:monospace;font-size:.85rem;overflow-x:auto;margin:1rem 0}
+  .cta{background:linear-gradient(135deg,rgba(0,212,170,.1),rgba(0,212,170,.05));border:2px solid rgba(0,212,170,.25);border-radius:16px;padding:2rem;text-align:center;margin:2rem 0}
+  .btn{display:inline-block;padding:.85rem 2rem;background:var(--accent);color:#0a0a0f;border-radius:10px;font-weight:700;text-decoration:none}
+  nav{margin-bottom:1.5rem;font-size:.85rem}
+  nav a{color:var(--accent);text-decoration:none}
+  .stat{display:inline-block;background:rgba(0,212,170,.1);color:var(--accent);padding:.15rem .6rem;border-radius:4px;font-size:.8rem;font-weight:600}
+  footer{text-align:center;color:#475569;font-size:.8rem;margin-top:3rem;padding-top:1.5rem;border-top:1px solid var(--border)}
+</style>
+</head>
+<body>
+<nav><a href="/">agentmail</a> &rsaquo; <span>OFAC for AI Agents</span></nav>
+
+<h1>OFAC Screening for AI Agents: What Developers Need to Know</h1>
+<p>If your AI agent sends payments, it must screen every counterparty against OFAC sanctions before money moves. One transaction to a sanctioned wallet or entity is a federal violation. Here is what developers need to know to build compliant agents.</p>
+
+<h2>Why AI agents need OFAC screening</h2>
+<p>An autonomous agent that pays a sanctioned wallet at 3 AM has just committed a violation. The operator — you — is responsible regardless of whether the agent "knew." OFAC civil penalties start at <span class="stat">$356,000</span> per violation. The fix is one API call before every payment.</p>
+
+<h2>The 3 things every agent must check</h2>
+<p><strong>1. Wallet address:</strong> OFAC lists 782 sanctioned crypto addresses. Screen every destination wallet before signing a transaction.</p>
+<p><strong>2. Counterparty name:</strong> The SDN list has 19,086 names. Screen the recipient's name before any fiat transfer or contract execution.</p>
+<p><strong>3. Jurisdiction:</strong> 16 countries are under comprehensive sanctions. If the counterparty is in one of them, halt immediately.</p>
+
+<h2>Integration: one API call</h2>
+<p>Add this before any payment in your agent's execution path:</p>
+<div class="code">
+curl -s "https://sanctionsai.dev/sanctions?wallet=0x742d35Cc6634C0532929dC57EB0615e2383E2f96"
+</div>
+<p>Response includes a <code>clean</code> boolean. <code>true</code> = proceed. <code>false</code> = halt and log. Under 100ms latency, so your agent's payment loop is not slowed down.</p>
+
+<h2>Free tier: no key, no signup</h2>
+<p>agentmail's free tier lets you screen 5 counterparties per day without an API key. This is enough for development and low-volume agents. When you scale, paid plans start at <span class="stat">$19/mo</span> for 10,000 checks.</p>
+
+<div class="cta">
+  <h2>Start screening today</h2>
+  <p>Free tier, no API key. Paid from $19/mo for production agents.</p>
+  <a href="/checkout/dev" class="btn">Get API Access →</a>
+</div>
+
+<footer><p><a href="/">agentmail</a> · OFAC sanctions screening for AI agents</p></footer>
+</body>
+</html>

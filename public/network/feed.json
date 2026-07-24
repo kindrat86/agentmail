@@ -1,0 +1,159 @@
+{
+  "version": "https://jsonfeed.org/version/1.1",
+  "title": "SanctionsAI Portfolio Network",
+  "home_page_url": "https://sanctionsai.dev/network/",
+  "feed_url": "https://sanctionsai.dev/network/feed.json",
+  "description": "Cross-portfolio content feed for SanctionsAI \u2014 AI-readable discovery feed of related platforms.",
+  "date_modified": "2026-07-19T16:23:06.385092+00:00",
+  "authors": [
+    {
+      "name": "SanctionsAI"
+    }
+  ],
+  "items": [
+    {
+      "id": "pin:gitdealflow",
+      "title": "GitDealFlow",
+      "url": "https://gitdealflow.com",
+      "summary": "AI-powered deal flow tracking and startup discovery platform for angel investors and VCs.",
+      "category": "Deal Flow & Investing",
+      "topics": [
+        "investing",
+        "startups",
+        "deal flow",
+        "venture capital",
+        "angel investing"
+      ],
+      "totalPages": 113,
+      "dateModified": "2026-07-19T16:23:06.385092+00:00"
+    },
+    {
+      "id": "pin:sipiteno",
+      "title": "SipiTeno",
+      "url": "https://sipiteno.com",
+      "summary": "AI-powered business tools and automation platform helping companies leverage artificial intelligence.",
+      "category": "AI & Automation",
+      "topics": [
+        "ai",
+        "automation",
+        "business tools",
+        "ai agents",
+        "productivity"
+      ],
+      "totalPages": 718,
+      "dateModified": "2026-07-19T16:23:06.385092+00:00"
+    },
+    {
+      "id": "pin:signals",
+      "title": "Signals by GitDealFlow",
+      "url": "https://signals.gitdealflow.com",
+      "summary": "Real-time investment signals and startup momentum tracking powered by AI analysis of market data.",
+      "category": "Investment Analytics",
+      "topics": [
+        "investing",
+        "signals",
+        "momentum",
+        "startups",
+        "analytics"
+      ],
+      "totalPages": 2529,
+      "dateModified": "2026-07-19T16:23:06.385092+00:00"
+    },
+    {
+      "id": "pin:invisibleexit",
+      "title": "Invisible Exit",
+      "url": "https://invisibleexit.com",
+      "summary": "Intelligence platform for strategic business exits, acquisitions, and M&A opportunities.",
+      "category": "M&A Intelligence",
+      "topics": [
+        "ma",
+        "acquisitions",
+        "exits",
+        "business strategy",
+        "valuation"
+      ],
+      "totalPages": 838,
+      "dateModified": "2026-07-19T16:23:06.385092+00:00"
+    },
+    {
+      "id": "pin:unlocksaas",
+      "title": "UnlockSaaS",
+      "url": "https://unlocksaas.com",
+      "summary": "SaaS growth platform helping founders get their first paying customers with proven frameworks and tools.",
+      "category": "SaaS Growth",
+      "topics": [
+        "saas",
+        "growth",
+        "customers",
+        "startup",
+        "marketing"
+      ],
+      "totalPages": 787,
+      "dateModified": "2026-07-19T16:23:06.385092+00:00"
+    },
+    {
+      "id": "pin:voicelogpro",
+      "title": "VoiceLogPro",
+      "url": "https://voicelogpro.com",
+      "summary": "Professional voice logging, transcription, and analysis platform for business communication.",
+      "category": "Voice & Communication",
+      "topics": [
+        "voice",
+        "logging",
+        "transcription",
+        "communication",
+        "analysis"
+      ],
+      "totalPages": 165,
+      "dateModified": "2026-07-19T16:23:06.385092+00:00"
+    },
+    {
+      "id": "pin:carshake",
+      "title": "CarShake",
+      "url": "https://carshake.online",
+      "summary": "Damage-proof digital vehicle handover platform for valet, rental, and car-sharing operations.",
+      "category": "Automotive Tech",
+      "topics": [
+        "automotive",
+        "inspection",
+        "valet",
+        "rental",
+        "car-sharing"
+      ],
+      "totalPages": 159,
+      "dateModified": "2026-07-19T16:23:06.385092+00:00"
+    },
+    {
+      "id": "pin:churnlens",
+      "title": "ChurnLens",
+      "url": "https://churnlens.site",
+      "summary": "Deep churn analytics platform with interactive calculators, benchmarks, and retention intelligence for SaaS businesses.",
+      "category": "SaaS Analytics",
+      "topics": [
+        "saas",
+        "churn",
+        "analytics",
+        "retention",
+        "benchmarks"
+      ],
+      "totalPages": 189,
+      "dateModified": "2026-07-19T16:23:06.385092+00:00"
+    },
+    {
+      "id": "pin:sipi_bot",
+      "title": "Sipi Bot",
+      "url": "https://sipi.bot",
+      "summary": "AI spending intelligence platform that tracks, analyzes, and optimizes your AI API costs across providers.",
+      "category": "AI Cost Management",
+      "topics": [
+        "ai",
+        "costs",
+        "optimization",
+        "spending",
+        "api"
+      ],
+      "totalPages": 186,
+      "dateModified": "2026-07-19T16:23:06.385092+00:00"
+    }
+  ]
+}

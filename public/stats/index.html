@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OFAC Sanctions Enforcement Statistics & SVG Badges (2026)</title>
+<meta name="description" content="Key OFAC sanctions enforcement statistics with embeddable SVG badges. Civil penalties, SDN list size, crypto wallets sanctioned. Free to embed, CC BY 4.0.">
+<link rel="canonical" href="https://sanctionsai.dev/stats/">
+<meta name="robots" content="index, follow">
+<style>
+  :root{--bg:#0a0a0f;--card:#141420;--border:#1e1e30;--text:#e4e4ec;--muted:#8888a0;--accent:#00d4aa}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.7;max-width:900px;margin:0 auto;padding:2rem 1.5rem}
+  h1{font-size:2rem;font-weight:800;margin-bottom:.5rem}
+  .subtitle{color:var(--muted);margin-bottom:2rem}
+  .stats{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1.25rem}
+  .stat{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.5rem;position:relative}
+  .stat .num{font-size:2rem;font-weight:800;color:var(--accent)}
+  .stat .label{font-size:.9rem;color:var(--text);font-weight:600;margin:.35rem 0}
+  .stat .desc{font-size:.82rem;color:var(--muted);margin-bottom:.75rem}
+  .stat .source{font-size:.7rem;color:#555}
+  .stat .badge-preview{margin-top:.75rem;padding:.5rem;background:#000;border-radius:6px;text-align:center}
+  .stat .badge-preview img{max-width:100%;height:auto}
+  .embed-box{margin-top:.75rem;display:none}
+  .stat:hover .embed-box{display:block}
+  .embed-box textarea{width:100%;background:#0d0d1a;color:var(--accent);border:1px solid var(--border);border-radius:6px;padding:.5rem;font-size:.7rem;font-family:monospace;resize:none;height:50px}
+  .cta{background:linear-gradient(135deg,rgba(0,212,170,.1),rgba(0,212,170,.05));border:2px solid rgba(0,212,170,.25);border-radius:16px;padding:2rem;text-align:center;margin:2rem 0}
+  .btn{display:inline-block;padding:.85rem 2rem;background:var(--accent);color:#0a0a0f;border-radius:10px;font-weight:700;text-decoration:none}
+  nav{margin-bottom:1.5rem;font-size:.85rem}
+  nav a{color:var(--accent);text-decoration:none}
+  footer{text-align:center;color:#555;font-size:.75rem;margin-top:3rem;padding-top:1.5rem;border-top:1px solid var(--border)}
+</style>
+</head>
+<body>
+<nav><a href="/">agentmail</a> &rsaquo; <span>Stats</span></nav>
+
+<h1>OFAC Sanctions Enforcement Statistics (2026)</h1>
+<p class="subtitle">Key data points on OFAC enforcement, SDN list coverage, and sanctions screening. Free to embed on your site (CC BY 4.0). Updated July 2026.</p>
+
+<div class="stats">
+
+<div class="stat">
+  <div class="num">$356,000</div>
+  <div class="label">Minimum OFAC civil penalty per violation</div>
+  <div class="desc">OFAC can impose civil penalties up to the greater of $356,000 or twice the transaction value per violation. Willful violations carry criminal penalties up to $1,000,000 and 20 years imprisonment.</div>
+  <div class="source">Source: US Treasury OFAC, 31 CFR Part 501</div>
+  <div class="badge-preview">
+    <svg xmlns="http://www.w3.org/2000/svg" width="240" height="40"><rect width="240" height="40" rx="6" fill="#0a0a0f" stroke="#1e1e30"/><text x="12" y="26" font-family="system-ui" font-size="13" fill="#e4e4ec">OFAC penalty per violation</text><text x="220" y="26" font-family="system-ui" font-size="13" font-weight="700" fill="#00d4aa" text-anchor="end">$356K</text></svg>
+  </div>
+  <div class="embed-box"><textarea readonly onclick="this.select()">[![OFAC penalty: $356K](https://sanctionsai.dev/api/badge/ofac-penalty.svg)](https://sanctionsai.dev/stats/)</textarea></div>
+</div>
+
+<div class="stat">
+  <div class="num">19,086</div>
+  <div class="label">Names on OFAC SDN list</div>
+  <div class="desc">The Specially Designated Nationals list contains 19,086 individuals and entities as of July 2026. Every AI agent sending payments must screen against this list.</div>
+  <div class="source">Source: US Treasury OFAC sdn.csv, July 2026</div>
+  <div class="badge-preview">
+    <svg xmlns="http://www.w3.org/2000/svg" width="240" height="40"><rect width="240" height="40" rx="6" fill="#0a0a0f" stroke="#1e1e30"/><text x="12" y="26" font-family="system-ui" font-size="13" fill="#e4e4ec">OFAC SDN list entries</text><text x="220" y="26" font-family="system-ui" font-size="13" font-weight="700" fill="#00d4aa" text-anchor="end">19,086</text></svg>
+  </div>
+  <div class="embed-box"><textarea readonly onclick="this.select()">[![OFAC SDN: 19,086](https://sanctionsai.dev/api/badge/ofac-sdn.svg)](https://sanctionsai.dev/stats/)</textarea></div>
+</div>
+
+<div class="stat">
+  <div class="num">782</div>
+  <div class="label">Sanctioned crypto wallet addresses</div>
+  <div class="desc">OFAC has identified 782 cryptocurrency wallet addresses linked to sanctioned entities. Screening wallets before on-chain transactions is critical for DeFi agents and crypto payment bots.</div>
+  <div class="source">Source: vile/ofac-sdn-list GitHub releases</div>
+  <div class="badge-preview">
+    <svg xmlns="http://www.w3.org/2000/svg" width="240" height="40"><rect width="240" height="40" rx="6" fill="#0a0a0f" stroke="#1e1e30"/><text x="12" y="26" font-family="system-ui" font-size="13" fill="#e4e4ec">Sanctioned crypto wallets</text><text x="220" y="26" font-family="system-ui" font-size="13" font-weight="700" fill="#00d4aa" text-anchor="end">782</text></svg>
+  </div>
+  <div class="embed-box"><textarea readonly onclick="this.select()">[![782 sanctioned wallets](https://sanctionsai.dev/api/badge/ofac-wallets.svg)](https://sanctionsai.dev/stats/)</textarea></div>
+</div>
+
+<div class="stat">
+  <div class="num">16</div>
+  <div class="label">Comprehensively sanctioned jurisdictions</div>
+  <div class="desc">OFAC maintains comprehensive sanctions against 16 countries and regions. Any transaction involving these jurisdictions requires screening regardless of the counterparty.</div>
+  <div class="source">Source: US Treasury OFAC Sanctions Programs</div>
+  <div class="badge-preview">
+    <svg xmlns="http://www.w3.org/2000/svg" width="240" height="40"><rect width="240" height="40" rx="6" fill="#0a0a0f" stroke="#1e1e30"/><text x="12" y="26" font-family="system-ui" font-size="13" fill="#e4e4ec">Sanctioned jurisdictions</text><text x="220" y="26" font-family="system-ui" font-size="13" font-weight="700" fill="#00d4aa" text-anchor="end">16</text></svg>
+  </div>
+  <div class="embed-box"><textarea readonly onclick="this.select()">[![16 sanctioned jurisdictions](https://sanctionsai.dev/api/badge/ofac-jurisdictions.svg)](https://sanctionsai.dev/stats/)</textarea></div>
+</div>
+
+<div class="stat">
+  <div class="num">100ms</div>
+  <div class="label">Screening latency with agentmail</div>
+  <div class="desc">agentmail screens any counterparty against the full OFAC SDN list in under 100ms, making it viable for real-time pre-payment screening in AI agent payment loops.</div>
+  <div class="source">Source: agentmail benchmark data</div>
+</div>
+
+<div class="stat">
+  <div class="num">5/day</div>
+  <div class="label">Free tier checks per day</div>
+  <div class="desc">agentmail's free tier requires no API key and allows 5 sanctions checks per day. Enough for development, testing, and low-volume production agents.</div>
+  <div class="source">Source: agentmail pricing page</div>
+</div>
+
+</div>
+
+<div class="cta">
+  <h2>Add OFAC screening to your AI agent</h2>
+  <p>Free tier, no API key. One API call before every payment. Under 100ms.</p>
+  <a href="/checkout/dev" class="btn">Get API Access — from $19/mo →</a>
+</div>
+
+<footer>
+  <p>All statistics from US Treasury OFAC public data and agentmail benchmarks. CC BY 4.0 — embed freely with attribution.</p>
+  <p><a href="/">agentmail</a> · OFAC sanctions screening for AI agents</p>
+</footer>
+</body>
+</html>

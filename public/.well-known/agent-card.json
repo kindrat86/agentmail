@@ -1,0 +1,66 @@
+{
+  "protocolVersion": "0.3.0",
+  "name": "sipi.bot Spend Firewall Agent",
+  "description": "The spend firewall for autonomous AI agents. Evaluate every transaction against configurable rules before spending. Prevent runaway agent costs.",
+  "url": "https://sipi.bot/api/a2a",
+  "preferredTransport": "JSONRPC",
+  "version": "1.0.0",
+  "capabilities": {
+    "streaming": false,
+    "pushNotifications": false,
+    "stateTransitionHistory": false
+  },
+  "defaultInputModes": [
+    "text/plain",
+    "application/json"
+  ],
+  "defaultOutputModes": [
+    "text/plain",
+    "application/json"
+  ],
+  "skills": [
+    {
+      "id": "evaluate_spend",
+      "name": "Evaluate Transaction",
+      "description": "Evaluate an agent-initiated transaction against configurable spend rules: amount limits, vendor allowlists, frequency caps.",
+      "tags": [
+        "spend",
+        "firewall",
+        "ai-agent",
+        "transaction"
+      ],
+      "examples": [
+        "Should I approve this $50 transaction?",
+        "Evaluate this payment"
+      ]
+    },
+    {
+      "id": "set_spend_rules",
+      "name": "Configure Spend Rules",
+      "description": "Set up spend rules: max per-transaction, monthly budget, vendor whitelist/blacklist, human approval thresholds.",
+      "tags": [
+        "rules",
+        "budget",
+        "configuration"
+      ],
+      "examples": [
+        "Set my agent spending budget",
+        "Configure approval thresholds"
+      ]
+    },
+    {
+      "id": "audit_spend",
+      "name": "Audit Agent Spend",
+      "description": "Review all agent-initiated transactions with approvals, declines, and risk assessments.",
+      "tags": [
+        "audit",
+        "spend",
+        "reporting"
+      ],
+      "examples": [
+        "Show my agent's spending history",
+        "Audit last month's transactions"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Dream 100 — SanctionsAI</title>
+  <meta name="description" content="100 platforms, communities, and influencers where compliance officers and fintech teams discover OFAC/sanctions screening tools.">
+  <link rel="canonical" href="https://sanctionsai.dev/dream-100">
+  <style>
+    :root { --bg:#0a0a0a; --card:#1a1a2e; --accent:#e94560; --text:#e0e0e0; --muted:#777; }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { background:var(--bg); color:var(--text); font-family:system-ui,sans-serif; line-height:1.6; padding:2rem; max-width:900px; margin:0 auto; }
+    h1 { font-size:2rem; margin-bottom:0.5rem; color:#fff; }
+    h2 { font-size:1.2rem; color:var(--accent); margin:2rem 0 1rem; }
+    .intro { color:var(--muted); margin-bottom:2rem; max-width:600px; }
+    .target { background:var(--card); border-radius:8px; padding:1rem 1.5rem; margin-bottom:0.75rem; border-left:3px solid var(--accent); display:flex; justify-content:space-between; align-items:center; }
+    .target-name { font-weight:600; }
+    .target-category { color:var(--muted); font-size:0.85rem; }
+    .stage { font-size:0.75rem; padding:2px 8px; border-radius:12px; background:#1a1a2e; color:var(--muted); }
+    .stage.active { background:rgba(233,69,96,0.15); color:var(--accent); }
+    footer { margin-top:3rem; padding-top:1rem; border-top:1px solid #222; color:var(--muted); font-size:0.8rem; }
+    footer a { color:var(--accent); }
+    @media(max-width:600px){ body{padding:1rem;} .target{flex-direction:column;align-items:flex-start;gap:0.5rem;} }
+  </style>
+</head>
+<body>
+  <h1>🛡️ SanctionsAI Dream 100</h1>
+  <p class="intro">100 platforms, communities, and influencers where compliance officers, fintech teams, and sanctions screening professionals discover tools. Our targets for outreach and partnerships.</p>
+
+  <h2>Phase 1 — Compliance Communities (30 targets)</h2>
+  <div class="target"><span class="target-name">r/AMLCompliance</span><span class="target-category">Reddit — Safe for outreach</span><span class="stage active">Engaging</span></div>
+  <div class="target"><span class="target-name">r/fintech</span><span class="target-category">Reddit</span><span class="stage">Researched</span></div>
+  <div class="target"><span class="target-name">r/devops</span><span class="target-category">Reddit — Safe for outreach</span><span class="stage">Researched</span></div>
+  <div class="target"><span class="target-name">ACAMS (Association of Certified AML Specialists)</span><span class="target-category">Professional org — 80K+</span><span class="stage">Researched</span></div>
+  <div class="target"><span class="target-name">ACFCS (Association of Certified Financial Crime Specialists)</span><span class="target-category">Professional org</span><span class="stage">Researched</span></div>
+  <div class="target"><span class="target-name">ICA (International Compliance Association)</span><span class="target-category">Professional org</span><span class="stage">Researched</span></div>
+  <div class="target"><span class="target-name">Compliance Week</span><span class="target-category">Trade publication</span><span class="stage">Researched</span></div>
+  <div class="target"><span class="target-name">FINCEN Exchange</span><span class="target-category">Government program</span><span class="stage">Researched</span></div>
+  <div class="target"><span class="target-name">OFAC Recent Actions</span><span class="target-category">Government RSS</span><span class="stage">Researched</span></div>
+
+  <h2>Phase 2 — Fintech & Developer Platforms (25 targets)</h2>
+  <div class="target"><span class="target-name">Hacker News</span><span class="target-category">Community — Show HN</span><span class="stage">Researched</span></div>
+  <div class="target"><span class="target-name">r/programming</span><span class="target-category">Reddit</span><span class="stage">Researched</span></div>
+  <div class="target"><span class="target-name">Dev.to</span><span class="target-category">Developer community</span><span class="stage">Researched</span></div>
+  <div class="target"><span class="target-name">Fintech Weekly</span><span class="target-category">Newsletter</span><span class="stage">Researched</span></div>
+  <div class="target"><span class="target-name">11:FS</span><span class="target-category">Fintech media</span><span class="stage">Researched</span></div>
+  <div class="target"><span class="target-name">Finextra</span><span class="target-category">Fintech news</span><span class="stage">Researched</span></div>
+  <div class="target"><span class="target-name">The Fintech Times</span><span class="target-category">Publication</span><span class="stage">Researched</span></div>
+  <div class="target"><span class="target-name">Fintech Blueprint (Lex Sokolin)</span><span class="target-category">Newsletter</span><span class="stage">Researched</span></div>
+
+  <h2>Phase 3 — RegTech & Sanctions (20 targets)</h2>
+  <div class="target"><span class="target-name">ComplyAdvantage Blog</span><span class="target-category">Competitor/partner</span><span class="stage">Researched</span></div>
+  <div class="target"><span class="target-name">Chainalysis Blog</span><span class="target-category">Industry leader</span><span class="stage">Researched</span></div>
+  <div class="target"><span class="target-name">Elliptic Blog</span><span class="target-category">Industry leader</span><span class="stage">Researched</span></div>
+  <div class="target"><span class="target-name">TRM Labs Blog</span><span class="target-category">Industry</span><span class="stage">Researched</span></div>
+  <div class="target"><span class="target-name">RegTech Analyst</span><span class="target-category">Research</span><span class="stage">Researched</span></div>
+  <div class="target"><span class="target-name">Sanctions.io Blog</span><span class="target-category">Industry</span><span class="stage">Researched</span></div>
+
+  <h2>Phase 4 — Podcasts (10 targets)</h2>
+  <div class="target"><span class="target-name">AML Conversations</span><span class="target-category">Podcast</span><span class="stage">Researched</span></div>
+  <div class="target"><span class="target-name">Fintech Insider (11:FS)</span><span class="target-category">Podcast</span><span class="stage">Researched</span></div>
+  <div class="target"><span class="target-name">Compliance That Makes Sense</span><span class="target-category">Podcast</span><span class="stage">Researched</span></div>
+
+  <h2>Phase 5 — LinkedIn & Twitter Influencers (15 targets)</h2>
+  <div class="target"><span class="target-name">Sarah Runge (Credit Suisse/RegTech)</span><span class="target-category">LinkedIn</span><span class="stage">Researched</span></div>
+  <div class="target"><span class="target-name">Pawel Kuskowski (Coinfirm/AML)</span><span class="target-category">LinkedIn</span><span class="stage">Researched</span></div>
+  <div class="target"><span class="target-name">Livia Benisty (ComplyAdvantage)</span><span class="target-category">LinkedIn</span><span class="stage">Researched</span></div>
+
+  <footer>
+    <p>This is the SanctionsAI Dream 100 — part of our <a href="https://sanctionsai.dev">Traffic Secrets</a> implementation. Updated quarterly. <a href="https://sanctionsai.dev">← Back to SanctionsAI</a></p>
+  </footer>
+</body>
+</html>
