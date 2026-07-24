@@ -5499,7 +5499,13 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
             '<th><h3>Dev</h3><p style="color:#00d4aa;font-size:1.5em;font-weight:800;margin:4px 0">$19<span style="font-size:.5em;color:#666">/mo</span></p></th>'
             '<th><h3>Pro</h3><p style="color:#00d4aa;font-size:1.5em;font-weight:800;margin:4px 0">$99<span style="font-size:.5em;color:#666">/mo</span></p></th></tr></thead>'
             '<tbody>'
-            '<tr><td style="text-align:left">Sanctions checks / day</td><td>5</td><td>1,000</td><td>10,000</td></tr>'
+            # 2026-07-24: was "5 / 1,000 / 10,000" per day for Free/Dev/Pro —
+            # contradicts this page's own JSON-LD below, the homepage copy
+            # (free tier is 50/day everywhere else on the site), and the
+            # limits actually enforced in billing.py (TIERS: dev=10,000/mo,
+            # team=100,000/mo). Buyers were being overpromised ~3x on the
+            # page where they decide. See conversion-audit-scored-2026-07-24.
+            '<tr><td style="text-align:left">Sanctions checks</td><td>50/day</td><td>10,000/mo</td><td>100,000/mo</td></tr>'
             '<tr><td style="text-align:left">Risk scoring</td><td>-</td><td style="color:#00d4aa">All 4 tools</td><td style="color:#00d4aa">All 4 tools</td></tr>'
             '<tr><td style="text-align:left">KYA verification</td><td>-</td><td style="color:#00d4aa">Included</td><td style="color:#00d4aa">Included</td></tr>'
             '<tr><td style="text-align:left">Disputes</td><td>-</td><td style="color:#00d4aa">Included</td><td style="color:#00d4aa">Included</td></tr>'
@@ -7135,9 +7141,7 @@ No spam. Unsubscribe anytime.
 </select>
 <button class="btn btn-primary" type="submit">Send me the playbook</button>
 </form>
-<div id="squeeze-result" class="result" style="margin-top:16px">
-Join 200+ developers building compliant agents.
-</div>
+<div id="squeeze-result" class="result" style="margin-top:16px"></div>
 <p class="note" style="margin-top:12px">
 PDF delivered by email. Already have an API key?
 <a href="/pricing">See Team plan</a>.
@@ -7150,10 +7154,29 @@ document.getElementById("squeeze-form").addEventListener("submit", function(e){
   var email = document.getElementById("email").value.trim();
   var attr = document.getElementById("attribution").value;
   var out = document.getElementById("squeeze-result");
+  var btn = document.querySelector("#squeeze-form button[type=submit]");
   if(!email){ out.className="result"; out.textContent="Enter your email first."; return; }
   /* AEO: capture self-reported attribution in PostHog */
   if(window.posthog && attr){ window.posthog.capture('attribution_survey',{source:attr,page:'/start'}); window.posthog.identify&&window.posthog.identify({signup_source:attr}); }
-  window.location.href = "/pricing?email=" + encodeURIComponent(email) + (attr ? "&ref=" + attr : "");
+  /* 2026-07-24: this used to skip capture entirely and just redirect to
+     /pricing with the email in the URL (leaking it, and never sending the
+     promised PDF). Now it actually POSTs to /subscribe, which stores the
+     email and sends the welcome/playbook email, before redirecting. */
+  btn.disabled = true; btn.textContent = "Sending...";
+  fetch("/subscribe", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({email: email, source: "start_squeeze", heard_from: attr})
+  }).then(function(r){ return r.json(); }).then(function(data){
+    if(!data || !data.ok){ throw new Error((data && data.error) || "failed"); }
+    out.className = "result";
+    out.textContent = "Check your inbox — the playbook is on its way.";
+    window.location.href = "/pricing?email=" + encodeURIComponent(email) + (attr ? "&ref=" + attr : "");
+  }).catch(function(){
+    btn.disabled = false; btn.textContent = "Send me the playbook";
+    out.className = "result";
+    out.textContent = "Something went wrong — please try again.";
+  });
 });
 </script>"""
         return self._page("Agent Compliance Playbook - Free PDF | agentmail",
