@@ -3000,7 +3000,7 @@ License: https://creativecommons.org/licenses/by/4.0/
             return self._serve_file_content("public/affiliate", "text/html")
         # Catch-all 404 HTML page (not a 302 redirect — Google penalizes soft-404s)
         return self._page(
-            "Page not found - agentmail",
+            "Page not found - SanctionsAI",
             "The page you're looking for doesn't exist. agentmail provides OFAC sanctions screening for AI agents and autonomous payment pipelines.",
             '<section style="text-align:center;border-top:none;min-height:40vh;display:flex;flex-direction:column;align-items:center;justify-content:center">'
             '<h1 style="font-size:4em;margin-bottom:8px">404</h1>'
@@ -3304,7 +3304,7 @@ License: https://creativecommons.org/licenses/by/4.0/
             ("/dream100", "monthly", "0.5", "Dream 100 — target influencers and communities"),
             ("/widgets", "monthly", "0.8", "Free embeddable OFAC compliance badge and wallet screening widget"),
             ("/badge/clean", "monthly", "0.7", "Free embeddable 'Verified by sanctionsai.dev' SVG badge — add OFAC compliance verification to your site"),
-            ("/docs", "monthly", "0.6", "API documentation - agentmail"),
+            ("/docs", "monthly", "0.6", "API documentation - SanctionsAI"),
             ("/for/fintech", "monthly", "0.7", "OFAC sanctions for fintech agents"),
             ("/for/crypto", "monthly", "0.7", "OFAC sanctions for crypto agents"),
             ("/for/ecommerce", "monthly", "0.7", "OFAC sanctions for ecommerce agents"),
@@ -3502,7 +3502,7 @@ License: https://creativecommons.org/licenses/by/4.0/
         ("/faq/what-happens-if-you-violate-ofac", "monthly", "0.7", "What happens if you violate OFAC sanctions?"),
         ("/faq/how-to-screen-crypto-wallets-ofac", "monthly", "0.7", "How to screen crypto wallets against OFAC"),
         # Round 21: section-index pages (AEO — AI crawler entry points)
-        ("/for", "weekly", "0.7", "OFAC sanctions screening by industry — agentmail"),
+        ("/for", "weekly", "0.7", "OFAC sanctions screening by industry — SanctionsAI"),
         ("/compare", "weekly", "0.7", "agentmail vs competitors — OFAC screening comparison"),
         ("/integrations", "weekly", "0.7", "Agentmail integrations — OFAC screening for agent frameworks"),
         ("/glossary", "weekly", "0.9", "OFAC and sanctions compliance glossary"),
@@ -3553,7 +3553,7 @@ License: https://creativecommons.org/licenses/by/4.0/
 
     def _llms_txt(self):
         """llms.txt - GEO/AIO: tells AI crawlers what agentmail is and how to use it."""
-        txt = """# agentmail
+        txt = """# SanctionsAI
 
 > OFAC sanctions screening, transaction risk scoring, and Know-Your-Agent verification for AI agents that transact autonomously.
 
@@ -3601,7 +3601,7 @@ curl "https://sanctionsai.dev/sanctions?wallet=0x098B716B8Aaf21512996dC57EB0615e
 
     def _llms_full_txt(self):
         """llms-full.txt - full documentation for AI training / RAG ingestion."""
-        txt = """# agentmail - Complete Documentation
+        txt = """# SanctionsAI - Complete Documentation
 
 > OFAC sanctions screening, transaction risk scoring, and Know-Your-Agent verification for AI agents that transact autonomously.
 
@@ -4234,7 +4234,7 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
 <a href="#story" class="skip-link">Skip to content</a>
 <div class="menu-backdrop" id="menu-backdrop"></div>
 <nav id="nav"><div class="wrap bar">
-  <a href="/" class="logo" aria-label="agentmail home"><span class="mark">a</span> agent<span style="color:var(--teal)">mail</span></a>
+  <a href="/" class="logo" aria-label="SanctionsAI home">Sanctions<span style="color:var(--teal)">AI</span></a>
   <div class="links" id="navlinks">
     <a href="#story">How it works</a>
     <a href="/agent">For AI Agents</a>
@@ -4677,7 +4677,7 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
 <footer><div class="wrap">
   <div class="grid">
     <div class="brand">
-      <a href="/" class="logo"><span class="mark">a</span> agent<span style="color:var(--teal)">mail</span></a>
+      <a href="/" class="logo">Sanctions<span style="color:var(--teal)">AI</span></a>
       <p>OFAC sanctions screening for AI agents. Screen every counterparty before your agent pays. MIT licensed, open source.</p>
     </div>
     <div class="cols">
@@ -4773,7 +4773,7 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
         from urllib.parse import parse_qs, urlparse
         qs = parse_qs(urlparse(self.path).query)
         email = qs.get("email", [""])[0]
-        html = "<!DOCTYPE html><html lang='en'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Unsubscribe - agentmail</title>"
+        html = "<!DOCTYPE html><html lang='en'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>Unsubscribe - SanctionsAI</title>"
         html += "<style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:-apple-system,system-ui,sans-serif;background:#0a0a0a;color:#e0e0e0;line-height:1.6;padding:40px 20px;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh}.card{background:#111;border:1px solid #222;border-radius:16px;padding:40px;max-width:420px;width:100%;text-align:center}.logo{font-size:1.4em;font-weight:700;color:#fff;margin-bottom:20px}.logo span{color:#00d4aa}.btn{display:inline-block;padding:14px 32px;border-radius:8px;font-weight:600;font-size:1em;cursor:pointer;border:none;min-height:48px;transition:all .2s}.btn-danger{background:#ff4444;color:#fff}.btn-ghost{background:transparent;border:1px solid #333;color:#888;margin-top:12px}.status{color:#00d4aa;display:none;margin:16px 0}</style></head><body><div class='card'><div class='logo'>agent<span>mail</span></div>"
         if email:
             html += "<h1 style='color:#fff;font-size:20px;margin-bottom:8px'>Unsubscribe</h1><p style='color:#888;font-size:14px;margin-bottom:24px'>We will stop sending you emails.</p>"
@@ -4923,7 +4923,7 @@ Written by the team at <a href="https://sanctionsai.dev">agentmail</a>. MIT lice
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>x402 payment flow demo - agentmail</title>
+<title>x402 payment flow demo - SanctionsAI</title>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <meta name="description" content="See how the x402 payment protocol works: 402 response, payment requirements, and retry with X-PAYMENT.">
 
@@ -5194,7 +5194,7 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
 </head>
 <body>
 <nav id="nav"><div class="wrap bar">
-  <a href="/" class="logo"><span class="mark">a</span> agent<span style="color:var(--teal)">mail</span></a>
+  <a href="/" class="logo">Sanctions<span style="color:var(--teal)">AI</span></a>
   <div class="links" id="navlinks">
     <a href="/">For Humans</a>
     <a href="https://github.com/kindrat86/agentmail">GitHub</a>
@@ -5447,7 +5447,7 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
 <footer><div class="wrap">
   <div class="grid">
     <div class="brand">
-      <a href="/" class="logo"><span class="mark">a</span> agent<span style="color:var(--teal)">mail</span></a>
+      <a href="/" class="logo">Sanctions<span style="color:var(--teal)">AI</span></a>
       <p>OFAC sanctions screening for AI agents. x402-native, pay-per-check, no subscription. MIT licensed.</p>
     </div>
     <div class="cols">
@@ -5542,6 +5542,7 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
                     "name": "agentmail OFAC Sanctions Screening API",
                     "description": "OFAC sanctions screening, transaction risk scoring, and Know-Your-Agent verification for AI agents. Plans from free to $99/mo.",
                     "brand": {"@type": "Brand", "name": "agentmail"},
+                    "image": "https://sanctionsai.dev/og.png",
                     "url": "https://sanctionsai.dev/pricing",
                     "offers": [
                         {
@@ -5673,7 +5674,7 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
                 for q, a in faqs
             ],
         }
-        return self._page("agentmail FAQ - OFAC Sanctions for AI Agents",
+        return self._page("SanctionsAI FAQ - OFAC Sanctions for AI Agents",
                           "Answers to common questions about OFAC sanctions screening for AI agents: data sources, accuracy, Know-Your-Agent, x402 payments, and the free tier.",
                           body, extra_head=self._ld(ld), canonical="/faq")
 
@@ -6525,7 +6526,7 @@ document.getElementById("wallet").addEventListener("keydown",function(e){if(e.ke
             + '<meta name="robots" content="index,follow,max-image-preview:large">'
         )
         return self._page(
-            "Agent Payment Sanctions Exposure Leaderboard (2026) - agentmail",
+            "Agent Payment Sanctions Exposure Leaderboard (2026) - SanctionsAI",
             "Independent 2026 ranking of 11 AI agent payment platforms (x402, Coinbase AgentKit, Stripe Agent Toolkit, Solana Agent Kit, Skyfire, Nevermined, and more) by their OFAC / sanctions compliance posture. Every row cited to public docs.",
             body, extra_head=extra_head, canonical="/leaderboard")
 
@@ -6732,7 +6733,7 @@ document.getElementById("wallet").addEventListener("keydown",function(e){if(e.ke
             '</div></section>'
         )
         ld = {"@context": "https://schema.org", "@type": "WebPage",
-              "name": "JV Partner Program — agentmail", "description": "50% recurring commission for 12 months per referred paying customer.",
+              "name": "JV Partner Program — SanctionsAI", "description": "50% recurring commission for 12 months per referred paying customer.",
               "url": _SITE + "/partners/jv"}
         return self._page("JV Partner Program — 50% Recurring Commission | agentmail",
                           "Earn 50% recurring commission for 12 months on every developer you refer to agentmail. Swipe copy, partner ID, and monthly payouts.",
@@ -6824,7 +6825,7 @@ document.getElementById("wallet").addEventListener("keydown",function(e){if(e.ke
             '</div></section>'
         )
         ld = {"@context": "https://schema.org", "@type": "WebPage",
-              "name": "Dream 100 — agentmail", "description": "Our target list of influencers, communities, and partners for distributing OFAC sanctions screening to AI agent developers.",
+              "name": "Dream 100 — SanctionsAI", "description": "Our target list of influencers, communities, and partners for distributing OFAC sanctions screening to AI agent developers.",
               "url": _SITE + "/dream100"}
         return self._page("Dream 100 — Our Target Distribution List | agentmail",
                           "The influencers, communities, and partners we are building relationships with to bring OFAC sanctions screening to every AI payment agent.",
@@ -6909,7 +6910,7 @@ Two embeddable widgets that let your users screen wallets against the OFAC SDN l
         body = """<!DOCTYPE html>
 <html lang="en">
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>OFAC Wallet Screening — agentmail</title>
+<title>OFAC Wallet Screening — SanctionsAI</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{background:#0a0a0a;color:#e8e8ea;font:15px/1.5 -apple-system,BlinkMacSystemFont,'Segoe UI',Inter,sans-serif;padding:24px;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center}
@@ -7692,7 +7693,7 @@ curl "https://agentmail-api.fly.dev/sanctions?wallet=<span style="color:#f59e0b"
             '<a href="/tools/wallet-checker" class="btn btn-primary">Try the free wallet checker</a>'
             '&nbsp; <a href="/pricing" class="btn btn-ghost">See pricing</a></div></section>'
         )
-        return self._page("OFAC Penalties & Risk for AI Agents - agentmail",
+        return self._page("OFAC Penalties & Risk for AI Agents - SanctionsAI",
                           "Understand OFAC penalty exposure for AI agents: strict liability, voluntary self-disclosure, mitigation strategies, and compliance costs.",
                           body, canonical="/penalties")
 
@@ -7776,7 +7777,7 @@ curl "https://agentmail-api.fly.dev/sanctions?wallet=<span style="color:#f59e0b"
             '<a href="/tools/wallet-checker" class="btn btn-primary">Try the free checker</a>'
             '&nbsp; <a href="/pricing" class="btn btn-ghost">See pricing</a></div></section>'
         )
-        return self._page("OFAC Sanctions Screening by Industry — agentmail",
+        return self._page("OFAC Sanctions Screening by Industry — SanctionsAI",
                           "OFAC sanctions screening for every industry: fintech, crypto, DeFi, DEX, payments, gaming, ecommerce, and more. Free tier available.",
                           body, canonical="/for")
 
@@ -7873,7 +7874,7 @@ curl "https://agentmail-api.fly.dev/sanctions?wallet=<span style="color:#f59e0b"
             '<p>Free tier: 50 checks/day, no API key.</p>'
             '<a href="/tools/wallet-checker" class="btn btn-primary">Try the free wallet checker</a></div></section>'
         )
-        return self._page("OFAC & Sanctions Compliance Glossary — agentmail",
+        return self._page("OFAC & Sanctions Compliance Glossary — SanctionsAI",
                           "OFAC sanctions glossary: SDN list, Specially Designated Nationals, Know Your Agent (KYA), strict liability, voluntary self-disclosure, embargoed jurisdictions, and more.",
                           body, canonical="/glossary")
 
@@ -7902,7 +7903,7 @@ curl "https://agentmail-api.fly.dev/sanctions?wallet=<span style="color:#f59e0b"
             '<p>From $19/mo for 10,000 checks/month. MCP, HTTP, and CLI.</p>'
             '<a href="/pricing" class="btn btn-primary">See pricing</a></div></section>'
         )
-        return self._page("Free OFAC Screening Tools — agentmail",
+        return self._page("Free OFAC Screening Tools — SanctionsAI",
                           "Free OFAC screening tools: wallet checker, name checker, country checker, batch checker, and compliance checker. No API key required.",
                           body, canonical="/tools")
 
@@ -7977,7 +7978,7 @@ curl "https://agentmail-api.fly.dev/sanctions?wallet=<span style="color:#f59e0b"
             '<p>50 free checks/day to get started.</p>'
             '<a href="/tools/wallet-checker" class="btn btn-primary">Try the free checker</a></div></section>'
         )
-        return self._page("How to Comply with OFAC — Guides for AI Agents — agentmail",
+        return self._page("How to Comply with OFAC — Guides for AI Agents — SanctionsAI",
                           "How to comply with OFAC: screen crypto wallets, build a compliance program, file a voluntary self-disclosure, check company sanctions, and integrate screening APIs.",
                           body, canonical="/how-to")
 
@@ -8007,7 +8008,7 @@ curl "https://agentmail-api.fly.dev/sanctions?wallet=<span style="color:#f59e0b"
             '<p>Screen before every payment. Free tier available.</p>'
             '<a href="/tools/wallet-checker" class="btn btn-primary">Try the free checker</a></div></section>'
         )
-        return self._page("OFAC Penalty Costs — AI Agent Compliance — agentmail",
+        return self._page("OFAC Penalty Costs — AI Agent Compliance — SanctionsAI",
                           "OFAC penalty costs: fines per violation ($330K+), criminal penalties, settlement costs, crypto enforcement, and the true cost of non-compliance for AI agents.",
                           body, canonical="/cost")
 
@@ -8032,7 +8033,7 @@ curl "https://agentmail-api.fly.dev/sanctions?wallet=<span style="color:#f59e0b"
             '<a href="/tools/wallet-checker" class="btn btn-primary">Try it now</a>'
             '&nbsp; <a href="/pricing" class="btn btn-ghost">See pricing</a></div></section>'
         )
-        return self._page("Agent Compliance Guides - OFAC Screening for AI Agents - agentmail",
+        return self._page("Agent Compliance Guides - OFAC Screening for AI Agents - SanctionsAI",
                           "Step-by-step guides for adding OFAC sanctions screening to your AI agents: setup, API selection, compliance programs, and violation avoidance.",
                           body, canonical="/guides")
 
@@ -9754,7 +9755,7 @@ _SEINFELD_SUBJECTS = [
 
 def _build_branded_email(subject: str, content_html: str, day_info: str = "") -> str:
     """Build a complete branded email with header and footer."""
-    html = "<!DOCTYPE html><html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1.0'><title>agentmail</title></head>"
+    html = "<!DOCTYPE html><html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1.0'><title>SanctionsAI</title></head>"
     html += "<body style='margin:0;padding:0;background-color:#0a0a0a;font-family:-apple-system,BlinkMacSystemFont,\'Segoe UI\',Roboto,Helvetica,Arial,sans-serif'>"
     html += "<table role='presentation' width='100%' cellpadding='0' cellspacing='0' style='background-color:#0a0a0a'><tr><td align='center' style='padding:40px 16px'>"
     html += "<table role='presentation' width='100%' style='max-width:560px;background-color:#111;border-radius:16px;overflow:hidden;border:1px solid #1a1a1a'>"
@@ -10008,7 +10009,7 @@ def _send_welcome_email(email: str) -> dict:
     unsub_link = '<a href="' + unsub_url + '" style="color:#555;text-decoration:underline;font-size:11px">Unsubscribe</a>'
     
     html = ''
-    html += '<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>agentmail</title></head>'
+    html += '<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>SanctionsAI</title></head>'
     html += '<body style="margin:0;padding:0;background-color:#0a0a0a;font-family:-apple-system,BlinkMacSystemFont,\'Segoe UI\',Roboto,Helvetica,Arial,sans-serif">'
     html += '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#0a0a0a"><tr><td align="center" style="padding:40px 16px">'
     html += '<table role="presentation" width="100%" style="max-width:560px;background-color:#111;border-radius:16px;overflow:hidden;border:1px solid #1a1a1a">'
