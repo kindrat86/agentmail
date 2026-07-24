@@ -2017,7 +2017,7 @@ Allow: Storing
         if p.path == "/" or p.path == "":
             return self._landing_page()
         # Unsubscribe page (one-click)
-        if p.path == "/unsubscribe":
+        if p.path == "/unsubscribe" or p.path == "/api/unsubscribe":
             return self._unsubscribe_page()
         if p.path == "/blog":
             return self._blog_index_page()
@@ -3090,7 +3090,7 @@ License: https://creativecommons.org/licenses/by/4.0/
                 return _json(self, 500, {"error": str(e)})
         
         # Unsubscribe - public, no auth gate
-        if p.path == "/unsubscribe":
+        if p.path == "/unsubscribe" or p.path == "/api/unsubscribe":
             try:
                 b = self._body()
                 email = b.get("email", "")
