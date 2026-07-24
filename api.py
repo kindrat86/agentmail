@@ -1636,13 +1636,15 @@ def _capture(event: str, distinct_id: str = None, properties: dict = None):
         return
     try:
         import requests as req
+        props = {"$host": "sanctionsai.dev", "product": "sanctionsai"}
+        props.update(properties or {})
         req.post(
             "https://eu.i.posthog.com/capture/",
             json={
                 "api_key": _POSTHOG_API_KEY,
                 "event": event,
                 "distinct_id": distinct_id or "anon",
-                "properties": properties or {},
+                "properties": props,
             },
             timeout=3,
         )
