@@ -2795,6 +2795,25 @@ License: https://creativecommons.org/licenses/by/4.0/
         # Note: api.py may be running from the installed site-packages, while
         # the static dirs are deployed alongside the app at /home/agentmail/app/.
         # Use AGENTMAIL_HOME env or search both candidate roots.
+        # /learn and /learn/ serve learn/index.html (a redirect stub pointing
+        # at the real glossary hub). Without this both 404: the slug loop
+        # below breaks on the empty slug even though the file is deployed.
+        # Scoped to /learn deliberately — other prefix roots (/vs, /faq,
+        # /guides, /stats) are already served by their own handlers, and
+        # /stats in particular has a live page NEWER than its on-disk
+        # index.html, so a generic root-serving loop would regress it.
+        if p.path in ("/learn", "/learn/"):
+            import os as _os
+            _here = _os.path.dirname(_os.path.abspath(__file__))
+            for _rp in (
+                _os.path.join(_here, "learn", "index.html"),
+                _os.path.join(_here, "..", "learn", "index.html"),
+                _os.path.join("/home/agentmail/app", "learn", "index.html"),
+            ):
+                _rp = _os.path.normpath(_rp)
+                if _os.path.isfile(_rp):
+                    with open(_rp, "r", encoding="utf-8") as _fh:
+                        return self._serve_text(_fh.read(), "text/html; charset=utf-8")
         for _pfx in ("/vs/", "/faq/", "/learn/", "/alternatives-to/", "/penalties/", "/guides/", "/checklists/", "/cost-of/", "/best/", "/templates/", "/stats/"):
             if p.path.startswith(_pfx):
                 _slug = p.path[len(_pfx):].split("?")[0].split("/")[0]
@@ -3660,6 +3679,29 @@ License: https://creativecommons.org/licenses/by/4.0/
         ("/learn/crypto-sanctions-risk", "monthly", "0.6", "Crypto sanctions risk guide"),
         ("/learn/ofac-compliance-guide", "monthly", "0.6", "OFAC compliance guide 2026"),
         ("/learn/sanctions-screening-best-practices", "monthly", "0.6", "Sanctions screening best practices"),
+        # Glossary cluster — live and internally linked, but was absent from
+        # the sitemap entirely (discoverable only via a one-time IndexNow ping).
+        ("/learn/sanctions-glossary", "monthly", "0.7", "Sanctions & AI-Agent Compliance Glossary"),
+        ("/learn/what-are-secondary-sanctions", "monthly", "0.6", "What is Secondary Sanctions?"),
+        ("/learn/what-is-a-blocked-person", "monthly", "0.6", "What is Blocked Person?"),
+        ("/learn/what-is-a-civil-penalty-ofac", "monthly", "0.6", "What is OFAC Civil Penalty?"),
+        ("/learn/what-is-a-false-positive-in-screening", "monthly", "0.6", "What is False Positive?"),
+        ("/learn/what-is-an-agentic-payment", "monthly", "0.6", "What is Agentic Payment?"),
+        ("/learn/what-is-facilitation-in-sanctions", "monthly", "0.6", "What is Facilitation?"),
+        ("/learn/what-is-fuzzy-matching", "monthly", "0.6", "What is Fuzzy Matching?"),
+        ("/learn/what-is-know-your-agent", "monthly", "0.6", "What is KYA?"),
+        ("/learn/what-is-know-your-customer", "monthly", "0.6", "What is KYC?"),
+        ("/learn/what-is-know-your-transaction", "monthly", "0.6", "What is KYT?"),
+        ("/learn/what-is-ofac", "monthly", "0.6", "What is OFAC?"),
+        ("/learn/what-is-sanctions-screening", "monthly", "0.6", "What is Sanctions Screening?"),
+        ("/learn/what-is-strict-liability-in-ofac", "monthly", "0.6", "What is Strict Liability?"),
+        ("/learn/what-is-the-consolidated-sanctions-list", "monthly", "0.6", "What is Consolidated Sanctions List?"),
+        ("/learn/what-is-the-ofac-50-percent-rule", "monthly", "0.6", "What is OFAC 50 Percent Rule?"),
+        ("/learn/what-is-the-sdn-list", "monthly", "0.6", "What is SDN List?"),
+        ("/learn/what-is-the-travel-rule", "monthly", "0.6", "What is Travel Rule?"),
+        ("/learn/what-is-voluntary-self-disclosure", "monthly", "0.6", "What is Voluntary Self-Disclosure?"),
+        ("/learn/what-is-wallet-screening", "monthly", "0.6", "What is Wallet Screening?"),
+        ("/learn/what-is-x402", "monthly", "0.6", "What is x402?"),
         ("/alternatives-to/chainalysis", "monthly", "0.7", "Chainalysis alternatives"),
         ("/alternatives-to/dow-jones", "monthly", "0.7", "Dow Jones RDC alternatives"),
         ("/alternatives-to/elliptic", "monthly", "0.7", "Elliptic alternatives"),
