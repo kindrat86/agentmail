@@ -978,7 +978,7 @@ const agent = createAgent({
 
     # Response flagged/clean + latency''',
         "price_paid": "$99/mo + $0.05/x402-check",
-        "price_free": "Free: 50 x402 checks/day",
+        "price_free": "Free: 5 x402 checks/day",
     },
     "autonome": {
         "name": "Autonome (Fleek)",
