@@ -59,8 +59,17 @@ STALE_CIVIL = [
     r"\$330,000", r"\$300,000", r"\$356K", r"\$330K", r"\$300K",
 ]
 
-# The criminal maximum has been overstated as $20M / 30 years.
-STALE_CRIMINAL = [r"\$20 million", r"\$20M", r"30 years"]
+# The criminal maximum has been overstated as $20M / 30 years. These must only
+# fire in criminal-penalty context: "$20M" is also a legitimate way to describe
+# the largest enforcement action of a given year (see /enforcement/2024), and a
+# checker that flags real data is a checker people switch off.
+CRIMINAL_CONTEXT = r"(?:criminal|imprison|willful|convict)"
+STALE_CRIMINAL = [
+    rf"\$20\s?(?:million|M)\b(?=[^.]{{0,120}}{CRIMINAL_CONTEXT})",
+    rf"{CRIMINAL_CONTEXT}[^.]{{0,120}}\$20\s?(?:million|M)\b",
+    rf"30 years(?=[^.]{{0,120}}{CRIMINAL_CONTEXT})",
+    rf"{CRIMINAL_CONTEXT}[^.]{{0,120}}30 years",
+]
 
 # A ceiling described as a floor.
 FLOOR_FRAMING = [
@@ -83,7 +92,11 @@ PROTECTED = [
 SKIP_DIRS = {".git", "__pycache__", "node_modules", ".claude", "dist", ".venv"}
 EXTS = (".py", ".html", ".md", ".json", ".txt", ".xml")
 # Audit reports quote the figures as they stood at the time. That is the record.
-SKIP_NAMES = {"check_penalty_figures.py"}
+# CLAUDE.md states the floor-framing rule, which it can only do by quoting the
+# phrase the rule forbids. Scanning it made this checker fail on its own
+# documentation, permanently — and a gate that always fails is a gate everyone
+# learns to ignore, which is exactly how the figures drifted the first two times.
+SKIP_NAMES = {"check_penalty_figures.py", "CLAUDE.md"}
 SKIP_PATTERNS = ("AUDIT_", "HERMES_REPORT_", "CHANGELOG")
 
 
