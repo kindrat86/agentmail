@@ -4307,10 +4307,7 @@ License: https://creativecommons.org/licenses/by/4.0/
             "/checklists/shipper-ofac-checklist": "2026-07-18",
             "/compare": "2026-07-18",
             "/compare/amlbot": "2026-07-06",
-            "/compare/chainalysis": "2026-07-02",
             "/compare/charmverse": "2026-06-29",
-            "/compare/complyadvantage": "2026-07-02",
-            "/compare/elliptic": "2026-07-02",
             "/compare/identitymind": "2026-07-06",
             "/compare/scorechain": "2026-07-06",
             "/compare/sumsub": "2026-07-02",
@@ -5225,7 +5222,7 @@ The server exposes four tools (call by these exact names):
 <style>
 :root{
   --bg:#0a0a0a; --bg2:#0c0c0e;
-  --text:#e8eaed; --t2:#a4abb3; --t3:#767c84; --t4:#5c6168;
+  --text:#e8eaed; --t2:#a4abb3; --t3:#9aa0a8; --t4:#868b93;
   --line:rgba(255,255,255,.07); --line2:rgba(255,255,255,.12);
   --surf:rgba(255,255,255,.025); --surf2:rgba(255,255,255,.045);
   --teal:#00d4aa; --teal2:#2deec0;
@@ -5608,8 +5605,16 @@ footer{padding-bottom:max(40px,env(safe-area-inset-bottom))}
 /* AEO: auto-capture AI-engine referrals — tells us when ChatGPT/Perplexity/Gemini drive traffic */
 var ref=document.referrer||'';if(ref){var aiHosts=['chatgpt.com','chat.openai.com','perplexity.ai','you.com','poe.com','gemini.google.com','copilot.microsoft.com','claude.ai','bing.com/chat','duckduckgo.com/chat','phind.com','kagi.com','wrtn.ai','deepseek.com','grok.x.ai','x.com/i/grok'];for(var i=0;i<aiHosts.length;i++){if(ref.indexOf(aiHosts[i])>-1){p.capture('ai_referral_detected',{ai_source:aiHosts[i],referrer:ref,landing_page:pg,timestamp:new Date().toISOString()});p.identify&&p.identify({ai_referred:true,ai_source:aiHosts[i]});break;}}var socialHosts=['reddit.com','news.ycombinator.com','twitter.com','x.com'];for(var j=0;j<socialHosts.length;j++){if(ref.indexOf(socialHosts[j])>-1){p.capture('social_referral_detected',{social_source:socialHosts[j],referrer:ref,landing_page:pg});break;}}}
 document.addEventListener('click',function(e){var a=e.target.closest&&e.target.closest('a[href],button.btn,.btn');if(!a)return;var href=a.getAttribute('href')||'';var txt=(a.textContent||'').trim().slice(0,40);var cls=a.classList||{};var tier=cls.contains('btn-primary')?'primary':(cls.contains('btn-ghost')?'secondary':'text');if(href.indexOf('/checkout/')>-1){p.capture('cta_checkout',{cta:txt,href:href,page:pg,tier:tier});}else if(href.indexOf('/tools/wallet-checker')>-1){p.capture('cta_run_check',{cta:txt,href:href,page:pg,tier:tier});}else if(href.indexOf('github.com/kindrat86')>-1){p.capture('cta_github',{cta:txt,href:href,page:pg});}},true);var f=document.getElementById('free-tier-capture');if(f){f.addEventListener('submit',function(){p.capture('cta_free_signup',{page:pg});});}});</script>
-<link rel="stylesheet" href="/ux.css">
-<script src="/ux.js" defer></script>
+<!-- /ux.css and /ux.js were loaded here, AFTER this page's own <style>, so
+     ux.css won every conflict. ux.css is light-by-default (--ux-surface:#fff,
+     dark only inside a prefers-color-scheme query), which meant the homepage
+     rendered on a WHITE body for every light-mode visitor while its own text
+     colours stayed dark-theme: "947 OFAC-listed wallets" was white-on-white
+     and body copy measured 2.32:1. This page uses no .ux-* class and no
+     var(--ux-*) — its only ux.js hook, [data-stagger], is unused, and
+     data-copy is handled by this page's own script. So the stylesheet
+     contributed nothing but the bug; dropping it also removes a
+     render-blocking request from the LCP path. -->
     </head>
 <body>
 <a href="#story" class="skip-link">Skip to content</a>
@@ -5780,7 +5785,7 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
 <section class="sec" id="try-free" style="padding-top:0"><div class="wrap">
   <div class="capture reveal">
     <h2>Run your first check right now. Free.</h2>
-    <p class="lead">No signup, no API key, no credit card. Paste any wallet address and see the result instantly &mdash; or drop your email and I'll send you the <b>5-day agent compliance Soap Opera</b>:</p>
+    <p class="lead">No signup, no API key, no credit card. <a href="/tools/wallet-checker" style="color:var(--teal2)">Screen a wallet in the free checker</a> and see the result instantly &mdash; or drop your email and I'll send you the <b>5-day agent compliance Soap Opera</b>:</p>
     <ol style="margin:6px 0 14px;font-size:.95rem;color:var(--muted);line-height:1.9;max-width:560px">
       <li><b style="color:var(--text)">Day 1:</b> The wallet that almost cost me $377,700 (the epiphany)</li>
       <li><b style="color:var(--text)">Day 2:</b> The 3-line curl that screens any wallet in 100&nbsp;ms</li>
@@ -5810,6 +5815,13 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
       <p style="margin:0 0 14px;font-size:1.02rem">Nothing changes today. Your agent keeps paying. Maybe nothing happens this week &mdash; there are 947 sanctioned wallets and your agent touches a handful of counterparties.</p>
       <p style="margin:0 0 14px;font-size:1.02rem">But agents are getting more autonomous every month. More wallets, more chains, higher amounts. The rails they run on &mdash; <strong style="color:#ff9b9b">x402, AgentKit, AP2, ACP</strong> &mdash; do not screen. They never will on their own. The first time your agent pays the wrong wallet, the notice is $377,700. Not a bug report. Not a refund. <strong style="color:#ff9b9b">A fine that lands on whoever deployed the agent.</strong></p>
       <p style="margin:0;font-size:1.02rem">Six months from now, when the first agent-driven OFAC enforcement makes the news, you'll either have had this screen in place for months &mdash; or you'll be explaining why you didn't. The curl above takes 30 seconds. <a href="/tools/wallet-checker" style="color:#ff9b9b;text-decoration:underline">Run it now &rarr;</a></p>
+    </div>
+
+    <div class="callout" style="margin-top:18px;background:linear-gradient(135deg,rgba(0,212,170,.07),rgba(0,212,170,.02));border:1px solid rgba(0,212,170,.2);border-radius:16px;padding:28px 30px;color:var(--t2);line-height:1.7">
+      <div class="eyebrow" style="color:var(--teal2);margin-bottom:14px"><span class="dot" style="background:var(--teal);box-shadow:0 0 12px var(--teal)"></span> And if you do</div>
+      <p style="margin:0 0 14px;font-size:1.02rem">You stop being a developer who <i>hopes</i> the counterparty was fine. Your agent gets a property it did not have yesterday: it cannot pay a sanctioned address, in the same way a TLS client cannot silently accept a bad certificate. Not a policy you follow &mdash; a thing your code is now unable to do.</p>
+      <p style="margin:0 0 14px;font-size:1.02rem">That changes the conversations. When a partner asks what your compliance story is, you have one, and it is four lines long. When somebody eventually asks what you screened on a particular Tuesday in March, you <a href="/protocol#gates" style="color:var(--teal2);text-decoration:underline">open the receipt</a> instead of searching your memory. And when the first agent-driven enforcement lands, you are not reading it as news about you.</p>
+      <p style="margin:0;font-size:1.02rem">That is the whole transformation, and it is available in one HTTP call. <a href="/protocol" style="color:var(--teal2);text-decoration:underline">Learn the four gates &rarr;</a></p>
     </div>
   </div>
 </div></section>
@@ -6421,7 +6433,7 @@ const payment = await x402.pay({
 <style>
 :root{
   --bg:#0a0a0a; --bg2:#0c0c0e;
-  --text:#e8eaed; --t2:#a4abb3; --t3:#767c84; --t4:#5c6168;
+  --text:#e8eaed; --t2:#a4abb3; --t3:#9aa0a8; --t4:#868b93;
   --line:rgba(255,255,255,.07); --line2:rgba(255,255,255,.12);
   --surf:rgba(255,255,255,.025); --surf2:rgba(255,255,255,.045);
   --teal:#00d4aa; --teal2:#2deec0;
@@ -7221,7 +7233,7 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
             '<li><a href="/penalties/ofac-violation-costs">OFAC violation costs for ' + name_lower + ' agents</a></li>'
             '<li><a href="/guides/setup-ofac-screening">How to set up OFAC screening</a></li>'
             '<li><a href="/blog/how-to-screen-wallet-agent">How to screen a wallet before your agent pays</a></li>'
-            '<li><a href="/compare/chainalysis">agentmail vs Chainalysis <span style="color:var(--t3)">\\u2014 pricing and feature comparison</span></a></li>'
+            '<li><a href="/vs/chainalysis">agentmail vs Chainalysis <span style="color:var(--t3)">\\u2014 pricing and feature comparison</span></a></li>'
             '</ul>'
             '</div></section>'
             '<section><div class="cta-box">'
@@ -7293,8 +7305,8 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
             '<section><div class="prose">'
             '<h3>Related comparisons</h3>'
             '<ul>'
-            '<li><a href="/compare/elliptic">agentmail vs Elliptic</a></li>'
-            '<li><a href="/compare/complyadvantage">agentmail vs ComplyAdvantage</a></li>'
+            '<li><a href="/vs/elliptic">agentmail vs Elliptic</a></li>'
+            '<li><a href="/vs/comply-advantage">agentmail vs ComplyAdvantage</a></li>'
             '<li><a href="/compare/sumsub">agentmail vs SumSub</a></li>'
             '<li><a href="/guides/choose-sanctions-api">How to choose a sanctions API</a></li>'
             '<li><a href="/for/developers">OFAC screening for developers</a></li>'
@@ -7443,7 +7455,7 @@ python -m agentmail.cli sanctions --wallet 0x098B...</code></pre>
 <h1>Free OFAC Wallet Checker</h1>
 <p class="lead" style="max-width:600px;margin:0 auto 8px">Paste any crypto wallet address and check it against the OFAC sanctions list. Instant results, shareable, embeddable. No signup.</p>
 <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:16px">
-<span id="screens-pill" style="display:none;background:var(--surf2);border:1px solid var(--line);border-radius:20px;padding:6px 14px;font-size:.82rem;color:var(--teal)"><strong id="live-count"></strong> screens today</span>
+<span id="screens-pill" style="display:none;background:var(--surf2);border:1px solid var(--line);border-radius:20px;padding:6px 14px;font-size:.82rem;color:var(--teal)"><strong id="live-count"></strong> <span id="screens-word">screens</span> today</span>
 <span style="background:var(--surf2);border:1px solid var(--line);border-radius:20px;padding:6px 14px;font-size:.82rem;color:var(--t2)">947 OFAC wallets tracked</span>
 </div>
 </section>
@@ -7522,7 +7534,10 @@ var SITE="__SITE__";
   fetch(SITE+"/badge/clean?count=1").then(function(r){return r.json()}).then(function(d){
     if(d.screens_today!==undefined){
       var el=document.getElementById("live-count");
-      el.textContent=Number(d.screens_today).toLocaleString();
+      var n=Number(d.screens_today);
+      el.textContent=n.toLocaleString();
+      var w=document.getElementById("screens-word");
+      if(w) w.textContent = (n===1 ? "screen" : "screens");
       el.parentNode.style.display='';
     }
   }).catch(function(){});
@@ -7941,7 +7956,7 @@ document.getElementById("wallet").addEventListener("keydown",function(e){if(e.ke
             '<h1>Agent Payment Sanctions Exposure Leaderboard</h1>'
             '<p class="lead" style="max-width:680px;margin:0 auto 28px">An independent ranking of AI agent payment platforms by their OFAC / sanctions compliance posture. Every cell is sourced from the platform&rsquo;s own public documentation. Last updated ' + today + '.</p>'
             '<a href="/tools/wallet-checker" class="btn btn-primary">Test a wallet now</a>'
-            '&nbsp; <a href="/compare/chainalysis" class="btn btn-ghost">See head-to-head comparisons</a>'
+            '&nbsp; <a href="/vs/chainalysis" class="btn btn-ghost">See head-to-head comparisons</a>'
             '</section>'
 
             '<section><div class="prose">'
@@ -7989,9 +8004,9 @@ document.getElementById("wallet").addEventListener("keydown",function(e){if(e.ke
             '<h2>Compare agentmail head-to-head</h2>'
             '<p>Want a deeper comparison than the leaderboard? These pages break down agentmail against the major enterprise sanctions providers feature-by-feature:</p>'
             '<ul>'
-            '<li><a href="/compare/chainalysis">agentmail vs Chainalysis</a></li>'
-            '<li><a href="/compare/elliptic">agentmail vs Elliptic</a></li>'
-            '<li><a href="/compare/complyadvantage">agentmail vs ComplyAdvantage</a></li>'
+            '<li><a href="/vs/chainalysis">agentmail vs Chainalysis</a></li>'
+            '<li><a href="/vs/elliptic">agentmail vs Elliptic</a></li>'
+            '<li><a href="/vs/comply-advantage">agentmail vs ComplyAdvantage</a></li>'
             '<li><a href="/compare/sumsub">agentmail vs Sumsub</a></li>'
             '<li><a href="/compare/world-check">agentmail vs World-Check</a></li>'
             '</ul>'
