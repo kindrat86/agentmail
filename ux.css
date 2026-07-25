@@ -864,3 +864,46 @@ a[aria-label] > svg:only-child {
   width: 24px;
   height: 24px;
 }
+
+
+/* ── CENTERED TEXT BOX REPAIR (MK UI/UX 2026-07-25) ────────────────
+   `p { max-width: 65ch }` above caps every paragraph's BOX. Inside a
+   centre-aligned parent that narrow box hugs the LEFT edge, so
+   `text-align: center` faithfully centres the text inside a box that is
+   itself off-centre and the copy drifts left of its container.
+   Centring text does nothing while the box is off-centre.
+
+   Measured live on sanctionsai.dev before this fix: 4 paragraphs
+   off-centre on the homepage. After: 0. Re-verified 0-before/0-after on
+   /learn/sanctions-glossary and /vs/chainalysis (no regression there).
+
+   The first selector is the portfolio-wide rule (see the same marker on
+   the other 6 sites). The second is sanctionsai-specific: this site does
+   NOT use `text-center` utilities — it centres via 122 inline
+   `text-align:center` plus its own component classes, and .hint/.snote
+   sit inside `.capture` / `.stack .snote` which are centred by
+   stylesheet rules that no attribute selector can see.
+
+   `.stack` is deliberately NOT in the container list — only `.stack
+   .snote` and `.stack h3` are centred there, so treating `.stack` as a
+   centred container would drag its left-aligned paragraphs off-axis.
+
+   The `:not(...text-left...)` guard is REQUIRED, and that was measured
+   here too, not assumed: the identical rule without the guard fixed all
+   4 but moved left-aligned paragraphs (control run D).
+   The two `:not()` chains must NOT be separated by whitespace —
+   whitespace is a descendant combinator and changes the meaning.
+   Marker: CENTERED TEXT BOX REPAIR */
+:is([class*="text-center"], .center, .brunson-trust-bar,
+    [style*="text-align:center"], [style*="text-align: center"])
+  p:not(:is([class*="text-left"], [class*="text-right"], [class*="text-justify"], [style*="text-align:left"], [style*="text-align: left"]) p):not(:is([class*="text-left"], [class*="text-right"], [class*="text-justify"], [style*="text-align:left"], [style*="text-align: left"])),
+p[class*="text-center"],
+p.center,
+p[style*="text-align:center"],
+p[style*="text-align: center"],
+:is(.hero, .card, .cta-box, .final, .guarantee, .capture, .tcard, .hero-card,
+    .mcpbox, .widget, .countdown, .sec-head, .riskline, .network-footer)
+  p:not(:is([class*="text-left"], [class*="text-right"], [class*="text-justify"], [style*="text-align:left"], [style*="text-align: left"]) p):not(:is([class*="text-left"], [class*="text-right"], [class*="text-justify"], [style*="text-align:left"], [style*="text-align: left"])),
+p.snote {
+  margin-inline: auto !important;
+}
