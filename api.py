@@ -751,13 +751,7 @@ tbody tr:last-child td{border-bottom:0}
 .cta-box p{color:var(--fg-2);margin:0 auto 20px}
 .cta-box .btn{margin:6px}
 @media (max-width:520px){.cta-box .btn{display:flex;width:100%;margin:8px 0}}
-/* Button rows elsewhere sized to their own text, so a two-button CTA landed as
-   two different widths stacked off-centre (measured on /leaderboard). Stack
-   them full-width, but only when the container holds nothing BUT buttons —
-   that guard is what keeps the nav drawer and inline prose buttons out. */
-@media (max-width:560px){
-  :is(p,div):has(> .btn):not(:has(> :not(.btn):not(br):not(script))) > .btn{display:flex;width:100%;margin:6px 0}
-}
+@media (max-width:560px){.btn + .btn{margin-top:10px}}
 
 /* ── forms ──────────────────────────────────────────────────────── */
 /* 16px minimum: anything smaller makes iOS Safari zoom the page on focus */
@@ -10846,6 +10840,300 @@ compute();
         ]
         self._render_pseo(c["title"], c["desc"], body, faq, f"/cost/{slug}")
 
+
+    def _free_tool_widget(self, slug):
+        """The working tool for the /tools/* pages.
+
+        These four pages shipped as article stubs -- an <h2>, a curl snippet
+        and an FAQ, under titles like "Free OFAC Name Checker". There was no
+        checker on any of them: one input (the footer newsletter box), no
+        submit control, and zero fetch() calls. Someone arriving from a search
+        for "ofac name checker" got a page describing a tool with nothing to
+        type into, which is worse than no page -- it spends the click and
+        returns nothing.
+
+        Built with createElement/textContent rather than innerHTML on purpose.
+        These pages carry the strict CSP, which includes
+        require-trusted-types-for 'script' and therefore blocks innerHTML.
+        /widgets/screen gets away with innerHTML only because it is served with
+        a permissive embed CSP (frame-ancestors *). Same-origin fetch to
+        /sanctions is allowed by connect-src 'self'.
+        """
+        if slug not in ("name-checker", "country-checker",
+                        "batch-checker", "compliance-checker"):
+            return ""
+
+        css = (
+            '<style>'
+            '.tk{background:#0c0d0f;border:1px solid #222;border-radius:14px;padding:22px;margin:26px 0}'
+            '.tk h3{margin:0 0 4px;font-size:1.05rem;color:#fff}'
+            '.tk .tk-sub{color:#8b9199;font-size:.86rem;margin:0 0 16px}'
+            '.tk .tk-row{display:flex;gap:10px;flex-wrap:wrap}'
+            '.tk input[type=text],.tk select,.tk textarea{flex:1;min-width:220px;padding:11px 14px;'
+            'background:#08090a;border:1px solid #2a2d31;border-radius:9px;color:#e6e8ea;font-size:.95rem;'
+            'font-family:inherit}'
+            '.tk textarea{width:100%;min-height:120px;resize:vertical;'
+            'font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.85rem}'
+            '.tk button.tk-go{padding:11px 22px;border:none;border-radius:9px;background:#00d4aa;color:#04120e;'
+            'font-weight:700;font-size:.95rem;cursor:pointer;font-family:inherit}'
+            '.tk button.tk-go:disabled{opacity:.55;cursor:progress}'
+            '.tk .tk-out{margin-top:16px}'
+            '.tk .tk-card{border-radius:10px;padding:14px 16px;border:1px solid #2a2d31;background:#08090a}'
+            '.tk .tk-card.ok{border-color:rgba(0,212,170,.35);background:rgba(0,212,170,.06)}'
+            '.tk .tk-card.bad{border-color:rgba(255,107,107,.4);background:rgba(255,107,107,.07)}'
+            '.tk .tk-card.warn{border-color:rgba(233,196,106,.4);background:rgba(233,196,106,.07)}'
+            '.tk .tk-v{font-weight:800;font-size:1.02rem;margin:0 0 4px}'
+            '.tk .tk-v.ok{color:#4ade9b}.tk .tk-v.bad{color:#ff8b8b}.tk .tk-v.warn{color:#e9c46a}'
+            '.tk .tk-note{color:#8b9199;font-size:.82rem;margin:6px 0 0;line-height:1.55}'
+            '.tk .tk-m{margin:8px 0 0;padding:9px 12px;background:#0c0d0f;border:1px solid #222;'
+            'border-radius:8px;font-family:ui-monospace,Menlo,monospace;font-size:.79rem;color:#cfd2d8;'
+            'overflow-x:auto}'
+            '.tk .tk-rcpt{margin-top:10px;font-family:ui-monospace,Menlo,monospace;font-size:.72rem;color:#6b7178;'
+            'word-break:break-all}'
+            '.tk table{width:100%;border-collapse:collapse;margin-top:6px;font-size:.84rem}'
+            '.tk th,.tk td{text-align:left;padding:7px 9px;border-bottom:1px solid #1c1f22}'
+            '.tk th{color:#8b9199;font-weight:600;font-size:.76rem;text-transform:uppercase;letter-spacing:.04em}'
+            '.tk td.v-bad{color:#ff8b8b;font-weight:700}.tk td.v-ok{color:#4ade9b}'
+            '.tk .ck{display:flex;gap:11px;align-items:flex-start;padding:10px 0;border-bottom:1px solid #1c1f22}'
+            '.tk .ck:last-of-type{border-bottom:none}'
+            '.tk .ck input{margin-top:3px;width:17px;height:17px;accent-color:#00d4aa;flex-shrink:0}'
+            '.tk .ck label{font-size:.9rem;color:#c9ccd1;line-height:1.5;cursor:pointer}'
+            '.tk .ck label b{color:#fff;font-weight:600}'
+            '.tk .score{font-size:2.1rem;font-weight:800;letter-spacing:-.02em;line-height:1}'
+            '</style>'
+        )
+
+        helpers = (
+            'function _el(t,c,x){var e=document.createElement(t);if(c)e.className=c;'
+            'if(x!==undefined&&x!==null)e.textContent=x;return e}'
+            'function _clr(n){while(n.firstChild)n.removeChild(n.firstChild)}'
+            'function _rcpt(o,d){if(!d||!d.screen_id)return;'
+            'var p=_el("p","tk-rcpt","receipt "+d.screen_id+" · "+(d.screened_at||"")+'
+            '(d.latency_ms!==undefined?" · "+d.latency_ms+"ms":""));o.appendChild(p)}'
+            'function _matches(o,d){var ms=(d&&d.matches)||[];for(var i=0;i<ms.length;i++){var m=ms[i];'
+            'o.appendChild(_el("div","tk-m",(m.list||"OFAC")+" · "+(m.entity||"")+" · "+'
+            '(m.match_type||"")+" · confidence "+(m.confidence!==undefined?m.confidence:"?")+'
+            '(m.detail?" · "+m.detail:"")))}}'
+            'function _track(n,p){try{if(window.posthog)window.posthog.capture(n,p||{})}catch(e){}}'
+        )
+
+        if slug == "name-checker":
+            markup = (
+                '<div class="tk">'
+                '<h3>Screen a name against the OFAC SDN list</h3>'
+                '<p class="tk-sub">19,218 Specially Designated Nationals. Fuzzy matching, so aliases and '
+                'name orderings still hit. Free, no signup.</p>'
+                '<form class="tk-row" id="nc-f">'
+                '<input type="text" id="nc-i" placeholder="e.g. Lazarus Group" '
+                'autocomplete="off" aria-label="Name to screen">'
+                '<button type="submit" class="tk-go" id="nc-b">Screen name</button>'
+                '</form>'
+                '<div class="tk-out" id="nc-o"></div>'
+                '</div>'
+            )
+            script = (
+                '<script>(function(){' + helpers +
+                'var f=document.getElementById("nc-f"),i=document.getElementById("nc-i"),'
+                'b=document.getElementById("nc-b"),o=document.getElementById("nc-o");'
+                'if(!f)return;'
+                'f.addEventListener("submit",function(e){e.preventDefault();'
+                'var q=i.value.trim();if(!q)return;b.disabled=true;_clr(o);'
+                'o.appendChild(_el("p","tk-note","Screening “"+q+"” against 19,218 SDN names…"));'
+                '_track("tool_used",{tool:"name-checker"});'
+                'fetch("/sanctions?name="+encodeURIComponent(q)).then(function(r){return r.json()})'
+                '.then(function(d){_clr(o);b.disabled=false;'
+                'if(d.error){var c=_el("div","tk-card warn");c.appendChild(_el("p","tk-v warn","Could not screen"));'
+                'c.appendChild(_el("p","tk-note",String(d.error)));o.appendChild(c);return}'
+                'var hit=!d.clean;var c=_el("div","tk-card "+(hit?"bad":"ok"));'
+                'c.appendChild(_el("p","tk-v "+(hit?"bad":"ok"),hit?"⚠ MATCH — do not transact":"✓ No OFAC SDN match"));'
+                'c.appendChild(_el("p","tk-note",hit'
+                '?"This name matches the OFAC Specially Designated Nationals list. Dealing with an SDN is a '
+                'strict-liability violation — intent is irrelevant. Halt and escalate to a human."'
+                ':"No entry on the OFAC SDN list matched this name. Name matching is fuzzy, so a near-miss '
+                'spelling can still be the same person — review anything you are unsure of. This screens the '
+                'US Treasury OFAC SDN list only, not EU, UN or UK lists."));'
+                '_matches(c,d);_rcpt(c,d);o.appendChild(c);'
+                '_track("tool_result",{tool:"name-checker",clean:!!d.clean});})'
+                '.catch(function(err){_clr(o);b.disabled=false;'
+                'var c=_el("div","tk-card warn");c.appendChild(_el("p","tk-v warn","Could not reach the screening API"));'
+                'c.appendChild(_el("p","tk-note",String(err&&err.message||err)));o.appendChild(c)});});})();</script>'
+            )
+            return css + markup + script
+
+        if slug == "country-checker":
+            # The API takes ISO-3166-1 alpha-2 only: /sanctions?country=IRAN comes
+            # back clean:true, which on a compliance tool is a silent false
+            # negative. A select makes an unmappable value unreachable.
+            countries = [
+                ("Afghanistan", "AF"), ("Australia", "AU"), ("Belarus", "BY"), ("Brazil", "BR"),
+                ("Canada", "CA"), ("Central African Republic", "CF"), ("China", "CN"), ("Cuba", "CU"),
+                ("Democratic Republic of the Congo", "CD"), ("France", "FR"), ("Germany", "DE"),
+                ("India", "IN"), ("Indonesia", "ID"), ("Iran", "IR"), ("Iraq", "IQ"), ("Italy", "IT"),
+                ("Japan", "JP"), ("Libya", "LY"), ("Mexico", "MX"), ("Myanmar", "MM"),
+                ("Netherlands", "NL"), ("Nigeria", "NG"), ("North Korea", "KP"), ("Poland", "PL"),
+                ("Russia", "RU"), ("Singapore", "SG"), ("Somalia", "SO"), ("South Africa", "ZA"),
+                ("South Korea", "KR"), ("Spain", "ES"), ("Sudan", "SD"), ("Switzerland", "CH"),
+                ("Syria", "SY"), ("Turkey", "TR"), ("Ukraine", "UA"), ("United Arab Emirates", "AE"),
+                ("United Kingdom", "GB"), ("United States", "US"), ("Venezuela", "VE"), ("Yemen", "YE"),
+            ]
+            opts = "".join('<option value="%s">%s</option>' % (c, n) for n, c in countries)
+            markup = (
+                '<div class="tk">'
+                '<h3>Check whether a jurisdiction is embargoed</h3>'
+                '<p class="tk-sub">16 comprehensively sanctioned or embargoed jurisdictions, screened live '
+                'against the same endpoint your agent would call.</p>'
+                '<form class="tk-row" id="cc-f">'
+                '<select id="cc-i" aria-label="Country to check"><option value="">Select a country…</option>'
+                + opts + '</select>'
+                '<button type="submit" class="tk-go" id="cc-b">Check jurisdiction</button>'
+                '</form>'
+                '<div class="tk-out" id="cc-o"></div>'
+                '</div>'
+            )
+            script = (
+                '<script>(function(){' + helpers +
+                'var f=document.getElementById("cc-f"),i=document.getElementById("cc-i"),'
+                'b=document.getElementById("cc-b"),o=document.getElementById("cc-o");'
+                'if(!f)return;'
+                'f.addEventListener("submit",function(e){e.preventDefault();'
+                'var q=i.value;if(!q){_clr(o);o.appendChild(_el("p","tk-note","Pick a country first."));return}'
+                'var nm=i.options[i.selectedIndex].text;b.disabled=true;_clr(o);'
+                'o.appendChild(_el("p","tk-note","Checking "+nm+"…"));'
+                '_track("tool_used",{tool:"country-checker"});'
+                'fetch("/sanctions?country="+encodeURIComponent(q)).then(function(r){return r.json()})'
+                '.then(function(d){_clr(o);b.disabled=false;'
+                'if(d.error){var c=_el("div","tk-card warn");c.appendChild(_el("p","tk-v warn","Could not check"));'
+                'c.appendChild(_el("p","tk-note",String(d.error)));o.appendChild(c);return}'
+                'var hit=!d.clean;var c=_el("div","tk-card "+(hit?"bad":"ok"));'
+                'c.appendChild(_el("p","tk-v "+(hit?"bad":"ok"),hit'
+                '?"⚠ "+nm+" is an embargoed jurisdiction":"✓ "+nm+" is not comprehensively embargoed"));'
+                'c.appendChild(_el("p","tk-note",hit'
+                '?"This jurisdiction is under comprehensive OFAC sanctions or an embargo. A counterparty here '
+                'needs a licence, not a screen."'
+                ':"This country is not on the comprehensive-embargo list. That is not an all-clear: individual '
+                'people and entities in any country can be SDN-listed, and sectoral measures may still apply. '
+                'Screen the counterparty itself as well."));'
+                '_matches(c,d);_rcpt(c,d);o.appendChild(c);'
+                '_track("tool_result",{tool:"country-checker",clean:!!d.clean});})'
+                '.catch(function(err){_clr(o);b.disabled=false;'
+                'var c=_el("div","tk-card warn");c.appendChild(_el("p","tk-v warn","Could not reach the screening API"));'
+                'c.appendChild(_el("p","tk-note",String(err&&err.message||err)));o.appendChild(c)});});})();</script>'
+            )
+            return css + markup + script
+
+        if slug == "batch-checker":
+            markup = (
+                '<div class="tk">'
+                '<h3>Screen a list in one pass</h3>'
+                '<p class="tk-sub">One wallet address or name per line, up to 25. Addresses starting 0x, bc1, '
+                'T or 1/3 are screened as wallets; everything else as a name.</p>'
+                '<form id="bc-f">'
+                '<textarea id="bc-i" spellcheck="false" aria-label="Wallets or names, one per line"'
+                '>0x098B716B8Aaf21512996dC57EB0615e2383E2f96\nLazarus Group\n0x742d35Cc6634C0532925a3b844Bc9e7595f0bEbb</textarea>'
+                '<div class="tk-row" style="margin-top:10px">'
+                '<button type="submit" class="tk-go" id="bc-b">Screen the list</button></div>'
+                '</form>'
+                '<div class="tk-out" id="bc-o"></div>'
+                '</div>'
+            )
+            script = (
+                '<script>(function(){' + helpers +
+                'var f=document.getElementById("bc-f"),i=document.getElementById("bc-i"),'
+                'b=document.getElementById("bc-b"),o=document.getElementById("bc-o");'
+                'if(!f)return;'
+                'function isW(s){return /^(0x[0-9a-fA-F]{6,}|bc1[a-z0-9]{6,}|T[1-9A-HJ-NP-Za-km-z]{25,}|[13][1-9A-HJ-NP-Za-km-z]{20,})$/.test(s)}'
+                'f.addEventListener("submit",function(e){e.preventDefault();'
+                'var lines=i.value.split("\\n").map(function(s){return s.trim()}).filter(Boolean).slice(0,25);'
+                'if(!lines.length)return;b.disabled=true;_clr(o);'
+                'var st=_el("p","tk-note","Screening 0 of "+lines.length+"…");o.appendChild(st);'
+                '_track("tool_used",{tool:"batch-checker",n:lines.length});'
+                'var rows=[],flagged=0;'
+                'function step(n){'
+                'if(n>=lines.length){done();return}'
+                'st.textContent="Screening "+(n+1)+" of "+lines.length+"…";'
+                'var v=lines[n];var p=isW(v)?"wallet=":"name=";'
+                'fetch("/sanctions?"+p+encodeURIComponent(v)).then(function(r){return r.json()})'
+                '.then(function(d){var hit=!d.clean;if(hit)flagged++;'
+                'rows.push({v:v,kind:isW(v)?"wallet":"name",hit:hit,'
+                'det:(d.matches&&d.matches[0]?((d.matches[0].match_type||"")+" · "+(d.matches[0].confidence!==undefined?d.matches[0].confidence:"")):"—")});'
+                'step(n+1)})'
+                '.catch(function(){rows.push({v:v,kind:isW(v)?"wallet":"name",hit:null,det:"request failed"});step(n+1)})}'
+                'function done(){_clr(o);b.disabled=false;'
+                'var c=_el("div","tk-card "+(flagged?"bad":"ok"));'
+                'c.appendChild(_el("p","tk-v "+(flagged?"bad":"ok"),'
+                'flagged?("⚠ "+flagged+" of "+rows.length+" flagged"):("✓ "+rows.length+" screened, none flagged")));'
+                'var t=_el("table"),hd=_el("tr");'
+                '["Subject","Type","Result","Detail"].forEach(function(h){hd.appendChild(_el("th",null,h))});'
+                't.appendChild(hd);'
+                'rows.forEach(function(r){var tr=_el("tr");'
+                'tr.appendChild(_el("td",null,r.v.length>34?r.v.slice(0,31)+"…":r.v));'
+                'tr.appendChild(_el("td",null,r.kind));'
+                'tr.appendChild(_el("td",r.hit===null?"":(r.hit?"v-bad":"v-ok"),'
+                'r.hit===null?"error":(r.hit?"FLAGGED":"clean")));'
+                'tr.appendChild(_el("td",null,r.det));t.appendChild(tr)});'
+                'c.appendChild(t);'
+                'c.appendChild(_el("p","tk-note","Screened against the US Treasury OFAC SDN list. '
+                'Batch runs sequentially so you can see exactly which subject produced which verdict."));'
+                'o.appendChild(c);_track("tool_result",{tool:"batch-checker",n:rows.length,flagged:flagged})}'
+                'step(0);});})();</script>'
+            )
+            return css + markup + script
+
+        # compliance-checker: a genuine self-assessment, scored client-side.
+        items = [
+            ("Every outbound payment calls a sanctions screen <b>before</b> the transfer is signed", 20),
+            ("A match <b>halts</b> the payment automatically — it does not just log a warning", 20),
+            ("If the screening call errors or times out, the agent <b>fails closed</b> and stops", 15),
+            ("You store the screening response for every payment — <b>screen_id and screened_at</b>", 15),
+            ("Recurring counterparties are <b>re-screened</b>, not screened once and cached forever", 10),
+            ("You screen the <b>destination jurisdiction</b>, not only the wallet or name", 8),
+            ("A <b>human is alerted</b> when a payment is blocked", 7),
+            ("You have a written procedure for a true positive — freeze, then <b>report to OFAC</b>", 5),
+        ]
+        rows = "".join(
+            '<div class="ck"><input type="checkbox" id="cx%d" data-w="%d">'
+            '<label for="cx%d">%s</label></div>' % (n, w, n, text)
+            for n, (text, w) in enumerate(items)
+        )
+        markup = (
+            '<div class="tk">'
+            '<h3>Is your agent actually compliant?</h3>'
+            '<p class="tk-sub">Eight controls that decide whether an autonomous payment path is defensible. '
+            'Tick what is true today. Nothing is sent anywhere — this scores in your browser.</p>'
+            + rows +
+            '<div class="tk-row" style="margin-top:16px">'
+            '<button type="button" class="tk-go" id="cm-b">Score my agent</button></div>'
+            '<div class="tk-out" id="cm-o"></div>'
+            '</div>'
+        )
+        script = (
+            '<script>(function(){' + helpers +
+            'var b=document.getElementById("cm-b"),o=document.getElementById("cm-o");'
+            'if(!b)return;'
+            'b.addEventListener("click",function(){'
+            'var boxes=[].slice.call(document.querySelectorAll(".tk .ck input[type=checkbox]"));'
+            'var score=0,gaps=[];'
+            'boxes.forEach(function(x){var w=parseInt(x.getAttribute("data-w"),10)||0;'
+            'if(x.checked){score+=w}else{var l=document.querySelector("label[for="+x.id+"]");'
+            'if(l)gaps.push(l.textContent)}});'
+            '_clr(o);_track("tool_used",{tool:"compliance-checker",score:score});'
+            'var band=score>=90?"ok":(score>=60?"warn":"bad");'
+            'var verdict=score>=90?"Defensible":(score>=60?"Partial — real gaps":"Not defensible");'
+            'var c=_el("div","tk-card "+band);'
+            'var s=_el("p","score "+("tk-v "+band),String(score)+" / 100");c.appendChild(s);'
+            'c.appendChild(_el("p","tk-v "+band,verdict));'
+            'c.appendChild(_el("p","tk-note",score>=90'
+            '?"Every control that matters is in place. Keep the stored responses — they are what turns '
+            '“we screen” into something you can evidence."'
+            ':"OFAC applies strict liability: intent is irrelevant, and the operator is liable, not the agent. '
+            "A documented screening programme is an explicit mitigating factor under OFAC's Enforcement "
+            'Guidelines — the gaps below are what you would be asked about."));'
+            'if(gaps.length){c.appendChild(_el("p","tk-note","Missing:"));'
+            'gaps.forEach(function(g){c.appendChild(_el("div","tk-m",g))})}'
+            'o.appendChild(c)});})();</script>'
+        )
+        return css + markup + script
+
     def _free_tool_page(self, slug):
         """pSEO Round 14: Additional free tool landing pages."""
         TOOLS = {
@@ -10859,12 +11147,16 @@ compute();
         if not t:
             return _json(self, 404, {"error": "not found"})
         today = "2026-07-13"
-        body = f"""<p class="note">By <span class="author" rel="author">sanctionsai.dev team</span> &middot; <time datetime="{today}">{today}</time></p>
+        # The tool goes ABOVE the prose. Someone who searched for "ofac name
+        # checker" came to use one, not to read about one.
+        widget = self._free_tool_widget(slug)
+        body = f"""<p class="note">By <span class="author" rel="author">Maryan</span> &middot; <time datetime="{today}">{today}</time></p>
 <h2>{t["h1"]}</h2>
 <p>{t["desc"]}</p>
-<h3>Try it now</h3>
+{widget}
+<h3>The same check from your terminal</h3>
 <pre><code>curl "https://sanctionsai.dev/sanctions?wallet=0x098B716B8Aaf21512996dC57EB0615e2383E2f96"</code></pre>
-<p class="note">Free tier: 5 checks/day, no API key. Real OFAC data, refreshed daily.</p>
+<p class="note">No API key, no signup. Real OFAC data, refreshed daily.</p>
 <h2>What this tool checks</h2>
 <ul>
 <li><strong>947 OFAC-sanctioned crypto wallets</strong> across Ethereum, Bitcoin, Solana, and Tron</li>
