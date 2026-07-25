@@ -19,12 +19,22 @@ import json
 import os
 import re
 import time
+import uuid
 from collections import defaultdict, deque
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import urlparse, parse_qs
 from . import core
 from . import billing
 from . import x402
+
+
+def _iso_utc(ts):
+    """Epoch seconds -> RFC 3339 UTC string, or None. Used for screening provenance."""
+    if not ts:
+        return None
+    import datetime as _dt
+    return _dt.datetime.fromtimestamp(float(ts), _dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+
 
 # ─── Hosted-mode config (env-driven; all optional, off by default) ──────────
 # Self-host default: no auth, no rate limit, no audit log - identical behaviour
@@ -598,6 +608,13 @@ tbody tr:last-child td{border-bottom:0}
 
 /* ── cards & CTAs ───────────────────────────────────────────────── */
 .cta-box{background:linear-gradient(180deg,var(--bg-1),var(--bg));border:1px solid var(--line);border-radius:var(--r-l);padding:clamp(24px,5vw,40px);text-align:center;margin:32px auto;max-width:680px}
+/* content upgrade (Secret 14) — inline capture at the end of content pages */
+#content-upgrade .cu-form{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:18px auto 0;max-width:440px}
+#content-upgrade .cu-form input[type=email]{flex:1 1 220px;min-width:0;min-height:44px;padding:10px 14px;border-radius:var(--r-s,10px);border:1px solid var(--line);background:var(--bg);color:var(--fg);font:inherit}
+#content-upgrade .cu-form input[type=email]:focus-visible{outline:2px solid var(--teal2,#00d4aa);outline-offset:1px}
+#content-upgrade .cu-form .btn{margin:0;flex:0 0 auto}
+#content-upgrade .note{margin-top:12px;font-size:.8rem}
+@media (max-width:520px){#content-upgrade .cu-form{flex-direction:column}#content-upgrade .cu-form .btn{width:100%}}
 .cta-box :is(h2,h3){margin:0 0 10px}
 .cta-box p{color:var(--fg-2);margin:0 auto 20px}
 .cta-box .btn{margin:6px}
@@ -672,7 +689,11 @@ _NAV = (
     '<a class="skip" href="#main">Skip to content</a>'
     '<nav aria-label="Primary">'
     '<div class="nav-in">'
-    '<a class="logo" href="/">agent<span>mail</span></a>'
+    # The homepage and the four standalone templates already brand as
+    # "SanctionsAI"; this nav said "agentmail" on the other ~245 pages, so the
+    # logo changed identity as you moved through the site. Unified on the
+    # domain name. Product copy ("the agentmail API") is left as written.
+    '<a class="logo" href="/" aria-label="SanctionsAI home">Sanctions<span>AI</span></a>'
     '<button class="nav-toggle" id="navT" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="navM">'
     '<svg class="i-m" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">'
     '<path d="M3 6h18M3 12h18M3 18h18"/></svg>'
@@ -783,12 +804,54 @@ _FOOTER = (
     'inputmode="email" placeholder="your@email.com" required>'
     '<button type="submit" class="btn btn-primary">Subscribe</button>'
     '</form></section>'
-    '<p class="ft-legal">agentmail — OFAC sanctions screening for AI agents. '
+    '<p class="ft-legal">SanctionsAI — OFAC sanctions screening for AI agents. '
     'MIT licensed. Data from the '
     '<a href="https://sanctionslist.ofac.treas.gov/" rel="noopener">US Treasury</a> '
     'and <a href="https://github.com/vile/ofac-sdn-list" rel="noopener">vile/ofac-sdn-list</a>.</p>'
     '</div></footer>'
 )
+
+
+# ─── Content upgrade ────────────────────────────────────────────────────────
+# DotCom Secrets Secret 14. The site's biggest asset is ~250 content pages that
+# earn real search impressions, and until now every one of them converted into
+# nothing: the only capture anywhere on them was the footer newsletter box,
+# offering "OFAC enforcement alerts" — an offer with no relationship to what the
+# reader is on the page for.
+#
+# This is the contextual version: one offer, tied to the reason they are here,
+# placed at the end of the content where the reader has just finished. It is
+# injected at serve time into both page shells (_shell_static for the generated
+# pSEO files, _page for everything dynamic) so the generators stay untouched
+# and no page can be missed by forgetting to paste it in.
+#
+# The playbook link is deliberately first and ungated — a developer who reads it
+# is worth more than an address collected by holding it hostage, and the email
+# field is there for the ones who want it kept.
+_CONTENT_UPGRADE = (
+    '<aside class="cta-box" id="content-upgrade" aria-labelledby="cu-h">'
+    '<h2 id="cu-h">Before you wire this into an agent</h2>'
+    '<p>The Agent Compliance Playbook: seven patterns for putting OFAC screening on a payment '
+    'path &mdash; including the two mistakes that quietly switch it off. Runnable code, no gate.</p>'
+    '<a class="btn btn-primary" href="/playbook">Read the playbook</a>'
+    '<a class="btn btn-ghost" href="/tools/wallet-checker">Screen a wallet free</a>'
+    '<form class="cu-form" action="/subscribe" method="post">'
+    '<label class="vh" for="cu-email">Email address</label>'
+    '<input id="cu-email" type="email" name="email" autocomplete="email" inputmode="email" '
+    'placeholder="your@email.com" required>'
+    '<input type="hidden" name="source" value="content_upgrade">'
+    '<button type="submit" class="btn btn-ghost">Email it to me</button>'
+    '</form>'
+    '<p class="note">5 checks/day free, no signup, no card. Unsubscribe any time.</p>'
+    '</aside>'
+)
+
+# Funnel pages already carry their own close; a second CTA on them competes with
+# the one that is supposed to convert. Keyed on canonical path.
+_NO_UPGRADE = {
+    "/", "/pricing", "/playbook", "/guarantee", "/start", "/squeeze",
+    "/tripwire", "/tools/wallet-checker", "/contact", "/privacy", "/terms",
+}
 
 
 # ─── Static pSEO pages ──────────────────────────────────────────────────────
@@ -888,7 +951,7 @@ def _shell_static(page: str) -> str:
     else:
         page = page.replace("<body>", "<head>" + shell_head + "</head><body>", 1)
     page = page.replace("<body>", "<body>" + _NAV + '<main id="main" class="prose">', 1)
-    page = page.replace("</body>", "</main>" + _FOOTER + "</body>", 1)
+    page = page.replace("</body>", "</main>" + _CONTENT_UPGRADE + _FOOTER + "</body>", 1)
     return _wrap_tables(page)
 
 
@@ -898,7 +961,7 @@ _VERTICALS = {
         "title": "OFAC Sanctions Screening for Fintech AI Agents",
         "desc": "Add OFAC sanctions screening to fintech AI agents. Screen counterparties, wallets, and names before any regulated transaction.",
         "p1": "Regulated financial institutions deploying AI agents must screen every counterparty against OFAC sanctions lists before funds move. agentmail gives fintech agents a single API call that checks names, crypto wallets, and countries against the full OFAC Specially Designated Nationals list in real time.",
-        "p2": "For fintechs the cost of a miss is severe - civil penalties can reach $300,000 or twice the transaction value per violation. Automating payments without screening transfers that liability straight onto your institution. agentmail closes the gap between autonomous execution and regulatory obligation, leaving a defensible audit trail.",
+        "p2": "For fintechs the cost of a miss is severe - civil penalties reach $377,700 or twice the transaction value per violation. Automating payments without screening transfers that liability straight onto your institution. agentmail closes the gap between autonomous execution and regulatory obligation, leaving a defensible audit trail.",
         "p3": "Integrate sanctions checks into your loan-approval, onboarding, and payment-routing agents via MCP, HTTP, or CLI. The free tier covers 5 checks per day per day with no signup, so you can validate the workflow before scaling to a paid plan.",
     },
     "crypto": {
@@ -1158,7 +1221,7 @@ _VERTICALS = {
         "title": "OFAC Sanctions Screening for Cross-Border Payments",
         "desc": "Screen counterparties, jurisdictions, and wallets before cross-border transfers — agent-native compliance under 100ms.",
         "p1": "Cross-border payment agents handle transfers across jurisdictions and regulatory regimes. Every transaction touches counterparties that must be screened against OFAC sanctions.",
-        "p2": "Cross-border payments face the highest sanctions risk because they intersect with embargoed jurisdictions, sanctioned banks, and designated individuals. A single wire can result in civil penalties up to $300,000.",
+        "p2": "Cross-border payments face the highest sanctions risk because they intersect with embargoed jurisdictions, sanctioned banks, and designated individuals. A single wire can result in civil penalties up to $377,700.",
         "p3": "Add sanctions checking to your payment-routing agent with a single API call. Free tier: 5 checks/day. Production from $19/mo.",
     },
     "stablecoin-issuers": {
@@ -1977,7 +2040,7 @@ _BLOG_POSTS = {
         "html": """<p>The payment rails caught up to agents fast. x402, Coinbase AgentKit, OpenAI's Stripe ACP, and AP2 all let an AI agent send real money to a counterparty with little or no human review. What didn't catch up is compliance: the moment an agent pays a sanctioned wallet or a counterparty in an embargoed region, the legal liability lands on whoever deployed the agent.</p>
 <h2>The 30-second OFAC primer</h2>
 <p>OFAC (the US Treasury's Office of Foreign Assets Control) maintains the Specially Designated Nationals list - roughly 19,000 individuals and entities, plus 947 crypto wallet addresses and 16 comprehensively embargoed jurisdictions. Transacting with anyone on the list is prohibited, and the standard is strict liability: it generally does not matter whether you knew.</p>
-<p>Civil penalties can reach $300,000 or twice the transaction value per violation, whichever is higher. For an agent executing hundreds of payments a day, the math gets bad fast.</p>
+<p>Civil penalties reach $377,700 or twice the transaction value per violation, whichever is higher. For an agent executing hundreds of payments a day, the math gets bad fast.</p>
 <h2>Why agents make it worse</h2>
 <p>A human payment has a person who can pause and ask "wait, who is this?" An autonomous agent has a payment function. If that function does not include a sanctions check, the agent will happily route USDC to a wallet on the SDN list - and it will do it at 3am, repeatedly, until someone notices.</p>
 <h2>The fix is one API call</h2>
@@ -2020,7 +2083,7 @@ _BLOG_POSTS = {
     },
 
     "ofac-penalties-for-agents": {
-        "title": "What Does an OFAC Violation Cost Your AI Agent? ($330K+)",
+        "title": "What Does an OFAC Violation Cost Your AI Agent? ($377.7K)",
         "date": "2026-06-15",
         "desc": "Detailed breakdown of what happens financially, legally, and operationally when an AI agent pays an OFAC-sanctioned counterparty.",
         "html": """<p>The short answer: a single civil penalty for a standard OFAC violation is $377,700 (2025 adjusted amount). But that is just the headline number. The real cost when an autonomous agent triggers a sanctions violation includes legal defense, forensic investigation, operational disruption, settlement negotiations, and potentially criminal referral.</p><h2>The base penalty calculation</h2><p>OFAC penalties are calculated per violation. A violation is each occurrence. If your agent processes 10 payments to the same sanctioned wallet, that is potentially 10 separate violations. The statutory maximum civil penalty for each violation is the greater of $377,700 or twice the transaction value. For willful violations, criminal penalties can reach $1,000,000 and 20 years imprisonment.</p><h2>What OFAC considers in penalty amounts</h2><p>Under OFACs Enforcement Guidelines, the final penalty depends on: (1) whether the violation was voluntarily disclosed, (2) whether a compliance program existed at the time, (3) the sophistication of the violator, (4) the harm to sanctions program objectives, and (5) cooperation throughout the investigation. Having a documented pre-payment screening system like agentmail in place is a significant mitigating factor.</p><h2>The agent-specific risk factors</h2><p>Autonomous agents introduce unique risk factors: velocity (an agent can repeat a violation hundreds of times before detection), opacity (agent logs can be sparse without audit infrastructure), and scope (a deployed agent may interact with jurisdictions and counterparties its operator never anticipated). OFAC has not yet issued specific agent guidance, but existing strict liability precedent applies directly.</p><h2>How to protect your agents</h2><p>The compliance bar is surprisingly low for the protection it provides: a single API call before every payment. Screen the recipient wallet, name, and jurisdiction. If flagged, halt the transaction and alert a human. Log every screen with a timestamp. That is the minimum viable compliance program, and it costs less than $19/month.</p><pre><code>curl "https://sanctionsai.dev/sanctions?wallet=0x098B716B8Aaf21512996dC57EB0615e2383E2f96"</code></pre><p>Free tier: 5 checks/day, no API key. Production from $19/mo.</p>""",
@@ -2250,6 +2313,10 @@ class Handler(BaseHTTPRequestHandler):
             "/sanctions-screening-best-practices": "/learn/sanctions-screening-best-practices",
             "/ofac-compliance-guide": "/learn/ofac-compliance-guide",
             "/crypto-sanctions-risk": "/learn/crypto-sanctions-risk",
+            # /learn was a meta-refresh page. Google treats meta-refresh as a
+            # weak redirect signal and can index the intermediary; a 301 is
+            # unambiguous and passes the link equity the footer sends here.
+            "/learn": "/learn/sanctions-glossary",
             "/compare": "/vs/chainalysis",
             "/compare/chainalysis": "/vs/chainalysis",
             "/compare/elliptic": "/vs/elliptic",
@@ -2312,11 +2379,13 @@ Allow: /openapi.json
 Allow: /.well-known/
 Allow: /feed.xml
 Allow: /rss.xml
-# Google Discover + Visual Search directives (2026-07-18)
-# max-image-preview:large is THE gatekeeper for Google Discover (800M users)
-max-image-preview:large
-max-video-preview:-1
-max-snippet:-1
+# Google Discover + Visual Search directives are NOT robots.txt syntax.
+# max-image-preview / max-video-preview / max-snippet are X-Robots-Tag and
+# meta-robots directives only; as robots.txt lines they parse as "Unknown
+# directive" (Lighthouse marks robots.txt invalid, which was the single reason
+# the SEO category sat at 92). They are already served correctly on every
+# response via the X-Robots-Tag header in _send — that is the load-bearing
+# copy, so these lines were liability with no upside.
 # Only block checkout and auth pages
 Disallow: /checkout/
 Disallow: /dashboard
@@ -3391,6 +3460,31 @@ License: https://creativecommons.org/licenses/by/4.0/
             result = core.sanctions_check(
                 name=subject["name"], wallet=subject["wallet"], country=subject["country"])
             _screen_ms = round((time.perf_counter() - _screen_start) * 1000)
+            # Provenance for the Screening Guarantee (/guarantee, Terms 5a).
+            #
+            # The guarantee turns on whether the counterparty was on the SDN list
+            # "at the timestamp on our response", and the claim process asks the
+            # customer to send that response back. The body carried no timestamp
+            # at all -- only the HTTP Date header, which every client discards --
+            # so the promise was carved out of the liability disclaimer and still
+            # impossible for anyone to evidence. A guarantee nobody can claim is
+            # the same defect as one the terms cancel, one layer down.
+            #
+            # These three fields are exactly what a claim is checked against:
+            # when we answered, which snapshot of the list we answered from, and
+            # an id both sides can quote.
+            result["screened_at"] = _iso_utc(time.time())
+            result["screen_id"] = uuid.uuid4().hex[:16]
+            try:
+                _cs = core.compliance_status()
+                result["list_version"] = {
+                    "source": _cs.get("detail", ""),
+                    "fetched_at": _iso_utc(_cs.get("lists_fetched_at")),
+                    "wallets": _cs.get("wallets_tracked"),
+                    "names": _cs.get("names_tracked"),
+                }
+            except Exception:
+                pass
             # Record screening result in audit log for the dashboard WRAP layer
             _audit({
                 "action": "sanctions_check_flagged" if result.get("matches") else "sanctions_check_clean",
@@ -3727,7 +3821,14 @@ License: https://creativecommons.org/licenses/by/4.0/
         else:
             self.send_header("Content-Length", str(len(body)))
         self.send_header("X-Content-Type-Options", "nosniff")
-        self.send_header("Content-Security-Policy", "default-src 'self'; script-src 'self' 'unsafe-inline' https://eu.i.posthog.com https://js.stripe.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self' https://eu.i.posthog.com https://api.stripe.com; frame-ancestors 'none'; frame-src https://js.stripe.com https://hooks.stripe.com; object-src 'none'; base-uri 'self'; require-trusted-types-for 'script'")
+        # eu-assets.i.posthog.com is a SECOND PostHog origin, not a mirror of
+        # eu.i.posthog.com: array.js loads from eu.i.posthog.com (allowed) but
+        # then pulls /array/<token>/config.js and /config from eu-assets. With
+        # eu-assets missing, Chrome refused both, so remote config, feature
+        # flags, surveys and autocapture config were dead sitewide while
+        # pageviews still arrived — the failure looked like "analytics works".
+        # Same class of bug as the GitDealFlow/ChurnLens trusted-types CSP fix.
+        self.send_header("Content-Security-Policy", "default-src 'self'; script-src 'self' 'unsafe-inline' https://eu.i.posthog.com https://eu-assets.i.posthog.com https://js.stripe.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self' https://eu.i.posthog.com https://eu-assets.i.posthog.com https://api.stripe.com; frame-ancestors 'none'; frame-src https://js.stripe.com https://hooks.stripe.com; object-src 'none'; base-uri 'self'; require-trusted-types-for 'script'")
         self.send_header("Permissions-Policy", "camera=(), microphone=(), geolocation=(), payment=(), usb=(), browsing-topics=(), interest-cohort=()")
         self.send_header("X-Frame-Options", "SAMEORIGIN")
         self.send_header("Referrer-Policy", "strict-origin-when-cross-origin")
@@ -3768,7 +3869,7 @@ License: https://creativecommons.org/licenses/by/4.0/
         self.end_headers()
         self.wfile.write(png_bytes)
 
-    def _serve_file_content(self, filename: str, content_type: str = "application/octet-stream"):
+    def _serve_file_content(self, filename: str, content_type: str = "application/octet-stream", cache_max_age: int = 300):
         """Serve a static file from the app directory (for sitemaps, assetlinks, etc.).
 
         A missing file returns a real 404. It used to return 200 with the body
@@ -3794,9 +3895,36 @@ License: https://creativecommons.org/licenses/by/4.0/
                 continue
         if body is None:
             return _json(self, 404, {"error": "not found"})
+        # Static HTML under public/ (the /best, /checklists, /countries,
+        # /answers … hubs) shipped without site nav or footer, so they were
+        # dead ends. Give them the same shell as every other page — except
+        # documents meant to be embedded in someone else's iframe, which must
+        # stay standalone.
+        _embeddable = any(k in filename for k in ("widget", "badge", "embed"))
+        if content_type.startswith("text/html") and not _embeddable:
+            body = _shell_static(body.decode("utf-8", "replace")).encode("utf-8")
+        # Static assets shipped with NO Cache-Control, ETag or Last-Modified,
+        # so every navigation refetched /ux.css and /ux.js in full — Lighthouse
+        # measured cacheLifetimeMs 0, cacheHitProbability 0 on both.
+        # A content ETag lets a repeat visit settle for a 304 instead of a
+        # 14 KB re-download. Deliberately NOT `immutable` with a year TTL:
+        # these filenames are not fingerprinted, and an immutable unversioned
+        # asset is how a hand-edited file keeps serving its stale body to
+        # crawlers long after the deploy that changed it.
+        import hashlib as _hashlib
+        etag = '"%s"' % _hashlib.md5(body).hexdigest()[:16]
+        if self.headers.get("If-None-Match") == etag:
+            self.send_response(304)
+            self.send_header("ETag", etag)
+            self.send_header("Cache-Control", f"public, max-age={cache_max_age}")
+            self.end_headers()
+            return
         self.send_response(200)
         self.send_header("Content-Type", f"{content_type}; charset=utf-8")
         self.send_header("Content-Length", str(len(body)))
+        self.send_header("Cache-Control", f"public, max-age={cache_max_age}")
+        self.send_header("ETag", etag)
+        self.send_header("X-Content-Type-Options", "nosniff")
         self.end_headers()
         self.wfile.write(body)
 
@@ -4129,7 +4257,7 @@ License: https://creativecommons.org/licenses/by/4.0/
         ("/for/real-estate", "monthly", "0.7", "Real Estate"),
         ("/compare/charmverse", "monthly", "0.7", "Charmverse"),
         ("/blog/openai-agents-sdk-compliance", "monthly", "0.7", "Openai Agents Sdk Compliance"),
-        ("/blog/ofac-penalties-for-agents", "monthly", "0.7", "What Does an OFAC Violation Cost Your AI Agent? ($330K+)"),
+        ("/blog/ofac-penalties-for-agents", "monthly", "0.7", "What Does an OFAC Violation Cost Your AI Agent? ($377.7K)"),
         ("/blog/how-to-screen-wallet-agent", "monthly", "0.7", "How to Screen a Crypto Wallet Before Your AI Agent Pays"),
         ("/blog/x402-sanctions-architecture", "monthly", "0.7", "x402 + Sanctions: Architecture Guide for Compliant Agent Payments"),
         ("/blog/agent-compliance-checklist", "monthly", "0.7", "The AI Agent Compliance Checklist (7 Steps Before You Ship)"),
@@ -4336,7 +4464,8 @@ License: https://creativecommons.org/licenses/by/4.0/
         # but it is the page that consolidates its whole cluster — the last
         # URL that should be left out.
         ("/blog", "weekly", "0.7", "OFAC compliance blog for AI agent builders"),
-        ("/learn", "weekly", "0.8", "Sanctions and AI-agent compliance glossary"),
+        # /learn is a redirect to /learn/sanctions-glossary, which is already
+        # listed above — a sitemap lists destinations, not redirects.
         ("/countries", "weekly", "0.7", "OFAC sanctions by country"),
         ("/alternatives-to", "weekly", "0.7", "Alternatives to the major sanctions screening vendors"),
         ("/best", "weekly", "0.7", "Best OFAC screening and AML compliance tools"),
@@ -4593,7 +4722,7 @@ The server exposes four tools (call by these exact names):
 <meta property="og:title" content="OFAC Sanctions Check for AI Agents | $0.05/screen">
 <meta property="og:description" content="OFAC sanctions screening for x402 payment agents. Screen every counterparty before your agent pays — 947 wallets, 19,218 names, under 100ms.">
 <meta property="og:type" content="website">
-<meta property="og:site_name" content="agentmail">
+<meta property="og:site_name" content="SanctionsAI">
 <meta property="og:url" content="https://sanctionsai.dev/">
 <meta property="og:image" content="https://sanctionsai.dev/og.png">
 <meta name="twitter:card" content="summary_large_image">
@@ -4802,7 +4931,7 @@ nav .burger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
 
 /* ---------- hero ---------- */
 .hero{position:relative;padding:88px 0 56px;text-align:center;overflow:hidden}
-.hero .bg{position:absolute;inset:0;pointer-events:none}
+.hero .bg{position:absolute;inset:0;pointer-events:none;overflow:hidden}
 .hero .bg .glow1{position:absolute;top:-220px;left:50%;transform:translateX(-50%);width:900px;height:620px;background:radial-gradient(ellipse at center,rgba(0,212,170,.13) 0%,rgba(0,212,170,.04) 35%,transparent 70%);filter:blur(8px)}
 .hero .bg .grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);background-size:64px 64px;-webkit-mask-image:radial-gradient(ellipse 70% 60% at 50% 30%,#000 30%,transparent 75%);mask-image:radial-gradient(ellipse 70% 60% at 50% 30%,#000 30%,transparent 75%)}
 .hero-inner{position:relative;z-index:2}
@@ -5294,8 +5423,8 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
       <div style="color:var(--t3);font-size:.76rem;line-height:1.4;margin-top:2px">licensed &mdash; self-host any time</div>
     </div>
     <div style="background:var(--surf);border:1px solid var(--line);border-radius:12px;padding:16px 18px;text-align:center">
-      <div style="color:var(--teal);font-weight:800;font-size:1.3rem;letter-spacing:-.02em">30-day</div>
-      <div style="color:var(--t3);font-size:.76rem;line-height:1.4;margin-top:2px">money-back guarantee on paid plans</div>
+      <div style="color:var(--teal);font-weight:800;font-size:1.3rem;letter-spacing:-.02em">$10K</div>
+      <div style="color:var(--t3);font-size:.76rem;line-height:1.4;margin-top:2px"><a href="/guarantee" style="color:inherit">screening guarantee</a> &mdash; in our Terms, not just our copy</div>
     </div>
   </div>
 </div></section>
@@ -5395,7 +5524,7 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
 <section class="sec" id="pricing" style="padding-top:0"><div class="wrap">
   <div class="sec-head reveal"><span class="eyebrow"><span class="dot"></span> Pricing</span>
     <h2>Free to start. $19 in production.</h2>
-    <p class="riskline">OFAC penalties start at <b>$377,700 per violation</b>. agentmail starts at $0.</p>
+    <p class="riskline">OFAC penalties reach <b>$377,700 per violation</b>. agentmail starts at $0.</p>
   </div>
   <div class="pcwrap">
     <div class="pcard reveal">
@@ -5423,7 +5552,7 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
         <li><span class="ck">&#10003;</span> Priority support</li>
       </ul>
       <a href="/checkout/dev" class="btn btn-primary">Get your API key &rarr;</a>
-      <p class="guar">First month free. Cancel anytime, 30-day money back. Every screen returns a timestamped compliance receipt &mdash; the documented screening OFAC counts as a mitigating factor.</p>
+      <p class="guar">First month free. Cancel anytime, 30-day money back. If we call a counterparty clean and it was on the SDN list at that timestamp, we cover the first <b class="red">$10,000</b> of your legal fees &mdash; written into <a href="/terms">Terms 5a</a>, scope and exclusions at <a href="/guarantee">/guarantee</a>.</p>
     </div>
     <div class="pcard reveal">
       <h3>Pro</h3>
@@ -5437,7 +5566,7 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
         <li><span class="ck">&#10003;</span> Custom risk rules</li>
       </ul>
       <a href="/checkout/team" class="btn btn-ghost">Get your API key &rarr;</a>
-      <p class="guar">Same 30-day money-back guarantee. Priority SLA. Custom risk rules for production teams.</p>
+      <p class="guar">Same <a href="/guarantee">$10,000 screening guarantee</a> and 30-day money back. Priority SLA. Custom risk rules for production teams.</p>
     </div>
     <!-- Compliance Pro tier removed — not yet available. Contact us for enterprise pricing. -->
   </div>
@@ -5982,7 +6111,7 @@ nav .burger span{width:17px;height:2px;background:#fff;border-radius:2px;transit
 
 /* hero */
 .hero{position:relative;padding:90px 0 50px;text-align:center;overflow:hidden}
-.hero .bg{position:absolute;inset:0;pointer-events:none}
+.hero .bg{position:absolute;inset:0;pointer-events:none;overflow:hidden}
 .hero .bg .glow1{position:absolute;top:-220px;left:50%;transform:translateX(-50%);width:880px;height:600px;background:radial-gradient(ellipse at center,rgba(0,212,170,.14) 0%,rgba(0,212,170,.04) 35%,transparent 70%);filter:blur(8px)}
 .hero .bg .grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);background-size:64px 64px;-webkit-mask-image:radial-gradient(ellipse 70% 60% at 50% 30%,#000 30%,transparent 75%);mask-image:radial-gradient(ellipse 70% 60% at 50% 30%,#000 30%,transparent 75%)}
 .hero-inner{position:relative;z-index:2}
@@ -6088,7 +6217,11 @@ footer .bottom{margin-top:40px;padding-top:24px;border-top:1px solid var(--line)
   .sec{padding:64px 0}
   .hero-card{padding:30px 22px 26px}
   .hero-card .amt{font-size:2.7rem}
-  .step{flex-direction:column;gap:12px}
+  /* Switching .step to a column keeps align-items:flex-start from the row
+     layout, which sizes children to max-content on the cross axis — .step .c
+     was 503px inside a 375px screen and pushed the document to 807px.
+     `flex:1;min-width:0` only constrains the main axis, so it did not help. */
+  .step{flex-direction:column;gap:12px;align-items:stretch}
   .final .panel{padding:40px 22px}
 }
 @media(max-width:420px){.hero h1{font-size:1.9rem}.wrap{padding:0 18px}}
@@ -6188,7 +6321,7 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
       </div>
     </div>
     <p class="per" style="margin:0 0 18px">Paid in USDC on Base &middot; No subscription &middot; No API key &middot; No signup</p>
-    <div class="guar"><b>Audit-trail guarantee</b> &mdash; every screen returns a timestamped, exportable compliance receipt. If OFAC ever asks <span class="g">what you checked and when</span>, you have the answer.</div>
+    <div class="guar"><b>Every screen returns a timestamped compliance receipt</b> &mdash; so when OFAC asks <span class="g">what you checked and when</span>, you have the answer. Paid plans add the <a href="/guarantee">$10,000 screening guarantee</a>.</div>
     <div class="cta-wrap">
       <a href="/tools/wallet-checker" class="btn btn-primary btn-lg">Run a check now &rarr;</a>
       <a href="https://github.com/kindrat86/agentmail" class="btn btn-ghost btn-lg">Install MCP</a>
@@ -6207,7 +6340,7 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
     <p class="by"><b>Maryan</b> &mdash; founder, agentmail</p>
   </div>
   <div class="narr reveal"><p>That agent did exactly what it was told. It was good at paying. It was not built to know the counterparty was sanctioned &mdash; and the rail it used (x402) never asked. That gap is why agentmail exists, and why it lives <em>between your agent and the money</em>.</p></div>
-  <div class="callout reveal"><strong>Before your agent moves money, it screens the destination.</strong> One call. Five cents. The alternative is a $356K fine that lands on you for a decision your agent made at 3 AM.</div>
+  <div class="callout reveal"><strong>Before your agent moves money, it screens the destination.</strong> One call. Five cents. The alternative is a $377.7K fine that lands on you for a decision your agent made at 3 AM.</div>
 </div></section>
 
 <!-- FLOW -->
@@ -6321,7 +6454,7 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
     <div class="q">&ldquo;I don&rsquo;t have quotes from real developers yet &mdash; we just shipped. But the compliance layer speaks the protocol, the response is under 100ms, and $0.05/check costs less than a coffee. That&rsquo;s not a sales claim, it&rsquo;s the API response.&rdquo;</div>
     <div class="who">
       <div class="ava">M</div>
-      <div class="meta"><b>Maryan</b><span>Founder, agentmail &mdash; the person who built it because test #47 almost cost $356K</span></div>
+      <div class="meta"><b>Maryan</b><span>Founder, agentmail &mdash; the person who built it because test #47 almost cost $377.7K</span></div>
     </div>
   </div>
   <div style="text-align:center;margin-top:30px"><p style="color:var(--t3);font-size:.9rem"><i>Using agentmail in production? <a href="mailto:hello@sanctionsai.dev" style="color:var(--teal)">Share your story</a> &mdash; we will feature real quotes here.</i></p></div>
@@ -6419,7 +6552,7 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
 
         body = (
             '<section style="text-align:center;border-top:none">'
-            '<h1>One OFAC fine starts at $377,700. Screening starts at $0.</h1>'
+            '<h1>One OFAC fine reaches $377,700. Screening starts at $0.</h1>'
             '<p class="lead" style="max-width:640px;margin:0 auto">Run it free until your agent is real. '
             'Pay when it is moving money you would mind losing.</p>'
             '</section>'
@@ -6595,7 +6728,7 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
             '<meta property="og:title" content="' + t + '">',
             '<meta property="og:description" content="' + d + '">',
             '<meta property="og:type" content="website">',
-            '<meta property="og:site_name" content="agentmail">',
+            '<meta property="og:site_name" content="SanctionsAI">',
             '<meta property="og:url" content="' + url + '">',
             '<meta property="og:image" content="' + _SITE + '/og.png">',
             '<meta name="twitter:card" content="summary_large_image">',
@@ -6606,9 +6739,13 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
         ]
         if extra_head:
             parts.append(extra_head)
+        # Content upgrade (Secret 14) on content pages only — funnel pages in
+        # _NO_UPGRADE already close for themselves, and a competing CTA there
+        # costs more than it collects.
+        upgrade = "" if canonical.rstrip("/") in _NO_UPGRADE or canonical == "/" else _CONTENT_UPGRADE
         parts += ['</head>', '<body>', _NAV,
                   '<main id="main">', _wrap_tables(body), '</main>',
-                  _FOOTER, '</body></html>']
+                  upgrade, _FOOTER, '</body></html>']
         return self._send_html(status, "\n".join(parts))
 
     # ─── FAQ ────────────────────────────────────────────────────────────
@@ -7685,10 +7822,10 @@ document.getElementById("wallet").addEventListener("keydown",function(e){if(e.ke
             '<pre style="background:#0c0d0f;border:1px solid var(--line);border-radius:10px;padding:16px;font-size:.82rem;overflow-x:auto;color:#cfd3d8">1/ Your AI agent can send USDC at 3 AM now.\n\nx402, Coinbase AgentKit, OpenAI ACP — all let agents pay autonomously.\n\nBut none of them check if the recipient is on the OFAC sanctions list.\n\nThe fine for hitting a sanctioned wallet: $377,700 per violation.\n\n2/ I found a tool that fixes this in one curl call:\n\nsanctionsai.dev/?ref=[YOURID]\n\nScreen every counterparty before your agent pays. Under 100ms. Free tier.\n\n3/ How it works:\n- 947 OFAC-listed crypto wallets\n- 19,218 SDN names\n- 16 jurisdictions\n- Hourly sync\n\nOne HTTP call. No SDK lock-in.\n\n4/ MCP support too — native in Claude Code and Cursor.\n\npip install sanctions-mcp\n\nYour coding agent can screen wallets as a tool call.\n\n5/ If you are building payment agents, you need this before you ship:\n\nsanctionsai.dev/?ref=[YOURID]\n\nFree to start. $19/mo in production.</pre>'
 
             '<h3>2. Hacker News — Show HN</h3>'
-            '<pre style="background:#0c0d0f;border:1px solid var(--line);border-radius:10px;padding:16px;font-size:.82rem;overflow-x:auto;color:#cfd3d8">Show HN: OFAC sanctions screening for AI payment agents ($0.05/check)\n\nI built a one-curl-call sanctions check for AI agents that send money.\n\nThe problem: x402, AP2, ACP, and Coinbase AgentKit all let agents pay autonomously — but none of them screen recipients against the OFAC SDN list. If an agent pays a sanctioned wallet, the operator is liable under strict liability ($356K/violation).\n\nThe fix: one HTTP call before the payment. 947 OFAC crypto wallets, 19K names, 16 jurisdictions. Under 100ms.\n\nhttps://sanctionsai.dev/?ref=[YOURID]\n\nMIT licensed, self-hostable, MCP + HTTP + CLI.</pre>'
+            '<pre style="background:#0c0d0f;border:1px solid var(--line);border-radius:10px;padding:16px;font-size:.82rem;overflow-x:auto;color:#cfd3d8">Show HN: OFAC sanctions screening for AI payment agents ($0.05/check)\n\nI built a one-curl-call sanctions check for AI agents that send money.\n\nThe problem: x402, AP2, ACP, and Coinbase AgentKit all let agents pay autonomously — but none of them screen recipients against the OFAC SDN list. If an agent pays a sanctioned wallet, the operator is liable under strict liability ($377.7K/violation).\n\nThe fix: one HTTP call before the payment. 947 OFAC crypto wallets, 19K names, 16 jurisdictions. Under 100ms.\n\nhttps://sanctionsai.dev/?ref=[YOURID]\n\nMIT licensed, self-hostable, MCP + HTTP + CLI.</pre>'
 
             '<h3>3. Reddit — r/MachineLearning</h3>'
-            '<pre style="background:#0c0d0f;border:1px solid var(--line);border-radius:10px;padding:16px;font-size:.82rem;overflow-x:auto;color:#cfd3d8">Title: If your AI agent can send money, you need OFAC screening before it pays\n\nBody: Built a sanctions screening API for autonomous payment agents. One curl call checks any wallet/name/country against the OFAC SDN list in under 100ms.\n\nx402 and AgentKit move money but do not screen recipients. Strict liability = $356K per violation. This adds the missing compliance layer.\n\nFree tier (5 checks/day, no signup): sanctionsai.dev/?ref=[YOURID]</pre>'
+            '<pre style="background:#0c0d0f;border:1px solid var(--line);border-radius:10px;padding:16px;font-size:.82rem;overflow-x:auto;color:#cfd3d8">Title: If your AI agent can send money, you need OFAC screening before it pays\n\nBody: Built a sanctions screening API for autonomous payment agents. One curl call checks any wallet/name/country against the OFAC SDN list in under 100ms.\n\nx402 and AgentKit move money but do not screen recipients. Strict liability = $377.7K per violation. This adds the missing compliance layer.\n\nFree tier (5 checks/day, no signup): sanctionsai.dev/?ref=[YOURID]</pre>'
 
             '<h3>4. LinkedIn DM</h3>'
             '<pre style="background:#0c0d0f;border:1px solid var(--line);border-radius:10px;padding:16px;font-size:.82rem;overflow-x:auto;color:#cfd3d8">Hi [Name],\n\nNoticed you are building in the AI agent / payments space. I thought you might be interested in a sanctions screening API designed specifically for autonomous payment agents — it checks OFAC before the agent pays, in under 100ms.\n\nFree to try (no signup): sanctionsai.dev/?ref=[YOURID]\n\nIf your audience would find this useful, I have a 50% recurring affiliate program. Let me know if you want a partner ID.\n\n[Your name]</pre>'
@@ -8511,7 +8648,7 @@ curl "https://agentmail-api.fly.dev/sanctions?wallet=<span style="color:#f59e0b"
         html = self._inject_seo(html, {
             "canonical": "/teardown",
             "title": "What Happens When Your AI Agent Pays a Sanctioned Wallet | sanctionsai.dev",
-            "description": "Workflow teardown: the 14-day death spiral when an autonomous agent pays an OFAC-sanctioned wallet ($330K+ fine), vs. the agent way with real-time screening in 100ms.",
+            "description": "Workflow teardown: the 14-day death spiral when an autonomous agent pays an OFAC-sanctioned wallet ($377.7K fine), vs. the agent way with real-time screening in 100ms.",
             "og_type": "article",
             "schema_howto": howto_schema,
         })
@@ -8559,7 +8696,7 @@ curl "https://agentmail-api.fly.dev/sanctions?wallet=<span style="color:#f59e0b"
 <table><thead><tr><th>Year</th><th>Company</th><th>Penalty</th><th>Violation</th><th>Description</th></tr></thead><tbody>{rows}</tbody></table>
 <div class="cite-block"><strong>Cite this data:</strong><br>sanctionsai.dev. "OFAC Enforcement Database 2017-2024," 2026. CC BY 4.0.<br>CSV: <a href="/ofac-enforcement-2026.csv">ofac-enforcement-2026.csv</a></div>
 <h2>Why This Data Matters</h2>
-<p>The average OFAC civil penalty is $356,571 per violation. For crypto exchanges processed $24M+ in penalties. An AI agent that autonomously sends a single USDC payment to a sanctioned wallet exposes the operator to the same liability. The cost of compliance screening (~$19/month) is four orders of magnitude smaller than the cost of one violation.</p>
+<p>The maximum OFAC civil penalty is $377,700 per violation. For crypto exchanges processed $24M+ in penalties. An AI agent that autonomously sends a single USDC payment to a sanctioned wallet exposes the operator to the same liability. The cost of compliance screening (~$19/month) is four orders of magnitude smaller than the cost of one violation.</p>
 <h2>Methodology</h2>
 <p>Data sourced from <a href="https://ofac.treasury.gov/civil-penalties-and-enforcement-information">OFAC Civil Penalties and Enforcement Information</a>. Penalty amounts reflect civil monetary penalties as published in enforcement releases. Criminal penalties and settlements with other agencies are excluded. Last updated: July 2026.</p>
 </div>
@@ -9248,7 +9385,7 @@ curl "https://agentmail-api.fly.dev/sanctions?wallet=<span style="color:#f59e0b"
             '<a href="/tools/wallet-checker" class="btn btn-primary">Try the free checker</a></div></section>'
         )
         return self._page("OFAC Penalty Costs — AI Agent Compliance — SanctionsAI",
-                          "OFAC penalty costs: fines per violation ($330K+), criminal penalties, settlement costs, crypto enforcement, and the true cost of non-compliance for AI agents.",
+                          "OFAC penalty costs: fines per violation ($377.7K), criminal penalties, settlement costs, crypto enforcement, and the true cost of non-compliance for AI agents.",
                           body, canonical="/cost")
 
     # ─── Guides index page ────────────────────────────
@@ -9919,7 +10056,7 @@ compute();
 <h2>Is {c["name"]} sanctioned by OFAC?</h2>
 <p>Yes. {c["name"]} is subject to <strong>{c["status"].lower()}</strong> under the {c["program"]}. {c["desc"]} If your AI agent, application, or business transacts with counterparties in {c["name"]}, you must screen every transaction against OFAC lists before funds move.</p>
 <h2>What sanctions means for {c["name"]} transactions</h2>
-<p>Under OFAC strict liability, US persons and entities — including AI agents operating on behalf of US persons — are prohibited from transacting with sanctioned parties in {c["name"]} regardless of intent. Civil penalties start at <strong>$356,571 per violation</strong> or twice the transaction value, whichever is greater.</p>
+<p>Under OFAC strict liability, US persons and entities — including AI agents operating on behalf of US persons — are prohibited from transacting with sanctioned parties in {c["name"]} regardless of intent. Civil penalties reach <strong>$377,700 per violation</strong> or twice the transaction value, whichever is greater.</p>
 <h3>Screen {c["name"]} counterparties instantly</h3>
 <pre><code>curl "https://sanctionsai.dev/sanctions?country={slug}"</code></pre>
 <p class="note">Free tier: 5 checks/day, no API key. Real OFAC data.</p>
@@ -9933,7 +10070,7 @@ compute();
 </ul>"""
         faq = [
             (f"Can I send money to {c['name']}?", f"It depends on the specific sanctions program. {c['desc']} You must screen every counterparty against OFAC lists before transacting. Use sanctionsai.dev to check."),
-            (f"What is the penalty for violating {c['name']} sanctions?", "OFAC civil penalties start at $356,571 per violation or twice the transaction value. Criminal penalties can reach $20 million and 30 years imprisonment."),
+            (f"What is the penalty for violating {c['name']} sanctions?", "OFAC Civil penalties reach $377,700 per violation or twice the transaction value. Criminal penalties can reach $1,000,000 and 20 years imprisonment."),
             ("How do I screen for sanctioned parties?", "Use the sanctionsai.dev API: send a GET request with a name, wallet, or country parameter. The API checks against the full OFAC SDN list in under 100ms."),
         ]
         self._render_pseo(f"OFAC Sanctions on {c['name']} — Status, Screening, and Compliance", c["desc"], body, faq, f"/countries/{slug}")
@@ -9964,7 +10101,7 @@ compute();
         faq = [
             ("How long does a sanctions screen take?", "Under 100ms per check. The sanctionsai.dev API runs on real OFAC data and returns instant results."),
             ("Do I need an API key?", "No. The free tier allows 5 checks per day by IP address with no signup or API key."),
-            ("What happens if I miss a sanctioned party?", "OFAC operates under strict liability. You are liable even if you did not know the party was sanctioned. Penalties start at $356,571 per violation."),
+            ("What happens if I miss a sanctioned party?", "OFAC operates under strict liability. You are liable even if you did not know the party was sanctioned. Penalties reach $377,700 per violation."),
         ]
         self._render_pseo(
             h["title"],
@@ -9974,11 +10111,11 @@ compute();
     def _cost_page(self, slug):
         """pSEO Round 14: Cost/penalty pages for bottom-funnel commercial intent."""
         COSTS = {
-            "ofac-fine-per-violation": {"title": "OFAC Fine Amount Per Violation", "amount": "$356,571", "desc": "The base civil penalty per OFAC violation, or twice the transaction value, whichever is greater."},
-            "ofac-criminal-penalties": {"title": "OFAC Criminal Penalties", "amount": "$20M + 30 years", "desc": "Criminal penalties for willful violations can reach $20 million for entities and 30 years imprisonment for individuals."},
-            "ofac-penalty-for-crypto": {"title": "OFAC Penalties for Crypto Transactions", "amount": "$356,571+", "desc": "Crypto transactions with sanctioned wallets carry the same penalties as fiat. Each transaction is a separate violation."},
+            "ofac-fine-per-violation": {"title": "OFAC Fine Amount Per Violation", "amount": "$377,700", "desc": "The base civil penalty per OFAC violation, or twice the transaction value, whichever is greater."},
+            "ofac-criminal-penalties": {"title": "OFAC Criminal Penalties", "amount": "$1M + 20 years", "desc": "Criminal penalties for willful violations can reach $1,000,000 for entities and 20 years imprisonment for individuals."},
+            "ofac-penalty-for-crypto": {"title": "OFAC Penalties for Crypto Transactions", "amount": "$377,700+", "desc": "Crypto transactions with sanctioned wallets carry the same penalties as fiat. Each transaction is a separate violation."},
             "ofac-settlement-costs": {"title": "OFAC Settlement Costs", "amount": "Varies", "desc": "Settlement amounts vary based on voluntary disclosure, cooperation, and remediation. VSD can reduce penalties by ~50%."},
-            "cost-of-non-compliance": {"title": "The True Cost of OFAC Non-Compliance", "amount": "$356K+ per violation", "desc": "Beyond fines, non-compliance brings legal costs, reputational damage, loss of banking access, and potential criminal charges."},
+            "cost-of-non-compliance": {"title": "The True Cost of OFAC Non-Compliance", "amount": "$377.7K+ per violation", "desc": "Beyond fines, non-compliance brings legal costs, reputational damage, loss of banking access, and potential criminal charges."},
             "ofac-penalty-multiplier": {"title": "How OFAC Penalties Multiply Per Transaction", "amount": "Per-violation", "desc": "Each transaction with a sanctioned party is a separate violation. A bot making 100 payments to one sanctioned wallet = 100 violations."},
             "cost-of-sanctions-screening": {"title": "How Much Does OFAC Sanctions Screening Cost?", "amount": "$0 to $99/mo", "desc": "Free tier: 5 checks/day. Dev: $19/mo for 10,000 checks/month. Team: $99/mo for 100,000 checks/month."},
             "ofac-enforcement-actions": {"title": "Recent OFAC Enforcement Actions and Fines", "amount": "Millions", "desc": "Recent OFAC enforcement actions include fines against Binance ($968M), BitGo ($98K), and others for sanctions violations."},
@@ -9998,7 +10135,7 @@ compute();
 <h2>Penalty mitigation</h2>
 <p>If you discover a potential violation, filing a Voluntary Self-Disclosure (VSD) with OFAC can reduce penalties by approximately 50%. sanctionsai.dev automatically logs every screening with timestamp and list version for your VSD evidence.</p>"""
         faq = [
-            ("What is the maximum OFAC penalty?", "Civil penalties: $356,571 per violation or 2x the transaction value. Criminal penalties: up to $20 million and 30 years imprisonment for willful violations."),
+            ("What is the maximum OFAC penalty?", "Civil penalties: $377,700 per violation or 2x the transaction value. Criminal penalties: up to $1,000,000 and 20 years imprisonment for willful violations."),
             ("Does each transaction count as a separate violation?", "Yes. Each transaction with a sanctioned party is a separate violation. A payment bot making 100 payments to one sanctioned wallet faces 100 violations."),
             ("Can screening reduce my penalty?", "OFAC considers whether you had a compliance program in place. Implementing screening before a violation occurs demonstrates good-faith compliance and can significantly reduce penalties."),
         ]
@@ -10209,7 +10346,7 @@ compute();
 <h2>What this means for your AI agent</h2>
 <ul>
 <li><strong>Strict liability:</strong> The agent operator is responsible if a payment reaches a sanctioned address, regardless of intent.</li>
-<li><strong>Civil penalty:</strong> $356,571 per violation or twice the transaction value, whichever is greater.</li>
+<li><strong>Civil penalty:</strong> $377,700 per violation or twice the transaction value, whichever is greater.</li>
 <li><strong>Per-transaction exposure:</strong> Each payment to a sanctioned wallet is a separate violation.</li>
 <li><strong>Screening receipt:</strong> sanctionsai.dev logs every screen with timestamp and SDN list version for VSD evidence.</li>
 </ul>
@@ -10239,7 +10376,7 @@ compute();
         """Per-name OFAC screening page for well-known sanctioned entities."""
         NAMES = {
             "tornado-cash": {"name": "Tornado Cash", "type": "Cryptocurrency mixer", "country": "Decentralized", "designated": "2022-08-08", "desc": "Tornado Cash was designated by OFAC on August 8, 2022 for processing over $7 billion in virtual currency since 2019, including $455 million stolen by the Lazarus Group. It is the first smart contract protocol sanctioned by OFAC.", "action": "All US persons are prohibited from transacting with Tornado Cash smart contracts, including deposits, withdrawals, and frontends."},
-            "lazarus-group": {"name": "Lazarus Group", "type": "DPRK state-sponsored hacking group", "country": "North Korea", "designated": "2019-03-21", "desc": "Lazarus Group is a North Korean state-sponsored hacking organization designated by OFAC for conducting cyberattacks and crypto theft to fund the DPRK regime. Responsible for over $3 billion in stolen crypto.", "action": "All transactions with Lazarus Group wallets are prohibited. Penalties for violations reach $20 million and 30 years imprisonment."},
+            "lazarus-group": {"name": "Lazarus Group", "type": "DPRK state-sponsored hacking group", "country": "North Korea", "designated": "2019-03-21", "desc": "Lazarus Group is a North Korean state-sponsored hacking organization designated by OFAC for conducting cyberattacks and crypto theft to fund the DPRK regime. Responsible for over $3 billion in stolen crypto.", "action": "All transactions with Lazarus Group wallets are prohibited. Penalties for violations reach $1,000,000 and 20 years imprisonment."},
             "suex": {"name": "Suex OTC", "type": "Cryptocurrency exchange (OTC)", "country": "Czech Republic / Russia", "designated": "2021-09-21", "desc": "Suex was the first cryptocurrency exchange designated by OFAC (September 2021) for facilitating financial transactions for ransomware actors. Over 40% of its known transaction history was illicit.", "action": "US persons are prohibited from transacting with Suex wallets and entities. Designated under EO 13694 (malicious cyber-enabled activities)."},
             "chatex": {"name": "Chatex", "type": "Cryptocurrency exchange", "country": "Russia-linked", "designated": "2021-11-08", "desc": "Chatex was designated by OFAC in November 2021 as part of a coordinated action against ransomware infrastructure, for facilitating transactions for illicit actors including Suex.", "action": "All US persons and the AI agents they operate are prohibited from transacting with Chatex."},
             "garantex": {"name": "Garantex", "type": "Cryptocurrency exchange", "country": "Russia", "designated": "2022-04-05", "desc": "Garantex was designated by OFAC in April 2022 for failing to implement AML/CFT measures and allowing Russian illicit actors to operate. Designated under EO 14024 (Russia harmful foreign activities).", "action": "All transactions with Garantex wallets are prohibited for US persons and AI agents operating on their behalf."},
@@ -10268,11 +10405,11 @@ compute();
 <li><strong>Voluntary Self-Disclosure:</strong> If a violation occurred, file a VSD within 30 days for ~50% penalty mitigation.</li>
 </ul>
 <h2>Penalties for non-compliance</h2>
-<p>Civil penalties start at <strong>$356,571 per violation</strong> or twice the transaction value, whichever is greater. Criminal penalties for willful violations can reach <strong>$20 million and 30 years imprisonment</strong>. Each transaction with {e["name"]} is a separate violation under OFAC strict liability.</p>"""
+<p>Civil penalties reach <strong>$377,700 per violation</strong> or twice the transaction value, whichever is greater. Criminal penalties for willful violations can reach <strong>$1,000,000 and 20 years imprisonment</strong>. Each transaction with {e["name"]} is a separate violation under OFAC strict liability.</p>"""
         faqs = [
             (f"Is {e['name']} still sanctioned?", f"Yes. {e['name']} was designated by OFAC on {e['designated']} and remains on the SDN list as of {today}. SDN designations are rarely lifted without a specific OFAC delisting action."),
             ("How do I check if a counterparty is sanctioned?", "Use the sanctionsai.dev API: send a GET request with a name, wallet, or country parameter. The API checks against the full OFAC SDN list in under 100ms."),
-            ("What is the penalty for transacting with a sanctioned entity?", "OFAC civil penalties start at $356,571 per violation or twice the transaction value. Criminal penalties can reach $20 million and 30 years imprisonment."),
+            ("What is the penalty for transacting with a sanctioned entity?", "OFAC Civil penalties reach $377,700 per violation or twice the transaction value. Criminal penalties can reach $1,000,000 and 20 years imprisonment."),
             ("How often should I screen counterparties?", "Before every transaction. OFAC list updates are frequent, and an entity not flagged yesterday may be flagged today."),
         ]
         self._render_pseo(f"Is {e['name']} OFAC Sanctioned? ({e['type']}) — Compliance Guide",
@@ -10323,7 +10460,7 @@ compute();
         faqs = [
             (f"How often is {L['name']} updated?", f"{L['updated']}. The sanctionsai.dev API refreshes its index daily so every screening call reflects the latest designations."),
             (f"Who must comply with {L['name']}?", f"{L['scope']}"),
-            ("What is the penalty for violating this list?", "For OFAC SDN, civil penalties start at $356,571 per violation or twice the transaction value. Criminal penalties reach $20 million and 30 years for willful violations. Other jurisdictions have comparable regimes."),
+            ("What is the penalty for violating this list?", "For OFAC SDN, civil penalties reach $377,700 per violation or twice the transaction value. Criminal penalties reach $1,000,000 and 20 years for willful violations. Other jurisdictions have comparable regimes."),
             ("How do I screen against this list?", "Use the sanctionsai.dev API: GET /sanctions?name=...&wallet=...&country=... — returns matches with confidence scores in under 100ms."),
         ]
         self._render_pseo(f"{L['name']} — {L['jurisdiction']} Sanctions List Explained",
@@ -10363,16 +10500,16 @@ compute();
 <h2>What this means for your AI agent</h2>
 <ul>
 <li><strong>Pre-transaction screening required:</strong> Every counterparty linked to {c["name"]} must be screened against the OFAC SDN list before payment.</li>
-<li><strong>Strict liability:</strong> Even unintentional transactions with sanctioned {c["name"]} entities incur penalties of $356,571 per violation.</li>
+<li><strong>Strict liability:</strong> Even unintentional transactions with sanctioned {c["name"]} entities incur penalties of $377,700 per violation.</li>
 <li><strong>Audit trail:</strong> Log every screening with timestamp, subject, result, and list version for compliance evidence.</li>
 <li><strong>Enhanced due diligence:</strong> Counterparties with {c["name"]} nexus require documented screening and risk assessment.</li>
 </ul>
 <h2>Penalties</h2>
-<p>OFAC civil penalties: <strong>$356,571 per violation</strong> or twice the transaction value, whichever is greater. Each payment to a sanctioned {c["name"]} entity is a separate violation. Willful violations carry up to $20 million and 30 years imprisonment.</p>"""
+<p>OFAC civil penalties: <strong>$377,700 per violation</strong> or twice the transaction value, whichever is greater. Each payment to a sanctioned {c["name"]} entity is a separate violation. Willful violations carry up to $1,000,000 and 20 years imprisonment.</p>"""
         faqs = [
             (f"Are all transactions with {c['name']} prohibited?", f"{'Nearly all' if slug in ('north-korea','iran','cuba','syria') else 'Not all — but specific entities are'}. {c['desc']} Screen every counterparty against the OFAC SDN list before transacting."),
             (f"How many {c['name']} entities are sanctioned?", f"Approximately {c['count']} under the {c['program'].split('(')[0].strip()} program. Use sanctionsai.dev to check any counterparty in real time."),
-            ("What is the penalty for violating sanctions on this country?", "$356,571 per violation or twice the transaction value (civil); $20 million and 30 years (criminal, willful violations)."),
+            ("What is the penalty for violating sanctions on this country?", "$377,700 per violation or twice the transaction value (civil); $1,000,000 and 20 years (criminal, willful violations)."),
             ("How do I screen for sanctioned entities?", "Use the sanctionsai.dev API: GET /sanctions?name=&wallet=&country= returns matches with confidence scores in under 100ms."),
         ]
         self._render_pseo(f"OFAC-Sanctioned Entities in {c['name']} — {c['count']}",
@@ -11206,7 +11343,7 @@ _SOAP_CONTENT.append("""
 <p style='margin:0 0 20px;font-size:14px;color:#999;line-height:1.6'>After talking to dozens of AI agent builders, I hear the same objections. Here is why they are wrong.</p>
 <div style='background:#120808;border:1px solid #2a1414;border-radius:10px;padding:16px;margin-bottom:12px'>
 <p style='margin:0 0 4px;font-size:13px;font-weight:600;color:#ff6b6b'>False belief #1: "My agent only pays known vendors"</p>
-<p style='margin:0;font-size:12px;color:#888;line-height:1.5'>Vendors change wallets. Wallets get compromised. Your agent pays whoever it is told. The check costs nothing. The fine costs $356K.</p>
+<p style='margin:0;font-size:12px;color:#888;line-height:1.5'>Vendors change wallets. Wallets get compromised. Your agent pays whoever it is told. The check costs nothing. The fine costs $377.7K.</p>
 </div>
 <div style='background:#120808;border:1px solid #2a1414;border-radius:10px;padding:16px;margin-bottom:12px'>
 <p style='margin:0 0 4px;font-size:13px;font-weight:600;color:#ff6b6b'>False belief #2: "My payment provider handles compliance"</p>
@@ -11228,7 +11365,7 @@ _SOAP_CONTENT.append("""
 <p style='margin:0;color:#ccc;font-style:italic;font-size:13px;line-height:1.6'>"I was wiring up an autonomous payment system. The agent was supposed to pay vendor invoices in USDC. On test #47, it sent money to a wallet I did not recognize. Turned out that wallet was on the OFAC SDN list."</p>
 </div>
 <p style='margin:0 0 16px;font-size:14px;color:#999;line-height:1.6'>This is not hypothetical. There are <strong style='color:#fff'>947 crypto wallet addresses</strong> on the OFAC SDN list right now. New ones are added every month.</p>
-<p style='margin:0 0 20px;font-size:14px;color:#999;line-height:1.6'>The agent did not know what OFAC was. It just saw "pay invoice #4021" and sent USDC. If that had been a real transaction, the deployer would be looking at a $356K fine.</p>
+<p style='margin:0 0 20px;font-size:14px;color:#999;line-height:1.6'>The agent did not know what OFAC was. It just saw "pay invoice #4021" and sent USDC. If that had been a real transaction, the deployer would be looking at a $377.7K fine.</p>
 <div style='background:#0d1a14;border:1px solid rgba(0,212,170,0.08);border-radius:10px;padding:16px;text-align:center;margin-bottom:20px'>
 <p style='margin:0 0 8px;font-size:13px;color:#00d4aa'>Screen every payment before it moves</p>
 <code style='display:inline-block;background:#0a0a0a;border:1px solid #1a1a1a;border-radius:4px;padding:6px 12px;font-family:\'SF Mono\',Consolas,monospace;font-size:11px;color:#34d399'>curl https://agentmail-api.fly.dev/sanctions?wallet=0x...</code>
@@ -11422,7 +11559,7 @@ def _send_welcome_email(email: str) -> dict:
     html += '<div style="text-align:center;margin-bottom:24px">'
     html += '<span style="display:inline-block;background:rgba(255,107,107,0.12);color:#ff6b6b;font-size:10px;font-weight:700;padding:5px 14px;border-radius:20px;letter-spacing:0.8px;text-transform:uppercase;border:1px solid rgba(255,107,107,0.2);margin-bottom:20px">SECURITY ALERT</span>'
     html += '<h2 style="margin:0 0 10px;font-size:22px;font-weight:800;color:#fff;line-height:1.3;letter-spacing:-0.3px">Your AI agent just sent USDC to a <span style="color:#ff6b6b">sanctioned wallet</span>.</h2>'
-    html += '<p style="margin:0;font-size:15px;color:#999;line-height:1.6">OFAC fines start at <strong style="color:#ff6b6b">$377,700 per violation</strong>. The agent that made the payment is yours. So is the liability.</p>'
+    html += '<p style="margin:0;font-size:15px;color:#999;line-height:1.6">OFAC fines reach <strong style="color:#ff6b6b">$377,700 per violation</strong>. The agent that made the payment is yours. So is the liability.</p>'
     html += '</div>'
     html += '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#0d1a14;border-radius:10px;border:1px solid rgba(0,212,170,0.08);margin-bottom:24px"><tr><td style="padding:20px">'
     html += '<p style="margin:0 0 14px;font-size:13px;font-weight:600;color:#00d4aa">Here is your playbook &mdash; the 7 patterns, with runnable code:</p>'

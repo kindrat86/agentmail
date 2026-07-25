@@ -1,0 +1,134 @@
+#!/usr/bin/env python3
+"""Guard: the OFAC penalty figures must be right, everywhere, all at once.
+
+Twice now this site has shipped the wrong number for the statutory penalty
+maximum — and both times it shipped *several* wrong numbers simultaneously, in
+copy that was written months apart and never cross-checked. At the last count
+the same statutory ceiling appeared as eight different values across the site.
+
+That is uniquely damaging here. The audience is developers who verify claims;
+the product is a compliance tool. A reader who checks the primary source and
+finds our number wrong has learned something about our data quality, not just
+our copywriting.
+
+Run it:  python3 scripts/check_penalty_figures.py
+Exit 0 = clean, 1 = a stale figure or floor framing is back.
+
+── Ground truth (both primary sources, re-verify each January) ────────────────
+
+  CIVIL, 50 U.S.C. 1705(b): the greater of $250,000 or twice the transaction
+    value. The $250,000 is inflation-adjusted annually. Current adjustment:
+    $377,700, Federal Register 2025-00786 (2025-01-15), amending 31 CFR 501.701.
+    History: $368,136 (2024), $356,579 (2023), $330,947 (2022).
+
+  CRIMINAL, 50 U.S.C. 1705(c): fined not more than $1,000,000, or if a natural
+    person, imprisoned not more than 20 years, or both. NOT inflation-adjusted.
+
+  Both are CEILINGS. "Penalties start at X" inverts the statute — X is the most
+  OFAC can impose, not the least. Use "reach" / "up to" / "as much as".
+
+── Annual maintenance ────────────────────────────────────────────────────────
+
+  Each January, check for a new adjustment:
+
+    curl -s "https://www.federalregister.gov/api/v1/documents.json\
+?per_page=5&order=newest\
+&conditions[term]=%22Inflation+Adjustment+of+Civil+Monetary+Penalties%22\
+&conditions[agencies][]=foreign-assets-control-office"
+
+  If a new rule exists, update CIVIL_MAX below, move the old value into
+  STALE_CIVIL, and run scripts/check_penalty_figures.py to find every place
+  that needs changing.
+"""
+import os
+import re
+import sys
+
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+CIVIL_MAX = "$377,700"
+CRIMINAL_MAX = "$1,000,000"
+CRIMINAL_YEARS = "20 years"
+
+# Every figure that has stood in for the civil maximum on this site at some
+# point. Some were stale adjustments, some were typos of stale adjustments,
+# some were invented. All are wrong now.
+STALE_CIVIL = [
+    r"\$356,000", r"\$356,571", r"\$356,579", r"\$353,634", r"\$358,256",
+    r"\$368,000", r"\$368,136", r"\$368,236", r"\$330,944", r"\$330,947",
+    r"\$330,000", r"\$300,000", r"\$356K", r"\$330K", r"\$300K",
+]
+
+# The criminal maximum has been overstated as $20M / 30 years.
+STALE_CRIMINAL = [r"\$20 million", r"\$20M", r"30 years"]
+
+# A ceiling described as a floor.
+FLOOR_FRAMING = [
+    r"(?:penalt|fine)\w*\s+(?:can\s+)?starts?\s+at",
+    r"starts?\s+at\s+\$377,700",
+]
+
+# Real enforcement settlements. These are history and must never be rewritten
+# by a well-meaning sweep — they are the reason this checker matches on the
+# specific stale figures above rather than on "any dollar amount".
+PROTECTED = [
+    "362,158",      # Kraken 2022
+    "98,307",       # BitGo 2021
+    "507,375",      # BitPay 2021
+    "450,000",      # EtherDelta 2018
+    "50,000,000",   # Coinbase 2023
+    "968,618,202",  # Binance 2023
+]
+
+SKIP_DIRS = {".git", "__pycache__", "node_modules", ".claude", "dist", ".venv"}
+EXTS = (".py", ".html", ".md", ".json", ".txt", ".xml")
+# Audit reports quote the figures as they stood at the time. That is the record.
+SKIP_NAMES = {"check_penalty_figures.py"}
+SKIP_PATTERNS = ("AUDIT_", "HERMES_REPORT_", "CHANGELOG")
+
+
+def files():
+    for root, dirs, fs in os.walk(ROOT):
+        dirs[:] = [d for d in dirs if d not in SKIP_DIRS]
+        for f in fs:
+            if not f.endswith(EXTS) or f in SKIP_NAMES:
+                continue
+            if any(p in f for p in SKIP_PATTERNS):
+                continue
+            yield os.path.join(root, f)
+
+
+def main():
+    problems = []
+    for path in files():
+        try:
+            src = open(path, encoding="utf-8").read()
+        except (UnicodeDecodeError, OSError):
+            continue
+        rel = os.path.relpath(path, ROOT)
+        for label, pats in (("stale civil figure", STALE_CIVIL),
+                            ("overstated criminal penalty", STALE_CRIMINAL),
+                            ("ceiling described as a floor", FLOOR_FRAMING)):
+            for pat in pats:
+                for m in re.finditer(pat, src, re.I):
+                    line = src.count("\n", 0, m.start()) + 1
+                    ctx = re.sub(r"\s+", " ", src[max(0, m.start() - 70):m.end() + 70])
+                    problems.append((rel, line, label, m.group(0), ctx))
+
+    if not problems:
+        print(f"OK — civil max {CIVIL_MAX}, criminal max {CRIMINAL_MAX} / "
+              f"{CRIMINAL_YEARS}, no floor framing.")
+        return 0
+
+    print(f"FAIL — {len(problems)} penalty-figure problems:\n")
+    for rel, line, label, hit, ctx in problems:
+        print(f"  {rel}:{line}  [{label}] {hit}")
+        print(f"      …{ctx}…")
+    print(f"\nCorrect values: civil {CIVIL_MAX} (50 U.S.C. 1705(b), FR 2025-00786), "
+          f"criminal {CRIMINAL_MAX} and {CRIMINAL_YEARS} (50 U.S.C. 1705(c)).")
+    print("Both are ceilings — say 'reach' or 'up to', never 'start at'.")
+    return 1
+
+
+if __name__ == "__main__":
+    sys.exit(main())

@@ -43,7 +43,7 @@ def welcome_email(unsubscribe_url):
         '<div style="text-align:center;padding:32px 0 24px">'
         '<div style="display:inline-block;background:#fef2f2;color:#dc2626;font-size:11px;font-weight:600;padding:4px 12px;border-radius:4px;letter-spacing:0.5px;text-transform:uppercase;margin-bottom:16px">COMPLIANCE ALERT</div>'
         '<h2 style="margin:0 0 8px;font-size:20px;font-weight:700;color:#0f172a;line-height:1.3">Your AI agent just sent USDC<br>to a sanctioned wallet.</h2>'
-        '<p style="margin:0;font-size:15px;color:#64748b;line-height:1.5">OFAC fines start at <strong style="color:#dc2626">$377,700 per violation</strong>. The agent that made the payment is yours. So is the liability.</p>'
+        '<p style="margin:0;font-size:15px;color:#64748b;line-height:1.5">OFAC fines reach <strong style="color:#dc2626">$377,700 per violation</strong>. The agent that made the payment is yours. So is the liability.</p>'
         '</div>'
         '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f8fafc;border-radius:8px;border:1px solid #e2e8f0;margin-bottom:24px"><tr><td style="padding:20px">'
         '<p style="margin:0 0 10px;font-size:13px;font-weight:600;color:#0f172a">Your free tier is ready. No API key needed.</p>'
