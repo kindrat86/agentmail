@@ -32,6 +32,19 @@ COPY ux.css ux.js ./
 # Public static assets (related-tools hub, network, answers, badge, verification files)
 COPY public/ ./public/
 
+# --- structured-data gate (~/.growth-engine/GUARDRAILS.md rule 3) ---
+# Fails the image build — and so `flyctl deploy` — if any copied page carries
+# unparsable JSON-LD. Placed after every static COPY so it sees exactly the
+# page set do_GET will serve, and before the USER switch so it still runs as
+# root. The gate is what was missing when "Unparsable structured data — Parsing
+# error: Missing ',' or '}'" reached Search Console on voicelogpro.com.
+# Python, not the portfolio's Node gate, deliberately: this is a python:slim
+# image and validate_jsonld.py is stdlib-only, so gating costs no new dependency
+# and no Node install. scripts/verify-jsonld.mjs runs in CI instead, where Node
+# is free, for the extra corruption-signature checks.
+COPY scripts/validate_jsonld.py /tmp/validate_jsonld.py
+RUN python3 /tmp/validate_jsonld.py . && rm /tmp/validate_jsonld.py
+
 RUN pip install --no-cache-dir ".[mcp]" && \
     cp /home/agentmail/app/api.py /usr/local/lib/python3.11/site-packages/agentmail/api.py && \
     cp /home/agentmail/app/core.py /usr/local/lib/python3.11/site-packages/agentmail/core.py && \

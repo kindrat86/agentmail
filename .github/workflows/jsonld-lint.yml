@@ -17,3 +17,12 @@ jobs:
       - uses: actions/checkout@v4
       - name: Validate JSON-LD
         run: python3 scripts/validate_jsonld.py .
+      # Stronger second pass: catches the two corruption signatures seen in
+      # production (the `schema.org","` → `***` clobber and a stray
+      # template-literal backtick closing a schema) plus blocks that JSON.parse
+      # accepts but whose @context was corrupted — the Python lint waves those
+      # through. The Python lint is the one wired into the Dockerfile (this is a
+      # python:slim image, so gating there costs no Node install); this runs
+      # here where Node is free. See ~/.growth-engine/GUARDRAILS.md rule 3.
+      - name: Verify shipped JSON-LD
+        run: node scripts/verify-jsonld.mjs .
