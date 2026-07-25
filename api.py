@@ -10670,11 +10670,10 @@ footer a{color:var(--mut)}
 <div class="text"><strong>60-Day Guarantee:</strong> If the kit does not save you at least one hour of compliance research, I will refund your $7. You keep everything.</div>
 </div>
 <div style="text-align:center;margin:30px 0">
-<a href="https://buy.stripe.com/REPLACE_WITH_TRIPWIRE_LINK" class="btn">Get the Quick-Start Kit - $7</a>
-<p class="secondary">One-time payment. Instant access. <a href="/">No thanks, I will risk the fine</a></p>
+<a href="mailto:hello@sanctionsai.dev?subject=OFAC%20Compliance%20Quick-Start%20Kit" class="btn">Email to get the Quick-Start Kit - $7</a>
+<p class="secondary">Checkout is not automated yet — email and we send payment details and the kit by hand. <a href="/">No thanks, I will risk the fine</a></p>
 </div>
 <div class="testimonial">
-<div class="quote">"I was about to deploy my x402 agent without any OFAC screening. The kit curl snippet took 30 seconds. Now every payment is screened before it moves."</div>
 <div class="attr">- Agent Framework Author, San Francisco</div>
 </div>
 <div class="faq">
