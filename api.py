@@ -3373,7 +3373,7 @@ License: https://creativecommons.org/licenses/by/4.0/
         # crawl path in and no hub to consolidate its internal links. Falls
         # through when a directory has no index.html, so the keyed handlers
         # below keep serving the hubs they already own.
-        for _pfx in ("/vs/", "/faq/", "/learn/", "/alternatives-to/", "/penalties/", "/guides/", "/checklists/", "/cost-of/", "/best/", "/templates/", "/stats/", "/free/", "/programs/", "/sanctioned-addresses/", "/designations/"):
+        for _pfx in ("/vs/", "/faq/", "/learn/", "/alternatives-to/", "/penalties/", "/guides/", "/checklists/", "/cost-of/", "/best/", "/templates/", "/stats/", "/free/", "/programs/", "/sanctioned-addresses/", "/designations/", "/enforcement/"):
             _hub = _pfx.rstrip("/")
             if p.path in (_hub, _hub + "/"):
                 import os as _os
@@ -3387,7 +3387,7 @@ License: https://creativecommons.org/licenses/by/4.0/
                     if _os.path.isfile(_rp):
                         with open(_rp, "r", encoding="utf-8") as _fh:
                             return self._serve_text(_shell_static(_fh.read()), "text/html; charset=utf-8")
-        for _pfx in ("/vs/", "/faq/", "/learn/", "/alternatives-to/", "/penalties/", "/guides/", "/checklists/", "/cost-of/", "/best/", "/templates/", "/stats/", "/free/", "/programs/", "/sanctioned-addresses/", "/designations/"):
+        for _pfx in ("/vs/", "/faq/", "/learn/", "/alternatives-to/", "/penalties/", "/guides/", "/checklists/", "/cost-of/", "/best/", "/templates/", "/stats/", "/free/", "/programs/", "/sanctioned-addresses/", "/designations/", "/enforcement/"):
             if p.path.startswith(_pfx):
                 _slug = p.path[len(_pfx):].split("?")[0].split("/")[0]
                 if not _slug:
@@ -8617,9 +8617,9 @@ document.getElementById("squeeze-form").addEventListener("submit", function(e){
             '<div style="margin-top:14px"><a href="/tools/wallet-checker" class="btn btn-ghost">Screen a wallet '
             'free</a>&nbsp; <a href="/playbook" class="btn btn-ghost">Take the seven patterns</a></div>'
             '</div>'
-            '<p class="note" style="margin-top:20px">First month free &middot; cancel anytime &middot; 30-day '
-            'money back &middot; <a href="/guarantee">$10,000 screening guarantee</a> &middot; MIT licensed, so '
-            'you can leave and keep running it.</p>'
+            '<p class="note" style="margin-top:20px">First month free &middot; cancel anytime &middot; '
+            '<a href="/guarantee">$10,000 screening guarantee</a> &middot; MIT licensed, so you can leave and '
+            'keep running it.</p>'
             '</div></section>'
         )
         return self._page(
@@ -10607,7 +10607,8 @@ compute();
 <meta name="description" content="{_esc(_md)}">
 <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
 <meta name="indexnow" content="87aaa199acaf7d14c812e974ce115e32">
-<meta name="theme-color" content="#0a0a0a">
+<meta name="theme-color" content="#08090b">
+<meta name="color-scheme" content="dark">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="canonical" href="{_page_url}">
 <link rel="alternate" hreflang="en-US" href="{_page_url}">
@@ -10623,18 +10624,17 @@ compute();
 <meta name="twitter:title" content="{_esc(title)}">
 <meta name="twitter:description" content="{_esc(_md)}">
 <meta name="twitter:image" content="{_SITE}/og.png">
-<link rel="stylesheet" href="/ux.css">
+<style>{_DARK_CSS}{_STATIC_CSS}</style>
 <script type="application/ld+json">{json.dumps(schema)}</script>
 </head>
-<body><main><article>
+<body>{_NAV}<main id="main" class="prose"><article>
 <h1>{_esc(h1)}</h1>
-{body_html}
+{_wrap_tables(body_html)}
 <h2>Frequently asked questions</h2>
 <div class="faq">{faq_html}</div>
 <section><p><a href="{_SITE}">Try SanctionsAI free →</a></p></section>
 </article></main>
 {_FOOTER}
-<script src="/ux.js" defer></script>
 </body></html>"""
         self._send_html(200, html)
 
