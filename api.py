@@ -7686,12 +7686,23 @@ curl "https://agentmail-api.fly.dev/sanctions?wallet=<span style="color:#f59e0b"
         # literal "\\n" two-character sequences rather than newlines, so the whole
         # response was a single physical line, and its penalty amounts were unquoted
         # ($362,158 -> "$362","158"). Both are fixed in the file; serve the file.
+        # NOTE: the container runs `python -m agentmail.api`, so __file__ is the
+        # INSTALLED copy under site-packages/agentmail/ — the dataset is not
+        # beside it. Check the app dir (Dockerfile WORKDIR) and cwd too.
         import os as _os
-        _csv_path = _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), "ofac-enforcement-2026.csv")
-        try:
-            with open(_csv_path, "r", encoding="utf-8") as _f:
-                csv_data = _f.read()
-        except OSError:
+        _names = []
+        for _base in (_os.path.dirname(_os.path.abspath(__file__)),
+                      "/home/agentmail/app", _os.getcwd()):
+            _names.append(_os.path.join(_base, "ofac-enforcement-2026.csv"))
+        csv_data = None
+        for _cand in _names:
+            try:
+                with open(_cand, "r", encoding="utf-8") as _f:
+                    csv_data = _f.read()
+                break
+            except OSError:
+                continue
+        if csv_data is None:
             self.send_error(404, "dataset unavailable")
             return
         data = csv_data.encode('utf-8')
