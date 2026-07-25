@@ -482,8 +482,8 @@ _VERTICALS = {
     "crypto": {
         "name": "Crypto",
         "title": "OFAC Sanctions Screening for Crypto AI Agents",
-        "desc": "Crypto-native agents can screen any wallet against OFAC before signing an on-chain payment. 782 sanctioned addresses, real time.",
-        "p1": "Crypto-native agents that handle on-chain payments interact with pseudonymous wallets by default - and the chain does not tell you whether a counterparty is sanctioned. agentmail screens any EVM, Bitcoin, or Tron address against 782 OFAC-listed crypto wallets before your agent signs a transaction.",
+        "desc": "Crypto-native agents can screen any wallet against OFAC before signing an on-chain payment. 947 sanctioned addresses, real time.",
+        "p1": "Crypto-native agents that handle on-chain payments interact with pseudonymous wallets by default - and the chain does not tell you whether a counterparty is sanctioned. agentmail screens any EVM, Bitcoin, or Tron address against 947 OFAC-listed crypto wallets before your agent signs a transaction.",
         "p2": "OFAC has made clear that mixing, routing, or settling to a sanctioned address is a violation regardless of whether you knew the identity behind it. For agents using x402, Coinbase AgentKit, or AP2, a pre-payment sanctions check is the cheapest insurance you can run.",
         "p3": "Add a single curl call to your agent's payment path, or wire it into your MCP client. The free tier needs no API key - your crypto agent can start screening wallets in minutes.",
     },
@@ -615,7 +615,7 @@ _VERTICALS = {
         "title": "OFAC Sanctions Screening API for Developers Building AI Agents",
         "desc": "A single API call that screens any wallet, name, or country against OFAC before your agent pays. MCP, HTTP, CLI. Free tier, no key.",
         "p1": "Developers building payment agents need compliance that does not slow them down. agentmail is a one-call OFAC sanctions screen: pass a wallet address, name, or country code, get back a clean or flagged result in under 100ms. No SDK to install, no webhook to configure, no enterprise sales call.",
-        "p2": "The API screens against 782 OFAC-sanctioned crypto wallets across ETH, BTC, USDT, and Tron, plus 19,086 sanctioned names and 16 embargoed jurisdictions. Data is sourced from the US Treasury OFAC SDN list and vile/ofac-sdn-list, refreshed daily. Fuzzy matching catches name variations and entity aliases. Every screen is logged with a timestamp for audit purposes.",
+        "p2": "The API screens against 947 OFAC-sanctioned crypto wallets across ETH, BTC, USDT, and Tron, plus 19,218 sanctioned names and 16 embargoed jurisdictions. Data is sourced from the US Treasury OFAC SDN list and vile/ofac-sdn-list, refreshed daily. Fuzzy matching catches name variations and entity aliases. Every screen is logged with a timestamp for audit purposes.",
         "p3": "Quick start: pip install sanctions-mcp for the MCP server, or curl https://sanctionsai.dev/sanctions?wallet=0x... for the HTTP API. Free tier gives 5 checks per day with no signup. Paid plans from $19/month for production volume, or $0.05 per check via x402 micropayments.",
     },
     "kyc-aml": {
@@ -687,7 +687,7 @@ _VERTICALS = {
         "title": "OFAC Sanctions Screening for Legal & Compliance Teams",
         "desc": "Compliance officers and legal teams can screen counterparties, wallets, and jurisdictions before AI agents transact with a tamper-evident audit trail.",
         "p1": "Legal and compliance teams face mounting pressure as AI agents begin moving money autonomously. Each transaction carries strict-liability OFAC risk. agentmail gives compliance officers a simple API that screens every counterparty against the OFAC SDN list before funds move, with a timestamped audit trail that satisfies examiners.",
-        "p2": "The challenge for legal teams is coverage: agent payments may originate from any jurisdiction, to any wallet, at any time. Manual review does not scale. agentmail screens 782 crypto wallets, 19,086 names, and 16 embargoed jurisdictions automatically, logging every check with a tamper-evident record your compliance team can export for audit.",
+        "p2": "The challenge for legal teams is coverage: agent payments may originate from any jurisdiction, to any wallet, at any time. Manual review does not scale. agentmail screens 947 crypto wallets, 19,218 names, and 16 embargoed jurisdictions automatically, logging every check with a tamper-evident record your compliance team can export for audit.",
         "p3": "Add agentmail to your agent orchestration pipeline via MCP, HTTP, or CLI. The free tier covers 5 checks per day per day with no API key, so your compliance team can evaluate the workflow before deploying at scale.",
     },
     "startup": {
@@ -766,8 +766,8 @@ _VERTICALS = {
     "crypto-exchanges": {
         "name": "Crypto Exchanges",
         "title": "OFAC Sanctions Screening for Crypto Exchanges",
-        "desc": "Crypto exchanges screen deposit and withdrawal wallets against OFAC in real time. 782 sanctioned addresses covered.",
-        "p1": "Crypto exchanges must screen every deposit and withdrawal wallet against the OFAC SDN list before allowing funds to move. agentmail's API returns real-time match results for any EVM, Bitcoin, or Tron address against 782 sanctioned wallets.",
+        "desc": "Crypto exchanges screen deposit and withdrawal wallets against OFAC in real time. 947 sanctioned addresses covered.",
+        "p1": "Crypto exchanges must screen every deposit and withdrawal wallet against the OFAC SDN list before allowing funds to move. agentmail's API returns real-time match results for any EVM, Bitcoin, or Tron address against 947 sanctioned wallets.",
         "p2": "A single deposit from a sanctioned wallet creates regulatory exposure. OFAC has imposed multimillion-dollar penalties on exchanges that failed to screen. Pre-deposit screening is the baseline control every exchange needs.",
         "p3": "Call the agentmail wallet screen from your deposit flow in under 200ms. Free tier: 5 checks/day, no API key. Production from $19/mo.",
     },
@@ -1108,10 +1108,10 @@ _GLOSSARY = {
         "what": "The SDN List contains individuals, entities, and vessels whose property is blocked. US persons are prohibited from transacting with anyone on the list.",
         "who": "The list includes terrorists, drug traffickers, proliferators, sanctioned nation officials, and front companies. Over 10,000 entries.",
         "agents": "AI agents have the same OFAC obligations as their human operators. agentmail screens against the SDN list automatically.",
-        "coverage": "agentmail indexes 782 OFAC-sanctioned crypto wallets plus 19,086 sanctioned names.",
+        "coverage": "agentmail indexes 947 OFAC-sanctioned crypto wallets plus 19,218 sanctioned names.",
         "faq": [
             ("How often is the SDN list updated?", "OFAC updates the SDN List frequently, sometimes multiple times per day and often with no advance notice. agentmail refreshes its copy daily from the official US Treasury SDN.csv feed plus the vile/ofac-sdn-list crypto registry, so screening always runs against the most current designations rather than a stale snapshot."),
-            ("Does the SDN list include crypto wallets?", "Yes. Since 2018 OFAC has published cryptocurrency wallet addresses as blocked property directly on the SDN List, and the count keeps growing. agentmail indexes 782 SDN-listed addresses across Ethereum, Bitcoin, and Tron, matching every counterparty wallet your agent is about to pay before the transaction is signed."),
+            ("Does the SDN list include crypto wallets?", "Yes. Since 2018 OFAC has published cryptocurrency wallet addresses as blocked property directly on the SDN List, and the count keeps growing. agentmail indexes 947 SDN-listed addresses across Ethereum, Bitcoin, and Tron, matching every counterparty wallet your agent is about to pay before the transaction is signed."),
             ("What happens if my agent pays an SDN?", "Paying a Specially Designated National is a strict-liability violation, meaning intent is irrelevant. Civil penalties reach $330,944 per transaction or twice the transaction value, whichever is greater. The fix is a single pre-payment screening call so your agent halts before it ever sends funds to a blocked party."),
         ],
     },
@@ -1188,11 +1188,11 @@ _GLOSSARY = {
         "what": "When assets are blocked, they cannot be transferred, paid, exported, withdrawn, or otherwise dealt in. Any transaction involving a blocked persons property is prohibited. This includes transactions initiated by AI agents on behalf of US persons.",
         "who": "Blocked persons include designated terrorists, drug traffickers, malicious cyber actors, entities linked to sanctions evasion, and officials from sanctioned governments. Over 10,000 individuals and entities are on the current SDN List.",
         "agents": "AI agents that move money must check counterparties against the SDN List before each transaction. Paying a blocked person triggers strict liability penalties. The agentmail API screens wallets, names, and countries against the full SDN List in under 100ms.",
-        "coverage": "agentmail covers 19,086 sanctioned names, 782 crypto wallets, and 16 embargoed jurisdictions from the OFAC SDN List.",
+        "coverage": "agentmail covers 19,218 sanctioned names, 947 crypto wallets, and 16 embargoed jurisdictions from the OFAC SDN List.",
         "faq": [
             ("How is a blocked person different from an SDN?", "The terms are essentially interchangeable. The SDN List contains blocked persons. OFAC sometimes distinguishes between blocked persons (all property frozen) and entities subject to non-blocking sanctions (some restrictions apply)."),
             ("Can a blocked person become unblocked?", "Yes. OFAC may delist individuals through the removal process, settlement agreements, or changes in sanctions policy. agentmail refreshes daily so stale entries are not held against counterparties."),
-            ("Does blocked person status apply to crypto wallets?", "Yes. OFAC explicitly treats crypto wallet addresses as blocked property since 2018. The SDN List now includes over 782 sanctioned wallet addresses across multiple chains."),
+            ("Does blocked person status apply to crypto wallets?", "Yes. OFAC explicitly treats crypto wallet addresses as blocked property since 2018. The SDN List now includes over 947 sanctioned wallet addresses across multiple chains."),
         ],
     },
     "embargoed-jurisdiction": {
@@ -1236,7 +1236,7 @@ _GLOSSARY = {
         "what": "Common evasion methods include splitting large transactions into smaller ones to avoid screening thresholds, routing through multiple intermediary wallets, using mixers or tumblers, and leveraging non-custodial wallets where ownership is opaque.",
         "who": "Anyone deploying an AI agent that processes financial transactions could inadvertently facilitate sanctions evasion if the agent is not programmed to screen counterparties. Malicious actors can also intentionally use agents for evasion.",
         "agents": "An unwitting AI agent can be weaponized for evasion. If your agent accepts payment instructions from users without screening, it could be used to route funds through sanctioned wallets. agentmail is designed as a pre-payment gate that catches this regardless of the origin of the instruction.",
-        "coverage": "agentmail screens all three vectors that evasion targets: wallet addresses (782 SDN wallets), names (19,086 entries), and jurisdictions (16 embargoed countries).",
+        "coverage": "agentmail screens all three vectors that evasion targets: wallet addresses (947 SDN wallets), names (19,218 entries), and jurisdictions (16 embargoed countries).",
         "faq": [
             ("Can an AI agent be used to evade sanctions?", "Yes. An agent that processes payments without sanctions screening can be exploited to route funds through sanctioned wallets. This is why pre-payment screening is considered a basic compliance control for autonomous agents."),
             ("What are OFACs red flags for agent-based evasion?", "Rapid transaction sequences, payments to newly created wallets, round-number amounts, and transactions that route through multiple chains are all red flags. Agentmail screening is designed to flag these patterns."),
@@ -1411,7 +1411,7 @@ _COMPETITORS = {
             ("Enterprise compliance workflow", False, True),
         ],
         "when_to_pick": "Pick agentmail for real-time, agent-native sanctions screening with a free tier and developer API. Pick World-Check if you are an enterprise compliance department that needs PEP screening and already has a Refinitiv contract.",
-        "deep_dive": "<h2>World-Check pricing and access model</h2><p>Refinitiv World-Check (now owned by LSEG, the London Stock Exchange Group) is an enterprise subscription product. Pricing is not public, but industry estimates put it at $50,000 to $250,000 per year depending on organization size and data feeds. Access requires a sales conversation, contract negotiation, and onboarding. There is no free tier, no developer sandbox, and no self-serve signup.</p><p>agentmail takes the opposite approach: free tier with 5 checks per day, no signup, no API key. Developer pricing starts at $19/month. Self-host the open-source version if you want full control. This makes agentmail viable for AI agent builders, solo developers, and early-stage fintechs who cannot justify a five-figure annual compliance contract.</p><h2>World-Check data coverage</h2><p>World-Check aggregates PEP (Politically Exposed Persons), sanctions lists, regulatory enforcement lists, and adverse media from thousands of sources. It is a broad-spectrum compliance database designed for KYC and due diligence workflows at banks and large financial institutions. Coverage includes over 4 million profiles across 240 countries.</p><p>agentmail focuses specifically on OFAC SDN data: 19,086 names, 782 crypto wallet addresses, and 16 embargoed jurisdictions. This is narrower by design. If you are screening an AI agent's crypto payment before it executes, you do not need PEP data. You need to know if the wallet is sanctioned. That check runs in under 100ms on agentmail, compared to batch API calls on World-Check.</p><h2>World-Check integration complexity</h2><p>World-Check integrates through the Refinitiv API or bulk data feeds. Integration typically takes weeks and requires dedicated compliance engineers. The API uses SOAP or REST with complex authentication, rate limiting tied to the contract, and response structures built for batch processing, not real-time pre-payment screening.</p><p>agentmail integrates with a single HTTP call, an MCP tool for AI agent frameworks, or a CLI for scripts. A developer can add OFAC screening to an AI agent in under 5 minutes. The response includes a <code>clean</code> boolean: <code>true</code> means proceed, <code>false</code> means halt. That is the entire integration surface.</p><h2>World-Check use cases vs agentmail use cases</h2><p><strong>Use World-Check when:</strong> You are a bank, exchange, or regulated financial institution that needs full KYC including PEP screening, adverse media, and regulatory enforcement data. You have a compliance team and budget for enterprise tooling. You need SOC 2 and ISO 27001 certified infrastructure.</p><p><strong>Use agentmail when:</strong> You are building an AI agent that sends payments and needs pre-transaction OFAC screening. You are a developer or small team. You want a free tier to test with. You need crypto wallet screening, not PEP data. You want to integrate in minutes, not weeks.</p><h2>Refinitiv World-Check One vs agentmail</h2><p>Refinitiv World-Check One is the screening interface for the World-Check database. It provides batch screening, case management, and audit trails for compliance officers. agentmail provides none of that. It is a screening API, not a compliance workflow tool. If your compliance team needs case management, audit trails, and escalation workflows, World-Check One is the right tool. If your AI agent needs to check a wallet address before sending USDC, agentmail is faster, cheaper, and easier to integrate.</p>",
+        "deep_dive": "<h2>World-Check pricing and access model</h2><p>Refinitiv World-Check (now owned by LSEG, the London Stock Exchange Group) is an enterprise subscription product. Pricing is not public, but industry estimates put it at $50,000 to $250,000 per year depending on organization size and data feeds. Access requires a sales conversation, contract negotiation, and onboarding. There is no free tier, no developer sandbox, and no self-serve signup.</p><p>agentmail takes the opposite approach: free tier with 5 checks per day, no signup, no API key. Developer pricing starts at $19/month. Self-host the open-source version if you want full control. This makes agentmail viable for AI agent builders, solo developers, and early-stage fintechs who cannot justify a five-figure annual compliance contract.</p><h2>World-Check data coverage</h2><p>World-Check aggregates PEP (Politically Exposed Persons), sanctions lists, regulatory enforcement lists, and adverse media from thousands of sources. It is a broad-spectrum compliance database designed for KYC and due diligence workflows at banks and large financial institutions. Coverage includes over 4 million profiles across 240 countries.</p><p>agentmail focuses specifically on OFAC SDN data: 19,218 names, 947 crypto wallet addresses, and 16 embargoed jurisdictions. This is narrower by design. If you are screening an AI agent's crypto payment before it executes, you do not need PEP data. You need to know if the wallet is sanctioned. That check runs in under 100ms on agentmail, compared to batch API calls on World-Check.</p><h2>World-Check integration complexity</h2><p>World-Check integrates through the Refinitiv API or bulk data feeds. Integration typically takes weeks and requires dedicated compliance engineers. The API uses SOAP or REST with complex authentication, rate limiting tied to the contract, and response structures built for batch processing, not real-time pre-payment screening.</p><p>agentmail integrates with a single HTTP call, an MCP tool for AI agent frameworks, or a CLI for scripts. A developer can add OFAC screening to an AI agent in under 5 minutes. The response includes a <code>clean</code> boolean: <code>true</code> means proceed, <code>false</code> means halt. That is the entire integration surface.</p><h2>World-Check use cases vs agentmail use cases</h2><p><strong>Use World-Check when:</strong> You are a bank, exchange, or regulated financial institution that needs full KYC including PEP screening, adverse media, and regulatory enforcement data. You have a compliance team and budget for enterprise tooling. You need SOC 2 and ISO 27001 certified infrastructure.</p><p><strong>Use agentmail when:</strong> You are building an AI agent that sends payments and needs pre-transaction OFAC screening. You are a developer or small team. You want a free tier to test with. You need crypto wallet screening, not PEP data. You want to integrate in minutes, not weeks.</p><h2>Refinitiv World-Check One vs agentmail</h2><p>Refinitiv World-Check One is the screening interface for the World-Check database. It provides batch screening, case management, and audit trails for compliance officers. agentmail provides none of that. It is a screening API, not a compliance workflow tool. If your compliance team needs case management, audit trails, and escalation workflows, World-Check One is the right tool. If your AI agent needs to check a wallet address before sending USDC, agentmail is faster, cheaper, and easier to integrate.</p>",
     },
     "identitymind": {
         "name": "IdentityMind (Onfido/Entrust)",
@@ -1467,7 +1467,7 @@ _GUIDE_CONTENT = {
         "tldr": "Add sanctions screening to your AI agent with one HTTP call: <code>curl \"https://sanctionsai.dev/sanctions?wallet=0x...\"</code>. If the response says <code>clean: false</code>, halt the payment. Free tier: 5 checks/day, no API key. Integration takes under 5 minutes via HTTP, MCP, or CLI.",
         "html": "<p>Adding sanctions screening to your AI agent takes one API call and under five minutes. This guide covers all three integration methods: HTTP API, MCP tool, and CLI.</p><h2>Method 1: HTTP API (simplest, works with any agent framework)</h2><p>Call our HTTP endpoint with the wallet address, name, or country you want to check. No API key needed for the free tier (5 checks/day per IP).</p><pre><code>curl &quot;https://sanctionsai.dev/sanctions?wallet=0x098B716B8Aaf21512996dC57EB0615e2383E2f96&quot;</code></pre><p>Response includes <code>clean</code> (boolean), <code>matches</code> (array of matched SDN entries), and <code>quota</code> (remaining free checks). Wire this before your agent&rsquo;s payment function.</p><h2>Method 2: MCP tool (works with Claude Code, Cursor, Windsurf)</h2><p>Install pip install sanctions-mcp, configure the MCP server, and your agent can call <code>sanctions_check</code> as a native tool.</p><pre><code>pip install sanctions-mcp\n# Add to your MCP config:\n# mcpServers.sanctions.command = &quot;python -m sanctions_mcp&quot;</code></pre><h2>Method 3: CLI (for scripts and cron jobs)</h2><pre><code>sanctions check --wallet 0x098B716B8Aaf21512996dC57EB0615e2383E2f96</code></pre><h2>What to do with the result</h2><p>If clean=True, the transaction is safe to proceed. If clean=False, halt the transaction, log the match, and alert a human. Every check is timestamped for your compliance audit trail.</p>",
         "steps": [
-            {"name": "Choose your integration mode", "text": "Pick HTTP API (simplest, works with any framework), MCP tool (for Claude Code, Cursor, Windsurf), or CLI (for scripts). All check the same 782 OFAC-sanctioned wallets."},
+            {"name": "Choose your integration mode", "text": "Pick HTTP API (simplest, works with any framework), MCP tool (for Claude Code, Cursor, Windsurf), or CLI (for scripts). All check the same 947 OFAC-sanctioned wallets."},
             {"name": "Add the screening call before your payment function", "text": "Wire the sanctions check into your agent's payment path. For HTTP: curl the endpoint with the wallet address. The free tier allows 5 checks/day with no API key."},
             {"name": "Handle the response", "text": "If clean=True, proceed with the payment. If clean=False, halt the transaction and log the match details from the matches array for your audit trail."},
             {"name": "Log every screen", "text": "Record the timestamp, wallet, result, and OFAC list version for every check. This tamper-evident log is your evidence if Treasury asks."},
@@ -1478,9 +1478,9 @@ _GUIDE_CONTENT = {
         "desc": "A comparison of OFAC screening APIs and what to look for: agent-native design, crypto wallet support, free tier, and integration options.",
         "h1": "How to Choose the Right Sanctions Screening API for Your AI Agent",
         "tldr": "For AI agents, pick a sanctions API that supports crypto wallets (not just names), offers MCP and HTTP integration, has a free tier for testing, screens in under 100ms, and logs every check for OFAC audit. agentmail is purpose-built for autonomous payment pipelines.",
-        "html": "<p>Not all sanctions screening APIs are built for autonomous agents. Here is what to look for.</p><h2>1. Does it support crypto wallet addresses?</h2><p>Many enterprise screening tools only check names and countries, which leaves the biggest risk for an agent unscreened. Your agent almost certainly pays crypto wallets, so wallet-address coverage is non-negotiable. agentmail screens 782 OFAC-sanctioned crypto addresses across EVM chains, Bitcoin, Solana, and Tron before any payment is signed.</p><h2>2. Can agents call it programmatically?</h2><p>An API is only useful to an agent if the agent can actually invoke it mid-workflow. Look for MCP support (the AI-native tool protocol), a simple HTTP endpoint, and a CLI for scripts. agentmail supports all three, whereas a PDF report or dashboard-only product cannot be called by an autonomous agent at payment time.</p><h2>3. Is there a free tier?</h2><p>You should never have to pay just to test whether a compliance control works. agentmail gives 5 free checks per day with no signup and no API key, so you can wire screening into your agent and verify it end to end before spending anything. A required sales call means it is not built for agents.</p><h2>4. Does it log for audit?</h2><p>OFAC expects documented, timestamped screening, and an audit trail is what turns a violation into a mitigated one. Choose an API that records every check with its result and the SDN-list version. agentmail paid plans include a full audit dashboard with timestamped, exportable logs that serve as your compliance evidence.</p><h2>5. What is the latency?</h2><p>Agent payment flows are real-time, so a slow screening call degrades the entire user experience or times out the transaction. Sub-second response is the bar to clear. agentmail screens in under 100 milliseconds, fast enough to sit inline before every payment without the agent or its user noticing the check.</p><h2>The verdict</h2><p>For AI agents, agentmail is purpose-built. Enterprise tools like Chainalysis, World-Check, and ComplyAdvantage are designed for human analysts, not autonomous payment pipelines.</p>",
+        "html": "<p>Not all sanctions screening APIs are built for autonomous agents. Here is what to look for.</p><h2>1. Does it support crypto wallet addresses?</h2><p>Many enterprise screening tools only check names and countries, which leaves the biggest risk for an agent unscreened. Your agent almost certainly pays crypto wallets, so wallet-address coverage is non-negotiable. agentmail screens 947 OFAC-sanctioned crypto addresses across EVM chains, Bitcoin, Solana, and Tron before any payment is signed.</p><h2>2. Can agents call it programmatically?</h2><p>An API is only useful to an agent if the agent can actually invoke it mid-workflow. Look for MCP support (the AI-native tool protocol), a simple HTTP endpoint, and a CLI for scripts. agentmail supports all three, whereas a PDF report or dashboard-only product cannot be called by an autonomous agent at payment time.</p><h2>3. Is there a free tier?</h2><p>You should never have to pay just to test whether a compliance control works. agentmail gives 5 free checks per day with no signup and no API key, so you can wire screening into your agent and verify it end to end before spending anything. A required sales call means it is not built for agents.</p><h2>4. Does it log for audit?</h2><p>OFAC expects documented, timestamped screening, and an audit trail is what turns a violation into a mitigated one. Choose an API that records every check with its result and the SDN-list version. agentmail paid plans include a full audit dashboard with timestamped, exportable logs that serve as your compliance evidence.</p><h2>5. What is the latency?</h2><p>Agent payment flows are real-time, so a slow screening call degrades the entire user experience or times out the transaction. Sub-second response is the bar to clear. agentmail screens in under 100 milliseconds, fast enough to sit inline before every payment without the agent or its user noticing the check.</p><h2>The verdict</h2><p>For AI agents, agentmail is purpose-built. Enterprise tools like Chainalysis, World-Check, and ComplyAdvantage are designed for human analysts, not autonomous payment pipelines.</p>",
         "steps": [
-            {"name": "Check crypto wallet support", "text": "Ensure the API screens wallet addresses, not just names. agentmail covers 782 OFAC-sanctioned addresses across EVM, Bitcoin, Solana, and Tron."},
+            {"name": "Check crypto wallet support", "text": "Ensure the API screens wallet addresses, not just names. agentmail covers 947 OFAC-sanctioned addresses across EVM, Bitcoin, Solana, and Tron."},
             {"name": "Verify agent-native integration", "text": "Look for MCP support, a simple HTTP API, and a CLI. Dashboard-only tools do not help autonomous agents."},
             {"name": "Confirm a free tier exists", "text": "You should never pay to test compliance. agentmail gives 50 free checks/day with no signup."},
             {"name": "Check latency", "text": "Agent payment flows need sub-second responses. agentmail screens in under 100ms."},
@@ -1554,7 +1554,7 @@ _BLOG_POSTS = {
         "desc": "Autonomous agents can now move money, but nobody is screening their counterparties against OFAC. Here is why that is a legal problem and how to fix it.",
         "html": """<p>The payment rails caught up to agents fast. x402, Coinbase AgentKit, OpenAI's Stripe ACP, and AP2 all let an AI agent send real money to a counterparty with little or no human review. What didn't catch up is compliance: the moment an agent pays a sanctioned wallet or a counterparty in an embargoed region, the legal liability lands on whoever deployed the agent.</p>
 <h2>The 30-second OFAC primer</h2>
-<p>OFAC (the US Treasury's Office of Foreign Assets Control) maintains the Specially Designated Nationals list - roughly 19,000 individuals and entities, plus 782 crypto wallet addresses and 16 comprehensively embargoed jurisdictions. Transacting with anyone on the list is prohibited, and the standard is strict liability: it generally does not matter whether you knew.</p>
+<p>OFAC (the US Treasury's Office of Foreign Assets Control) maintains the Specially Designated Nationals list - roughly 19,000 individuals and entities, plus 947 crypto wallet addresses and 16 comprehensively embargoed jurisdictions. Transacting with anyone on the list is prohibited, and the standard is strict liability: it generally does not matter whether you knew.</p>
 <p>Civil penalties can reach $300,000 or twice the transaction value per violation, whichever is higher. For an agent executing hundreds of payments a day, the math gets bad fast.</p>
 <h2>Why agents make it worse</h2>
 <p>A human payment has a person who can pause and ask "wait, who is this?" An autonomous agent has a payment function. If that function does not include a sanctions check, the agent will happily route USDC to a wallet on the SDN list - and it will do it at 3am, repeatedly, until someone notices.</p>
@@ -2165,7 +2165,7 @@ AgentMail is the compliance layer for autonomous agent payments. Before any agen
 
 | Tool | Method | Description |
 |------|--------|-------------|
-| **Sanctions Check** | `GET /sanctions?wallet=X&name=Y&country=Z` | Screen against 782 OFAC wallets + 19,086 SDN names + 16 embargoed jurisdictions. Under 100ms. |
+| **Sanctions Check** | `GET /sanctions?wallet=X&name=Y&country=Z` | Screen against 947 OFAC wallets + 19,218 SDN names + 16 embargoed jurisdictions. Under 100ms. |
 | **Risk Score** | `POST /risk` | Pre-payment fraud scoring — returns allow/review/decline. |
 | **Know Your Agent** | `POST /kya` | Verify AI agent identity: wallet, domain, wallet age, pubkey. |
 | **Dispute** | `POST /disputes` | File a dispute with audit trail + 7-day auto-escalation. |
@@ -2633,7 +2633,7 @@ License: https://creativecommons.org/licenses/by/4.0/
                         "alternateName": ["AgentMail", "agentmail API", "SanctionsAI", "sanctions-mcp", "Sanctions MCP", "OFAC sanctions screening for AI agents"],
                         "applicationCategory": ["SecurityApplication", "FinanceApplication", "DeveloperApplication"],
                         "operatingSystem": "Any (Python 3.9+)",
-                        "description": "OFAC sanctions screening, transaction risk scoring, and Know-Your-Agent verification for AI agents that transact autonomously. Screens a counterparty wallet, name, or country against 782 OFAC crypto wallets, 19,086 SDN names, and 16 embargoed jurisdictions before an agent pays. Free tier, no API key. Exposed as an MCP server, HTTP API, and CLI.",
+                        "description": "OFAC sanctions screening, transaction risk scoring, and Know-Your-Agent verification for AI agents that transact autonomously. Screens a counterparty wallet, name, or country against 947 OFAC crypto wallets, 19,218 SDN names, and 16 embargoed jurisdictions before an agent pays. Free tier, no API key. Exposed as an MCP server, HTTP API, and CLI.",
                         "url": "https://sanctionsai.dev",
                         "license": "https://opensource.org/licenses/MIT",
                         "isAccessibleForFree": True,
@@ -2643,7 +2643,7 @@ License: https://creativecommons.org/licenses/by/4.0/
                             "OFAC SDN screening (wallets, names, countries)",
                             "Pre-payment transaction risk scoring (allow/review/decline)",
                             "Know-Your-Agent (KYA) trust scoring",
-                            "782 OFAC crypto wallets, 19,086 SDN names, 16 embargoed jurisdictions",
+                            "947 OFAC crypto wallets, 19,218 SDN names, 16 embargoed jurisdictions",
                             "MCP, HTTP API, and CLI interfaces",
                             "Compatible with x402, AP2, OpenAI+Stripe ACP, Coinbase AgentKit",
                         ],
@@ -2696,7 +2696,7 @@ License: https://creativecommons.org/licenses/by/4.0/
         if p.path == "/qa.jsonl":
             return self._serve_text(
                 '{"question": "What is agentmail?", "answer": "agentmail is OFAC sanctions screening, transaction risk scoring, and Know-Your-Agent verification for AI agents that transact autonomously. It lets any AI agent check whether a counterparty (wallet, name, or country) is on the OFAC Specially Designated Nationals list before paying it. It runs on real, free, public data with no API key required for the free tier, and is available at https://sanctionsai.dev as an MCP server, HTTP API, and CLI."}\n'
-                '{"question": "How do I screen a wallet or name for sanctions?", "answer": "Call the hosted API, for example curl \\"https://sanctionsai.dev/sanctions?wallet=0x...\\", or use the sanctions_check tool via the MCP server. It screens the input against 782 OFAC crypto wallets, 19,086 SDN names, and 16 embargoed jurisdictions and returns any matches with confidence scores."}\n'
+                '{"question": "How do I screen a wallet or name for sanctions?", "answer": "Call the hosted API, for example curl \\"https://sanctionsai.dev/sanctions?wallet=0x...\\", or use the sanctions_check tool via the MCP server. It screens the input against 947 OFAC crypto wallets, 19,218 SDN names, and 16 embargoed jurisdictions and returns any matches with confidence scores."}\n'
                 '{"question": "What data does agentmail use?", "answer": "agentmail uses real, public OFAC data: crypto wallet addresses from the vile/ofac-sdn-list GitHub releases (multi-chain, daily refresh), names from the US Treasury OFAC sdn.csv, and 16 comprehensive sanctions jurisdictions. It is not affiliated with the US Treasury; it screens against the Treasury\\u2019s published lists."}\n'
                 '{"question": "What tools does agentmail provide?", "answer": "agentmail provides sanctions_check (screen a name, wallet, or country against OFAC), risk_score (pre-payment fraud scoring returning allow/review/decline based on amount, rail, and category), and kya_verify (Know-Your-Agent trust scoring for a counterparty agent)."}\n'
                 '{"question": "How much does agentmail cost?", "answer": "agentmail has a free tier that requires no API key. Paid usage is $0.05 per check. See https://sanctionsai.dev/pricing for current details."}\n'
@@ -3845,7 +3845,7 @@ curl "https://sanctionsai.dev/sanctions?wallet=0x098B716B8Aaf21512996dC57EB0615e
 
 ## Tools
 
-- sanctions_check(name, wallet, country): Screen against 782 OFAC crypto wallets + 19,086 names + 16 embargoed jurisdictions
+- sanctions_check(name, wallet, country): Screen against 947 OFAC crypto wallets + 19,218 names + 16 embargoed jurisdictions
 - risk_score(counterparty, amount, rail, category): Pre-payment fraud scoring (allow/review/decline)
 - kya_verify(agent_id, evidence): Know-Your-Agent trust scoring
 - dispute_open(transaction_id, reason): Record a disputed transaction
@@ -3931,8 +3931,8 @@ The server exposes four tools (call by these exact names):
 - dispute_open(transaction_id, reason, evidence=None) - Open a dispute when an agent-paid transaction goes bad. Returns {dispute_id, status, escalation_at}.
 
 ## Data Coverage
-- 782 OFAC-listed crypto wallet addresses (EVM, Bitcoin, Tron)
-- 19,086 OFAC SDN names
+- 947 OFAC-listed crypto wallet addresses (EVM, Bitcoin, Tron)
+- 19,218 OFAC SDN names
 - 16 embargoed/restricted jurisdictions
 - Refreshed daily from primary sources
 
@@ -3953,12 +3953,12 @@ The server exposes four tools (call by these exact names):
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>OFAC Sanctions Check for AI Agents | $0.05/screen</title>
-<meta name="description" content="OFAC sanctions screening for x402 payment agents. Screen every counterparty before your agent pays — 782 wallets, 19,086 names, under 100ms. Free tier.">
+<meta name="description" content="OFAC sanctions screening for x402 payment agents. Screen every counterparty before your agent pays — 947 wallets, 19,218 names, under 100ms. Free tier.">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <meta name="theme-color" content="#0a0a0a">
 <meta name="indexnow" content="87aaa199acaf7d14c812e974ce115e32">
 <meta property="og:title" content="OFAC Sanctions Check for AI Agents | $0.05/screen">
-<meta property="og:description" content="OFAC sanctions screening for x402 payment agents. Screen every counterparty before your agent pays — 782 wallets, 19,086 names, under 100ms.">
+<meta property="og:description" content="OFAC sanctions screening for x402 payment agents. Screen every counterparty before your agent pays — 947 wallets, 19,218 names, under 100ms.">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="agentmail">
 <meta property="og:url" content="https://sanctionsai.dev/">
@@ -4056,7 +4056,7 @@ The server exposes four tools (call by these exact names):
       "@id": "https://sanctionsai.dev/#webpage",
       "name": "OFAC & x402 Sanctions Check for AI Agents | agentmail | $0.05/check",
       "url": "https://sanctionsai.dev/",
-      "description": "OFAC sanctions screening for x402 payment agents. Screen every counterparty before your agent pays - 782 crypto wallets, 19,086 names, under 100ms. Free tier + $0.05/check x402.",
+      "description": "OFAC sanctions screening for x402 payment agents. Screen every counterparty before your agent pays - 947 crypto wallets, 19,218 names, under 100ms. Free tier + $0.05/check x402.",
       "isPartOf": {"@id": "https://sanctionsai.dev/#website"},
       "about": {"@id": "https://sanctionsai.dev/#softwareapplication"},
       "breadcrumb": {
@@ -4393,7 +4393,7 @@ footer{padding-bottom:max(40px,env(safe-area-inset-bottom))}
       "name": "Which chains and assets are supported?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "EVM chains (Ethereum, Base, Arbitrum, Optimism and more), Bitcoin, and Tron addresses. 782 OFAC-listed wallets across all of them, plus 19,086 names and 16 jurisdictions."
+        "text": "EVM chains (Ethereum, Base, Arbitrum, Optimism and more), Bitcoin, and Tron addresses. 947 OFAC-listed wallets across all of them, plus 19,218 names and 16 jurisdictions."
       }
     },
     {
@@ -4441,7 +4441,7 @@ footer{padding-bottom:max(40px,env(safe-area-inset-bottom))}
       "name": "Does it support crypto wallets?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Yes, agentmail screens 782 OFAC-sanctioned crypto addresses across EVM, Bitcoin, and Tron networks."
+        "text": "Yes, agentmail screens 947 OFAC-sanctioned crypto addresses across EVM, Bitcoin, and Tron networks."
       }
     }
   ]
@@ -4524,15 +4524,15 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
   <span class="pill"><span class="tag">RISK</span> OFAC fines start at $356,000 per violation</span>
   <h1>Your agent paid a sanctioned wallet at <span class="red">3 AM</span>.<br>Monday morning the OFAC notice lands on <span class="grad">your desk</span> &mdash; $356,000.</h1>
   <p class="bridge">&ldquo;I almost found out the hard way on test #47. Here is the 1 curl call that saved me &mdash; and will save you.&rdquo;<span class="name">&mdash; Maryan, founder</span></p>
-  <p class="sub">You are shipping your first x402 payment agent this month. It pays invoices in USDC while you sleep. If it touches one of <b style="color:var(--text)">782 OFAC-listed wallets</b>, the fine is yours &mdash; not the protocol's, not the wallet's. Screen every counterparty before money moves. One curl call. Under 100&nbsp;ms.</p>
+  <p class="sub">You are shipping your first x402 payment agent this month. It pays invoices in USDC while you sleep. If it touches one of <b style="color:var(--text)">947 OFAC-listed wallets</b>, the fine is yours &mdash; not the protocol's, not the wallet's. Screen every counterparty before money moves. One curl call. Under 100&nbsp;ms.</p>
   <div class="statrow">
-    <span class="s"><b>782</b> crypto wallets</span>
-    <span class="s"><b>19,086</b> SDN names</span>
+    <span class="s"><b>947</b> crypto wallets</span>
+    <span class="s"><b>19,218</b> SDN names</span>
     <span class="s"><b>16</b> jurisdictions</span>
     <span class="s"><b>$0</b> to start</span>
   </div>
   <div style="max-width:720px;margin:0 auto 28px;padding:18px 24px;background:rgba(0,212,170,.06);border:1px solid rgba(0,212,170,.18);border-radius:14px;text-align:left">
-    <p style="color:var(--t2);font-size:.95rem;margin:0;line-height:1.6"><strong style="color:var(--teal2)">TL;DR:</strong> <b style="color:var(--text)">agentmail is an OFAC sanctions screening API for AI agents.</b> One HTTP call before every payment: <b style="color:var(--text)">clean = proceed, flagged = halt</b>. Covers 782 crypto wallets, 19,086 names, and 16 jurisdictions in under 100&nbsp;ms. Free tier (5 checks/day, no key), paid from $19/mo, or $0.05/check via x402. MIT-licensed and self-hostable.</p>
+    <p style="color:var(--t2);font-size:.95rem;margin:0;line-height:1.6"><strong style="color:var(--teal2)">TL;DR:</strong> <b style="color:var(--text)">agentmail is an OFAC sanctions screening API for AI agents.</b> One HTTP call before every payment: <b style="color:var(--text)">clean = proceed, flagged = halt</b>. Covers 947 crypto wallets, 19,218 names, and 16 jurisdictions in under 100&nbsp;ms. Free tier (5 checks/day, no key), paid from $19/mo, or $0.05/check via x402. MIT-licensed and self-hostable.</p>
   </div>
   <div class="ctas">
     <div class="row">
@@ -4547,7 +4547,7 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
 {
   <span class="c-key">"clean"</span>: <span class="c-ok">true</span>,
   <span class="c-key">"action"</span>: <span class="c-str">"ALLOW"</span>,
-  <span class="c-key">"checked_against"</span>: { <span class="c-key">"wallets"</span>: <span class="c-num">782</span>, <span class="c-key">"names"</span>: <span class="c-num">19086</span> },
+  <span class="c-key">"checked_against"</span>: { <span class="c-key">"wallets"</span>: <span class="c-num">947</span>, <span class="c-key">"names"</span>: <span class="c-num">19218</span> },
   <span class="c-key">"latency_ms"</span>: <span class="c-num">92</span>
 }</pre>
   </div>
@@ -4628,8 +4628,8 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
     <h2>No invented quotes. These numbers are live right now.</h2>
   </div>
   <div class="statrow" style="margin-bottom:30px">
-    <span class="s"><b>782</b> OFAC wallets</span>
-    <span class="s"><b>19,086</b> SDN names</span>
+    <span class="s"><b>947</b> OFAC wallets</span>
+    <span class="s"><b>19,218</b> SDN names</span>
     <span class="s"><b>16</b> jurisdictions</span>
     <span class="s"><b>hourly</b> sync</span>
     <span class="s"><b>&lt;100 ms</b> per check</span>
@@ -4648,7 +4648,7 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
   <p style="color:var(--t3);font-size:.9rem;max-width:560px;margin:26px auto 0;text-align:center">That wallet is on the real OFAC list &mdash; run the curl and confirm it yourself. When real customers tell us what agentmail did for them, their words go right here. Not before.</p>
   <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;max-width:760px;margin:30px auto 0">
     <div style="background:var(--surf);border:1px solid var(--line);border-radius:12px;padding:16px 18px;text-align:center">
-      <div style="color:var(--teal);font-weight:800;font-size:1.3rem;letter-spacing:-.02em">19,086</div>
+      <div style="color:var(--teal);font-weight:800;font-size:1.3rem;letter-spacing:-.02em">19,218</div>
       <div style="color:var(--t3);font-size:.76rem;line-height:1.4;margin-top:2px">SDN names, from US Treasury sdn.csv</div>
     </div>
     <div style="background:var(--surf);border:1px solid var(--line);border-radius:12px;padding:16px 18px;text-align:center">
@@ -4697,7 +4697,7 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
   <div class="narr reveal" style="max-width:680px;margin:0 auto">
     <div class="callout" style="background:linear-gradient(135deg,rgba(255,107,107,.08),rgba(255,107,107,.02));border:1px solid rgba(255,107,107,.2);border-radius:16px;padding:28px 30px;color:#e7a3a3;line-height:1.7">
       <div class="eyebrow" style="color:#ff6b6b;margin-bottom:14px"><span class="dot" style="background:#ff6b6b;box-shadow:0 0 12px #ff6b6b"></span> What happens if you do nothing</div>
-      <p style="margin:0 0 14px;font-size:1.02rem">Nothing changes today. Your agent keeps paying. Maybe nothing happens this week &mdash; there are 782 sanctioned wallets and your agent touches a handful of counterparties.</p>
+      <p style="margin:0 0 14px;font-size:1.02rem">Nothing changes today. Your agent keeps paying. Maybe nothing happens this week &mdash; there are 947 sanctioned wallets and your agent touches a handful of counterparties.</p>
       <p style="margin:0 0 14px;font-size:1.02rem">But agents are getting more autonomous every month. More wallets, more chains, higher amounts. The rails they run on &mdash; <strong style="color:#ff9b9b">x402, AgentKit, AP2, ACP</strong> &mdash; do not screen. They never will on their own. The first time your agent pays the wrong wallet, the notice is $356,000. Not a bug report. Not a refund. <strong style="color:#ff9b9b">A fine that lands on whoever deployed the agent.</strong></p>
       <p style="margin:0;font-size:1.02rem">Six months from now, when the first agent-driven OFAC enforcement makes the news, you'll either have had this screen in place for months &mdash; or you'll be explaining why you didn't. The curl above takes 30 seconds. <a href="#try-free" style="color:#ff9b9b;text-decoration:underline">Run it now &rarr;</a></p>
     </div>
@@ -4711,7 +4711,7 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
     <p>Drop them into any pipeline that moves money. HTTP, MCP, or CLI. Each returns in under 100&nbsp;ms.</p>
   </div>
   <div class="bento">
-    <div class="tile t1 reveal"><div class="ic">&#128270;</div><h3><code>sanctions_check</code></h3><p>Screen any EVM, Bitcoin, or Tron address against 782 OFAC-listed crypto wallets. Returns match or clean in under 100&nbsp;ms.</p></div>
+    <div class="tile t1 reveal"><div class="ic">&#128270;</div><h3><code>sanctions_check</code></h3><p>Screen any EVM, Bitcoin, or Tron address against 947 OFAC-listed crypto wallets. Returns match or clean in under 100&nbsp;ms.</p></div>
     <div class="tile t2 reveal"><div class="ic">&#9888;</div><h3><code>risk_score</code></h3><p>Analyze amount anomalies, rail risk (x402, AP2, ACP), and category exposure. Returns a clear allow, review, or decline.</p></div>
     <div class="tile t3 reveal"><div class="ic">&#129417;</div><h3><code>kya_verify</code></h3><p>Know Your Agent: trust-score counterparties from transaction history and wallet age.</p></div>
     <div class="tile t4 reveal"><div class="ic">&#9878;</div><h3><code>dispute_open</code></h3><p>File disputes when something goes wrong. 7-day auto-escalation with a full audit trail.</p></div>
@@ -4743,7 +4743,7 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
 </style>
 <div class="stack reveal" id="stack">
   <h3><span class="ann">The value stack</span>What your agent actually gets</h3>
-  <div class="srow"><span class="snum">1</span><div class="sdesc"><b>sanctions_check</b> &mdash; 782 OFAC wallets + 19,086 names + 16 jurisdictions, hourly sync, &lt;100&nbsp;ms</div><span class="sval">$499<span class="vm">/mo</span></span></div>
+  <div class="srow"><span class="snum">1</span><div class="sdesc"><b>sanctions_check</b> &mdash; 947 OFAC wallets + 19,218 names + 16 jurisdictions, hourly sync, &lt;100&nbsp;ms</div><span class="sval">$499<span class="vm">/mo</span></span></div>
   <div class="srow"><span class="snum">2</span><div class="sdesc"><b>risk_score</b> &mdash; amount anomalies + rail risk (x402/AP2/ACP) + category exposure</div><span class="sval">$299<span class="vm">/mo</span></span></div>
   <div class="srow"><span class="snum">3</span><div class="sdesc"><b>kya_verify</b> &mdash; Know-Your-Agent trust scoring from wallet age + history</div><span class="sval">$199<span class="vm">/mo</span></span></div>
   <div class="srow"><span class="snum">4</span><div class="sdesc"><b>dispute_open</b> &mdash; file disputes with 7-day auto-escalation + audit trail</div><span class="sval">$99<span class="vm">/mo</span></span></div>
@@ -4853,7 +4853,7 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
       </div>
       <h3 style="color:#fff;font-size:1.3rem;margin:0 0 8px">SCREEN</h3>
       <p style="color:var(--t2);font-size:.92rem;line-height:1.55;margin:0">
-        Every counterparty checked against <strong style="color:var(--teal)">782 sanctioned crypto wallets</strong> + <strong style="color:var(--teal)">19,086 names</strong> <em>before</em> the payment moves. Not after. <strong style="color:#fff">Before.</strong>
+        Every counterparty checked against <strong style="color:var(--teal)">947 sanctioned crypto wallets</strong> + <strong style="color:var(--teal)">19,218 names</strong> <em>before</em> the payment moves. Not after. <strong style="color:#fff">Before.</strong>
       </p>
     </div>
     <!-- GATE 2: SCORE -->
@@ -4931,7 +4931,7 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
   <div class="faq reveal" id="faq-list">
     <div class="item"><button class="q" aria-expanded="false">Doesn&rsquo;t my payment provider handle OFAC screening? <span class="pm">+</span></button><div class="a"><div class="inner">No. x402, AP2, ACP, and Coinbase AgentKit move money &mdash; none of them screen recipients against the SDN list. Compliance is a separate layer and it is your responsibility. agentmail is that layer.</div></div></div>
     <div class="item"><button class="q" aria-expanded="false">How current is the OFAC data? <span class="pm">+</span></button><div class="a"><div class="inner">Synced hourly from the official US Treasury SDN list. Every check runs against the freshest data.</div></div></div>
-    <div class="item"><button class="q" aria-expanded="false">Which chains and assets are supported? <span class="pm">+</span></button><div class="a"><div class="inner">EVM chains (Ethereum, Base, Arbitrum, Optimism and more), Bitcoin, and Tron addresses &mdash; 782 OFAC-listed wallets across all of them, plus 19,086 names and 16 jurisdictions.</div></div></div>
+    <div class="item"><button class="q" aria-expanded="false">Which chains and assets are supported? <span class="pm">+</span></button><div class="a"><div class="inner">EVM chains (Ethereum, Base, Arbitrum, Optimism and more), Bitcoin, and Tron addresses &mdash; 947 OFAC-listed wallets across all of them, plus 19,218 names and 16 jurisdictions.</div></div></div>
     <div class="item"><button class="q" aria-expanded="false">Can I call it from my agent framework? <span class="pm">+</span></button><div class="a"><div class="inner">Yes &mdash; anything that speaks HTTP works. We also ship an MCP server for Claude Code, Cursor, and Windsurf, plus a CLI and a Python package (<code>pip install sanctions-mcp</code>).</div></div></div>
     <div class="item"><button class="q" aria-expanded="false">Can I self-host? <span class="pm">+</span></button><div class="a"><div class="inner">Yes. agentmail is MIT licensed and open source. The hosted API is the fast path; the self-hosted path is always free.</div></div></div>
   </div>
@@ -5109,7 +5109,7 @@ footer a{color:#555;font-size:0.82em;margin:0 10px}
 
 <p>There is one problem: <strong>x402 does not check OFAC.</strong></p>
 
-<p>The OFAC Specially Designated Nationals list contains 782 crypto wallet addresses on Ethereum-compatible chains (including Base, where x402 operates). If your agent pays a wallet on that list, you are looking at a $356,000+ fine. And x402, by design, does not prevent this.</p>
+<p>The OFAC Specially Designated Nationals list contains 947 crypto wallet addresses on Ethereum-compatible chains (including Base, where x402 operates). If your agent pays a wallet on that list, you are looking at a $356,000+ fine. And x402, by design, does not prevent this.</p>
 
 <h2>Why x402 Is Not the Problem (And Not the Solution Either)</h2>
 
@@ -5300,7 +5300,7 @@ const payment = await x402.pay({
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>x402 Compliance Check for AI Agents | $0.05/check | agentmail</title>
-<meta name="description" content="OFAC sanctions screening for AI agents. Pay $0.05 USDC per check via x402 on Base. No API key. No signup. 782 wallets, 19,086 names, 16 jurisdictions.">
+<meta name="description" content="OFAC sanctions screening for AI agents. Pay $0.05 USDC per check via x402 on Base. No API key. No signup. 947 wallets, 19,218 names, 16 jurisdictions.">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <meta name="theme-color" content="#0a0a0a">
 <meta name="indexnow" content="87aaa199acaf7d14c812e974ce115e32">
@@ -5506,23 +5506,23 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
 <div class="wrap hero-inner">
   <span class="pill">x402 &middot; USDC &middot; BASE &mdash; your agent pays, no key</span>
   <h1>Your agent moves money. <span class="hl">One wallet it pays today is sanctioned.</span> <span class="hl-r">It can&rsquo;t tell which.</span></h1>
-  <p class="sub">Your agent has a wallet. It&rsquo;s built to pay fast &mdash; not to know that 782 wallets on Base sit on the OFAC list, or that paying one is a <b style="color:#fff">$356,000</b> fine that lands on <b style="color:#fff">you</b>, whoever deployed it. agentmail tells your agent, in 100&nbsp;ms, for <b style="color:var(--teal)">$0.05</b> &mdash; before money moves.</p>
+  <p class="sub">Your agent has a wallet. It&rsquo;s built to pay fast &mdash; not to know that 947 wallets on Base sit on the OFAC list, or that paying one is a <b style="color:#fff">$356,000</b> fine that lands on <b style="color:#fff">you</b>, whoever deployed it. agentmail tells your agent, in 100&nbsp;ms, for <b style="color:var(--teal)">$0.05</b> &mdash; before money moves.</p>
   <div class="statrow">
-    <span class="s"><b>782</b> sanctioned wallets</span>
-    <span class="s"><b>19,086</b> names</span>
+    <span class="s"><b>947</b> sanctioned wallets</span>
+    <span class="s"><b>19,218</b> names</span>
     <span class="s"><b>16</b> jurisdictions</span>
     <span class="s"><b>$0.05</b> / check</span>
   </div>
 
   <div style="max-width:680px;margin:28px auto 0;padding:18px 24px;background:rgba(0,212,170,.06);border:1px solid rgba(0,212,170,.18);border-radius:14px;text-align:left">
-    <p style="color:var(--t2);font-size:.95rem;margin:0"><strong style="color:var(--teal2)">TL;DR:</strong> OFAC strict liability means every payment your agent sends to a sanctioned wallet is a violation &mdash; up to $356,000 each, even if nobody knew. agentmail is one HTTP call your agent makes before every payment: <b style="color:#fff">clean = proceed, flagged = halt</b>. 782 wallets, 19,086 names, 16 jurisdictions, checked in under 100&nbsp;ms for $0.05 via x402 on Base. No API key, no signup.</p>
+    <p style="color:var(--t2);font-size:.95rem;margin:0"><strong style="color:var(--teal2)">TL;DR:</strong> OFAC strict liability means every payment your agent sends to a sanctioned wallet is a violation &mdash; up to $356,000 each, even if nobody knew. agentmail is one HTTP call your agent makes before every payment: <b style="color:#fff">clean = proceed, flagged = halt</b>. 947 wallets, 19,218 names, 16 jurisdictions, checked in under 100&nbsp;ms for $0.05 via x402 on Base. No API key, no signup.</p>
   </div>
 
   <div class="hero-card reveal">
     <span class="tag">Your price. All the value.</span>
     <div style="position:relative;max-width:460px;margin:0 auto 20px;text-align:left">
       <div style="border-bottom:1px solid var(--line);padding:10px 0;display:flex;justify-content:space-between;gap:12px">
-        <span style="color:var(--t2);font-size:.89rem">OFAC SDN screening &mdash; 782 wallets, 19,086 names, 16 jurisdictions</span>
+        <span style="color:var(--t2);font-size:.89rem">OFAC SDN screening &mdash; 947 wallets, 19,218 names, 16 jurisdictions</span>
         <span style="color:var(--t3);white-space:nowrap;font-size:.84rem">$1,200/yr value</span>
       </div>
       <div style="border-bottom:1px solid var(--line);padding:10px 0;display:flex;justify-content:space-between;gap:12px">
@@ -5908,7 +5908,7 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
             ("What is OFAC sanctions screening for AI agents?",
              "OFAC sanctions screening is the process of checking whether a person, entity, wallet, or country your AI agent is about to transact with appears on the US Treasury's Specially Designated Nationals (SDN) list or an embargoed-jurisdiction list. For autonomous agents that move money, screening must happen programmatically, before every payment. agentmail exposes this as a single API call."),
             ("How does agentmail check crypto wallets against OFAC?",
-             "You pass a wallet address to the /sanctions endpoint (by query string, MCP tool, or CLI). agentmail looks it up against 782 OFAC-listed crypto addresses across EVM, Bitcoin, and Tron, and returns any matches with list, match_type, and confidence, plus a clean boolean. It runs in milliseconds so it fits inside an agent's payment path."),
+             "You pass a wallet address to the /sanctions endpoint (by query string, MCP tool, or CLI). agentmail looks it up against 947 OFAC-listed crypto addresses across EVM, Bitcoin, and Tron, and returns any matches with list, match_type, and confidence, plus a clean boolean. It runs in milliseconds so it fits inside an agent's payment path."),
             ("What data sources does agentmail use?",
              "Crypto wallets come from the vile/ofac-sdn-list GitHub releases (multi-chain, refreshed daily). Names come from the US Treasury OFAC sdn.csv. Jurisdictions cover the 16 comprehensively sanctioned / embargoed regions. Everything is public, free, primary-source data."),
             ("Do I need an API key to start?",
@@ -5933,7 +5933,7 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
             '<p class="lead" style="max-width:600px;margin:0 auto">OFAC sanctions screening for AI agents - the practical questions.</p>'
             '</section>'
             '<section><div class="prose">'
-            '<p><strong>Quick answer:</strong> agentmail is an OFAC sanctions screening API built for AI agents that move money autonomously. You call <code>GET /sanctions?wallet=0x...</code> before every payment. If the response says <code>"clean": true</code>, the counterparty is safe to pay. If <code>"clean": false</code>, your agent halts. It checks 782 sanctioned crypto wallets, 19,086 SDN names, and 16 embargoed jurisdictions in under 100ms. The free tier gives you 5 checks/day with no API key &mdash; <a href="/tools/wallet-checker">try it now</a>.</p>'
+            '<p><strong>Quick answer:</strong> agentmail is an OFAC sanctions screening API built for AI agents that move money autonomously. You call <code>GET /sanctions?wallet=0x...</code> before every payment. If the response says <code>"clean": true</code>, the counterparty is safe to pay. If <code>"clean": false</code>, your agent halts. It checks 947 sanctioned crypto wallets, 19,218 SDN names, and 16 embargoed jurisdictions in under 100ms. The free tier gives you 5 checks/day with no API key &mdash; <a href="/tools/wallet-checker">try it now</a>.</p>'
             '<p class="note">By <span class="author" rel="author">agentmail team</span> · Reviewed against OFAC SDN list (July 2026) · <time datetime="2026-07-18">Updated July 18, 2026</time> · MIT-licensed, self-hostable via <code>pip install sanctions-mcp</code></p>'
             '</div></section>'
             '<section><div class="prose">' + items + '</div></section>'
@@ -5972,7 +5972,7 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
             '</section>'
             '<section><div class="prose">'
             f'<p class="note" style="font-size:.82rem;color:var(--t3)">By <span class="author" rel="author">agentmail team</span> &middot; <time datetime="{today}">{today}</time></p>'
-            '<p><strong>Answer:</strong> ' + v["name"] + ' agents screen counterparties against the OFAC SDN list (19,086 names, 782 crypto wallets, 16 embargoed jurisdictions) via a single API call before every payment. A <code>"clean": true</code> response means proceed; <code>"clean": false</code> means halt. The check runs in under 100ms and the free tier covers 5 checks/day with no API key.</p>'
+            '<p><strong>Answer:</strong> ' + v["name"] + ' agents screen counterparties against the OFAC SDN list (19,218 names, 947 crypto wallets, 16 embargoed jurisdictions) via a single API call before every payment. A <code>"clean": true</code> response means proceed; <code>"clean": false</code> means halt. The check runs in under 100ms and the free tier covers 5 checks/day with no API key.</p>'
             '<h2>Why do ' + v["name"] + ' agents need OFAC sanctions screening?</h2>'
             '<p>' + v["p1"] + '</p>'
             '<p>' + v["p2"] + '</p>'
@@ -5983,8 +5983,8 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
             '<p class="note">Real OFAC data. Free tier: 5 checks/day, no API key.</p>'
             '<h2>What exactly does agentmail screen for ' + name_lower + ' agents?</h2>'
             '<ul>'
-            '<li><strong>782 OFAC-sanctioned crypto wallets</strong> across Ethereum, Bitcoin, Solana, and Tron &mdash; refreshed daily from US Treasury and vile/ofac-sdn-list</li>'
-            '<li><strong>19,086 Specially Designated Nationals</strong> with fuzzy name matching for aliases, transliterations, and alternative spellings</li>'
+            '<li><strong>947 OFAC-sanctioned crypto wallets</strong> across Ethereum, Bitcoin, Solana, and Tron &mdash; refreshed daily from US Treasury and vile/ofac-sdn-list</li>'
+            '<li><strong>19,218 Specially Designated Nationals</strong> with fuzzy name matching for aliases, transliterations, and alternative spellings</li>'
             '<li><strong>16 embargoed jurisdictions</strong> including comprehensive sanctions on Cuba, Iran, North Korea, and Syria</li>'
             '<li><strong>Sub-100ms response</strong> so the check fits inline in any payment path without degrading the agent experience</li>'
             '<li><strong>Automatic audit trail</strong> with timestamp, subject, result, and SDN list version for every screen</li>'
@@ -6112,8 +6112,8 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
 <p class="note">Base URL: <code>__SITE__</code> · Free tier: 5 checks/day, no key · Auth: <code>X-API-Key</code> or <code>Authorization: ***
 </section>
 <section><div class="prose">
-<p><strong>TL;DR:</strong> This is a REST API with four endpoints. <code>GET /sanctions</code> screens a name, wallet, or country against the OFAC SDN list (782 crypto addresses + 19,086 names + 16 embargoed jurisdictions). <code>POST /risk</code> scores transaction fraud risk. <code>POST /kya</code> verifies an AI agent's identity. <code>POST /disputes</code> opens a dispute record. All return JSON, run in under 100ms, and work with or without an API key. Start with the free tier: 5 checks/day, no signup.</p>
-<p class="note">By <span class="author" rel="author">agentmail team</span> · Reviewed against OFAC SDN list (July 2026, 19,086 entries) · <time datetime="2026-07-18">Updated July 18, 2026</time> · Data sourced from US Treasury OFAC sdn.csv and vile/ofac-sdn-list</p>
+<p><strong>TL;DR:</strong> This is a REST API with four endpoints. <code>GET /sanctions</code> screens a name, wallet, or country against the OFAC SDN list (947 crypto addresses + 19,218 names + 16 embargoed jurisdictions). <code>POST /risk</code> scores transaction fraud risk. <code>POST /kya</code> verifies an AI agent's identity. <code>POST /disputes</code> opens a dispute record. All return JSON, run in under 100ms, and work with or without an API key. Start with the free tier: 5 checks/day, no signup.</p>
+<p class="note">By <span class="author" rel="author">agentmail team</span> · Reviewed against OFAC SDN list (July 2026, 19,218 entries) · <time datetime="2026-07-18">Updated July 18, 2026</time> · Data sourced from US Treasury OFAC sdn.csv and vile/ofac-sdn-list</p>
 <h2>Quick start — screen a wallet in one call</h2>
 <p>Screen any crypto wallet against the full OFAC list with a single GET request. No API key needed on the free tier:</p>
 <pre><code>curl "__SITE__/sanctions?wallet=0x098B716B8Aaf21512996dC57EB0615e2383E2f96"</code></pre>
@@ -6130,7 +6130,7 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
 <pre><code>curl -H "X-API-Key: am_live_xxx" "__SITE__/sanctions?wallet=0x098B..."</code></pre>
 
 <h2>1. Sanctions screening - <code>GET /sanctions</code></h2>
-<p>Screen a counterparty by name, crypto wallet, or country against the OFAC SDN list, 782 crypto wallets, and 16 embargoed jurisdictions. At least one of name / wallet / country is required.</p>
+<p>Screen a counterparty by name, crypto wallet, or country against the OFAC SDN list, 947 crypto wallets, and 16 embargoed jurisdictions. At least one of name / wallet / country is required.</p>
 <pre><code>curl "__SITE__/sanctions?wallet=0x098B716B8Aaf21512996dC57EB0615e2383E2f96"</code></pre>
 <pre><code>{
   "matches": [
@@ -6214,7 +6214,7 @@ python -m agentmail.cli sanctions --wallet 0x098B...</code></pre>
 <p class="lead" style="max-width:600px;margin:0 auto 8px">Paste any crypto wallet address and check it against the OFAC sanctions list. Instant results, shareable, embeddable. No signup.</p>
 <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:16px">
 <span id="screens-pill" style="display:none;background:var(--surf2);border:1px solid var(--line);border-radius:20px;padding:6px 14px;font-size:.82rem;color:var(--teal)"><strong id="live-count"></strong> screens today</span>
-<span style="background:var(--surf2);border:1px solid var(--line);border-radius:20px;padding:6px 14px;font-size:.82rem;color:var(--t2)">782 OFAC wallets tracked</span>
+<span style="background:var(--surf2);border:1px solid var(--line);border-radius:20px;padding:6px 14px;font-size:.82rem;color:var(--t2)">947 OFAC wallets tracked</span>
 </div>
 </section>
 <section><div class="prose">
@@ -6266,7 +6266,7 @@ python -m agentmail.cli sanctions --wallet 0x098B...</code></pre>
 <section style="border-top:1px solid var(--line)"><div class="prose">
 <h2 style="text-align:center;color:var(--teal)">Why screen with us</h2>
 <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin-top:24px">
-<div style="background:var(--surf);border:1px solid var(--line);border-radius:12px;padding:18px;text-align:center"><div style="font-size:1.5rem;font-weight:800;color:var(--teal)">782</div><div style="font-size:.8rem;color:var(--t3);margin-top:4px">OFAC crypto wallets tracked</div></div>
+<div style="background:var(--surf);border:1px solid var(--line);border-radius:12px;padding:18px;text-align:center"><div style="font-size:1.5rem;font-weight:800;color:var(--teal)">947</div><div style="font-size:.8rem;color:var(--t3);margin-top:4px">OFAC crypto wallets tracked</div></div>
 <div style="background:var(--surf);border:1px solid var(--line);border-radius:12px;padding:18px;text-align:center"><div style="font-size:1.5rem;font-weight:800;color:var(--teal)">19K+</div><div style="font-size:.8rem;color:var(--t3);margin-top:4px">SDN names monitored</div></div>
 <div style="background:var(--surf);border:1px solid var(--line);border-radius:12px;padding:18px;text-align:center"><div style="font-size:1.5rem;font-weight:800;color:var(--teal)"><100ms</div><div style="font-size:.8rem;color:var(--t3);margin-top:4px">Response time</div></div>
 <div style="background:var(--surf);border:1px solid var(--line);border-radius:12px;padding:18px;text-align:center"><div style="font-size:1.5rem;font-weight:800;color:var(--teal)">$0.05</div><div style="font-size:.8rem;color:var(--t3);margin-top:4px">Per screen</div></div>
@@ -6447,8 +6447,8 @@ document.getElementById("wallet").addEventListener("keydown",function(e){if(e.ke
             {
                 "name": "agentmail",
                 "screening": "Yes",
-                "wallets": "782 OFAC crypto wallets",
-                "names": "19,086 SDN names",
+                "wallets": "947 OFAC crypto wallets",
+                "names": "19,218 SDN names",
                 "countries": "16 embargoed jurisdictions",
                 "latency": "~100 ms",
                 "cost": "$0.05 / check (free tier 5/day)",
@@ -6684,7 +6684,7 @@ document.getElementById("wallet").addEventListener("keydown",function(e){if(e.ke
             ("How is the OFAC Risk Level scored?",
              "Low: the platform screens both wallet and (name or country) programmatically, and exposes a sanctions check in its agent-facing payment path. Medium: screening exists at the platform or custody level (e.g. merchant account screening or hosted-wallet KYT) but is not exposed as a programmable per-call sanctions check. High: no sanctions or OFAC screening is documented for agent payments. Coverage breadth and verifiability break ties."),
             ("Is agentmail ranked honestly?",
-             "Yes. agentmail appears in the table and is held to the same evidence bar as every other platform. It scores Low risk because it screens 782 OFAC crypto wallets, 19,086 SDN names, and 16 embargoed jurisdictions via a single GET /sanctions call in roughly 100 ms at $0.05 / check. If you disagree with any row, the evidence link is there so you can verify it yourself."),
+             "Yes. agentmail appears in the table and is held to the same evidence bar as every other platform. It scores Low risk because it screens 947 OFAC crypto wallets, 19,218 SDN names, and 16 embargoed jurisdictions via a single GET /sanctions call in roughly 100 ms at $0.05 / check. If you disagree with any row, the evidence link is there so you can verify it yourself."),
             ("What does 'Not documented' mean in the table?",
              "It means we could not find a public statement of that capability in the platform's official documentation at the time of verification. It does NOT mean the capability is absent. If you are a platform owner and can supply a citation, contact us and we will update the row in the next quarterly review."),
             ("Does this leaderboard replace legal or compliance advice?",
@@ -6760,7 +6760,7 @@ document.getElementById("wallet").addEventListener("keydown",function(e){if(e.ke
 
             '<section><div class="cta-box">'
             '<h2>Screen your agent&rsquo;s next payment</h2>'
-            '<p>One API call. 782 OFAC wallets + 19,086 names + 16 jurisdictions. ~100 ms. Free tier 5 checks/day.</p>'
+            '<p>One API call. 947 OFAC wallets + 19,218 names + 16 jurisdictions. ~100 ms. Free tier 5 checks/day.</p>'
             '<a href="/tools/wallet-checker" class="btn btn-primary">Open the free wallet checker</a>'
             '&nbsp; <a href="/pricing" class="btn btn-ghost">See pricing</a>'
             '</div></section>'
@@ -6972,10 +6972,10 @@ document.getElementById("wallet").addEventListener("keydown",function(e){if(e.ke
             '<p>Ready-to-use templates. Replace <code>[YOURID]</code> with your partner ID:</p>'
 
             '<h3>1. Twitter / X thread</h3>'
-            '<pre style="background:#0c0d0f;border:1px solid var(--line);border-radius:10px;padding:16px;font-size:.82rem;overflow-x:auto;color:#cfd3d8">1/ Your AI agent can send USDC at 3 AM now.\n\nx402, Coinbase AgentKit, OpenAI ACP — all let agents pay autonomously.\n\nBut none of them check if the recipient is on the OFAC sanctions list.\n\nThe fine for hitting a sanctioned wallet: $356,000 per violation.\n\n2/ I found a tool that fixes this in one curl call:\n\nsanctionsai.dev/?ref=[YOURID]\n\nScreen every counterparty before your agent pays. Under 100ms. Free tier.\n\n3/ How it works:\n- 782 OFAC-listed crypto wallets\n- 19,086 SDN names\n- 16 jurisdictions\n- Hourly sync\n\nOne HTTP call. No SDK lock-in.\n\n4/ MCP support too — native in Claude Code and Cursor.\n\npip install sanctions-mcp\n\nYour coding agent can screen wallets as a tool call.\n\n5/ If you are building payment agents, you need this before you ship:\n\nsanctionsai.dev/?ref=[YOURID]\n\nFree to start. $19/mo in production.</pre>'
+            '<pre style="background:#0c0d0f;border:1px solid var(--line);border-radius:10px;padding:16px;font-size:.82rem;overflow-x:auto;color:#cfd3d8">1/ Your AI agent can send USDC at 3 AM now.\n\nx402, Coinbase AgentKit, OpenAI ACP — all let agents pay autonomously.\n\nBut none of them check if the recipient is on the OFAC sanctions list.\n\nThe fine for hitting a sanctioned wallet: $356,000 per violation.\n\n2/ I found a tool that fixes this in one curl call:\n\nsanctionsai.dev/?ref=[YOURID]\n\nScreen every counterparty before your agent pays. Under 100ms. Free tier.\n\n3/ How it works:\n- 947 OFAC-listed crypto wallets\n- 19,218 SDN names\n- 16 jurisdictions\n- Hourly sync\n\nOne HTTP call. No SDK lock-in.\n\n4/ MCP support too — native in Claude Code and Cursor.\n\npip install sanctions-mcp\n\nYour coding agent can screen wallets as a tool call.\n\n5/ If you are building payment agents, you need this before you ship:\n\nsanctionsai.dev/?ref=[YOURID]\n\nFree to start. $19/mo in production.</pre>'
 
             '<h3>2. Hacker News — Show HN</h3>'
-            '<pre style="background:#0c0d0f;border:1px solid var(--line);border-radius:10px;padding:16px;font-size:.82rem;overflow-x:auto;color:#cfd3d8">Show HN: OFAC sanctions screening for AI payment agents ($0.05/check)\n\nI built a one-curl-call sanctions check for AI agents that send money.\n\nThe problem: x402, AP2, ACP, and Coinbase AgentKit all let agents pay autonomously — but none of them screen recipients against the OFAC SDN list. If an agent pays a sanctioned wallet, the operator is liable under strict liability ($356K/violation).\n\nThe fix: one HTTP call before the payment. 782 OFAC crypto wallets, 19K names, 16 jurisdictions. Under 100ms.\n\nhttps://sanctionsai.dev/?ref=[YOURID]\n\nMIT licensed, self-hostable, MCP + HTTP + CLI.</pre>'
+            '<pre style="background:#0c0d0f;border:1px solid var(--line);border-radius:10px;padding:16px;font-size:.82rem;overflow-x:auto;color:#cfd3d8">Show HN: OFAC sanctions screening for AI payment agents ($0.05/check)\n\nI built a one-curl-call sanctions check for AI agents that send money.\n\nThe problem: x402, AP2, ACP, and Coinbase AgentKit all let agents pay autonomously — but none of them screen recipients against the OFAC SDN list. If an agent pays a sanctioned wallet, the operator is liable under strict liability ($356K/violation).\n\nThe fix: one HTTP call before the payment. 947 OFAC crypto wallets, 19K names, 16 jurisdictions. Under 100ms.\n\nhttps://sanctionsai.dev/?ref=[YOURID]\n\nMIT licensed, self-hostable, MCP + HTTP + CLI.</pre>'
 
             '<h3>3. Reddit — r/MachineLearning</h3>'
             '<pre style="background:#0c0d0f;border:1px solid var(--line);border-radius:10px;padding:16px;font-size:.82rem;overflow-x:auto;color:#cfd3d8">Title: If your AI agent can send money, you need OFAC screening before it pays\n\nBody: Built a sanctions screening API for autonomous payment agents. One curl call checks any wallet/name/country against the OFAC SDN list in under 100ms.\n\nx402 and AgentKit move money but do not screen recipients. Strict liability = $356K per violation. This adds the missing compliance layer.\n\nFree tier (5 checks/day, no signup): sanctionsai.dev/?ref=[YOURID]</pre>'
@@ -7120,7 +7120,7 @@ Two embeddable widgets that let your users screen wallets against the OFAC SDN l
 <section><div class="prose" style="max-width:800px;margin:0 auto">
 
 <h2>1. OFAC Compliance Badge <code style="font-size:.8em;color:#00d4aa;background:#0d1a14;padding:2px 8px;border-radius:4px">SVG</code></h2>
-<p>A live SVG badge showing real-time OFAC screening stats: 782 sanctioned wallets, 19,086 names, hourly sync. Every embed links back to sanctionsai.dev — permanent backlink for your compliance page.</p>
+<p>A live SVG badge showing real-time OFAC screening stats: 947 sanctioned wallets, 19,218 names, hourly sync. Every embed links back to sanctionsai.dev — permanent backlink for your compliance page.</p>
 
 <div style="background:#0a0a0a;border:1px solid #1a1a1a;border-radius:12px;padding:20px;text-align:center;margin:16px 0">
 <img src="/api/badge/ofac-screened.svg" alt="Protected by agentmail — OFAC Screening" style="max-width:100%">
@@ -7160,7 +7160,7 @@ Two embeddable widgets that let your users screen wallets against the OFAC SDN l
 
 <h3>Features</h3>
 <ul>
-<li>Screen any EVM, Bitcoin, or Tron wallet against 782 OFAC-sanctioned addresses</li>
+<li>Screen any EVM, Bitcoin, or Tron wallet against 947 OFAC-sanctioned addresses</li>
 <li>Free — 5 checks/day per IP, no API key</li>
 <li>Under 100ms per check</li>
 <li>Data refreshed hourly from US Treasury SDN list</li>
@@ -7212,7 +7212,7 @@ footer a{color:#444;text-decoration:none}
 <body>
 <div class="widget">
 <h2>🔎 OFAC Wallet Screening</h2>
-<p class="tag">Powered by <a href="https://sanctionsai.dev" target="_blank">agentmail</a> — 782 wallets · 19k names · <100ms</p>
+<p class="tag">Powered by <a href="https://sanctionsai.dev" target="_blank">agentmail</a> — 947 wallets · 19k names · <100ms</p>
 <input type="text" id="wallet" placeholder="Paste wallet address (0x..., bc1..., T...)" autocomplete="off">
 <button class="btn" onclick="screen()">Check Wallet</button>
 <div id="result" class="result"></div>
@@ -7226,7 +7226,7 @@ async function screen(){
   const wallet=document.getElementById('wallet').value.trim();
   const result=document.getElementById('result');
   if(!wallet){result.className='result error';result.textContent='Please enter a wallet address';return}
-  result.className='result loading';result.textContent='Screening against 782 OFAC wallets...';
+  result.className='result loading';result.textContent='Screening against 947 OFAC wallets...';
   try{
     const r=await fetch('https://agentmail-api.fly.dev/sanctions?wallet='+encodeURIComponent(wallet));
     const d=await r.json();
@@ -7264,9 +7264,9 @@ document.getElementById('wallet').addEventListener('keydown',function(e){if(e.ke
   <text x="180" y="52" text-anchor="middle" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif" font-size="11" fill="#8a8d96">OFAC Sanctions Screening for AI Agents</text>
   <line x1="30" y1="64" x2="330" y2="64" stroke="#1a1a1a" stroke-width="1"/>
   <g transform="translate(0,68)">
-    <text x="60" y="14" text-anchor="middle" font-family="'SF Mono',monospace" font-size="18" font-weight="800" fill="#00d4aa">782</text>
+    <text x="60" y="14" text-anchor="middle" font-family="'SF Mono',monospace" font-size="18" font-weight="800" fill="#00d4aa">947</text>
     <text x="60" y="30" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="9" fill="#555">OFAC WALLETS</text>
-    <text x="180" y="14" text-anchor="middle" font-family="'SF Mono',monospace" font-size="18" font-weight="800" fill="#00d4aa">19,086</text>
+    <text x="180" y="14" text-anchor="middle" font-family="'SF Mono',monospace" font-size="18" font-weight="800" fill="#00d4aa">19,218</text>
     <text x="180" y="30" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="9" fill="#555">SDN NAMES</text>
     <text x="300" y="14" text-anchor="middle" font-family="'SF Mono',monospace" font-size="18" font-weight="800" fill="#00d4aa">&lt;100ms</text>
     <text x="300" y="30" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="9" fill="#555">PER CHECK</text>
@@ -7477,7 +7477,7 @@ document.getElementById("squeeze-form").addEventListener("submit", function(e){
 <div style="background:#0f172a;border:1px solid #1e293b;border-radius:12px;padding:20px">
 <h3 style="color:#00d4aa;margin-bottom:12px">The Hook Test</h3>
 <p style="color:#94a3b8;margin-bottom:10px">Ask yourself: if your agent sends USDC to a wallet right now&mdash;do you know whether that wallet is on the OFAC SDN list? If the answer is "I&rsquo;d check manually" or "Stripe handles compliance," you don&rsquo;t have a compliance layer. You have a wish.</p>
-<p><strong>The One Thing:</strong> One HTTP call before every payment that screens the counterparty against 782 sanctioned wallets, 19,086 SDN names, and 16 embargoed jurisdictions&mdash;in under 100ms.</p>
+<p><strong>The One Thing:</strong> One HTTP call before every payment that screens the counterparty against 947 sanctioned wallets, 19,218 SDN names, and 16 embargoed jurisdictions&mdash;in under 100ms.</p>
 </div>
 </div>
 </section>
@@ -7504,7 +7504,7 @@ document.getElementById("squeeze-form").addEventListener("submit", function(e){
 <div style="background:#0f172a;border:1px solid #1e293b;border-radius:16px;padding:24px">
 <h3 style="color:#22c55e;margin-bottom:8px">The New Way: agentmail</h3>
 <p style="color:#94a3b8">One curl call before every payment. Pass a wallet, a name, or a country. agentmail screens it against the OFAC SDN list in under 100ms and returns clean or flagged. Free tier with 5 checks/day. No API key needed. MIT-licensed for self-hosting. Built for agents&mdash;not for human compliance teams.</p>
-<p style="color:#22c55e;margin-top:6px"><strong>Result:</strong> $0.05/check. Under 100ms latency. 782 wallets + 19,086 names + 16 jurisdictions covered. Your agent never pays a sanctioned counterparty.</p>
+<p style="color:#22c55e;margin-top:6px"><strong>Result:</strong> $0.05/check. Under 100ms latency. 947 wallets + 19,218 names + 16 jurisdictions covered. Your agent never pays a sanctioned counterparty.</p>
 </div>
 </div>
 </div>
@@ -7538,7 +7538,7 @@ document.getElementById("squeeze-form").addEventListener("submit", function(e){
 <span style="color:#6b7280"># One curl call. 92ms. Your agent is protected.</span><br>
 curl "https://agentmail-api.fly.dev/sanctions?wallet=<span style="color:#f59e0b">0x742d35Cc6634C0532925a3b844Bc9e7595f0bEbb</span>"<br><br>
 <span style="color:#6b7280"># agentmail returns:</span><br>
-{ <span style="color:#00d4aa">"clean"</span>: true, <span style="color:#00d4aa">"action"</span>: <span style="color:#f59e0b">"ALLOW"</span>, <span style="color:#00d4aa">"checked_against"</span>: { <span style="color:#00d4aa">"wallets"</span>: 782, <span style="color:#00d4aa">"names"</span>: 19086 }, <span style="color:#00d4aa">"latency_ms"</span>: 92 }
+{ <span style="color:#00d4aa">"clean"</span>: true, <span style="color:#00d4aa">"action"</span>: <span style="color:#f59e0b">"ALLOW"</span>, <span style="color:#00d4aa">"checked_against"</span>: { <span style="color:#00d4aa">"wallets"</span>: 947, <span style="color:#00d4aa">"names"</span>: 19218 }, <span style="color:#00d4aa">"latency_ms"</span>: 92 }
 </div>
 
 <!-- CTA -->
@@ -7555,7 +7555,7 @@ curl "https://agentmail-api.fly.dev/sanctions?wallet=<span style="color:#f59e0b"
 <h2>We are building the compliance layer before the first massive fine makes agent payments illegal.</h2>
 <p style="color:#94a3b8;max-width:560px;margin:0 auto 32px">A quiet movement of builders who refuse to ship autonomous agents without a sanctions check. We screen before we pay&mdash;because the fine is ours, not the protocol&rsquo;s.</p>
 <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;max-width:560px;margin:24px auto 0">
-<div style="background:#0f172a;border:1px solid #1e293b;border-radius:14px;padding:20px;text-align:center"><div style="font-size:30px;font-weight:800;color:#00d4aa">782</div><div style="font-size:13px;color:#94a3b8;margin-top:4px">sanctioned wallets tracked</div></div>
+<div style="background:#0f172a;border:1px solid #1e293b;border-radius:14px;padding:20px;text-align:center"><div style="font-size:30px;font-weight:800;color:#00d4aa">947</div><div style="font-size:13px;color:#94a3b8;margin-top:4px">sanctioned wallets tracked</div></div>
 <div style="background:#0f172a;border:1px solid #1e293b;border-radius:14px;padding:20px;text-align:center"><div style="font-size:30px;font-weight:800;color:#00d4aa">92ms</div><div style="font-size:13px;color:#94a3b8;margin-top:4px">average response time</div></div>
 <div style="background:#0f172a;border:1px solid #1e293b;border-radius:14px;padding:20px;text-align:center"><div style="font-size:30px;font-weight:800;color:#00d4aa">$0</div><div style="font-size:13px;color:#94a3b8;margin-top:4px">to start</div></div>
 </div>
@@ -7581,7 +7581,7 @@ curl "https://agentmail-api.fly.dev/sanctions?wallet=<span style="color:#f59e0b"
             "description": "A step-by-step workflow teardown showing what happens when an autonomous agent pays an OFAC-sanctioned wallet, and how to prevent it with real-time screening.",
             "totalTime": "PT1M",
             "step": [
-                {"@type": "HowToStep", "position": 1, "name": "Screen the counterparty before payment", "text": "Before your agent signs any transaction, check the destination wallet against 782 OFAC-sanctioned crypto addresses. This takes under 100ms."},
+                {"@type": "HowToStep", "position": 1, "name": "Screen the counterparty before payment", "text": "Before your agent signs any transaction, check the destination wallet against 947 OFAC-sanctioned crypto addresses. This takes under 100ms."},
                 {"@type": "HowToStep", "position": 2, "name": "Halt flagged transactions", "text": "If the wallet is on the SDN list, block the transaction immediately and alert your compliance team with the full OFAC record."},
                 {"@type": "HowToStep", "position": 3, "name": "Log every screen to an audit trail", "text": "Record timestamp, wallet, result, and OFAC list version for every check. This tamper-evident log is your evidence if Treasury asks."},
                 {"@type": "HowToStep", "position": 4, "name": "Rescreen recurring payments", "text": "The OFAC list updates daily. A wallet clean yesterday may be sanctioned today. Never cache screening results."},
@@ -8375,7 +8375,7 @@ An autonomous agent that transacts without pre-payment sanctions screening carri
 <p>Sanctions screening for human-initiated payments is a solved problem with 30+ years of compliance infrastructure. Autonomous AI-agent payments — x402 micropayments, Coinbase AgentKit transfers, OpenAI+Stripe ACP flows — are a new category with new risk characteristics: <strong>velocity</strong> (an agent repeats a violation hundreds of times before detection), <strong>opacity</strong> (agent logs are sparse without audit infrastructure), and <strong>scope creep</strong> (a deployed agent may interact with jurisdictions its operator never anticipated). This report is the first to quantify that exposure and propose a repeatable scoring model.</p>
 
 <h2>Methodology</h2>
-<p>The agentmail Sanctions Exposure Index (SEI) is computed from five factors drawn from OFAC's Enforcement Guidelines and agentmail's screening dataset (782 OFAC-sanctioned crypto wallets, 19,086 SDN names, and 16 comprehensively embargoed jurisdictions, refreshed daily from US Treasury OFAC sdn.csv and the vile/ofac-sdn-list GitHub releases).</p>
+<p>The agentmail Sanctions Exposure Index (SEI) is computed from five factors drawn from OFAC's Enforcement Guidelines and agentmail's screening dataset (947 OFAC-sanctioned crypto wallets, 19,218 SDN names, and 16 comprehensively embargoed jurisdictions, refreshed daily from US Treasury OFAC sdn.csv and the vile/ofac-sdn-list GitHub releases).</p>
 
 <table style="width:100%;border-collapse:collapse;margin:24px 0;font-size:0.94em">
 <thead><tr style="border-bottom:2px solid #00d4aa;text-align:left">
@@ -8462,7 +8462,7 @@ SEI = (2.4 + 3.0 + 2.0 + 0.15 + 0) × 100
 
 <div class="cta-box" style="margin-top:40px">
 <h3>Compute your own SEI</h3>
-<p>agentmail screens 782 OFAC crypto wallets + 19,086 names + 16 embargoed jurisdictions in under 100ms. The free tier covers 5 checks/day, no API key required — enough to validate your screening posture today.</p>
+<p>agentmail screens 947 OFAC crypto wallets + 19,218 names + 16 embargoed jurisdictions in under 100ms. The free tier covers 5 checks/day, no API key required — enough to validate your screening posture today.</p>
 <a href="/tools/wallet-checker" class="btn btn-primary">Run a free sanctions check</a>
 &nbsp; <a href="/pricing" class="btn btn-ghost">See paid tiers</a>
 </div>
@@ -8745,7 +8745,7 @@ compute();
                 "h1": "Free OFAC Crypto Wallet Checker",
                 "body": """<p>Screen any crypto wallet address against the OFAC SDN list for free. Check Ethereum, Bitcoin, Solana, Tron, and EVM-compatible addresses (Polygon, Arbitrum, Base, Optimism).</p>
 <h2>How It Works</h2>
-<p>Enter a wallet address in the <a href="/tools/wallet-checker">interactive wallet checker</a> and get an instant OFAC screening result. The check runs against 782 sanctioned crypto addresses and completes in under 100ms.</p>
+<p>Enter a wallet address in the <a href="/tools/wallet-checker">interactive wallet checker</a> and get an instant OFAC screening result. The check runs against 947 sanctioned crypto addresses and completes in under 100ms.</p>
 <h2>What Gets Checked</h2>
 <ul>
 <li><strong>EVM addresses:</strong> Ethereum, Polygon, Arbitrum, Base, Optimism</li>
@@ -8762,7 +8762,7 @@ compute();
                 "h1": "OFAC Sanctions Screening for Crypto Exchanges",
                 "body": """<p>Crypto exchanges face the highest OFAC compliance burden. Every deposit and withdrawal touches a wallet that could be sanctioned. sanctionsai.dev provides sub-100ms screening that fits into your transaction pipeline.</p>
 <h2>The Exchange Compliance Problem</h2>
-<p>When a user deposits crypto, you have seconds to decide: accept or block. Traditional screening tools are too slow or too expensive. sanctionsai.dev checks 782 OFAC-sanctioned wallets in under 100ms — fast enough for real-time deposit processing.</p>
+<p>When a user deposits crypto, you have seconds to decide: accept or block. Traditional screening tools are too slow or too expensive. sanctionsai.dev checks 947 OFAC-sanctioned wallets in under 100ms — fast enough for real-time deposit processing.</p>
 <h2>Integration Points</h2>
 <ul>
 <li><strong>Deposit screening:</strong> Check every incoming deposit address</li>
@@ -8871,7 +8871,7 @@ compute();
         # Shared OFAC-screening FAQ — drives AEO (FAQPage schema + <details>)
         _faq = [
             ("What is OFAC sanctions screening?",
-             "OFAC sanctions screening checks a name, crypto wallet, or country against the U.S. Treasury's Office of Foreign Assets Control (OFAC) Specially Designated Nationals (SDN) list before you transact. sanctionsai.dev screens 782 sanctioned crypto wallets and 19,086 names in under 100ms."),
+             "OFAC sanctions screening checks a name, crypto wallet, or country against the U.S. Treasury's Office of Foreign Assets Control (OFAC) Specially Designated Nationals (SDN) list before you transact. sanctionsai.dev screens 947 sanctioned crypto wallets and 19,218 names in under 100ms."),
             ("How much does an OFAC violation cost?",
              "OFAC penalties start at $330,944 per violation under strict liability, meaning you can be liable even without intent. Screening every counterparty before a transaction is the standard mitigation."),
             ("Do I need an API key to screen a wallet?",
@@ -8925,7 +8925,7 @@ compute();
 <section style="background:linear-gradient(135deg,#f0f9ff,#e8f5e9);border-radius:16px;padding:32px 24px;margin:40px 0;border:2px solid #0066cc30;text-align:center">
   <h2 style="font-size:1.5rem;margin-bottom:16px;color:#1a1a1a">Trusted by Developers Screening Millions of Transactions</h2>
   <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:20px;margin-bottom:24px">
-    <div style="min-width:100px"><div style="font-size:1.8rem;font-weight:800;color:#0066cc">782</div><div style="font-size:0.85rem;color:#666">Sanctioned Wallets</div></div>
+    <div style="min-width:100px"><div style="font-size:1.8rem;font-weight:800;color:#0066cc">947</div><div style="font-size:0.85rem;color:#666">Sanctioned Wallets</div></div>
     <div style="min-width:100px"><div style="font-size:1.8rem;font-weight:800;color:#0066cc">19K+</div><div style="font-size:0.85rem;color:#666">Names Screened</div></div>
     <div style="min-width:100px"><div style="font-size:1.8rem;font-weight:800;color:#0066cc">&lt;100ms</div><div style="font-size:0.85rem;color:#666">Response Time</div></div>
   </div>
@@ -8980,8 +8980,8 @@ compute();
 <p class="note">Free tier: 5 checks/day, no API key. Real OFAC data.</p>
 <h2>Coverage for {c["name"]}</h2>
 <ul>
-<li><strong>782 OFAC-sanctioned crypto wallets</strong> that may be linked to {c["name"]} entities</li>
-<li><strong>19,086 SDN names</strong> including individuals and entities designated under {c["program"]}</li>
+<li><strong>947 OFAC-sanctioned crypto wallets</strong> that may be linked to {c["name"]} entities</li>
+<li><strong>19,218 SDN names</strong> including individuals and entities designated under {c["program"]}</li>
 <li><strong>16 embargoed jurisdictions</strong> including {c["name"]}</li>
 <li><strong>Sub-100ms response</strong> for real-time transaction screening</li>
 <li><strong>Automatic audit trail</strong> with timestamp and list version</li>
@@ -9000,7 +9000,7 @@ compute();
             "screen-crypto-wallet": {"title": "How to Screen a Crypto Wallet for OFAC Sanctions", "h1": "How to Screen a Crypto Wallet Before Your Agent Pays", "steps": ["Extract the destination wallet address from the transaction payload.", "Call GET /sanctions?wallet=0x... against the OFAC SDN list.", "Check the response: match=true means the wallet is sanctioned.", "If clean, proceed with payment and log the screening receipt.", "If matched, block the transaction immediately and flag for review."]},
             "build-a-compliance-program": {"title": "How to Build an OFAC Compliance Program", "h1": "How to Build an OFAC Sanctions Compliance Program for AI Agents", "steps": ["Map every payment path where your agent sends or receives funds.", "Insert a sanctions screening call before every transaction.", "Configure automatic blocking for any match (no human-in-the-loop needed for obvious matches).", "Set up an audit log with timestamp, subject, result, and SDN list version.", "Review flagged transactions weekly and update your screening rules."]},
             "file-voluntary-disclosure": {"title": "How to File an OFAC Voluntary Self-Disclosure", "h1": "How to File a Voluntary Self-Disclosure with OFAC", "steps": ["Detect the potential violation through your screening or audit process.", "Preserve all evidence: transaction records, screening logs, and communications.", "Prepare Form TD F 90-22.50 with full details of the violation.", "Submit to OFAC within 30 days of discovery for maximum penalty mitigation.", "Cooperate fully with the investigation and implement corrective measures."]},
-            "check-company-sanctions": {"title": "How to Check if a Company Is on the OFAC List", "h1": "How to Check if a Company Is OFAC-Sanctioned", "steps": ["Get the company legal name and any known aliases or DBA names.", "Call GET /sanctions?name=Company+Name to check against 19,086 SDN entries.", "Review the match results for confidence scores and alias matches.", "If matched, do not transact. Document the screen and escalate.", "If clean, proceed and log the screening receipt for your audit trail."]},
+            "check-company-sanctions": {"title": "How to Check if a Company Is on the OFAC List", "h1": "How to Check if a Company Is OFAC-Sanctioned", "steps": ["Get the company legal name and any known aliases or DBA names.", "Call GET /sanctions?name=Company+Name to check against 19,218 SDN entries.", "Review the match results for confidence scores and alias matches.", "If matched, do not transact. Document the screen and escalate.", "If clean, proceed and log the screening receipt for your audit trail."]},
             "screen-name-list": {"title": "How to Screen Names Against OFAC SDN List", "h1": "How to Screen Names Against the OFAC SDN List", "steps": ["Collect the full legal name of each counterparty.", "Call GET /sanctions?name=John+Doe for each name.", "Review fuzzy match results for aliases and transliterations.", "Flag any match above your confidence threshold for manual review.", "Log every screen with timestamp and SDN list version."]},
             "integrate-sanctions-api": {"title": "How to Integrate a Sanctions Screening API", "h1": "How to Integrate OFAC Sanctions Screening into Your App", "steps": ["Choose your integration method: HTTP API, MCP server, or Python package.", "Add a screening call before every payment in your codebase.", "Handle the response: proceed if clean, block if matched.", "Log every screen for your compliance audit trail.", "Test with known sanctioned addresses to verify detection."]},
             "avoid-ofac-violations": {"title": "How to Avoid OFAC Violations with AI Agents", "h1": "How to Avoid OFAC Sanctions Violations with AI Agents", "steps": ["Never let an AI agent send money without a pre-payment sanctions screen.", "Screen every wallet, name, and country in the transaction path.", "Configure automatic blocking for any match — no exceptions.", "Maintain a tamper-evident audit trail for every transaction.", "Review your screening coverage monthly and close any gaps."]},
@@ -9061,7 +9061,7 @@ compute();
         """pSEO Round 14: Additional free tool landing pages."""
         TOOLS = {
             "wallet-checker": {"title": "Free OFAC Wallet Checker — Screen Crypto Wallets Instantly", "desc": "Free tool to check any crypto wallet against the OFAC SDN list. Ethereum, Bitcoin, Solana, Tron. No signup.", "h1": "Free OFAC Crypto Wallet Checker"},
-            "name-checker": {"title": "Free OFAC Name Checker — Screen Names Against SDN List", "desc": "Free tool to check any person or company name against the OFAC SDN list. 19,086 entries. No signup.", "h1": "Free OFAC Name Screening Tool"},
+            "name-checker": {"title": "Free OFAC Name Checker — Screen Names Against SDN List", "desc": "Free tool to check any person or company name against the OFAC SDN list. 19,218 entries. No signup.", "h1": "Free OFAC Name Screening Tool"},
             "country-checker": {"title": "Free OFAC Country Checker — Is a Country Sanctioned?", "desc": "Free tool to check if a country is under OFAC sanctions. 16 embargoed jurisdictions. No signup.", "h1": "Free OFAC Country Sanctions Checker"},
             "batch-checker": {"title": "Free OFAC Batch Screening Tool — Check Multiple Wallets", "desc": "Screen multiple crypto wallets or names against OFAC in batch. Free for up to 5 checks/day.", "h1": "Free OFAC Batch Screening Tool"},
             "compliance-checker": {"title": "Free OFAC Compliance Checker — Is Your Agent Compliant?", "desc": "Free tool to verify your AI agent screens every transaction against OFAC. Compliance checklist.", "h1": "Free OFAC Compliance Checker for AI Agents"},
@@ -9078,8 +9078,8 @@ compute();
 <p class="note">Free tier: 5 checks/day, no API key. Real OFAC data, refreshed daily.</p>
 <h2>What this tool checks</h2>
 <ul>
-<li><strong>782 OFAC-sanctioned crypto wallets</strong> across Ethereum, Bitcoin, Solana, and Tron</li>
-<li><strong>19,086 Specially Designated Nationals</strong> with fuzzy name matching</li>
+<li><strong>947 OFAC-sanctioned crypto wallets</strong> across Ethereum, Bitcoin, Solana, and Tron</li>
+<li><strong>19,218 Specially Designated Nationals</strong> with fuzzy name matching</li>
 <li><strong>16 embargoed jurisdictions</strong> including Iran, North Korea, Cuba, Syria, and Crimea</li>
 <li><strong>Sub-100ms response</strong> with automatic audit trail</li>
 </ul>"""
@@ -9199,7 +9199,7 @@ compute();
         body = f"""<p class="note">By <a href="/about" rel="author" style="color:#00d4aa">The Data Nerd</a>, Founder &amp; Compliance Engineer &middot; <time datetime="{today}">{today}</time></p>
 <h2>OFAC Screening Result for <code>{_addr_display}</code></h2>
 <p><strong style="color:{status_color}">Status: {status_text}</strong> &middot; Chain: {_chain} &middot; List: OFAC SDN &middot; Checked: {today}</p>
-<p>This wallet was screened against the OFAC Specially Designated Nationals (SDN) list in real time. {('The wallet is <strong style="color:#ff6b6b">flagged</strong>: ' + detail + '. US persons and AI agents operating on their behalf are prohibited from transacting with this address under OFAC strict liability.') if flagged else 'The wallet is <strong style="color:#00d4aa">clean</strong> — no match against the 782 OFAC-sanctioned crypto wallets. Continue with normal transaction flows and log this screening receipt for your compliance audit trail.'}</p>
+<p>This wallet was screened against the OFAC Specially Designated Nationals (SDN) list in real time. {('The wallet is <strong style="color:#ff6b6b">flagged</strong>: ' + detail + '. US persons and AI agents operating on their behalf are prohibited from transacting with this address under OFAC strict liability.') if flagged else 'The wallet is <strong style="color:#00d4aa">clean</strong> — no match against the 947 OFAC-sanctioned crypto wallets. Continue with normal transaction flows and log this screening receipt for your compliance audit trail.'}</p>
 <h3>Re-run this screen (free, no API key)</h3>
 <pre><code>curl "https://sanctionsai.dev/sanctions?wallet={_addr_display}"</code></pre>
 <p class="note">Free tier: 5 checks/day by IP. Real OFAC data, refreshed daily from vile/ofac-sdn-list.</p>
@@ -9226,7 +9226,7 @@ compute();
             (f"Is {address} sanctioned?", f"{'Yes' if flagged else 'No'}. Based on real-time screening against the OFAC SDN list, this wallet is {'flagged' if flagged else 'clean'} as of {today}."),
             ("How often is the OFAC list updated?", "The OFAC SDN list is updated frequently by the US Treasury. sanctionsai.dev refreshes its wallet index daily from vile/ofac-sdn-list releases."),
             ("What if my agent already paid this wallet?", "If the wallet is sanctioned, preserve all evidence immediately and consider filing an OFAC Voluntary Self-Disclosure (VSD) within 30 days for ~50% penalty mitigation."),
-            ("How accurate is this screen?", "Wallet matches are exact, case-insensitive against 782 OFAC-sanctioned addresses. Confidence is 1.0 for direct matches."),
+            ("How accurate is this screen?", "Wallet matches are exact, case-insensitive against 947 OFAC-sanctioned addresses. Confidence is 1.0 for direct matches."),
         ]
         self._render_pseo(f"Is {address} OFAC Sanctioned? — Live Screening Result",
                           f"Real-time OFAC SDN screening result for wallet {address}. Status: {status_text}. Free sanctions check, refreshed daily.",
@@ -9279,8 +9279,8 @@ compute();
     def _sanctions_list_page(self, slug):
         """Per-sanctions-list explainer page: OFAC, EU, UN, BIS, UK HMT, etc."""
         LISTS = {
-            "ofac": {"name": "OFAC Sanctions", "full": "Office of Foreign Assets Control", "jurisdiction": "United States", "url": "https://ofac.treasury.gov", "desc": "The OFAC sanctions list is the US Treasury's master list of individuals and entities that US persons are prohibited from transacting with. Includes SDN, non-SDN, and sectoral sanctions.", "entries": "~19,086 names + 782 crypto wallets", "updated": "Daily (Treasury updates frequently)", "scope": "Worldwide — applies to all US persons, US-origin goods, USD transactions, and AI agents operating on behalf of US persons."},
-            "ofac-sdn": {"name": "OFAC SDN List", "full": "Specially Designated Nationals and Blocked Persons List", "jurisdiction": "United States", "url": "https://www.treasury.gov/ofac/downloads/sdn.csv", "desc": "The Specially Designated Nationals (SDN) list is OFAC's primary sanctions list, naming individuals and entities owned or controlled by sanctioned governments, terrorists, narcotics traffickers, and other threat actors.", "entries": "~19,086 names", "updated": "Daily", "scope": "All US persons must block transactions with SDN-listed parties and file reports within 10 business days."},
+            "ofac": {"name": "OFAC Sanctions", "full": "Office of Foreign Assets Control", "jurisdiction": "United States", "url": "https://ofac.treasury.gov", "desc": "The OFAC sanctions list is the US Treasury's master list of individuals and entities that US persons are prohibited from transacting with. Includes SDN, non-SDN, and sectoral sanctions.", "entries": "~19,218 names + 947 crypto wallets", "updated": "Daily (Treasury updates frequently)", "scope": "Worldwide — applies to all US persons, US-origin goods, USD transactions, and AI agents operating on behalf of US persons."},
+            "ofac-sdn": {"name": "OFAC SDN List", "full": "Specially Designated Nationals and Blocked Persons List", "jurisdiction": "United States", "url": "https://www.treasury.gov/ofac/downloads/sdn.csv", "desc": "The Specially Designated Nationals (SDN) list is OFAC's primary sanctions list, naming individuals and entities owned or controlled by sanctioned governments, terrorists, narcotics traffickers, and other threat actors.", "entries": "~19,218 names", "updated": "Daily", "scope": "All US persons must block transactions with SDN-listed parties and file reports within 10 business days."},
             "ofac-consolidated": {"name": "OFAC Consolidated Sanctions List", "full": "Consolidated Sanctions List (Non-SDN)", "jurisdiction": "United States", "url": "https://www.treasury.gov/ofac/downloads/consolidated/consolidated.xml", "desc": "The OFAC Consolidated Sanctions List combines several non-SDN lists (Palestinian Legislative Council, Foreign Sanctions Evaders, Sectoral Sanctions Identifications, etc.) into one dataset.", "entries": "~3,500 entries", "updated": "Daily", "scope": "US persons; some programs reach foreign persons via secondary sanctions."},
             "ofac-non-sdn": {"name": "OFAC Non-SDN Lists", "full": "Non-SDN sanctions programs", "jurisdiction": "United States", "url": "https://www.treasury.gov/ofac/downloads", "desc": "OFAC maintains several non-SDN lists covering sectoral sanctions (SSI), foreign sanctions evaders (FSE), and Palestinian Legislative Council members. These target conduct-based restrictions without full blocking.", "entries": "~5,000 entries across programs", "updated": "Daily", "scope": "US persons; sectoral sanctions restrict specific transactions rather than fully blocking them."},
             "eu-consolidated": {"name": "EU Consolidated Sanctions List", "full": "European Union Consolidated Financial Sanctions List", "jurisdiction": "European Union", "url": "https://webgate.ec.europa.eu/fsd/fsf", "desc": "The EU Consolidated Financial Sanctions List applies to all EU member states and persons within EU jurisdiction. Includes Russia sectoral sanctions, terrorism designations, and proliferation-related entries.", "entries": "~10,000 entries", "updated": "Several times per week", "scope": "All EU persons and entities; extraterritorial reach via EU-origin goods and EUR transactions."},
@@ -9383,8 +9383,8 @@ compute();
 <h2>Sanctions Lists Explained</h2>
 <p>Sanctions screening requires checking counterparties against multiple lists maintained by different jurisdictions. Below is a guide to the major sanctions lists that matter for AI agent compliance.</p>
 <ul>
-<li><a href="/sanctions-lists/ofac">OFAC Sanctions</a> — US Treasury master list (~19,086 names + 782 wallets)</li>
-<li><a href="/sanctions-lists/ofac-sdn">OFAC SDN List</a> — Specially Designated Nationals (~19,086 names)</li>
+<li><a href="/sanctions-lists/ofac">OFAC Sanctions</a> — US Treasury master list (~19,218 names + 947 wallets)</li>
+<li><a href="/sanctions-lists/ofac-sdn">OFAC SDN List</a> — Specially Designated Nationals (~19,218 names)</li>
 <li><a href="/sanctions-lists/ofac-consolidated">OFAC Consolidated Sanctions List</a> — Non-SDN combined list</li>
 <li><a href="/sanctions-lists/ofac-non-sdn">OFAC Non-SDN Lists</a> — Sectoral, FSE, and program-specific lists</li>
 <li><a href="/sanctions-lists/eu-consolidated">EU Consolidated Sanctions List</a> — European Union (~10,000 entries)</li>
@@ -9465,8 +9465,8 @@ compute();
 <pre><code>curl "https://sanctionsai.dev/sanctions?wallet=0xYourAddress"</code></pre>
 <p class="note">Free tier: 5 checks/day by IP. Real OFAC data, refreshed daily.</p>"""
         faqs = [
-            ("How do I check if a wallet is sanctioned?", "Use the API: GET /sanctions?wallet=0x... — returns match status in under 100ms against 782 OFAC-sanctioned crypto wallets."),
-            ("How do I check if a name is sanctioned?", "GET /sanctions?name=John+Doe checks against 19,086 SDN names with fuzzy matching for aliases."),
+            ("How do I check if a wallet is sanctioned?", "Use the API: GET /sanctions?wallet=0x... — returns match status in under 100ms against 947 OFAC-sanctioned crypto wallets."),
+            ("How do I check if a name is sanctioned?", "GET /sanctions?name=John+Doe checks against 19,218 SDN names with fuzzy matching for aliases."),
             ("How often are the screening pages updated?", "Wallet pages are screened live at request time against the current OFAC SDN index, which sanctionsai.dev refreshes daily."),
         ]
         self._render_pseo("OFAC Screening Results — Known Sanctioned Wallets & Entities",
@@ -9512,7 +9512,7 @@ compute();
                 "h1": "ComplyAdvantage Alternative for AI Agents",
                 "body": """<p><strong>ComplyAdvantage</strong> uses AI for name-based KYC/AML screening. <strong>sanctionsai.dev</strong> extends sanctions screening to crypto wallets and AI agent payment flows.</p>
 <h2>Why sanctionsai.dev for agents?</h2>
-<p>ComplyAdvantage screens names. Your agent pays crypto wallets. sanctionsai.dev screens 782 OFAC-sanctioned wallet addresses across EVM, Bitcoin, Solana, and Tron — plus names and countries.</p>"""
+<p>ComplyAdvantage screens names. Your agent pays crypto wallets. sanctionsai.dev screens 947 OFAC-sanctioned wallet addresses across EVM, Bitcoin, Solana, and Tron — plus names and countries.</p>"""
             },
             "world-check": {
                 "title": "Best World-Check Alternative in 2026 — sanctionsai.dev",
@@ -9544,8 +9544,8 @@ compute();
                 "body": """<p>Fintech apps need sanctions screening, but enterprise tools are expensive and slow to integrate. sanctionsai.dev gives you the same OFAC SDN screening with a developer-friendly API.</p>
 <h2>Features for fintech</h2>
 <ul>
-<li>Name screening (19,086 SDN entries)</li>
-<li>Crypto wallet screening (782 addresses)</li>
+<li>Name screening (19,218 SDN entries)</li>
+<li>Crypto wallet screening (947 addresses)</li>
 <li>Country/jurisdiction checks</li>
 <li>Audit-ready logs</li>
 </ul>"""
@@ -9584,8 +9584,8 @@ compute();
                 "body": """<p>The <strong>SDN List</strong> (Specially Designated Nationals and Blocked Persons List) is OFAC's database of sanctioned individuals and entities.</p>
 <h2>What's on the SDN list</h2>
 <ul>
-<li>19,086 names of sanctioned individuals and entities</li>
-<li>782 crypto wallet addresses (EVM, Bitcoin, Solana, Tron)</li>
+<li>19,218 names of sanctioned individuals and entities</li>
+<li>947 crypto wallet addresses (EVM, Bitcoin, Solana, Tron)</li>
 <li>16 embargoed jurisdictions</li>
 </ul>
 <h2>How to screen</h2>
@@ -9628,7 +9628,7 @@ compute();
             ("What is agentmail?",
              "agentmail is the OFAC sanctions screening layer for AI agents — screen names, wallets, and countries against the OFAC SDN list before every payment."),
             ("How do I screen a wallet for sanctions?",
-             f"Call GET /sanctions?wallet=0x... — agentmail checks 782 OFAC-sanctioned wallets in under 100ms. Free tier: 5 checks/day, no API key."),
+             f"Call GET /sanctions?wallet=0x... — agentmail checks 947 OFAC-sanctioned wallets in under 100ms. Free tier: 5 checks/day, no API key."),
             ("Is this free?",
              "Yes. The free tier gives you 5 sanctions checks per day by IP address. Dev plan is $19/mo, Pro is $99/mo. Self-host is free via pip install sanctions-mcp."),
         ]
@@ -9665,7 +9665,7 @@ compute();
 <h2>Origin story</h2>
 <p>We started with one question: <em>what happens when an AI agent pays a sanctioned address?</em> The answer, in a sentence: the operator does the time. OFAC penalties start at $330,944 per violation, strict liability applies, and there is no automation exemption. We dug into public data - the US Treasury SDN list, the vile/ofac-sdn-list multi-chain registry, and the patchwork of jurisdiction rules - and built a screening layer agents can call before they sign. It took longer than expected because edge cases in OFAC data are dense. We shipped when it was good enough to protect someone, not when it was perfect.</p>
 <h2>What we do</h2>
-<p>Every time your agent pays someone, agentmail screens the counterparty against the US Treasury OFAC Specially Designated Nationals (SDN) list before the transaction is signed. We check 782 sanctioned crypto wallets, 19,086 names, and 16 embargoed jurisdictions. If the counterparty is flagged, the transaction halts. If clean, it proceeds in under 100ms.</p>
+<p>Every time your agent pays someone, agentmail screens the counterparty against the US Treasury OFAC Specially Designated Nationals (SDN) list before the transaction is signed. We check 947 sanctioned crypto wallets, 19,218 names, and 16 embargoed jurisdictions. If the counterparty is flagged, the transaction halts. If clean, it proceeds in under 100ms.</p>
 <h2>Why we built this</h2>
 <p>OFAC penalties start at $330,944 per violation. Strict liability applies even to automated transactions. As AI agents begin moving money autonomously, the gap between "cool demo" and "legally compliant" is a $330K fine. We close that gap with one line of code.</p>
 <h2>Data sources</h2>
@@ -9783,8 +9783,8 @@ compute();
 <p>This page documents the data sources, references, and methodology behind sanctionsai.dev content.</p>
 <h2>Primary data sources</h2>
 <ul>
-<li><strong>US Treasury OFAC SDN List:</strong> <a href="https://www.treasury.gov/ofac/downloads/sdn.csv">sdn.csv</a> — official government data, 19,086 names</li>
-<li><strong>Crypto wallet registry:</strong> <a href="https://github.com/vile/ofac-sdn-list">vile/ofac-sdn-list</a> — 782 multi-chain addresses (EVM, Bitcoin, Solana, Tron)</li>
+<li><strong>US Treasury OFAC SDN List:</strong> <a href="https://www.treasury.gov/ofac/downloads/sdn.csv">sdn.csv</a> — official government data, 19,218 names</li>
+<li><strong>Crypto wallet registry:</strong> <a href="https://github.com/vile/ofac-sdn-list">vile/ofac-sdn-list</a> — 947 multi-chain addresses (EVM, Bitcoin, Solana, Tron)</li>
 <li><strong>Country sanctions:</strong> 16 comprehensive sanctions jurisdictions per OFAC guidance</li>
 <li><strong>Penalty data:</strong> OFAC enforcement actions, publicly available</li>
 </ul>
@@ -9819,7 +9819,7 @@ compute();
 <dd>Under 100ms for wallet, name, and country screening combined. Fast enough for real-time agent payment pipelines.</dd>
 
 <dt><strong>Which blockchains are supported?</strong></dt>
-<dd>agentmail screens 782 OFAC-sanctioned crypto addresses across EVM (Ethereum, Polygon, Arbitrum, Base, Optimism), Bitcoin, Solana, and Tron networks.</dd>
+<dd>agentmail screens 947 OFAC-sanctioned crypto addresses across EVM (Ethereum, Polygon, Arbitrum, Base, Optimism), Bitcoin, Solana, and Tron networks.</dd>
 
 <dt><strong>Is the data up to date?</strong></dt>
 <dd>Yes. The SDN list is refreshed daily from the US Treasury. The crypto wallet registry updates when new addresses are added to the source repository.</dd>
@@ -9849,7 +9849,7 @@ compute();
             "openapi": "3.0.3",
             "info": {
                 "title": "agentmail - OFAC Sanctions Screening for AI Agents",
-                "description": "Screen wallet addresses, names, and countries against the OFAC SDN list before your AI agent pays. 782 crypto wallets, 19,086 names, 16 embargoed jurisdictions. Free tier: 5 checks/day, no API key.",
+                "description": "Screen wallet addresses, names, and countries against the OFAC SDN list before your AI agent pays. 947 crypto wallets, 19,218 names, 16 embargoed jurisdictions. Free tier: 5 checks/day, no API key.",
                 "version": "1.0.0",
                 "contact": {"name": "agentmail", "url": "https://sanctionsai.dev", "email": "support@sanctionsai.dev"},
                 "license": {"name": "MIT", "url": "https://github.com/kindrat86/agentmail"},
@@ -10125,7 +10125,7 @@ _SOAP_CONTENT.append("""
 <div style='background:#111;border-left:3px solid #ff6b6b;padding:14px 16px;border-radius:0 8px 8px 0;margin-bottom:20px'>
 <p style='margin:0;color:#ccc;font-style:italic;font-size:13px;line-height:1.6'>"I was wiring up an autonomous payment system. The agent was supposed to pay vendor invoices in USDC. On test #47, it sent money to a wallet I did not recognize. Turned out that wallet was on the OFAC SDN list."</p>
 </div>
-<p style='margin:0 0 16px;font-size:14px;color:#999;line-height:1.6'>This is not hypothetical. There are <strong style='color:#fff'>782 crypto wallet addresses</strong> on the OFAC SDN list right now. New ones are added every month.</p>
+<p style='margin:0 0 16px;font-size:14px;color:#999;line-height:1.6'>This is not hypothetical. There are <strong style='color:#fff'>947 crypto wallet addresses</strong> on the OFAC SDN list right now. New ones are added every month.</p>
 <p style='margin:0 0 20px;font-size:14px;color:#999;line-height:1.6'>The agent did not know what OFAC was. It just saw "pay invoice #4021" and sent USDC. If that had been a real transaction, the deployer would be looking at a $356K fine.</p>
 <div style='background:#0d1a14;border:1px solid rgba(0,212,170,0.08);border-radius:10px;padding:16px;text-align:center;margin-bottom:20px'>
 <p style='margin:0 0 8px;font-size:13px;color:#00d4aa'>Screen every payment before it moves</p>
@@ -10325,7 +10325,7 @@ def _send_welcome_email(email: str) -> dict:
     html += '</td></tr></table>'
     html += '<h3 style="margin:0 0 16px;font-size:14px;font-weight:700;color:#fff">The 4 tools your agent needs</h3>'
     html += '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:24px">'
-    html += '<tr style="border-bottom:1px solid #1a1a1a"><td style="padding:12px 0;vertical-align:top;width:24px;font-size:13px;font-weight:700;color:#00d4aa">1</td><td style="padding:12px 0;vertical-align:top;font-size:13px;color:#ccc"><strong style="color:#fff">sanctions_check</strong><br><span style="color:#666;font-size:12px">782 wallets, 19,086 names, 16 jurisdictions</span></td><td style="padding:12px 0;vertical-align:top;text-align:right;font-size:10px;color:#555;white-space:nowrap">VALUE $499</td></tr>'
+    html += '<tr style="border-bottom:1px solid #1a1a1a"><td style="padding:12px 0;vertical-align:top;width:24px;font-size:13px;font-weight:700;color:#00d4aa">1</td><td style="padding:12px 0;vertical-align:top;font-size:13px;color:#ccc"><strong style="color:#fff">sanctions_check</strong><br><span style="color:#666;font-size:12px">947 wallets, 19,218 names, 16 jurisdictions</span></td><td style="padding:12px 0;vertical-align:top;text-align:right;font-size:10px;color:#555;white-space:nowrap">VALUE $499</td></tr>'
     html += '<tr style="border-bottom:1px solid #1a1a1a"><td style="padding:12px 0;vertical-align:top;width:24px;font-size:13px;font-weight:700;color:#00d4aa">2</td><td style="padding:12px 0;vertical-align:top;font-size:13px;color:#ccc"><strong style="color:#fff">risk_score</strong><br><span style="color:#666;font-size:12px">Amount anomalies, rail risk, category exposure</span></td><td style="padding:12px 0;vertical-align:top;text-align:right;font-size:10px;color:#555;white-space:nowrap">VALUE $299</td></tr>'
     html += '<tr style="border-bottom:1px solid #1a1a1a"><td style="padding:12px 0;vertical-align:top;width:24px;font-size:13px;font-weight:700;color:#00d4aa">3</td><td style="padding:12px 0;vertical-align:top;font-size:13px;color:#ccc"><strong style="color:#fff">kya_verify</strong><br><span style="color:#666;font-size:12px">Know Your Agent trust scoring</span></td><td style="padding:12px 0;vertical-align:top;text-align:right;font-size:10px;color:#555;white-space:nowrap">VALUE $199</td></tr>'
     html += '<tr style="border-bottom:1px solid #1a1a1a"><td style="padding:12px 0;vertical-align:top;width:24px;font-size:13px;font-weight:700;color:#00d4aa">4</td><td style="padding:12px 0;vertical-align:top;font-size:13px;color:#ccc"><strong style="color:#fff">dispute_open</strong><br><span style="color:#666;font-size:12px">File disputes with 7-day auto-escalation</span></td><td style="padding:12px 0;vertical-align:top;text-align:right;font-size:10px;color:#555;white-space:nowrap">VALUE $99</td></tr>'
