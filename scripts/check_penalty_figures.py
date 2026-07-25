@@ -91,6 +91,24 @@ COVERAGE_CLAIMS = [
     r"OFAC[^.<>\n]{0,24}\b(?:EU|UN|UK)\b[^.<>\n]{0,24}\b(?:and|or)\b\s*(?:the\s+)?\b(?:EU|UN|UK)\b",
 ]
 
+# Saying "OFAC SDN only, NOT EU, UN or UK" is the correct disclaimer and names
+# the same list trio, so the patterns above match it. Flagging honest copy is
+# how a gate gets ignored — or worse, how someone "fixes" the true sentence to
+# make the gate green. Skip a hit whose immediate context negates it.
+# The negation must govern the LIST TRIO, not merely appear in the sentence.
+# "Not found on OFAC SDN, EU, UN, or UK" contains "not", but it negates "found"
+# — the trio is still the scope being claimed, so that one must still fail.
+# Only these shapes actually disclaim the trio:
+COVERAGE_NEGATION = re.compile(
+    r"only,?\s+not\b"          # "OFAC SDN only, not EU, UN or UK"
+    r"|not\s+(?:the\s+)?(?:EU|UN|UK)\b"   # "...not EU, UN or UK lists"
+    r"|(?:do|does|will|can)\s+not\s+(?:screen|cover|include|check)"
+    r"|\bexclud\w*\s+(?:the\s+)?(?:EU|UN|UK)\b"
+    r"|\bnever\s+(?:screen|cover|include|check)"
+    r"|\bno\s+(?:EU|UN|UK)\b",
+    re.I,
+)
+
 # Real enforcement settlements. These are history and must never be rewritten
 # by a well-meaning sweep — they are the reason this checker matches on the
 # specific stale figures above rather than on "any dollar amount".
@@ -112,6 +130,27 @@ EXTS = (".py", ".html", ".md", ".json", ".txt", ".xml")
 # learns to ignore, which is exactly how the figures drifted the first two times.
 SKIP_NAMES = {"check_penalty_figures.py", "CLAUDE.md"}
 SKIP_PATTERNS = ("AUDIT_", "HERMES_REPORT_", "CHANGELOG")
+
+
+def _is_disclaimer(src, m):
+    """True when the matched trio sits inside an explicit denial of coverage.
+
+    Scoped to the SENTENCE containing the match, not a fixed character window.
+    A ±70-char window reaches into neighbouring lines, so one honest disclaimer
+    on the next line silently suppressed real claims above it — a false
+    negative, which is far worse here than the false positive it was fixing.
+    """
+    start = max(
+        src.rfind(".", 0, m.start()), src.rfind("\n", 0, m.start()),
+        src.rfind(">", 0, m.start()), src.rfind("'", 0, m.start()),
+    ) + 1
+    end = min(
+        (p for p in (src.find(".", m.end()), src.find("\n", m.end()),
+                     src.find("<", m.end()), src.find("'", m.end()))
+         if p != -1),
+        default=len(src),
+    )
+    return bool(COVERAGE_NEGATION.search(src[start:end]))
 
 
 def files():
@@ -141,6 +180,8 @@ def main():
                 for m in re.finditer(pat, src, re.I):
                     line = src.count("\n", 0, m.start()) + 1
                     ctx = re.sub(r"\s+", " ", src[max(0, m.start() - 70):m.end() + 70])
+                    if pats is COVERAGE_CLAIMS and _is_disclaimer(src, m):
+                        continue  # an explicit disclaimer, not a coverage claim
                     problems.append((rel, line, label, m.group(0), ctx))
 
     if not problems:
