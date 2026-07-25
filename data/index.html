@@ -45,6 +45,16 @@
     footer{margin-top:3rem;padding:1.5rem 0;border-top:1px solid var(--border);color:var(--muted);font-size:.85rem}
     footer a{color:var(--accent)}
     @media(max-width:640px){.container{padding:1rem}h1{font-size:1.6rem}}
+    /* Literal colours for every element that carries its OWN light background.
+       The sitewide stylesheet is injected after this one and themes the page
+       dark; it also redefines the var() tokens used above, so anything on a
+       white card that resolves its colour through a token can end up light on
+       light. Elements without a light background of their own are left alone
+       so they inherit the dark theme correctly. */
+    .card{color:#1a1a2e}
+    .card p{color:#4b5563}
+    .cite-box,.cite-box p,.cite-box strong{color:#1a1a2e}
+    .btn-outline{color:#1a1a2e;border-color:#d1d5db}
     </style>
     </head>
     <body>
@@ -54,8 +64,8 @@
     <h1>Research Data</h1>
     <p class="lead">Free, downloadable datasets from publicly verifiable sources. Our own curated statistics are licensed <strong>CC BY 4.0</strong> — use freely, just link back. Redistributed government data carries its own licence, shown on each dataset.</p>
 
-    <div style="background:#fef3c7;border:1px solid #fcd34d;border-radius:8px;padding:1rem;margin:1.5rem 0">
-    <strong>📊 Why publish research data?</strong> We believe industry benchmarks and statistics should be openly accessible. Every dataset below is curated from public reports, government databases, and market research — properly cited, never fabricated. Use them in your articles, pitch decks, and research. Just include a link back here.
+    <div style="background:#fef3c7;border:1px solid #fcd34d;border-radius:8px;padding:1rem;margin:1.5rem 0;color:#1a1a2e">
+    <strong style="color:#1a1a2e">📊 Why publish research data?</strong> We believe industry benchmarks and statistics should be openly accessible. Every dataset below is curated from public reports, government databases, and market research — properly cited, never fabricated. Use them in your articles, pitch decks, and research. Just include a link back here.
     </div>
 
     <div class="card" style="margin-bottom:1.5rem;border-color:#bfdbfe;background:#f8fbff">

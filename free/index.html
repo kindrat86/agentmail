@@ -29,7 +29,15 @@ p{margin-bottom:.9rem}
 .tag{display:inline-block;padding:.18rem .55rem;border-radius:4px;font-size:.74rem;font-weight:600;background:#dcfce7;color:#059669;margin-right:.4rem}
 .breadcrumb{font-size:.85rem;color:var(--muted);margin-bottom:1.25rem}
 .breadcrumb a{color:var(--muted);text-decoration:none}
-.note{background:#f0f7ff;border:1px solid #bfdbfe;border-radius:8px;padding:1rem 1.15rem;margin:1.25rem 0;font-size:.9rem}
+/* Literal dark text, not var(--fg): this box hardcodes a light background and
+   the sitewide stylesheet is injected after this one, theming the page dark.
+   Anything left to inherit turns light grey and lands at ~1.7:1 on this
+   background. Boxes that own a light background must own their text colour. */
+.note{background:#f0f7ff;border:1px solid #bfdbfe;border-radius:8px;padding:1rem 1.15rem;margin:1.25rem 0;font-size:.9rem;color:#1a1a2e}
+.note p,.note strong{color:#1a1a2e}
+.note a{color:#1d4ed8}
+.card,.card p,.card h3{color:#1a1a2e}
+.card p{color:#4b5563}
 footer{margin-top:2.5rem;padding:1.5rem 0;border-top:1px solid var(--border);color:var(--muted);font-size:.85rem}
 a{color:var(--accent)}
 @media(max-width:640px){.container{padding:1rem}h1{font-size:1.55rem}}

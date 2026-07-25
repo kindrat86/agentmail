@@ -39,9 +39,20 @@ pre code{background:none;padding:0;color:inherit}
 .btn{display:inline-block;padding:.7rem 1.4rem;border-radius:8px;font-weight:600;text-decoration:none;font-size:.95rem}
 .btn-primary{background:var(--accent);color:#fff}
 .btn-outline{border:2px solid var(--border);color:var(--fg)}
-.note{border-radius:8px;padding:1rem 1.15rem;margin:1.25rem 0;font-size:.9rem}
+/* Literal colours, not var(--fg): these boxes hardcode a LIGHT background, so
+   their text must hardcode a dark colour to match. The sitewide stylesheet is
+   injected after this one and themes the page dark, which re-colours anything
+   left to inherit — that put the scope disclaimer at 1.7:1 contrast, the one
+   paragraph on this page a reader most needs to be able to read. */
+.note{border-radius:8px;padding:1rem 1.15rem;margin:1.25rem 0;font-size:.9rem;color:#1a1a2e}
+.note p,.note strong,.note em{color:#1a1a2e}
+.note a{color:#1d4ed8}
 .note-warn{background:#fef3c7;border:1px solid #fcd34d}
 .note-info{background:#f0f7ff;border:1px solid #bfdbfe}
+/* Deliberately NOT applied to the tables: they inherit the dark theme's light
+   text on a dark surface and read fine. Forcing dark text there would produce
+   the mirror-image bug. Only elements that carry their OWN light background
+   are re-coloured here. */
 .breadcrumb{font-size:.85rem;color:var(--muted);margin-bottom:1.25rem}
 .breadcrumb a{color:var(--muted);text-decoration:none}
 footer{margin-top:3rem;padding:1.5rem 0;border-top:1px solid var(--border);color:var(--muted);font-size:.85rem}
