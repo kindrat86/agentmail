@@ -58,7 +58,7 @@ def main():
     risk.add_argument("--rail", default="x402")
     risk.add_argument("--category", default="digital_goods")
 
-    san = sub.add_parser("sanctions", help="screen against OFAC/EU/UN/UK lists")
+    san = sub.add_parser("sanctions", help="screen against the US Treasury OFAC SDN list")
     san.add_argument("--name", default="")
     san.add_argument("--wallet", default="")
     san.add_argument("--country", default="")

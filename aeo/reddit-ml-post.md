@@ -9,7 +9,7 @@ The SEI is a 5-factor model:
 4. **Screening posture** (15%) — do you screen before payment?
 5. **Disclosure readiness** (10%) — can you produce a VSD in 5 days?
 
-Score 10 (min exposure) → 1000 (max). Worked example: an uncontrolled x402 agent doing 500 tx/day with 12% jurisdiction overlap = SEI 990/1000. Expected exposure ceiling: $165.5M/day.
+Score 10 (min exposure) → 1000 (max). Worked example: an uncontrolled x402 agent doing 500 tx/day with 12% jurisdiction overlap = SEI 990/1000. Expected exposure ceiling: $188.9M/day.
 
 The report includes real OFAC enforcement data (Binance $968M, Kraken $362K, EtherDelta $450K, etc.) and is CC BY 4.0 — cite freely.
 

@@ -123,7 +123,7 @@ footer p{color:#333;font-size:0.72em}
 </div>
 </nav>
 <div class="hero">
-<div class="badge">WARNING: OFAC FINES START AT $356,000</div>
+<div class="badge">WARNING: OFAC FINES REACH $377,700</div>
 <h1>Your AI agent just sent USDC to a <span style="color:#ff6b6b">sanctioned wallet</span>. You did not know. The Treasury <span style="color:#00d4aa">does</span>.</h1>
 <p class="sub">Screen every counterparty against live OFAC SDN data before your agent sends money. Under 100ms. From $0.</p>
 <div class="stat-row">
@@ -170,7 +170,7 @@ document.getElementById("lp-email-capture").addEventListener("submit",function(e
 <div class="story-section" id="story">
 <div class="story-label">THE STORY</div>
 <h2>I was building an agent that pays invoices. Then test #47 sent USDC to a wallet I did not recognize.</h2>
-<div class="story-quote">"I checked the wallet against the OFAC SDN list. It was there. If that had been production, I would be looking at a $356,000 fine right now. The agent did not know what OFAC was. It just saw 'pay invoice #4021' and sent USDC. It would have done it at 3 AM, repeatedly, until someone noticed."</div>
+<div class="story-quote">"I checked the wallet against the OFAC SDN list. It was there. If that had been production, I would be looking at a $377,700 fine right now. The agent did not know what OFAC was. It just saw 'pay invoice #4021' and sent USDC. It would have done it at 3 AM, repeatedly, until someone noticed."</div>
 <p>The problem was not the agent. The problem was that <strong>nobody was checking</strong>. The big payment rails handle moving money. They do not screen recipients. That gap is why I built agentmail.</p>
 <div class="callout"><strong>Your agent needs this check.</strong> Not next quarter. Not after the compliance notice. Before you deploy.</div>
 </div>
@@ -207,8 +207,8 @@ document.getElementById("lp-email-capture").addEventListener("submit",function(e
 </div>
 </div>
 <div class="value-stack">
-<p class="vs-label">Total monthly value of all 4 tools</p>
-<p class="vs-price"><span class="s">$1,096</span> $19<span style="font-size:0.4em;color:#555;font-weight:400">/mo</span></p>
+<p class="vs-label">Same 10,000 checks at our published x402 rate ($0.05/check)</p>
+<p class="vs-price"><span class="s">$500</span> $19<span style="font-size:0.4em;color:#555;font-weight:400">/mo</span></p>
 <p class="vs-label" style="font-size:0.78em;margin-top:4px">Free tier: 50 checks/day &middot; No signup &middot; MCP + HTTP + CLI</p>
 </div>
 </div>
@@ -218,7 +218,7 @@ document.getElementById("lp-email-capture").addEventListener("submit",function(e
 <p style="color:#555;font-size:0.72em">Returns OFAC match data in under 100ms. Try it with any EVM wallet.</p>
 </div>
 <div class="pricing" id="pricing">
-<div class="risk-warning">OFAC penalties start at <strong>$356,000 per violation</strong>. agentmail starts at $0.</div>
+<div class="risk-warning">OFAC penalties start at <strong>$377,700 per violation</strong>. agentmail starts at $0.</div>
 <h2>Pricing</h2>
 <p class="lead">Free to try. $0.01 per check if your agent pays. $19/mo if you want predictable billing.</p>
 <div class="price-cards">
@@ -246,7 +246,7 @@ document.getElementById("lp-email-capture").addEventListener("submit",function(e
 <li>MCP server access</li>
 </ul>
 <a href="/agent" class="btn btn-primary">Go agent-native</a>
-<p class="guarantee-text">Zero-liability guarantee: if a passed check results in an OFAC fine, we cover the first $10K.</p>
+<p class="guarantee-text">30-day money-back guarantee, plus a timestamped compliance receipt on every screen.</p>
 </div>
 <div class="price-card">
 <h3>Dev</h3>
@@ -274,7 +274,7 @@ document.getElementById("lp-email-capture").addEventListener("submit",function(e
 </div>
 <div class="faq-item">
 <h3>How up to date is the OFAC data?</h3>
-<p>Synced hourly from the US Treasury SDN list. If the Treasury adds a wallet at 2:47 PM, agentmail catches it at 3:00 PM.</p>
+<p>Refreshed daily from the US Treasury SDN list, with a 24-hour cache. /health reports the exact fetch time of the data you screened against.</p>
 </div>
 <div class="faq-item">
 <h3>Can I self-host?</h3>

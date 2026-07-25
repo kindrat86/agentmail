@@ -119,7 +119,7 @@ def risk_score(counterparty_id: str, amount: str, currency: str = "USDC",
 
 @mcp.tool()
 def sanctions_check(name: str = "", wallet: str = "", country: str = "") -> str:
-    """Screen a counterparty against OFAC/EU/UN/UK sanctions lists.
+    """Screen a counterparty against the US Treasury OFAC SDN list.
 
     Cheapest check, call first. At least one of name / wallet / country required.
     Free provider uses open sanctions data (no key). Useful as a fast pre-filter

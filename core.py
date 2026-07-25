@@ -225,7 +225,7 @@ def risk_score(counterparty_id: str, amount: str, currency: str = "USDC",
 
 
 def sanctions_check(name: str = "", wallet: str = "", country: str = "") -> dict:
-    """Screen against OFAC/EU/UN/UK sanctions lists. At least one identifier required."""
+    """Screen against the US Treasury OFAC SDN list. At least one identifier required."""
     return _compliance().sanctions_check(name=name, wallet=wallet, country=country)
 
 

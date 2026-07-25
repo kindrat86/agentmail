@@ -109,7 +109,7 @@ footer p{color:#333;font-size:0.7em}
 <div class="hero">
 <div class="badge">x402 &middot; USDC &middot; BASE</div>
 <h1>Your agent pays <span class="hl">$0.05 USDC</span> and never sends money to a <span class="hl-r">sanctioned wallet</span>.</h1>
-<p class="sub">OFAC fines start at $356,000 per violation. agentmail costs 5 cents. Your agent already understands the math.</p>
+<p class="sub">OFAC fines reach $377,700 per violation. agentmail costs 5 cents. Your agent already understands the math.</p>
 <div class="stat-row">
 <span><strong>782</strong> wallets</span>
 <span><strong>19,086</strong> names</span>
@@ -127,12 +127,12 @@ footer p{color:#333;font-size:0.7em}
 <li>Unlimited checks</li>
 <li>All 4 tools: sanctions_check, risk_score, kya_verify, dispute_open</li>
 <li>MCP server access (Claude Code, Cursor, Windsurf)</li>
-<li>Live OFAC data, synced hourly</li>
+<li>Live OFAC data, refreshed daily</li>
 </ul>
 <a href="https://github.com/kindrat86/agentmail" class="btn btn-primary btn-lg" style="width:100%">Integrate x402 &rarr;</a>
 <div class="guarantee">
-<strong>Zero-liability guarantee</strong><br>
-If a passed check results in an OFAC fine, we cover the first <strong class="hl-g">$10,000</strong> of legal fees.
+<strong>Audit-trail guarantee</strong><br>
+Every screen returns a timestamped, exportable compliance receipt. If OFAC asks <strong class="hl-g">what you checked and when</strong>, you have the answer.
 </div>
 </div>
 </div>
@@ -177,7 +177,7 @@ If a passed check results in an OFAC fine, we cover the first <strong class="hl-
 <div class="story-section">
 <div class="story-label">THE STORY</div>
 <h2>Test #47 sent USDC to a wallet on the SDN list.</h2>
-<div class="quote">"I checked the wallet against the OFAC SDN list. It was there. If that had been production, I would be looking at a $356,000 fine. The agent did not know what OFAC was. It just saw 'pay invoice #4021' and sent USDC."</div>
+<div class="quote">"I checked the wallet against the OFAC SDN list. It was there. If that had been production, I would be looking at a $377,700 fine. The agent did not know what OFAC was. It just saw 'pay invoice #4021' and sent USDC."</div>
 <p>The payment rails (x402, AP2, ACP) handle moving money. None of them check OFAC. This gap is why agentmail exists.</p>
 <div class="callout"><strong>Every agent that can pay needs a compliance layer.</strong> 5 cents per check. No subscription. No API key.</div>
 </div>
@@ -224,7 +224,7 @@ If a passed check results in an OFAC fine, we cover the first <strong class="hl-
 </div>
 <div class="faq-item">
 <h3>How current is the OFAC data?</h3>
-<p>Synced hourly from the US Treasury SDN list.</p>
+<p>Refreshed daily from the US Treasury SDN list, with a 24-hour cache.</p>
 </div>
 <div class="faq-item">
 <h3>Can I self-host?</h3>
