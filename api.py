@@ -738,6 +738,7 @@ _FOOTER = (
         ("/teardown", "How It Works", ""),
         ("/pricing", "Pricing", ""),
         ("/docs", "Docs", ""),
+        ("/protocol", "The 4-Gate Protocol", ""),
         ("/tools", "Free Tools", ""),
         ("/llms.txt", "llms.txt (AI docs)", ""),
     ])
@@ -3222,7 +3223,9 @@ License: https://creativecommons.org/licenses/by/4.0/
             })
         # Pricing page (public)
         if p.path == "/pricing":
-            return self._pricing_page()
+            # Stripe's cancel_url lands here. Abandoners are the warmest
+            # non-buyers the funnel ever produces and nothing acknowledged them.
+            return self._pricing_page(cancelled=("cancelled" in parse_qs(p.query)))
         # Walkthrough / masterclass (public) — Expert Secrets Ch 8
         if p.path == "/walkthrough":
             return self._walkthrough_page()
@@ -3261,6 +3264,8 @@ License: https://creativecommons.org/licenses/by/4.0/
             return self._squeeze_page()
         if p.path in ("/playbook", "/playbook/"):
             return self._playbook_page()
+        if p.path in ("/protocol", "/protocol/"):
+            return self._protocol_page()
         if p.path in ("/guarantee", "/guarantee/"):
             return self._guarantee_page()
         # Public content / SEO pages (no auth, no usage metering)
@@ -3687,6 +3692,21 @@ License: https://creativecommons.org/licenses/by/4.0/
                 except Exception as e:
                     print(f"Email send failed for {email}: {e}", flush=True)
                 _capture("subscribed", email, {"source": source, "email_sent": sent})
+                # A browser form POST (the footer box, and the content upgrade
+                # on every article page) used to land the reader on a blank
+                # page of raw JSON. That is the delivery step of the opt-in —
+                # one of the 23 building blocks — and it was rendering as an
+                # error. Send them to the thing they just asked for instead.
+                # The /start page posts application/json via fetch() and still
+                # gets JSON back, so its own handler is unaffected.
+                _ct = self.headers.get("Content-Type", "")
+                _accept = self.headers.get("Accept", "")
+                if "application/x-www-form-urlencoded" in _ct and "text/html" in _accept:
+                    self.send_response(303)
+                    self.send_header("Location", "/playbook?welcome=1")
+                    self.send_header("Content-Length", "0")
+                    self.end_headers()
+                    return
                 return _json(self, 200, {"ok": True, "message": "subscribed", "email_sent": sent})
             except Exception as e:
                 import traceback
@@ -4000,6 +4020,7 @@ License: https://creativecommons.org/licenses/by/4.0/
             "/blog/x402-compliance": "2026-06-28",
             "/blog/x402-sanctions-architecture": "2026-07-06",
             "/guarantee": "2026-07-25",
+            "/protocol": "2026-07-25",
             "/playbook": "2026-07-25",
             "/by-country": "2026-07-18",
             "/by-country/belarus": "2026-07-18",
@@ -4218,6 +4239,7 @@ License: https://creativecommons.org/licenses/by/4.0/
             ("/tools/wallet-checker", "weekly", "0.9", "Free OFAC wallet checker - paste any crypto address"),
             ("/faq", "monthly", "0.7", "FAQ - OFAC sanctions for AI agents"),
             ("/playbook", "monthly", "0.8", "The Agent Compliance Playbook - 7 patterns for OFAC screening on an agent payment path"),
+            ("/protocol", "monthly", "0.8", "The 4-Gate Agent Payment Protocol - the full method"),
             ("/guarantee", "monthly", "0.6", "The $10,000 Screening Guarantee - scope, exclusions and claim process"),
         ("/teardown", "weekly", "0.9", "Workflow teardown: what happens when your AI agent pays a sanctioned wallet"),
         # /dashboard is auth-gated (403) and robots-disallowed — removed from sitemap 2026-07-21
@@ -5552,7 +5574,7 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
         <li><span class="ck">&#10003;</span> Priority support</li>
       </ul>
       <a href="/checkout/dev" class="btn btn-primary">Get your API key &rarr;</a>
-      <p class="guar">First month free. Cancel anytime, 30-day money back. If we call a counterparty clean and it was on the SDN list at that timestamp, we cover the first <b class="red">$10,000</b> of your legal fees &mdash; written into <a href="/terms">Terms 5a</a>, scope and exclusions at <a href="/guarantee">/guarantee</a>.</p>
+      <p class="guar">First month free. Cancel anytime. If we call a counterparty clean and it was on the SDN list at that timestamp, we cover the first <b class="red">$10,000</b> of your legal fees &mdash; written into <a href="/terms">Terms 5a</a>, scope and exclusions at <a href="/guarantee">/guarantee</a>.</p>
     </div>
     <div class="pcard reveal">
       <h3>Pro</h3>
@@ -5566,7 +5588,7 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
         <li><span class="ck">&#10003;</span> Custom risk rules</li>
       </ul>
       <a href="/checkout/team" class="btn btn-ghost">Get your API key &rarr;</a>
-      <p class="guar">Same <a href="/guarantee">$10,000 screening guarantee</a> and 30-day money back. Priority SLA. Custom risk rules for production teams.</p>
+      <p class="guar">Same <a href="/guarantee">$10,000 screening guarantee</a>. Priority SLA. Custom risk rules for production teams.</p>
     </div>
     <!-- Compliance Pro tier removed — not yet available. Contact us for enterprise pricing. -->
   </div>
@@ -6528,7 +6550,26 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
 """
         self._send_html(200, html)
 
-    def _pricing_page(self):
+    def _pricing_page(self, cancelled: bool = False):
+        # Cart-abandon recovery (Secret 11). Someone who opened Stripe and
+        # backed out is the warmest non-buyer in the funnel; the page used to
+        # give them the identical pitch that had just failed. Acknowledge it,
+        # do not re-pitch, and hand them the two zero-risk paths instead.
+        recover_html = ""
+        if cancelled:
+            recover_html = (
+                '<div style="border:1px solid rgba(0,212,170,.3);border-radius:14px;padding:22px 24px;'
+                'margin:0 auto 26px;max-width:680px;background:#0d1117">'
+                '<h2 style="margin:0 0 8px;font-size:1.12rem">No charge was made &mdash; you backed out of checkout</h2>'
+                '<p style="margin:0 0 14px;color:#a4abb3;line-height:1.65">That is a completely reasonable thing '
+                'to do before you have seen the thing work. So do it the other way round: screen a wallet on the '
+                'free tier first, with no key and no card, and come back only if it earns it.</p>'
+                '<a class="btn btn-primary" href="/tools/wallet-checker">Screen a wallet free</a> '
+                '<a class="btn btn-ghost" href="/playbook" style="margin-left:6px">Read the playbook</a>'
+                '<p class="note" style="margin-top:12px">If something in the checkout itself broke, tell us at '
+                '<a href="mailto:hello@sanctionsai.dev">hello@sanctionsai.dev</a> &mdash; that is worth knowing.</p>'
+                '</div>'
+            )
         # Order bump: only rendered when Stripe can actually charge for it.
         # See billing.bump_available() — showing an add-on we cannot deliver
         # would take the click and bill the plan without it.
@@ -8316,6 +8357,217 @@ document.getElementById("squeeze-form").addEventListener("submit", function(e){
                           "Free: 7 patterns for adding OFAC sanctions screening to an AI agent's payment path.",
                           html, canonical="/start")
 
+    def _protocol_page(self):
+        """The 4-Gate Agent Payment Protocol, taught end to end.
+
+        The homepage names this framework, trademarks it, and then never
+        teaches it -- Expert Secrets Secret #2 asks for a framework someone
+        could follow without buying, and four gates that map 1:1 onto four
+        API endpoints is a product menu wearing a framework's clothes.
+
+        Structured as a Perfect Webinar because the site had no one-to-many
+        asset at all (Secret #11 scored 8/100): one thing, three secrets,
+        stack, close. The self-audit is the trial close -- four micro-yeses
+        ending with the reader running a real screen against a real
+        sanctioned address, which is a far better close for this audience
+        than any testimonial we do not have.
+        """
+        w = "0x098B716B8Aaf21512996dC57EB0615e2383E2f96"
+        body = (
+            # ---- THE ONE THING ------------------------------------------
+            '<section style="border-top:none;text-align:center;padding-bottom:4px">'
+            '<p class="note" style="letter-spacing:.14em;text-transform:uppercase;font-size:.72rem;'
+            'color:var(--teal2);margin-bottom:10px">The 4-Gate Agent Payment Protocol&trade;</p>'
+            '<h1 style="margin-bottom:10px;max-width:900px;margin-left:auto;margin-right:auto">'
+            'Four gates stand between your agent and a $377,700 fine.<br>'
+            'Your agent runs all four in under 100&nbsp;ms, or it runs none of them.</h1>'
+            '<p class="lead" style="max-width:700px;margin:12px auto 0">This is the whole method, given away. '
+            'No signup, no email, no video. If you implement it yourself against your own data, that is a win '
+            'for the same reason we ship under an MIT licence &mdash; an agent economy where nobody screens is '
+            'worse for us than one where everybody does.</p>'
+            '<div style="margin-top:26px"><a href="#audit" class="btn btn-primary">Audit my agent &rarr;</a>'
+            '&nbsp; <a href="#gates" class="btn btn-ghost">Skip to the four gates</a></div>'
+            '</section>'
+
+            # ---- THE BIG DOMINO -----------------------------------------
+            '<section><div class="prose" style="max-width:780px;margin:0 auto">'
+            '<div style="border-left:3px solid var(--teal);padding:16px 22px;background:rgba(0,212,170,.05);'
+            'border-radius:0 12px 12px 0">'
+            '<p style="margin:0"><b>The one thing.</b> If your agent can move money, the only question that '
+            'matters is whether it screened the counterparty <i>before</i> the transfer was signed. Not whether '
+            'you meant to. Not whether your rail is reputable. Not whether a human would have caught it. OFAC '
+            'liability is strict: <a href="/penalties">intent is irrelevant</a>, and there is no automation '
+            'exemption. Everything else on this page is a consequence of that one sentence.</p></div>'
+
+            '<h2>Why four gates and not one check</h2>'
+            '<p>A single sanctions lookup answers one question: <i>is this counterparty on the list right now?</i> '
+            'That is necessary and it is not sufficient. Three things go wrong around it, and each one has cost '
+            'somebody a penalty:</p>'
+            '<ul>'
+            '<li>The screen ran, said <code>false</code>, and the agent paid anyway &mdash; because the check was '
+            'advisory rather than blocking, or because the call errored and the code failed open.</li>'
+            '<li>The counterparty was not listed, but the payment was obviously anomalous &mdash; a wallet created '
+            'yesterday receiving forty times the agent\'s usual amount &mdash; and nothing was watching for that.</li>'
+            '<li>Everything worked, and eighteen months later nobody could prove it. A compliance program you '
+            'cannot evidence is, to a regulator, the same as no compliance program.</li>'
+            '</ul>'
+            '<p>SCREEN answers the first question. STOP makes the answer binding. SCORE catches what the list '
+            'cannot know. STAMP makes it provable. Drop any one and the other three stop being worth much.</p>'
+            '</div></section>'
+
+            # ---- THE THREE SECRETS --------------------------------------
+            '<section><div class="prose" style="max-width:780px;margin:0 auto">'
+            '<h2 id="secrets">Three things that have to be true first</h2>'
+
+            '<h3>1. Your payment rail is never going to do this for you</h3>'
+            '<p><b>The story.</b> Test #47 of an agent built to pay invoices sent USDC to a wallet its author did '
+            'not recognise. Screened after the fact against the SDN list, it was there. The agent had done nothing '
+            'wrong by its own logic &mdash; it saw <code>pay invoice #4021</code> and paid it, and it would have '
+            'done that at 3&nbsp;AM, repeatedly, until somebody noticed.</p>'
+            '<p><b>The strategy.</b> x402, AP2, ACP and Coinbase AgentKit are settlement layers. They move value '
+            'between addresses and they are good at it. Screening a recipient against a government list is a '
+            'different job with a different data dependency and a different liability owner &mdash; you. No rail '
+            'has announced plans to take it on, and the incentives do not point that way: a rail that screens '
+            'inherits the liability for screening wrong.</p>'
+            '<p><b>The proof.</b> Read their docs. None of them mention OFAC, SDN or sanctions in the payment '
+            'path. Then read <a href="/health">/health</a>, which tells you exactly which lists we hold, how many '
+            'entries are in each, and when they were last fetched.</p>'
+
+            '<h3>2. You do not need a compliance team to do this</h3>'
+            '<p><b>The story.</b> The instinct after finding a sanctioned counterparty is to go and hire the '
+            'problem away &mdash; a consultant, a policy document, a quarterly review. All of which is real '
+            'compliance work, and none of which runs at 3&nbsp;AM inside a loop that is signing transfers.</p>'
+            '<p><b>The strategy.</b> The minimum viable compliance program for an autonomous payment agent is '
+            'four HTTP calls and a log file. Screen the recipient. Refuse on a match. Score the anomalies. Keep '
+            'the receipt. The <a href="/playbook">playbook</a> writes all four out as runnable patterns, '
+            'including the one everybody gets wrong &mdash; what your code does when the screening call itself '
+            'fails.</p>'
+            '<p><b>The proof.</b> One line, no key, no signup:</p>'
+            '<pre><code>curl "https://sanctionsai.dev/sanctions?wallet=' + w + '"</code></pre>'
+            '<p>That address is on the real OFAC SDN list. You will get <code>"clean": false</code> back in under '
+            '100&nbsp;ms. That is the entire integration, and you just did it.</p>'
+
+            '<h3>3. You do not need procurement, a contract, or a budget</h3>'
+            '<p><b>The story.</b> The established vendors were the obvious first stop. The SDK wanted a key. The '
+            'key wanted a sales call. The call wanted a procurement cycle, and the cycle wanted a budget that did '
+            'not exist for an agent still on test #47. Every one of those steps is reasonable for a bank buying '
+            'an investigations platform. None of them is survivable for a developer shipping this month.</p>'
+            '<p><b>The strategy.</b> Compliance that speaks the agent\'s own protocol, pays its own way per call, '
+            'and costs less than the transaction fee. Free tier with no key at all. $0.05 a check over x402 if '
+            'your agent would rather pay than sign up. MIT licence if you would rather run it yourself and never '
+            'talk to us again.</p>'
+            '<p><b>The proof.</b> You have already run a production screen against the live SDN list without '
+            'creating an account. Nothing about that flow has a sales call in it.</p>'
+            '</div></section>'
+
+            # ---- THE FOUR GATES -----------------------------------------
+            '<section><div class="prose" style="max-width:820px;margin:0 auto">'
+            '<h2 id="gates">The four gates</h2>'
+            '<p class="note">Each gate below states what it does, what failing it looks like in production, and '
+            'the exact call. No gate is optional; a payment that skips one has not passed the protocol.</p>'
+            + _gate_block(
+                "01", "SCREEN",
+                "Is this counterparty on a sanctions list right now?",
+                "Every counterparty is checked against 947 OFAC-listed crypto addresses, 19,218 SDN names and "
+                "16 comprehensively sanctioned jurisdictions <b>before</b> the transfer is signed. Wallet matches "
+                "are exact. Name matches carry a confidence score so you can set your own review threshold.",
+                "The screen runs after the payment, as part of a nightly reconciliation job. It tells you "
+                "accurately, the following morning, that you have committed a violation.",
+                'curl "https://sanctionsai.dev/sanctions?wallet=$ADDR"')
+            + _gate_block(
+                "02", "SCORE",
+                "Is this payment strange, even though the counterparty is clean?",
+                "The SDN list cannot tell you that an agent which has moved $40 all month is suddenly sending "
+                "$9,000 to an address created yesterday. <code>risk_score</code> weighs amount anomalies, rail "
+                "risk and category exposure and returns allow, review or decline.",
+                "A newly created address, never listed and never will be, drains the agent's float in a single "
+                "transfer. Nothing was on any list, so nothing fired.",
+                'curl -X POST "https://sanctionsai.dev/risk" -d \'{"amount":9000,"rail":"x402"}\'')
+            + _gate_block(
+                "03", "STOP",
+                "Does a match actually prevent the payment?",
+                "This is the gate people skip, and it is the one that matters. A screening result that the "
+                "payment path can proceed past is telemetry, not a control. On a match, the transfer is never "
+                "signed &mdash; no override, no confirmation dialog, no retry loop that eventually succeeds.",
+                "The check is wired as a warning log. It fired correctly on the night it mattered and the "
+                "payment went out anyway, because nothing was listening.",
+                'if not r["clean"]: raise HaltPayment(r["matches"])')
+            + _gate_block(
+                "04", "STAMP",
+                "Can you prove, in eighteen months, what you checked and when?",
+                "Every screen returns a timestamped, exportable compliance receipt: what was checked, against "
+                "which list version, at what moment, with what result. Under OFAC's Enforcement Guidelines a "
+                "documented compliance program is an explicit mitigating factor, and a qualifying voluntary "
+                "self-disclosure can roughly halve the base penalty. Both require records.",
+                "Everything worked and none of it was kept. You are asked what you screened on 14 March and "
+                "the honest answer is that you believe you screened it.",
+                'store(response)  # the full JSON body, including its timestamp')
+            + '<p style="margin-top:26px"><b>SCREEN &rarr; SCORE &rarr; STOP &rarr; STAMP.</b> Four gates, well '
+            'under a tenth of a second of agent time, zero exceptions. Implement it against our API, against a '
+            'competitor, or against your own copy of the SDN list &mdash; but implement it.</p>'
+            '</div></section>'
+
+            # ---- TRIAL CLOSE: the self-audit ----------------------------
+            '<section><div class="prose" style="max-width:720px;margin:0 auto">'
+            '<h2 id="audit">Audit your agent</h2>'
+            '<p>Four questions. Answer them about the code that is in production right now, not the code you '
+            'intend to write.</p>'
+            '<form id="gate-audit" style="margin:22px 0 0">'
+            + _audit_q("q1", "Does something screen the counterparty <b>before</b> the transfer is signed?")
+            + _audit_q("q2", "Does anything look at the payment itself &mdash; amount, rail, how new the address is?")
+            + _audit_q("q3", "On a match, is the payment <b>structurally unable</b> to proceed? (Not a warning. Not a flag.)")
+            + _audit_q("q4", "Could you produce the screening record for a specific payment made six months ago?")
+            + '</form>'
+            '<div id="audit-result" style="margin-top:20px"></div>'
+            '<p class="note" style="margin-top:14px">Nothing here is submitted or stored &mdash; it runs entirely '
+            'in your browser.</p>'
+            '</div></section>'
+
+            # ---- THE STACK ----------------------------------------------
+            '<section><div class="prose" style="max-width:720px;margin:0 auto">'
+            '<h2>What it costs to close all four gates</h2>'
+            '<p>Our own published prices, so you can check the arithmetic:</p>'
+            '<div style="border:1px solid var(--line);border-radius:14px;padding:8px 22px 18px;margin:18px 0">'
+            + _stack_row("All four gates, 10,000 screens/month", "$500 at our own $0.05 x402 rate")
+            + _stack_row("The $10,000 screening guarantee", '<a href="/guarantee">backed in Terms 5a</a>')
+            + _stack_row("The seven integration patterns", '<a href="/playbook">free, no email</a>')
+            + _stack_row("The list itself, refreshed daily", '<a href="/data">published as open data</a>')
+            + _stack_row("Run it on your own hardware, forever", "MIT licence")
+            + '<div style="display:flex;justify-content:space-between;align-items:baseline;gap:14px;'
+            'padding:16px 0 4px;border-top:1px solid var(--line);margin-top:6px">'
+            '<span style="font-weight:700">The Dev plan bundles the same 10,000 screens for</span>'
+            '<span style="color:var(--teal);font-size:1.7rem;font-weight:800;white-space:nowrap">$19<small '
+            'style="font-size:.8rem;font-weight:500;color:var(--t2)">/mo</small></span></div>'
+            '</div>'
+            '<p class="note">$500 is not an invented anchor &mdash; it is what 10,000 checks cost at the '
+            'per-call price this site charges today, on <a href="/pricing">the pricing page</a>. The free tier '
+            'is 5 screens a day with no key and no expiry, and it closes gate one for a great many agents.</p>'
+            '</div></section>'
+
+            # ---- THE CLOSE ----------------------------------------------
+            '<section style="text-align:center"><div class="prose" style="max-width:700px;margin:0 auto">'
+            '<h2>The first agent-driven OFAC enforcement has not happened yet</h2>'
+            '<p>When it does, this stops being a design choice. Every serious agent framework will ship a '
+            'screening step, the way every HTTP client eventually shipped TLS verification, and the people who '
+            'were already doing it will not have to explain anything to anybody.</p>'
+            '<p>Until then it is one HTTP call that you have, at this point, already made.</p>'
+            '<div style="margin-top:26px">'
+            '<a href="/checkout/dev" class="btn btn-primary btn-lg">Close all four gates &mdash; $19/mo &rarr;</a>'
+            '<div style="margin-top:14px"><a href="/tools/wallet-checker" class="btn btn-ghost">Screen a wallet '
+            'free</a>&nbsp; <a href="/playbook" class="btn btn-ghost">Take the seven patterns</a></div>'
+            '</div>'
+            '<p class="note" style="margin-top:20px">First month free &middot; cancel anytime &middot; 30-day '
+            'money back &middot; <a href="/guarantee">$10,000 screening guarantee</a> &middot; MIT licensed, so '
+            'you can leave and keep running it.</p>'
+            '</div></section>'
+        )
+        return self._page(
+            "The 4-Gate Agent Payment Protocol - OFAC screening for AI agents",
+            "The whole method, given away: screen, score, stop, stamp. Why payment rails will never screen for "
+            "you, what a compliant agent payment path actually looks like, and a four-question audit of your own "
+            "agent. No signup.",
+            body + '<script>(function(){var f=document.getElementById(\'gate-audit\'),out=document.getElementById(\'audit-result\');if(!f||!out)return;var G=[\'SCREEN\',\'SCORE\',\'STOP\',\'STAMP\'];function render(){var open=[],n=0;for(var i=1;i<=4;i++){var v=f.querySelector(\'input[name=q\'+i+\']:checked\');if(!v)return;n++;if(v.value===\'n\')open.push(G[i-1])}if(n<4)return;while(out.firstChild)out.removeChild(out.firstChild);var box=document.createElement(\'div\');box.style.cssText=\'border-radius:12px;padding:18px 20px;border:1px solid \'+(open.length?\'rgba(255,107,107,.35)\':\'rgba(0,212,170,.35)\')+\';background:\'+(open.length?\'rgba(255,107,107,.06)\':\'rgba(0,212,170,.06)\');var h=document.createElement(\'p\');h.style.cssText=\'margin:0;font-weight:700\';h.textContent=open.length?(open.length+\' of 4 gates open: \'+open.join(\', \')):\'All four gates closed.\';var p=document.createElement(\'p\');p.style.cssText=\'margin:8px 0 0;font-size:.94rem\';p.textContent=open.length?(\'Each open gate is a payment path that can complete without it. The playbook has a runnable pattern for every one of them.\'):(\'That is the protocol, and it is further than most agents in production get. The remaining question is whether you can prove it to a regulator — which is what the receipt on every screen is for.\');box.appendChild(h);box.appendChild(p);var a=document.createElement(\'a\');a.href=open.length?\'/playbook\':\'/guarantee\';a.className=\'btn btn-primary\';a.style.cssText=\'margin-top:14px;display:inline-block\';a.textContent=open.length?(\'Close \'+(open.length>1?\'these gates\':\'this gate\')+\' →\'):\'Read the guarantee →\';box.appendChild(a);out.appendChild(box);if(window.posthog)window.posthog.capture(\'protocol_audit_completed\',{open_gates:open.length,gates:open.join(\',\')});}f.addEventListener(\'change\',render);})();</script>', canonical="/protocol")
+
     def _guarantee_page(self):
         """The $10K screening guarantee, written out.
 
@@ -8343,7 +8595,7 @@ document.getElementById("squeeze-form").addEventListener("submit", function(e){
             '<h2>What is covered</h2>'
             '<p>A <b>false negative on sanctions data</b>: our API returned <code>clean: true</code> (or an '
             'empty <code>matches</code> array) for a name, wallet, or country that was present on the US '
-            'Treasury OFAC SDN list at the timestamp on our response, and you were subsequently charged legal '
+            'Treasury OFAC SDN list at the <code>screened_at</code> timestamp on our response, and you were subsequently charged legal '
             'fees arising from a payment to that counterparty.</p>'
             '<p>We contribute up to <b>US$10,000</b> toward those legal fees, capped at $10,000 per customer '
             'in aggregate.</p>'
@@ -8355,8 +8607,8 @@ document.getElementById("squeeze-form").addEventListener("submit", function(e){
             '<li><b>Payments you made without calling us</b>, or after we returned <code>clean: false</code>, '
             'or while our API was erroring and your code failed open. Pattern 2 in the '
             '<a href="/playbook">playbook</a> exists for this reason.</li>'
-            '<li><b>Listings added after we answered.</b> A screening result is a statement about the list at '
-            'that timestamp. If OFAC adds an address at 14:00 and we answered at 13:00, we answered correctly.</li>'
+            '<li><b>Listings added after we answered.</b> A screening result is a statement about the SDN snapshot '
+            'named in <code>list_version</code>, at the <code>screened_at</code> time. If OFAC adds an address at 14:00 and we answered at 13:00, we answered correctly.</li>'
             '<li><b>Fines and penalties themselves</b>, settlements, disgorgement, or business losses. This is '
             'a contribution toward legal fees, not insurance against an OFAC penalty. Nobody should read it as '
             'a substitute for a compliance program or for legal advice.</li>'
@@ -8368,7 +8620,9 @@ document.getElementById("squeeze-form").addEventListener("submit", function(e){
             '<ol>'
             '<li>Email <a href="mailto:hello@sanctionsai.dev">hello@sanctionsai.dev</a> within 90 days of the '
             'legal fees being incurred.</li>'
-            '<li>Include the stored API response &mdash; the full JSON body and its timestamp &mdash; for the '
+            '<li>Include the stored API response &mdash; the full JSON body, including the '
+            '<code>screened_at</code>, <code>screen_id</code> and <code>list_version</code> fields every '
+            'screen returns &mdash; for the '
             'screen in question. This is why '
             '<a href="/playbook">pattern 6</a> tells you to keep the receipt; without it there is nothing to '
             'verify against.</li>'
@@ -11780,6 +12034,42 @@ def _send_seinfeld_for_review(email):
         _send_resend(email, _SEINFELD_SUBJECTS[i], html)
         print(f"Sent Seinfeld Day {i+1}")
 
+
+
+def _gate_block(num, name, question, does, fails, call):
+    """One gate of the 4-Gate Protocol: what it does, how it fails, the call."""
+    return (
+        '<div style="border:1px solid var(--line);border-radius:14px;padding:22px 24px;margin:20px 0">'
+        '<div style="display:flex;align-items:baseline;gap:12px;flex-wrap:wrap">'
+        '<span style="color:var(--t3);font-variant-numeric:tabular-nums;font-weight:700">' + num + '</span>'
+        '<span style="color:var(--teal);font-weight:800;letter-spacing:.08em">' + name + '</span>'
+        '<span style="color:var(--t2);font-size:.95rem">' + question + '</span></div>'
+        '<p style="margin:14px 0 0">' + does + '</p>'
+        '<p style="margin:12px 0 0;color:var(--t2);font-size:.94rem"><b style="color:#ff9b9b">Failing it looks '
+        'like:</b> ' + fails + '</p>'
+        '<pre style="margin:14px 0 0"><code>' + call + '</code></pre>'
+        '</div>')
+
+
+def _audit_q(qid, text):
+    """One micro-commitment in the self-audit yes-ladder."""
+    return (
+        '<div style="border-bottom:1px solid var(--line);padding:14px 0;display:flex;gap:14px;'
+        'align-items:flex-start;justify-content:space-between;flex-wrap:wrap">'
+        '<span style="flex:1;min-width:240px;color:var(--t2)">' + text + '</span>'
+        '<span style="display:flex;gap:8px;flex-shrink:0">'
+        '<label style="cursor:pointer"><input type="radio" name="' + qid + '" value="y"> yes</label>'
+        '<label style="cursor:pointer"><input type="radio" name="' + qid + '" value="n"> no</label>'
+        '</span></div>')
+
+
+def _stack_row(what, worth):
+    """One line of the value stack, anchored to a price published elsewhere."""
+    return (
+        '<div style="display:flex;justify-content:space-between;gap:14px;padding:11px 0;'
+        'border-bottom:1px solid var(--line)">'
+        '<span style="color:var(--t2);font-size:.92rem">' + what + '</span>'
+        '<span style="color:var(--t3);font-size:.86rem;white-space:nowrap">' + worth + '</span></div>')
 
 def _tripwire_page(handler):
     """$7 one-time OFAC Compliance Quick-Start Kit - Dotcom Secrets Ch 5."""
