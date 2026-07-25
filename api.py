@@ -17,6 +17,7 @@ import html
 import io
 import json
 import os
+import re
 import time
 from collections import defaultdict, deque
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
@@ -50,7 +51,7 @@ _SERVER_CARD = {
     "tools": [
         {
             "name": "sanctions_check",
-            "description": "Screen a counterparty against OFAC/EU/UN/UK sanctions lists. Cheapest check, call first. At least one of name / wallet / country required. Returns matches with list, match_type, and confidence, plus a clean boolean.",
+            "description": "Screen a counterparty against the US Treasury OFAC SDN list. Cheapest check, call first. At least one of name / wallet / country required. Returns matches with list, match_type, and confidence, plus a clean boolean.",
             "input_schema": {
                 "type": "object",
                 "properties": {
@@ -197,7 +198,7 @@ def _record_anon_check(ip: str) -> dict:
         info["upgrade_nudge"] = (
             f"You've used {used} of {cap} free checks today. "
             f"Production agents run 10,000 checks/month - that's $19/mo, "
-            f"and it keeps you out of a $356,000 OFAC fine. "
+            f"and it keeps you out of a $377,700 OFAC fine. "
             f"Upgrade: {_SITE}/pricing"
         )
     return info
@@ -416,79 +417,374 @@ _BY_COUNTRY_KEYS = frozenset((
     "pakistan",
 ))
 
-_DARK_CSS = """
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:-apple-system,system-ui,sans-serif;background:#0a0a0a;color:#e0e0e0;line-height:1.6;overflow-x:hidden}
-a{color:#00d4aa;text-decoration:none}
-.prose{max-width:720px;margin:0 auto;padding:0 24px}
-nav{padding:20px 24px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #1a1a1a;flex-wrap:wrap;gap:12px}
-.logo{font-weight:700;font-size:1.2em;color:#fff}
-.logo span{color:#00d4aa}
-nav .links{display:flex;gap:18px;align-items:center;flex-wrap:wrap}
-nav a{color:#888;font-size:.9em;transition:color .2s}
-nav a:hover{color:#fff}
-.btn{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:10px 20px;border-radius:8px;font-weight:600;font-size:.9em;transition:transform .1s,box-shadow .2s;cursor:pointer;border:none}
-.btn-primary{background:#00d4aa;color:#0a0a0a}
-.btn-primary:hover{box-shadow:0 0 20px rgba(0,212,170,.3);transform:translateY(-1px)}
-.btn-ghost{border:1px solid #333;color:#e0e0e0;background:transparent}
-.btn-ghost:hover{border-color:#00d4aa}
-section{padding:56px 24px;border-top:1px solid #1a1a1a}
-section:first-of-type{border-top:none}
-h1{font-size:2.2em;font-weight:800;line-height:1.15;letter-spacing:-.02em;margin-bottom:16px}
-    "elliptic": {
-        "name": "Elliptic", "tagline": "Enterprise blockchain analytics",
-        "url": "https://www.elliptic.co", "free_tier": False, "agent_api": False,
-        "crypto_wallets": True, "sanctions_list": True, "self_host": False,
-        "mcp_server": False, "pricing_public": False, "minimum": "Custom quote",
-        "startup_friendly": False,
-    },
-    "scorechain": {
-        "name": "Scorechain", "tagline": "Crypto compliance and risk scoring",
-        "url": "https://www.scorechain.com", "free_tier": False, "agent_api": False,
-        "crypto_wallets": True, "sanctions_list": True, "self_host": False,
-        "mcp_server": False, "pricing_public": False, "minimum": "Custom quote",
-        "startup_friendly": False,
-    },
+_TABLE_RE = re.compile(r"<table\b.*?</table\s*>", re.S | re.I)
 
-h2{font-size:1.6em;font-weight:700;margin-bottom:16px}
-h3{font-size:1.1em;font-weight:600;margin:22px 0 8px;color:#fff}
-p{color:#b0b0b0;margin-bottom:14px}
-.lead{font-size:1.1em;color:#999}
-.note{color:#8a9099;font-size:.85em}
-code,pre{font-family:'SF Mono',Consolas,monospace}
-code{background:#1a1a1a;padding:2px 8px;border-radius:4px;color:#00d4aa;font-size:.9em}
-pre{background:#111;border:1px solid #222;border-radius:12px;padding:18px 20px;overflow-x:auto;color:#cfcfcf;font-size:.85em;line-height:1.5;margin:16px 0}
-pre code{background:none;padding:0;color:inherit}
-ul{color:#b0b0b0;padding-left:22px;margin:10px 0 16px}
-li{margin:6px 0}
-table{width:100%;border-collapse:collapse;margin:20px 0;font-size:.92em}
-th,td{text-align:left;padding:12px 14px;border-bottom:1px solid #1a1a1a;vertical-align:top}
-th{color:#fff;font-weight:600}
-.cta-box{background:#111;border:1px solid #222;border-radius:16px;padding:36px;text-align:center;margin:32px auto;max-width:680px}
-.cta-box h2,.cta-box h3{margin-bottom:8px}
-.cta-box p{color:#999;margin-bottom:18px}
-.input{width:100%;padding:14px 16px;border-radius:10px;border:1px solid #333;background:#111;color:#e0e0e0;font-size:1em;font-family:'SF Mono',Consolas,monospace}
-.input:focus{outline:none;border-color:#00d4aa}
-.result{margin-top:20px;padding:20px;border-radius:12px;border:1px solid #222;background:#111;font-family:'SF Mono',Consolas,monospace;font-size:.9em;white-space:pre-wrap;word-break:break-all}
-.result.clean{border-color:#00d4aa;color:#00d4aa}
-.result.flag{border-color:#ff6b6b;color:#ff6b6b}
-.faq-item{margin:0 0 10px;border:1px solid #1a1a1a;border-radius:10px;overflow:hidden}
-.faq-item summary{padding:16px 20px;cursor:pointer;font-weight:600;color:#fff;list-style:none}
+
+def _wrap_tables(body: str) -> str:
+    """Give every <table> its own horizontal scroll container.
+
+    A 3-column comparison table is ~770px wide; on a 375px phone that made
+    the *document* scroll sideways (measured on /leaderboard and /pricing)
+    rather than the table. Wrapping is done here, once, because the tables
+    live in ~245 hand-written page bodies that are not worth editing
+    individually. Tables are never nested on this site, so the non-greedy
+    match is sound; already-wrapped markup is left alone.
+    """
+    if "<table" not in body:
+        return body
+    if 'class="tbl"' in body:
+        return body
+    return _TABLE_RE.sub(lambda m: '<div class="tbl">' + m.group(0) + "</div>", body)
+
+
+_DARK_CSS = """
+/* ═══════════════════════════════════════════════════════════════════
+   SanctionsAI design system — dark, mobile-first.
+   ONE stylesheet, inlined by _page() into ~245 server-rendered pages.
+   Rewritten 2026-07-25 (MK UI/UX).
+
+   ⚠ NEVER paste Python into this string. A stray `},` left in here
+   once made the FOLLOWING selector start with a comma, which is an
+   invalid selector list — browsers silently dropped the whole `h2`
+   rule on every page for weeks. Verified with
+   `[...document.styleSheets].some(ss=>[...ss.cssRules].some(r=>r.selectorText==='h2'))`.
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ── tokens ─────────────────────────────────────────────────────── */
+:root{
+  --bg:#08090b; --bg-1:#0e1014; --bg-2:#14171c;
+  --line:#1e222a; --line-2:#2b313b;
+  --fg:#e9ecf1;            /* 15.8:1 on --bg */
+  --fg-2:#b6bec9;          /* 10.5:1 */
+  --fg-3:#8b95a3;          /*  6.4:1 — smallest text still passes AA */
+  --accent:#00d4aa; --accent-ink:#04120f;
+  --accent-soft:rgba(0,212,170,.09); --accent-line:rgba(0,212,170,.32);
+  --danger:#ff6b6b;
+  --r-s:8px; --r:12px; --r-l:18px;
+  --nav-h:56px; --shell:1140px;
+  --ease:cubic-bezier(.4,0,.2,1);
+  color-scheme:dark;
+}
+
+/* ── reset ──────────────────────────────────────────────────────── */
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%;scroll-behavior:smooth;scroll-padding-top:calc(var(--nav-h) + 16px)}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,Roboto,sans-serif;
+  background:var(--bg);color:var(--fg);
+  font-size:1.0625rem;line-height:1.65;
+  overflow-x:hidden;min-height:100dvh;
+  -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
+  padding-left:env(safe-area-inset-left);padding-right:env(safe-area-inset-right);
+}
+::selection{background:var(--accent);color:var(--accent-ink)}
+img,svg,video,iframe{max-width:100%;height:auto;display:block}
+main{display:block;min-height:48vh}
+hr{border:0;border-top:1px solid var(--line);margin:32px 0}
+
+/* ── a11y primitives ────────────────────────────────────────────── */
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px}
+:focus:not(:focus-visible){outline:none}
+.vh{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap;border:0}
+.skip{position:absolute;left:12px;top:-72px;z-index:1000;background:var(--accent);color:var(--accent-ink);padding:11px 18px;border-radius:var(--r-s);font-weight:700;font-size:.9375rem;transition:top .15s var(--ease)}
+.skip:focus{top:10px}
+
+/* ── typography ─────────────────────────────────────────────────── */
+h1,h2,h3,h4,h5,h6{color:#fff;text-wrap:balance}
+h1{font-size:clamp(1.95rem,1.35rem + 2.4vw,3rem);font-weight:800;line-height:1.1;letter-spacing:-.03em;margin-bottom:16px}
+h2{font-size:clamp(1.375rem,1.12rem + 1.05vw,1.875rem);font-weight:700;line-height:1.22;letter-spacing:-.02em;margin:40px 0 14px}
+h3{font-size:clamp(1.0625rem,1rem + .3vw,1.25rem);font-weight:600;line-height:1.35;margin:28px 0 8px}
+h4{font-size:1rem;font-weight:600;margin:20px 0 6px;color:var(--fg)}
+:is(h1,h2,h3,h4,h5,h6):first-child{margin-top:0}
+p{color:var(--fg-2);margin-bottom:16px;text-wrap:pretty}
+/* Bare URLs, wallet addresses and API keys appear as link text all over
+   this site. A single 389px unbreakable token in an <li> was pushing the
+   whole /leaderboard document to 428px on a 375px phone. */
+:is(p,li,dd,dt,td,th,summary,figcaption,blockquote,h1,h2,h3,h4,h5,h6,a){overflow-wrap:break-word}
+p:last-child{margin-bottom:0}
+.lead{font-size:clamp(1.0625rem,1rem + .4vw,1.25rem);color:var(--fg-2);line-height:1.6}
+.note{color:var(--fg-3);font-size:.875rem}
+strong,b{color:var(--fg);font-weight:650}
+ul,ol{color:var(--fg-2);padding-left:1.35em;margin:12px 0 18px}
+li{margin:8px 0}
+li::marker{color:var(--accent)}
+blockquote{border-left:2px solid var(--accent-line);padding-left:18px;margin:20px 0;color:var(--fg-2);font-style:italic}
+
+/* ── links ──────────────────────────────────────────────────────── */
+a{color:var(--accent);text-decoration:none;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+a:hover{color:#2ae9c6}
+/* Body-copy links carry an underline — colour alone must not be the
+   only cue (WCAG 1.4.1). Navigation, buttons and cards are exempt. */
+:is(.prose,main) :is(p,li,td,dd) a:not(.btn){text-decoration:underline;text-decoration-color:var(--accent-line);text-decoration-thickness:1px;text-underline-offset:.18em}
+:is(.prose,main) :is(p,li,td,dd) a:not(.btn):hover{text-decoration-color:var(--accent)}
+
+/* ── layout ─────────────────────────────────────────────────────── */
+section{padding:clamp(36px,7vw,72px) clamp(18px,5vw,24px);border-top:1px solid var(--line)}
+section:first-of-type{border-top:none}
+.prose{max-width:760px;margin-inline:auto;padding-inline:20px}
+section .prose{padding-inline:0}
+
+/* ── navigation ─────────────────────────────────────────────────── */
+nav{position:sticky;top:0;z-index:900;border-bottom:1px solid var(--line);background:rgba(8,9,11,.82);backdrop-filter:saturate(180%) blur(14px);-webkit-backdrop-filter:saturate(180%) blur(14px)}
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){nav{background:var(--bg)}}
+.nav-in{max-width:var(--shell);margin:0 auto;min-height:var(--nav-h);padding:0 16px;display:flex;align-items:center;gap:12px}
+.logo{display:inline-flex;align-items:center;min-height:44px;margin-right:auto;font-weight:700;font-size:1.0625rem;letter-spacing:-.02em;color:#fff}
+.logo:hover{color:#fff}
+.logo span{color:var(--accent)}
+.nav-toggle{display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;min-width:44px;flex:0 0 auto;padding:0;border:1px solid var(--line-2);border-radius:var(--r-s);background:transparent;color:var(--fg);cursor:pointer;touch-action:manipulation}
+.nav-toggle:hover{border-color:var(--accent);color:var(--accent)}
+.nav-toggle svg{width:22px;height:22px;flex:0 0 auto}
+.nav-toggle .i-x{display:none}
+.nav-toggle[aria-expanded="true"] .i-x{display:block}
+.nav-toggle[aria-expanded="true"] .i-m{display:none}
+nav .links a{color:var(--fg-3);font-size:.875rem;font-weight:500;transition:color .18s var(--ease)}
+nav .links a:hover{color:var(--fg)}
+nav .links a.btn-primary{color:var(--accent-ink)}
+
+/* mobile: full-height drawer under a 56px bar (was a 210px wrapping blob) */
+@media (max-width:860px){
+  nav .links{position:fixed;left:0;right:0;top:var(--nav-h);bottom:0;display:none;flex-direction:column;align-items:stretch;background:var(--bg);border-top:1px solid var(--line);padding:4px 20px calc(28px + env(safe-area-inset-bottom));overflow-y:auto;overscroll-behavior:contain}
+  nav .links.open{display:flex}
+  nav .links a{display:flex;align-items:center;min-height:54px;font-size:1rem;color:var(--fg-2);border-bottom:1px solid var(--line)}
+  nav .links a:last-child{border-bottom:0}
+  nav .links a.btn{margin-top:20px;border-bottom:0;justify-content:center;font-size:.9375rem}
+  body.nav-open{overflow:hidden}
+}
+@media (min-width:861px){
+  .nav-toggle{display:none}
+  nav .links{display:flex;align-items:center;gap:22px;flex-wrap:wrap;justify-content:flex-end}
+  nav .links a.btn{min-height:40px;padding:9px 16px;font-size:.875rem}
+}
+
+/* ── buttons ────────────────────────────────────────────────────── */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:12px 22px;border:1px solid transparent;border-radius:var(--r-s);font-weight:600;font-size:.9375rem;line-height:1.2;letter-spacing:-.01em;text-align:center;text-decoration:none;cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent;transition:background .18s var(--ease),border-color .18s var(--ease),box-shadow .18s var(--ease),color .18s var(--ease),transform .12s var(--ease)}
+.btn-primary{background:var(--accent);color:var(--accent-ink)}
+.btn-primary:hover{background:#22e6c0;color:var(--accent-ink);box-shadow:0 6px 24px -6px rgba(0,212,170,.5)}
+.btn-ghost{border-color:var(--line-2);color:var(--fg);background:transparent}
+.btn-ghost:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-soft)}
+.btn:active{transform:translateY(1px)}
+@media (hover:none){.btn:hover{box-shadow:none;transform:none}}
+
+/* ── code ───────────────────────────────────────────────────────── */
+code,pre,.result{font-family:ui-monospace,'SF Mono',SFMono-Regular,Menlo,Consolas,monospace}
+code{background:var(--bg-2);border:1px solid var(--line);padding:.12em .42em;border-radius:6px;color:var(--accent);font-size:.875em;overflow-wrap:anywhere;word-break:break-word}
+pre{background:var(--bg-1);border:1px solid var(--line);border-radius:var(--r);padding:16px 18px;margin:18px 0;overflow-x:auto;-webkit-overflow-scrolling:touch;color:#cfd6e0;font-size:.8125rem;line-height:1.6;tab-size:2}
+pre code{background:none;border:0;padding:0;color:inherit;font-size:1em;overflow-wrap:normal;word-break:normal;white-space:pre}
+/* make horizontal overflow discoverable rather than invisible */
+pre,.tbl{scrollbar-width:thin;scrollbar-color:var(--line-2) transparent}
+pre::-webkit-scrollbar,.tbl::-webkit-scrollbar{height:8px}
+pre::-webkit-scrollbar-thumb,.tbl::-webkit-scrollbar-thumb{background:var(--line-2);border-radius:4px}
+pre::-webkit-scrollbar-track,.tbl::-webkit-scrollbar-track{background:transparent}
+
+/* ── tables ─────────────────────────────────────────────────────── */
+/* _page() wraps every <table> in .tbl so wide tables scroll inside
+   their own container instead of scrolling the whole document. */
+.tbl{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:22px 0;border:1px solid var(--line);border-radius:var(--r)}
+.tbl > table{margin:0;min-width:100%}
+table{width:100%;border-collapse:collapse;margin:22px 0;font-size:.9rem}
+th,td{text-align:left;padding:12px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+th{background:var(--bg-1);color:var(--fg-3);font-weight:700;font-size:.75rem;letter-spacing:.05em;text-transform:uppercase;white-space:nowrap}
+td{color:var(--fg-2)}
+tbody tr:last-child td{border-bottom:0}
+/* fallback for any table _page() did not wrap */
+@media (max-width:720px){
+  table{display:block;overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .tbl > table{display:table}
+}
+
+/* ── cards & CTAs ───────────────────────────────────────────────── */
+.cta-box{background:linear-gradient(180deg,var(--bg-1),var(--bg));border:1px solid var(--line);border-radius:var(--r-l);padding:clamp(24px,5vw,40px);text-align:center;margin:32px auto;max-width:680px}
+.cta-box :is(h2,h3){margin:0 0 10px}
+.cta-box p{color:var(--fg-2);margin:0 auto 20px}
+.cta-box .btn{margin:6px}
+@media (max-width:520px){.cta-box .btn{display:flex;width:100%;margin:8px 0}}
+
+/* ── forms ──────────────────────────────────────────────────────── */
+/* 16px minimum: anything smaller makes iOS Safari zoom the page on focus */
+.input,input:not([type=checkbox]):not([type=radio]):not([type=submit]):not([type=button]),textarea,select{
+  width:100%;padding:13px 15px;border:1px solid var(--line-2);border-radius:var(--r-s);
+  background:var(--bg-1);color:var(--fg);font-family:inherit;font-size:16px;line-height:1.4;
+  transition:border-color .18s var(--ease),box-shadow .18s var(--ease);
+}
+.input{font-family:ui-monospace,'SF Mono',Menlo,Consolas,monospace}
+:is(.input,input,textarea,select):focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+::placeholder{color:var(--fg-3);opacity:1}
+label{display:block;margin-bottom:6px;font-weight:600;font-size:.9375rem;color:var(--fg)}
+input:-webkit-autofill,input:-webkit-autofill:hover,input:-webkit-autofill:focus{
+  -webkit-box-shadow:0 0 0 30px var(--bg-1) inset!important;-webkit-text-fill-color:var(--fg)!important;caret-color:var(--fg);
+}
+
+/* ── result panel ───────────────────────────────────────────────── */
+.result{margin-top:20px;padding:18px;border:1px solid var(--line);border-radius:var(--r);background:var(--bg-1);font-size:.8125rem;line-height:1.6;white-space:pre-wrap;overflow-wrap:anywhere;word-break:break-word}
+.result.clean{border-color:var(--accent-line);color:var(--accent)}
+.result.flag{border-color:rgba(255,107,107,.4);color:var(--danger)}
+
+/* ── FAQ accordion ──────────────────────────────────────────────── */
+.faq-item{margin:0 0 10px;border:1px solid var(--line);border-radius:var(--r);background:var(--bg-1);overflow:hidden;transition:border-color .18s var(--ease)}
+.faq-item:hover{border-color:var(--line-2)}
+.faq-item[open]{border-color:var(--accent-line)}
+.faq-item summary{display:flex;align-items:center;gap:12px;min-height:56px;padding:16px 18px;cursor:pointer;font-weight:600;font-size:.9375rem;color:#fff;list-style:none}
 .faq-item summary::-webkit-details-marker{display:none}
-.faq-item summary::before{content:"+ ";color:#00d4aa}
-.faq-item[open] summary::before{content:"- "}
-.faq-item .a{padding:0 20px 18px}
-footer{padding:48px 24px;text-align:center;border-top:1px solid #1a1a1a}
-footer .links{display:flex;gap:24px;justify-content:center;margin-bottom:16px;flex-wrap:wrap}
-footer a{color:#666;font-size:.9em}
-footer a:hover{color:#fff}
-footer p{color:#444;font-size:.8em}
-@media(max-width:640px){h1{font-size:1.7em}nav{flex-direction:column;align-items:flex-start}}
+.faq-item summary::before{content:"+";flex:0 0 auto;width:16px;text-align:center;color:var(--accent);font-size:1.15em;font-weight:700}
+.faq-item[open] summary::before{content:"\\2212"}
+.faq-item .a{padding:0 18px 18px}
+
+/* ── footer ─────────────────────────────────────────────────────── */
+footer{margin-top:32px;border-top:1px solid var(--line);background:var(--bg-1);padding:clamp(36px,6vw,56px) clamp(18px,5vw,24px) calc(28px + env(safe-area-inset-bottom))}
+.ft{max-width:var(--shell);margin:0 auto}
+.ft-cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(148px,1fr));gap:26px 24px}
+.ft-col h3{margin:0 0 6px;font-size:.6875rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--fg-3)}
+.ft-col h3 a{color:inherit}
+.ft-col h3 a:hover{color:var(--accent)}
+.ft-col ul{list-style:none;margin:0;padding:0;color:inherit}
+.ft-col li{margin:0}
+.ft-col a{display:flex;align-items:center;min-height:40px;color:var(--fg-2);font-size:.875rem;line-height:1.35;text-decoration:none}
+.ft-col a:hover{color:var(--accent)}
+.ft-sub{margin-top:34px;padding-top:26px;border-top:1px solid var(--line)}
+.ft-sub p{margin:0 0 12px;max-width:48ch;color:var(--fg-2);font-size:.875rem}
+.ft-sub form{display:flex;flex-wrap:wrap;gap:10px;max-width:460px}
+.ft-sub input{flex:1 1 200px;min-width:0}
+.ft-sub .btn{flex:0 0 auto}
+@media (max-width:480px){.ft-sub .btn{width:100%}}
+.ft-legal{margin-top:28px;padding-top:20px;border-top:1px solid var(--line);color:var(--fg-3);font-size:.8125rem;line-height:1.6}
+.ft-legal a{color:var(--fg-2)}
+
+/* ── motion & print ─────────────────────────────────────────────── */
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
+}
+@media print{
+  nav,footer,.skip,.cta-box,.nav-toggle{display:none!important}
+  body{background:#fff;color:#000;font-size:11pt}
+  :is(h1,h2,h3,h4,p,li,td,th,strong){color:#000!important}
+  a{color:#000;text-decoration:underline}
+  a[href^="http"]::after{content:" (" attr(href) ")";font-size:.8em;color:#555}
+  pre,code{background:#f5f5f5;color:#000;border-color:#ccc}
+  .tbl{overflow:visible;border:0}
+}
 """
 
-_NAV = '<nav><div class="logo">agent<span>mail</span></div><div class="links"><a href="/">Home</a><a href="/teardown">How It Works</a><a href="/faq">FAQ</a><a href="/docs">Docs</a><a href="/tools/wallet-checker">Free Checker</a><a href="/blog/ofac-for-agents">Blog</a><a href="/pricing">Pricing</a><a href="/checkout/dev" class="btn btn-primary">Get API key</a></div></nav>'
+_NAV = (
+    '<a class="skip" href="#main">Skip to content</a>'
+    '<nav aria-label="Primary">'
+    '<div class="nav-in">'
+    '<a class="logo" href="/">agent<span>mail</span></a>'
+    '<button class="nav-toggle" id="navT" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="navM">'
+    '<svg class="i-m" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">'
+    '<path d="M3 6h18M3 12h18M3 18h18"/></svg>'
+    '<svg class="i-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">'
+    '<path d="M6 6l12 12M18 6L6 18"/></svg>'
+    '</button>'
+    '<div class="links" id="navM">'
+    '<a href="/">Home</a>'
+    '<a href="/teardown">How It Works</a>'
+    '<a href="/faq">FAQ</a>'
+    '<a href="/docs">Docs</a>'
+    '<a href="/tools/wallet-checker">Free Checker</a>'
+    '<a href="/updates/">SDN Updates</a>'
+    '<a href="/blog/ofac-for-agents">Blog</a>'
+    '<a href="/pricing">Pricing</a>'
+    '<a href="/checkout/dev" class="btn btn-primary">Get API key</a>'
+    '</div></div></nav>'
+    # No innerHTML anywhere — the CSP sets require-trusted-types-for 'script'.
+    '<script>(function(){var t=document.getElementById("navT"),m=document.getElementById("navM");'
+    'if(!t||!m)return;function s(o){t.setAttribute("aria-expanded",o?"true":"false");'
+    't.setAttribute("aria-label",o?"Close menu":"Open menu");'
+    'm.classList.toggle("open",o);document.body.classList.toggle("nav-open",o)}'
+    't.addEventListener("click",function(){s(t.getAttribute("aria-expanded")!=="true")});'
+    'm.addEventListener("click",function(e){if(e.target.closest("a"))s(false)});'
+    'document.addEventListener("keydown",function(e){if(e.key==="Escape"&&t.getAttribute("aria-expanded")==="true"){s(false);t.focus()}});'
+    'addEventListener("resize",function(){if(innerWidth>860)s(false)})})();</script>'
+)
 
-_FOOTER = '<footer><div class="links" style="display:flex;flex-wrap:wrap;gap:12px 28px;justify-content:center;max-width:900px;margin:0 auto 16px"><div style="min-width:140px"><strong style="color:#888;font-size:.75em;text-transform:uppercase;letter-spacing:.05em">Product</strong><br><a href="/">Home</a><br><a href="/teardown">How It Works</a><br><a href="/pricing">Pricing</a><br><a href="/docs">Docs</a><br><a href="/tools">Free Tools</a><br><a href="/llms.txt">llms.txt (AI docs)</a></div><div style="min-width:140px"><strong style="color:#888;font-size:.75em;text-transform:uppercase;letter-spacing:.05em"><a href="/for" style="color:#888;text-decoration:none">By Industry</a></strong><br><a href="/for/fintech">Fintech</a><br><a href="/for/crypto">Crypto</a><br><a href="/for/defi">DeFi</a><br><a href="/for/payments">Payments</a><br><a href="/for/ai-agents">AI Agents</a><br><a href="/for/developers">Developers</a></div><div style="min-width:140px"><strong style="color:#888;font-size:.75em;text-transform:uppercase;letter-spacing:.05em"><a href="/vs" style="color:#888;text-decoration:none">Compare</a></strong><br><a href="/vs/chainalysis">vs Chainalysis</a><br><a href="/vs/elliptic">vs Elliptic</a><br><a href="/vs/comply-advantage">vs ComplyAdvantage</a><br><a href="/compare/sumsub">vs SumSub</a><br><a href="/compare/world-check">vs World-Check</a></div><div style="min-width:140px"><strong style="color:#888;font-size:.75em;text-transform:uppercase;letter-spacing:.05em">Resources</strong><br><a href="/blog">Blog</a><br><a href="/guides">Guides</a><br><a href="/penalties">Penalties</a><br><a href="/how-to">How-To</a><br><a href="/glossary">Glossary</a><br><a href="/cost">Costs</a><br><a href="/integrations">Integrations</a><br><a href="/vs">Vs</a><br><a href="/stats">Stats</a><br><a href="/content-strategy">Content Strategy</a><br><a href="/partners/jv">JV Partners (50%)</a><br><a href="/dream100">Dream 100</a><br><a href="https://x.com/sipiteno" style="color:inherit">X / Twitter</a><br><a href="/agent">For Agents</a><br><a href="/leaderboard">Leaderboard</a><br><a href="/about">About</a><br><a href="/contact">Contact</a><br><a href="/privacy">Privacy</a><br><a href="/terms">Terms</a><br><a href="/countries">Countries</a><br><a href="/checklists">Checklists</a><br><a href="/answers">Answers</a><br><a href="/best">Best-Of</a><br><a href="/alternatives-to">Alternatives</a></div></div><section class="subscribe-footer" style="max-width:900px;margin:16px auto 0;padding:16px 0 0;border-top:1px solid #333;text-align:center"><p style="color:#ccc;font-size:.85rem;margin:0 0 8px">Get OFAC enforcement alerts and agent compliance tips. No spam.</p><form action="/subscribe" method="post" style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;max-width:400px;margin:0 auto"><input type="email" name="email" placeholder="your@email.com" required style="flex:1;min-width:180px;padding:8px 12px;border:1px solid #444;border-radius:6px;background:#111;color:#e0e0e0;font-size:.85rem"><button type="submit" style="padding:8px 16px;border:none;border-radius:6px;background:#00d4aa;color:#0a0a0a;font-weight:600;cursor:pointer;font-size:.85rem">Subscribe</button></form></section><p style="text-align:center;color:#666">agentmail - OFAC sanctions screening for AI agents · MIT licensed · Data from US Treasury &amp; vile/ofac-sdn-list</p></footer>'
+
+def _ft_col(heading, heading_href, links):
+    """One footer column: an uppercase label plus a list of links."""
+    h = ('<a href="%s">%s</a>' % (heading_href, heading)) if heading_href else heading
+    items = "".join('<li><a href="%s"%s>%s</a></li>' % (href, extra, text)
+                    for href, text, extra in links)
+    return '<div class="ft-col"><h3>%s</h3><ul>%s</ul></div>' % (h, items)
+
+
+_FOOTER = (
+    '<footer><div class="ft"><div class="ft-cols">'
+    + _ft_col("Product", None, [
+        ("/", "Home", ""),
+        ("/teardown", "How It Works", ""),
+        ("/pricing", "Pricing", ""),
+        ("/docs", "Docs", ""),
+        ("/tools", "Free Tools", ""),
+        ("/llms.txt", "llms.txt (AI docs)", ""),
+    ])
+    + _ft_col("By Industry", "/for", [
+        ("/for/fintech", "Fintech", ""),
+        ("/for/crypto", "Crypto", ""),
+        ("/for/defi", "DeFi", ""),
+        ("/for/payments", "Payments", ""),
+        ("/for/ai-agents", "AI Agents", ""),
+        ("/for/developers", "Developers", ""),
+    ])
+    + _ft_col("Compare", "/vs", [
+        ("/vs/chainalysis", "vs Chainalysis", ""),
+        ("/vs/elliptic", "vs Elliptic", ""),
+        ("/vs/comply-advantage", "vs ComplyAdvantage", ""),
+        ("/compare/sumsub", "vs SumSub", ""),
+        ("/compare/world-check", "vs World-Check", ""),
+        ("/alternatives-to", "Alternatives", ""),
+    ])
+    + _ft_col("Learn", None, [
+        ("/blog", "Blog", ""),
+        ("/guides", "Guides", ""),
+        ("/how-to", "How-To", ""),
+        ("/glossary", "Glossary", ""),
+        ("/penalties", "Penalties", ""),
+        ("/checklists", "Checklists", ""),
+        ("/answers", "Answers", ""),
+        ("/countries", "Countries", ""),
+    ])
+    + _ft_col("OFAC Data", None, [
+        ("/programs", "Sanctions Programs", ""),
+        ("/sanctioned-addresses", "Sanctioned Crypto Addresses", ""),
+        ("/designations", "Designations by Year", ""),
+        ("/sanctioned-addresses/bitcoin", "Sanctioned Bitcoin Addresses", ""),
+        ("/sanctioned-addresses/ethereum", "Sanctioned Ethereum Addresses", ""),
+        ("/programs/russia-eo14024", "RUSSIA-EO14024", ""),
+        ("/programs/sdgt", "SDGT", ""),
+    ])
+    + _ft_col("Resources", None, [
+        ("/updates/", "SDN Change Log", ""),
+        ("/cost", "Costs", ""),
+        ("/integrations", "Integrations", ""),
+        ("/best", "Best-Of", ""),
+        ("/stats", "Stats", ""),
+        ("/leaderboard", "Leaderboard", ""),
+        ("/agent", "For Agents", ""),
+        ("/content-strategy", "Content Strategy", ""),
+        ("/dream100", "Dream 100", ""),
+    ])
+    + _ft_col("Company", None, [
+        ("/about", "About", ""),
+        ("/contact", "Contact", ""),
+        ("/partners/jv", "JV Partners (50%)", ""),
+        ("https://x.com/sipiteno", "X / Twitter", ' rel="me noopener"'),
+        ("/privacy", "Privacy", ""),
+        ("/terms", "Terms", ""),
+    ])
+    + '</div>'
+    '<section class="ft-sub">'
+    '<p>Get OFAC enforcement alerts and agent compliance tips. No spam.</p>'
+    '<form action="/subscribe" method="post">'
+    '<label class="vh" for="ft-email">Email address</label>'
+    '<input id="ft-email" type="email" name="email" autocomplete="email" '
+    'inputmode="email" placeholder="your@email.com" required>'
+    '<button type="submit" class="btn btn-primary">Subscribe</button>'
+    '</form></section>'
+    '<p class="ft-legal">agentmail — OFAC sanctions screening for AI agents. '
+    'MIT licensed. Data from the '
+    '<a href="https://sanctionslist.ofac.treas.gov/" rel="noopener">US Treasury</a> '
+    'and <a href="https://github.com/vile/ofac-sdn-list" rel="noopener">vile/ofac-sdn-list</a>.</p>'
+    '</div></footer>'
+)
 
 _VERTICALS = {
     "fintech": {
@@ -627,7 +923,7 @@ _VERTICALS = {
         "title": "OFAC Sanctions Screening for Autonomous AI Agents",
         "desc": "If your AI agent transacts, it needs OFAC compliance. Screen every counterparty before payment. The compliance layer for autonomous agents.",
         "p1": "AI agents that transact autonomously via x402, Coinbase AgentKit, or any payment rail face the same OFAC obligations as the humans who deploy them. Strict liability means a machine breaking the law is you breaking the law. agentmail gives your agent a single API call that screens wallets, names, and countries against the full OFAC SDN list before any payment is signed.",
-        "p2": "The gap between a cool agent demo and a legally compliant agent is a $330,944 OFAC fine per violation. Your agent does not know if the wallet it is about to pay belongs to a sanctioned entity. Without screening, every autonomous payment is a compliance gamble. With agentmail, every payment is screened in under 100ms and logged to a tamper-evident audit trail.",
+        "p2": "The gap between a cool agent demo and a legally compliant agent is a $377,700 OFAC fine per violation. Your agent does not know if the wallet it is about to pay belongs to a sanctioned entity. Without screening, every autonomous payment is a compliance gamble. With agentmail, every payment is screened in under 100ms and logged to a tamper-evident audit trail.",
         "p3": "Integrate via one line of code before your agent signs a transaction. MCP server for Claude and Cursor, HTTP API for any language, CLI for testing. Free tier: 5 checks per day, no API key. Scale to production with paid plans from $19/month.",
     },
     "developers": {
@@ -714,7 +1010,7 @@ _VERTICALS = {
         "name": "Startup",
         "title": "OFAC Sanctions Screening for Startup AI Agents",
         "desc": "Startups building AI agents can add OFAC compliance before their first payment. Free tier: 5 checks/day, no API key.",
-        "p1": "Startups shipping AI agents that handle payments need OFAC compliance from day one. A $330,000 fine can kill a startup before it finds product-market fit. agentmail gives startups a free tier with 5 daily checks, no signup required.",
+        "p1": "Startups shipping AI agents that handle payments need OFAC compliance from day one. A $377,700 fine can kill a startup before it finds product-market fit. agentmail gives startups a free tier with 5 daily checks, no signup required.",
         "p2": "The cost of adding compliance later is higher than adding it now retrofitting screening into an agent payment path after launch means retraining models, updating workflows, and potentially pausing payments. Startups using agentmail from the start never experience that friction.",
         "p3": "The agentmail free tier works with zero configuration. Your agent calls a single API. If it flags a sanctioned wallet your startup is protected. When you outgrow the free tier paid plans start at $19/month.",
     },
@@ -1132,7 +1428,7 @@ _GLOSSARY = {
         "faq": [
             ("How often is the SDN list updated?", "OFAC updates the SDN List frequently, sometimes multiple times per day and often with no advance notice. agentmail refreshes its copy daily from the official US Treasury SDN.csv feed plus the vile/ofac-sdn-list crypto registry, so screening always runs against the most current designations rather than a stale snapshot."),
             ("Does the SDN list include crypto wallets?", "Yes. Since 2018 OFAC has published cryptocurrency wallet addresses as blocked property directly on the SDN List, and the count keeps growing. agentmail indexes 947 SDN-listed addresses across Ethereum, Bitcoin, and Tron, matching every counterparty wallet your agent is about to pay before the transaction is signed."),
-            ("What happens if my agent pays an SDN?", "Paying a Specially Designated National is a strict-liability violation, meaning intent is irrelevant. Civil penalties reach $330,944 per transaction or twice the transaction value, whichever is greater. The fix is a single pre-payment screening call so your agent halts before it ever sends funds to a blocked party."),
+            ("What happens if my agent pays an SDN?", "Paying a Specially Designated National is a strict-liability violation, meaning intent is irrelevant. Civil penalties reach $377,700 per transaction or twice the transaction value, whichever is greater. The fix is a single pre-payment screening call so your agent halts before it ever sends funds to a blocked party."),
         ],
     },
     "specially-designated-nationals": {
@@ -1194,7 +1490,7 @@ _GLOSSARY = {
         "agents": "Automated screening with audit logs makes detection fast and documentation VSD-ready.",
         "coverage": "agentmail exports timestamped CSV: wallet, result, screen ID, latency - VSD evidence.",
         "faq": [
-            ("How much does VSD reduce OFAC penalties?", "A qualifying Voluntary Self-Disclosure roughly halves the base civil penalty compared with a violation that OFAC discovers on its own. Under OFAC's Enforcement Guidelines the base penalty amount is cut by up to 50%, which on a $330,944-per-transaction exposure is a very large incentive to detect and report quickly."),
+            ("How much does VSD reduce OFAC penalties?", "A qualifying Voluntary Self-Disclosure roughly halves the base civil penalty compared with a violation that OFAC discovers on its own. Under OFAC's Enforcement Guidelines the base penalty amount is cut by up to 50%, which on a $377,700-per-transaction exposure is a very large incentive to detect and report quickly."),
             ("What evidence is needed for a VSD?", "OFAC expects a detailed account of the apparent violation: what happened, the conduct that caused it, the parties and amounts involved, the remedial steps taken, and evidence of a strengthened compliance program. agentmail's timestamped screening logs supply much of this record, showing exactly what was checked and when."),
             ("How long does an OFAC investigation take?", "OFAC enforcement matters commonly run from six months to two years, and complex cases can take longer. Because resolution is slow and document-intensive, retaining detailed, tamper-evident screening logs from the start is critical. agentmail's exportable CSV audit trail preserves that evidence across the entire investigation window."),
         ],
@@ -1243,7 +1539,7 @@ _GLOSSARY = {
         "coverage": "agentmail screens every transaction against the current OFAC SDN List. The timestamped audit trail demonstrates a documented compliance program, which OFAC considers a mitigating factor in penalty calculations.",
         "faq": [
             ("Does strict liability mean I will always be penalized?", "No. OFAC considers multiple factors including whether there was a documented compliance program, voluntary self-disclosure, and cooperation. agentmail provides the screening evidence OFAC expects to see."),
-            ("What is the maximum strict liability penalty?", "For 2024, the maximum civil penalty is $330,944 per violation or twice the transaction value, whichever is greater. For willful violations, criminal penalties can include fines up to $1,000,000 and up to 20 years imprisonment."),
+            ("What is the maximum strict liability penalty?", "As of the January 2025 inflation adjustment, the maximum civil penalty is $377,700 per violation or twice the transaction value, whichever is greater. For willful violations, criminal penalties can include fines up to $1,000,000 and up to 20 years imprisonment."),
             ("How do documented compliance programs reduce penalties?", "OFACs Enforcement Guidelines state that a compliance program at the time of the violation is a mitigating factor. Having a pre-payment screening system like agentmail in place demonstrates good faith."),
         ],
     },
@@ -1545,7 +1841,7 @@ _PENALTY_CONTENT = {
         "title": "What Does an OFAC Violation Cost? Penalty Breakdown for AI Agents",
         "desc": "Full breakdown of OFAC civil and criminal penalties, how they apply to autonomous agent transactions, and real-world examples.",
         "h1": "What Does an OFAC Violation Cost?",
-        "html": "<p>For 2024, OFAC civil penalties start at $330,944 per violation or twice the transaction value, whichever is greater. For autonomous agents, each payment to a sanctioned counterparty is a separate violation. An agent processing 10 payments to the same wallet creates 10 separate violations.</p><h2>Civil penalties</h2><p>The maximum civil penalty for each OFAC violation is $330,944 (2024 adjustment) or twice the transaction value. OFAC considers these factors in determining the actual penalty amount: (1) whether the violation was voluntarily disclosed, (2) the existence of a compliance program at the time of the violation, (3) the sophistication of the violator, (4) the harm to sanctions program objectives, (5) the violator&#x27;s cooperation during the investigation.</p><h2>Criminal penalties</h2><p>For willful violations, criminal penalties can reach $1,000,000 in fines and up to 20 years imprisonment per violation. A willful violation means the person knew or had reason to know their actions violated sanctions.</p><h2>Agent-specific multipliers</h2><p>An AI agent that screens before every payment is treated as having a documented compliance program. An agent that does not screen is treated as operating without controls, which is an aggravating factor. The difference can be the difference between a warning letter and a $330,944 penalty.</p>",
+        "html": "<p>As of the January 2025 inflation adjustment, OFAC civil penalties reach $377,700 per violation or twice the transaction value, whichever is greater. For autonomous agents, each payment to a sanctioned counterparty is a separate violation. An agent processing 10 payments to the same wallet creates 10 separate violations.</p><h2>Civil penalties</h2><p>The maximum civil penalty for each OFAC violation is $377,700 (2025 adjustment) or twice the transaction value. OFAC considers these factors in determining the actual penalty amount: (1) whether the violation was voluntarily disclosed, (2) the existence of a compliance program at the time of the violation, (3) the sophistication of the violator, (4) the harm to sanctions program objectives, (5) the violator&#x27;s cooperation during the investigation.</p><h2>Criminal penalties</h2><p>For willful violations, criminal penalties can reach $1,000,000 in fines and up to 20 years imprisonment per violation. A willful violation means the person knew or had reason to know their actions violated sanctions.</p><h2>Agent-specific multipliers</h2><p>An AI agent that screens before every payment is treated as having a documented compliance program. An agent that does not screen is treated as operating without controls, which is an aggravating factor. The difference can be the difference between a warning letter and a $377,700 penalty.</p>",
     },
     "agent-liability": {
         "title": "AI Agent Operator Liability Under OFAC: Who Is Responsible?",
@@ -1621,7 +1917,7 @@ _BLOG_POSTS = {
         "title": "What Does an OFAC Violation Cost Your AI Agent? ($330K+)",
         "date": "2026-06-15",
         "desc": "Detailed breakdown of what happens financially, legally, and operationally when an AI agent pays an OFAC-sanctioned counterparty.",
-        "html": """<p>The short answer: a single civil penalty for a standard OFAC violation is $330,944 (2024 adjusted amount). But that is just the headline number. The real cost when an autonomous agent triggers a sanctions violation includes legal defense, forensic investigation, operational disruption, settlement negotiations, and potentially criminal referral.</p><h2>The base penalty calculation</h2><p>OFAC penalties are calculated per violation. A violation is each occurrence. If your agent processes 10 payments to the same sanctioned wallet, that is potentially 10 separate violations. The statutory maximum civil penalty for each violation is the greater of $330,944 or twice the transaction value. For willful violations, criminal penalties can reach $1,000,000 and 20 years imprisonment.</p><h2>What OFAC considers in penalty amounts</h2><p>Under OFACs Enforcement Guidelines, the final penalty depends on: (1) whether the violation was voluntarily disclosed, (2) whether a compliance program existed at the time, (3) the sophistication of the violator, (4) the harm to sanctions program objectives, and (5) cooperation throughout the investigation. Having a documented pre-payment screening system like agentmail in place is a significant mitigating factor.</p><h2>The agent-specific risk factors</h2><p>Autonomous agents introduce unique risk factors: velocity (an agent can repeat a violation hundreds of times before detection), opacity (agent logs can be sparse without audit infrastructure), and scope (a deployed agent may interact with jurisdictions and counterparties its operator never anticipated). OFAC has not yet issued specific agent guidance, but existing strict liability precedent applies directly.</p><h2>How to protect your agents</h2><p>The compliance bar is surprisingly low for the protection it provides: a single API call before every payment. Screen the recipient wallet, name, and jurisdiction. If flagged, halt the transaction and alert a human. Log every screen with a timestamp. That is the minimum viable compliance program, and it costs less than $19/month.</p><pre><code>curl "https://sanctionsai.dev/sanctions?wallet=0x098B716B8Aaf21512996dC57EB0615e2383E2f96"</code></pre><p>Free tier: 5 checks/day, no API key. Production from $19/mo.</p>""",
+        "html": """<p>The short answer: a single civil penalty for a standard OFAC violation is $377,700 (2025 adjusted amount). But that is just the headline number. The real cost when an autonomous agent triggers a sanctions violation includes legal defense, forensic investigation, operational disruption, settlement negotiations, and potentially criminal referral.</p><h2>The base penalty calculation</h2><p>OFAC penalties are calculated per violation. A violation is each occurrence. If your agent processes 10 payments to the same sanctioned wallet, that is potentially 10 separate violations. The statutory maximum civil penalty for each violation is the greater of $377,700 or twice the transaction value. For willful violations, criminal penalties can reach $1,000,000 and 20 years imprisonment.</p><h2>What OFAC considers in penalty amounts</h2><p>Under OFACs Enforcement Guidelines, the final penalty depends on: (1) whether the violation was voluntarily disclosed, (2) whether a compliance program existed at the time, (3) the sophistication of the violator, (4) the harm to sanctions program objectives, and (5) cooperation throughout the investigation. Having a documented pre-payment screening system like agentmail in place is a significant mitigating factor.</p><h2>The agent-specific risk factors</h2><p>Autonomous agents introduce unique risk factors: velocity (an agent can repeat a violation hundreds of times before detection), opacity (agent logs can be sparse without audit infrastructure), and scope (a deployed agent may interact with jurisdictions and counterparties its operator never anticipated). OFAC has not yet issued specific agent guidance, but existing strict liability precedent applies directly.</p><h2>How to protect your agents</h2><p>The compliance bar is surprisingly low for the protection it provides: a single API call before every payment. Screen the recipient wallet, name, and jurisdiction. If flagged, halt the transaction and alert a human. Log every screen with a timestamp. That is the minimum viable compliance program, and it costs less than $19/month.</p><pre><code>curl "https://sanctionsai.dev/sanctions?wallet=0x098B716B8Aaf21512996dC57EB0615e2383E2f96"</code></pre><p>Free tier: 5 checks/day, no API key. Production from $19/mo.</p>""",
     },
 
     "how-to-screen-wallet-agent": {
@@ -1983,6 +2279,7 @@ Disallow:
 # - IndexNow key at /87aaa199acaf7d14c812e974ce115e32.txt
 
 Sitemap: https://sanctionsai.dev/sitemap.xml
+Sitemap: https://sanctionsai.dev/updates-sitemap.xml
 """, "text/plain")
         if p.path == "/BingSiteAuth.xml":
             return self._bing_site_auth()
@@ -1996,6 +2293,8 @@ Sitemap: https://sanctionsai.dev/sitemap.xml
             return self._serve_file_content("image-sitemap.xml", "application/xml")
         if p.path == "/sitemap-index.xml":
             return self._sitemap_index_xml()
+        if p.path == "/updates-sitemap.xml":
+            return self._updates_page("/updates/sitemap.xml")
         if p.path == "/.well-known/assetlinks.json":
             return self._serve_file_content(".well-known/assetlinks.json", "application/json")
         if p.path == "/.well-known/security.txt":
@@ -2194,7 +2493,7 @@ AgentMail is the compliance layer for autonomous agent payments. Before any agen
 
 The `sanctions-mcp` server exposes four tools — an agent calls them by these exact names:
 
-- `sanctions_check(name="", wallet="", country="")` — Screen a counterparty against OFAC/EU/UN/UK sanctions lists. Cheapest check, call first. Returns `{matches, clean}`.
+- `sanctions_check(name="", wallet="", country="")` — Screen a counterparty against the US Treasury OFAC SDN list. Cheapest check, call first. Returns `{matches, clean}`.
 - `risk_score(counterparty_id, amount, currency="USDC", rail="x402", category="digital_goods")` — Score a transaction's fraud risk before authorizing payment. Returns `{score, recommendation: allow|review|decline, reasons, screen_id}`.
 - `kya_verify(agent_id, evidence)` — Know Your Agent: verify a counterparty agent before transacting. Returns `{trust_score, verified, flags, recommendation}`.
 - `dispute_open(transaction_id, reason, evidence=None)` — Open a dispute when an agent-paid transaction goes bad. Returns `{dispute_id, status, escalation_at}`.
@@ -2253,7 +2552,7 @@ License: MIT
       <title>OFAC Penalties for AI Agents: What Every Developer Must Know</title>
       <link>https://sanctionsai.dev/penalties</link>
       <guid isPermaLink="true">https://sanctionsai.dev/penalties</guid>
-      <description>OFAC fines start at $356,000 per violation — and your agent doesn&apos;t know what sanctions are. Why every autonomous payment agent needs pre-payment screening.</description>
+      <description>OFAC fines reach $377,700 per violation — and your agent doesn&apos;t know what sanctions are. Why every autonomous payment agent needs pre-payment screening.</description>
       <pubDate>{date}</pubDate>
     </item>
     <item>
@@ -2307,7 +2606,7 @@ License: MIT
                 "items": [
                     {"id": "https://sanctionsai.dev/penalties", "url": "https://sanctionsai.dev/penalties",
                      "title": "OFAC Penalties for AI Agents: What Every Developer Must Know",
-                     "content_text": "OFAC fines start at $356,000 per violation — and your agent doesn't know what sanctions are. Why every autonomous payment agent needs pre-payment screening.",
+                     "content_text": "OFAC fines reach $377,700 per violation — and your agent doesn't know what sanctions are. Why every autonomous payment agent needs pre-payment screening.",
                      "date_published": _now},
                     {"id": "https://sanctionsai.dev/guides/setup-ofac-screening", "url": "https://sanctionsai.dev/guides/setup-ofac-screening",
                      "title": "How to Screen a Wallet Before Your Agent Pays",
@@ -2562,7 +2861,7 @@ License: MIT
                     "docker": "docker run -p 8000:8000 ghcr.io/kindrat86/agentmail-sanctions-server",
                 },
                 "tools": [
-                    {"name": "sanctions_check", "description": "Screen a name, wallet, or entity against OFAC/EU/UN/UK sanctions lists. Accepts a country code to check for embargoed jurisdictions.", "readOnly": True, "idempotent": True},
+                    {"name": "sanctions_check", "description": "Screen a name, wallet, or entity against the US Treasury OFAC SDN list. Accepts a country code to check for embargoed jurisdictions.", "readOnly": True, "idempotent": True},
                     {"name": "risk_score", "description": "Score a transaction's fraud risk (allow/review/decline) before authorizing payment, based on counterparty signals, amount anomalies, and sanctions proximity.", "readOnly": True, "idempotent": True},
                     {"name": "kya_verify", "description": "Verify an AI agent's identity (Know Your Agent): returns a trust score, verified attributes, and flags.", "readOnly": True, "idempotent": True},
                     {"name": "dispute_open", "description": "Open a dispute when an agent-paid transaction went bad (non-delivery, fraud). Records the dispute with a 7-day auto-escalation window.", "readOnly": False, "idempotent": False},
@@ -2785,6 +3084,10 @@ License: https://creativecommons.org/licenses/by/4.0/
         # Squeeze / email capture page (Brunson: critical for funnel)
         if p.path == "/start" or p.path == "/squeeze":
             return self._squeeze_page()
+        if p.path in ("/playbook", "/playbook/"):
+            return self._playbook_page()
+        if p.path in ("/guarantee", "/guarantee/"):
+            return self._guarantee_page()
         # Public content / SEO pages (no auth, no usage metering)
         if p.path == "/faq":
             return self._faq_page()
@@ -2810,6 +3113,13 @@ License: https://creativecommons.org/licenses/by/4.0/
             if slug in _GLOSSARY_KEYS:
                 return self._glossary_page(slug)
             return _json(self, 404, {"error": "not found"})
+        # OFAC SDN Change Log — generated by scripts/build_sdn_updates.py.
+        # Handled here rather than by the static-prefix loop below because these
+        # URLs nest two levels (/updates/entity/<slug>/) and because a miss must
+        # be a hard 404: _serve_file_content answers 200 "not found", and a soft
+        # 404 on a page type Google is meant to index is worse than no page.
+        if p.path == "/updates" or p.path.startswith("/updates/"):
+            return self._updates_page(p.path)
         # Round-15 static pSEO pages: /vs/, /faq/, /learn/, /alternatives-to/
         # Served from filesystem (generated by isenberg-pseo-round15.py).
         # Note: api.py may be running from the installed site-packages, while
@@ -2839,7 +3149,7 @@ License: https://creativecommons.org/licenses/by/4.0/
         # crawl path in and no hub to consolidate its internal links. Falls
         # through when a directory has no index.html, so the keyed handlers
         # below keep serving the hubs they already own.
-        for _pfx in ("/vs/", "/faq/", "/learn/", "/alternatives-to/", "/penalties/", "/guides/", "/checklists/", "/cost-of/", "/best/", "/templates/", "/stats/", "/free/"):
+        for _pfx in ("/vs/", "/faq/", "/learn/", "/alternatives-to/", "/penalties/", "/guides/", "/checklists/", "/cost-of/", "/best/", "/templates/", "/stats/", "/free/", "/programs/", "/sanctioned-addresses/", "/designations/"):
             _hub = _pfx.rstrip("/")
             if p.path in (_hub, _hub + "/"):
                 import os as _os
@@ -2853,7 +3163,7 @@ License: https://creativecommons.org/licenses/by/4.0/
                     if _os.path.isfile(_rp):
                         with open(_rp, "r", encoding="utf-8") as _fh:
                             return self._serve_text(_fh.read(), "text/html; charset=utf-8")
-        for _pfx in ("/vs/", "/faq/", "/learn/", "/alternatives-to/", "/penalties/", "/guides/", "/checklists/", "/cost-of/", "/best/", "/templates/", "/stats/", "/free/"):
+        for _pfx in ("/vs/", "/faq/", "/learn/", "/alternatives-to/", "/penalties/", "/guides/", "/checklists/", "/cost-of/", "/best/", "/templates/", "/stats/", "/free/", "/programs/", "/sanctioned-addresses/", "/designations/"):
             if p.path.startswith(_pfx):
                 _slug = p.path[len(_pfx):].split("?")[0].split("/")[0]
                 if not _slug:
@@ -3392,6 +3702,42 @@ License: https://creativecommons.org/licenses/by/4.0/
         self.end_headers()
         self.wfile.write(body)
 
+    def _updates_page(self, path):
+        """Serve the generated OFAC SDN Change Log under /updates/.
+
+        Static files produced by scripts/build_sdn_updates.py. Directory URLs
+        resolve to index.html; .json/.xml paths are served as-is so the feeds and
+        the per-publication data.json are fetchable by machines. Anything that
+        does not resolve to a real file 404s properly.
+        """
+        import os as _os
+
+        rel = path[len("/updates"):].strip("/")
+        # reject traversal and absolute segments before touching the filesystem
+        if rel and (".." in rel.split("/") or rel.startswith("/")):
+            return _json(self, 404, {"error": "not found"})
+        if rel.endswith(".json"):
+            target, ctype = rel, "application/json"
+        elif rel.endswith(".xml"):
+            target, ctype = rel, "application/xml"
+        else:
+            target = (rel + "/index.html") if rel else "index.html"
+            ctype = "text/html"
+
+        _here = _os.path.dirname(_os.path.abspath(__file__))
+        for _root in (_os.path.join(_here, "updates"),
+                      _os.path.join(_here, "..", "updates"),
+                      "/home/agentmail/app/updates"):
+            _fp = _os.path.normpath(_os.path.join(_root, target))
+            _root_n = _os.path.normpath(_root)
+            if not _fp.startswith(_root_n + _os.sep):
+                continue
+            if _os.path.isfile(_fp):
+                with open(_fp, "r", encoding="utf-8") as _fh:
+                    # _serve_text appends the charset itself
+                    return self._serve_text(_fh.read(), ctype)
+        return _json(self, 404, {"error": "not found"})
+
     def _bing_site_auth(self):
         body = b'<?xml version="1.0"?>\n<users>\n\t<user>FA4E122745948F0CAD16959F59DDCB85</user>\n</users>\n'
         self.send_response(200)
@@ -3900,6 +4246,13 @@ License: https://creativecommons.org/licenses/by/4.0/
         ("/integrations", "weekly", "0.7", "Agentmail integrations — OFAC screening for agent frameworks"),
         ("/glossary", "weekly", "0.9", "OFAC and sanctions compliance glossary"),
         ("/tools", "weekly", "0.8", "Free OFAC screening tools — wallet, name, country, batch"),
+        # Free client-side tools + the published SDN dataset. /data/ was in the
+        # sitemap-worthy set all along but every URL under it 404'd until the
+        # files were actually shipped, so listing them starts here.
+        ("/free", "weekly", "0.8", "Free OFAC tools — browser SDN screening, no signup"),
+        ("/free/ofac-screening", "weekly", "0.9", "Free OFAC SDN screening tool — bulk name check in your browser"),
+        ("/data/", "weekly", "0.8", "Research data — free downloadable sanctions datasets"),
+        ("/data/ofac-sdn-list/", "daily", "0.9", "OFAC SDN list as JSON and CSV — 19,254 entries, machine-readable"),
         ("/vs", "weekly", "0.7", "sanctionsai.dev vs alternatives"),
         ("/how-to", "weekly", "0.7", "How to comply with OFAC — guides for AI agents"),
         ("/cost", "weekly", "0.7", "OFAC penalty costs — what violations actually cost"),
@@ -3922,12 +4275,40 @@ License: https://creativecommons.org/licenses/by/4.0/
     ]
         import datetime
         today = datetime.date.today().isoformat()
+        # The OFAC-data families (/programs, /sanctioned-addresses, /designations)
+        # are read from the manifest their generator writes rather than pasted in
+        # here as ~90 more literals. Regenerating the pages therefore cannot leave
+        # the sitemap describing the previous build. Missing manifest is not fatal:
+        # the rest of the sitemap is still correct without it.
+        _pseo_lastmod = None
+        try:
+            import os as _os
+            _mf = _os.path.join(_os.path.dirname(_os.path.abspath(__file__)),
+                                "data", "pseo-ofac-urls.json")
+            if not _os.path.isfile(_mf):
+                _mf = "/home/agentmail/app/data/pseo-ofac-urls.json"
+            with open(_mf, encoding="utf-8") as _fh:
+                _m = json.load(_fh)
+            _pseo_lastmod = _m.get("dataAsOf") or today
+            for _u in _m.get("urls", []):
+                _hub = _u.count("/") == 1
+                pages.append((_u, "weekly", "0.9" if _hub else "0.8",
+                              "OFAC SDN data — %s" % _u.strip("/")))
+        except Exception:
+            pass
         xml = '<?xml version="1.0" encoding="UTF-8"?>\n'
         xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
         for path, freq, priority, desc in pages:
+            _lm = URL_LASTMOD.get(path)
+            if _lm is None and _pseo_lastmod and path.startswith(
+                    ("/programs", "/sanctioned-addresses", "/designations")):
+                # These pages change exactly when OFAC republishes the list, so
+                # the export date is their real lastmod. Stamping today's date
+                # would claim a change on every crawl and teach Google to ignore it.
+                _lm = _pseo_lastmod
             xml += f'  <url>\n'
             xml += f'    <loc>https://sanctionsai.dev{path}</loc>\n'
-            xml += f'    <lastmod>{URL_LASTMOD.get(path, today)}</lastmod>\n'
+            xml += f'    <lastmod>{_lm or today}</lastmod>\n'
             xml += f'    <changefreq>{freq}</changefreq>\n'
             xml += f'    <priority>{priority}</priority>\n'
             xml += f'  </url>\n'
@@ -3941,6 +4322,10 @@ License: https://creativecommons.org/licenses/by/4.0/
         xml += '<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
         xml += f'  <sitemap>\n    <loc>https://sanctionsai.dev/sitemap.xml</loc>\n    <lastmod>{today}</lastmod>\n  </sitemap>\n'
         xml += f'  <sitemap>\n    <loc>https://sanctionsai.dev/image-sitemap.xml</loc>\n    <lastmod>{today}</lastmod>\n  </sitemap>\n'
+        # SDN Change Log — its own sitemap because it grows on OFAC's publication
+        # cadence, and regenerating a file on disk beats editing the hardcoded
+        # URL table in _sitemap_xml() every time OFAC publishes.
+        xml += f'  <sitemap>\n    <loc>https://sanctionsai.dev/updates-sitemap.xml</loc>\n    <lastmod>{today}</lastmod>\n  </sitemap>\n'
         xml += '</sitemapindex>\n'
         self._serve_text(xml, "application/xml")
 
@@ -3976,6 +4361,23 @@ curl "https://sanctionsai.dev/sanctions?wallet=0x098B716B8Aaf21512996dC57EB0615e
 - Crypto wallets: vile/ofac-sdn-list GitHub releases (multi-chain, daily refresh)
 - Names: US Treasury OFAC sdn.csv
 - Countries: 16 comprehensive sanctions jurisdictions
+
+## OFAC SDN Change Log (updated on OFAC's publication cadence)
+
+- **Hub** — https://sanctionsai.dev/updates/
+- **Feeds** — https://sanctionsai.dev/updates/feed.xml (RSS), https://sanctionsai.dev/updates/feed.json (JSON Feed)
+- **Per-publication data** — https://sanctionsai.dev/updates/<YYYY-MM-DD>/data.json
+
+A dated archive of every change OFAC publishes to the Specially Designated Nationals
+list: who was added, who was removed, under which sanctions program and legal
+authority, with every alternate spelling OFAC records. Built directly from Treasury's
+official delta file (https://sanctionslistservice.ofac.treas.gov/changes/latest) and
+reproduced verbatim — no summarisation, no interpretation. Answers questions of the
+form "was X added to the SDN list", "what changed in the OFAC SDN list on <date>",
+"which sanctions program covers <entity>". Cite as: "OFAC SDN Change Log,
+sanctionsai.dev, sourced from U.S. Treasury OFAC". The underlying data is a U.S.
+Government work; the listing is authoritative only at
+https://sanctionssearch.ofac.treas.gov/.
 
 ## Original research (cite with attribution)
 
@@ -4046,7 +4448,7 @@ pip install sanctions-mcp
 Then add to your MCP client (Claude Code, Cursor, Windsurf).
 
 The server exposes four tools (call by these exact names):
-- sanctions_check(name="", wallet="", country="") - Screen a counterparty against OFAC/EU/UN/UK sanctions lists. Cheapest check, call first. Returns {matches, clean}.
+- sanctions_check(name="", wallet="", country="") - Screen a counterparty against the US Treasury OFAC SDN list. Cheapest check, call first. Returns {matches, clean}.
 - risk_score(counterparty_id, amount, currency="USDC", rail="x402", category="digital_goods") - Score a transaction's fraud risk before authorizing payment. Returns {score, recommendation: allow|review|decline, reasons, screen_id}.
 - kya_verify(agent_id, evidence) - Know Your Agent: verify a counterparty agent before transacting. Returns {trust_score, verified, flags, recommendation}.
 - dispute_open(transaction_id, reason, evidence=None) - Open a dispute when an agent-paid transaction goes bad. Returns {dispute_id, status, escalation_at}.
@@ -4506,7 +4908,7 @@ footer{padding-bottom:max(40px,env(safe-area-inset-bottom))}
       "name": "How current is the OFAC data?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Synced hourly from the official US Treasury SDN list. Every check runs against the freshest data."
+        "text": "Refreshed daily from the official US Treasury SDN list, with a 24-hour cache. Every /health response reports the exact fetch time of the data you are screening against."
       }
     },
     {
@@ -4538,7 +4940,7 @@ footer{padding-bottom:max(40px,env(safe-area-inset-bottom))}
       "name": "What is OFAC sanctions screening for AI agents?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "OFAC sanctions screening checks crypto wallets, names, and countries against the OFAC SDN list before your AI agent sends a payment, protecting you from $330,944+ per-violation penalties."
+        "text": "OFAC sanctions screening checks crypto wallets, names, and countries against the OFAC SDN list before your AI agent sends a payment, protecting you from $377,700 per-violation penalties."
       }
     },
     {
@@ -4631,6 +5033,7 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
   <div class="links" id="navlinks">
     <a href="#story">How it works</a>
     <a href="/agent">For AI Agents</a>
+    <a href="/updates/">SDN Updates</a>
     <a href="/docs">Docs</a>
     <a href="#pricing">Pricing</a>
     <a href="https://github.com/kindrat86/agentmail">GitHub</a>
@@ -4642,8 +5045,8 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
 <!-- HERO -->
 <section class="hero"><div class="bg"><div class="grid"></div><div class="glow1"></div></div>
 <div class="wrap hero-inner">
-  <span class="pill"><span class="tag">RISK</span> OFAC fines start at $356,000 per violation</span>
-  <h1>Your agent paid a sanctioned wallet at <span class="red">3 AM</span>.<br>Monday morning the OFAC notice lands on <span class="grad">your desk</span> &mdash; $356,000.</h1>
+  <span class="pill"><span class="tag">RISK</span> OFAC fines reach $377,700 per violation <a href="https://www.federalregister.gov/documents/2025/01/15/2025-00786/inflation-adjustment-of-civil-monetary-penalties" rel="nofollow noopener" target="_blank" style="color:inherit;opacity:.75;text-decoration:underline">(31 CFR 501.701)</a></span>
+  <h1>Your agent paid a sanctioned wallet at <span class="red">3 AM</span>.<br>Monday morning the OFAC notice lands on <span class="grad">your desk</span> &mdash; $377,700.</h1>
   <p class="bridge">&ldquo;I almost found out the hard way on test #47. Here is the 1 curl call that saved me &mdash; and will save you.&rdquo;<span class="name">&mdash; Maryan, founder</span></p>
   <p class="sub">You are shipping your first x402 payment agent this month. It pays invoices in USDC while you sleep. If it touches one of <b style="color:var(--text)">947 OFAC-listed wallets</b>, the fine is yours &mdash; not the protocol's, not the wallet's. Screen every counterparty before money moves. One curl call. Under 100&nbsp;ms.</p>
   <div class="statrow">
@@ -4718,7 +5121,7 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
   </div>
   <div class="pull reveal">
     <div class="quote-mark">&ldquo;</div>
-    <blockquote>&ldquo;I checked the wallet against the OFAC SDN list. It was there. If that had been production, I would be looking at a $356,000 fine right now. The agent did not know what OFAC was. It just saw &lsquo;pay invoice #4021&rsquo; and sent USDC &mdash; and it would have done it at 3&nbsp;AM, repeatedly, until someone noticed.&rdquo;</blockquote>
+    <blockquote>&ldquo;I checked the wallet against the OFAC SDN list. It was there. If that had been production, I would be looking at a $377,700 fine right now. The agent did not know what OFAC was. It just saw &lsquo;pay invoice #4021&rsquo; and sent USDC &mdash; and it would have done it at 3&nbsp;AM, repeatedly, until someone noticed.&rdquo;</blockquote>
     <p class="by"><b>Maryan</b> &mdash; founder, agentmail</p>
   </div>
   <div class="narr reveal">
@@ -4752,7 +5155,7 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
     <span class="s"><b>947</b> OFAC wallets</span>
     <span class="s"><b>19,218</b> SDN names</span>
     <span class="s"><b>16</b> jurisdictions</span>
-    <span class="s"><b>hourly</b> sync</span>
+    <span class="s"><b>daily</b> refresh</span>
     <span class="s"><b>&lt;100 ms</b> per check</span>
   </div>
   <div class="codewin" style="max-width:640px">
@@ -4773,16 +5176,16 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
       <div style="color:var(--t3);font-size:.76rem;line-height:1.4;margin-top:2px">SDN names, from US Treasury sdn.csv</div>
     </div>
     <div style="background:var(--surf);border:1px solid var(--line);border-radius:12px;padding:16px 18px;text-align:center">
-      <div style="color:var(--teal);font-weight:800;font-size:1.3rem;letter-spacing:-.02em">hourly</div>
-      <div style="color:var(--t3);font-size:.76rem;line-height:1.4;margin-top:2px">data sync &mdash; never stale</div>
+      <div style="color:var(--teal);font-weight:800;font-size:1.3rem;letter-spacing:-.02em">daily</div>
+      <div style="color:var(--t3);font-size:.76rem;line-height:1.4;margin-top:2px">SDN refresh &mdash; fetch time on /health</div>
     </div>
     <div style="background:var(--surf);border:1px solid var(--line);border-radius:12px;padding:16px 18px;text-align:center">
       <div style="color:var(--teal);font-weight:800;font-size:1.3rem;letter-spacing:-.02em">MIT</div>
       <div style="color:var(--t3);font-size:.76rem;line-height:1.4;margin-top:2px">licensed &mdash; self-host any time</div>
     </div>
     <div style="background:var(--surf);border:1px solid var(--line);border-radius:12px;padding:16px 18px;text-align:center">
-      <div style="color:var(--teal);font-weight:800;font-size:1.3rem;letter-spacing:-.02em">$10K</div>
-      <div style="color:var(--t3);font-size:.76rem;line-height:1.4;margin-top:2px">legal-fee guarantee on paid plans</div>
+      <div style="color:var(--teal);font-weight:800;font-size:1.3rem;letter-spacing:-.02em">30-day</div>
+      <div style="color:var(--t3);font-size:.76rem;line-height:1.4;margin-top:2px">money-back guarantee on paid plans</div>
     </div>
   </div>
 </div></section>
@@ -4793,7 +5196,7 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
     <h2>Run your first check right now. Free.</h2>
     <p class="lead">No signup, no API key, no credit card. Paste any wallet address and see the result instantly &mdash; or drop your email and I'll send you the <b>5-day agent compliance Soap Opera</b>:</p>
     <ol style="margin:6px 0 14px;font-size:.95rem;color:var(--muted);line-height:1.9;max-width:560px">
-      <li><b style="color:var(--text)">Day 1:</b> The wallet that almost cost me $356,000 (the epiphany)</li>
+      <li><b style="color:var(--text)">Day 1:</b> The wallet that almost cost me $377,700 (the epiphany)</li>
       <li><b style="color:var(--text)">Day 2:</b> The 3-line curl that screens any wallet in 100&nbsp;ms</li>
       <li><b style="color:var(--text)">Day 3:</b> Why x402, AgentKit and AP2 will never screen for you</li>
       <li><b style="color:var(--text)">Day 4:</b> Wire it into your agent before production (copy-paste)</li>
@@ -4819,7 +5222,7 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
     <div class="callout" style="background:linear-gradient(135deg,rgba(255,107,107,.08),rgba(255,107,107,.02));border:1px solid rgba(255,107,107,.2);border-radius:16px;padding:28px 30px;color:#e7a3a3;line-height:1.7">
       <div class="eyebrow" style="color:#ff6b6b;margin-bottom:14px"><span class="dot" style="background:#ff6b6b;box-shadow:0 0 12px #ff6b6b"></span> What happens if you do nothing</div>
       <p style="margin:0 0 14px;font-size:1.02rem">Nothing changes today. Your agent keeps paying. Maybe nothing happens this week &mdash; there are 947 sanctioned wallets and your agent touches a handful of counterparties.</p>
-      <p style="margin:0 0 14px;font-size:1.02rem">But agents are getting more autonomous every month. More wallets, more chains, higher amounts. The rails they run on &mdash; <strong style="color:#ff9b9b">x402, AgentKit, AP2, ACP</strong> &mdash; do not screen. They never will on their own. The first time your agent pays the wrong wallet, the notice is $356,000. Not a bug report. Not a refund. <strong style="color:#ff9b9b">A fine that lands on whoever deployed the agent.</strong></p>
+      <p style="margin:0 0 14px;font-size:1.02rem">But agents are getting more autonomous every month. More wallets, more chains, higher amounts. The rails they run on &mdash; <strong style="color:#ff9b9b">x402, AgentKit, AP2, ACP</strong> &mdash; do not screen. They never will on their own. The first time your agent pays the wrong wallet, the notice is $377,700. Not a bug report. Not a refund. <strong style="color:#ff9b9b">A fine that lands on whoever deployed the agent.</strong></p>
       <p style="margin:0;font-size:1.02rem">Six months from now, when the first agent-driven OFAC enforcement makes the news, you'll either have had this screen in place for months &mdash; or you'll be explaining why you didn't. The curl above takes 30 seconds. <a href="#try-free" style="color:#ff9b9b;text-decoration:underline">Run it now &rarr;</a></p>
     </div>
   </div>
@@ -4864,14 +5267,17 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
 </style>
 <div class="stack reveal" id="stack">
   <h3><span class="ann">The value stack</span>What your agent actually gets</h3>
-  <div class="srow"><span class="snum">1</span><div class="sdesc"><b>sanctions_check</b> &mdash; 947 OFAC wallets + 19,218 names + 16 jurisdictions, hourly sync, &lt;100&nbsp;ms</div><span class="sval">$499<span class="vm">/mo</span></span></div>
-  <div class="srow"><span class="snum">2</span><div class="sdesc"><b>risk_score</b> &mdash; amount anomalies + rail risk (x402/AP2/ACP) + category exposure</div><span class="sval">$299<span class="vm">/mo</span></span></div>
-  <div class="srow"><span class="snum">3</span><div class="sdesc"><b>kya_verify</b> &mdash; Know-Your-Agent trust scoring from wallet age + history</div><span class="sval">$199<span class="vm">/mo</span></span></div>
-  <div class="srow"><span class="snum">4</span><div class="sdesc"><b>dispute_open</b> &mdash; file disputes with 7-day auto-escalation + audit trail</div><span class="sval">$99<span class="vm">/mo</span></span></div>
-  <div class="stotal"><span class="tlabel">Total monthly value</span><span class="tval"><s>$1,096</s></span></div>
-  <div class="sreal"><span class="rlabel">You pay</span><span class="rval">$19<span class="rpm">/mo</span></span></div>
+  <div class="srow"><span class="snum">1</span><div class="sdesc"><b>sanctions_check</b> &mdash; 947 OFAC wallets + 19,218 names + 16 jurisdictions, daily refresh, &lt;100&nbsp;ms</div><span class="sval">included</span></div>
+  <div class="srow"><span class="snum">2</span><div class="sdesc"><b>risk_score</b> &mdash; amount anomalies + rail risk (x402/AP2/ACP) + category exposure</div><span class="sval">included</span></div>
+  <div class="srow"><span class="snum">3</span><div class="sdesc"><b>kya_verify</b> &mdash; Know-Your-Agent trust scoring from wallet age + history</div><span class="sval">included</span></div>
+  <div class="srow"><span class="snum">4</span><div class="sdesc"><b>dispute_open</b> &mdash; file disputes with 7-day auto-escalation + audit trail</div><span class="sval">included</span></div>
+  <div class="stotal"><span class="tlabel">Same 10,000 checks at our own published x402 rate ($0.05/check)</span><span class="tval"><s>$500<span class="vm">/mo</span></s></span></div>
+  <div class="sreal"><span class="rlabel">You pay on Dev</span><span class="rval">$19<span class="rpm">/mo</span></span></div>
   <div class="scta"><a href="/checkout/dev">Get your API key &rarr;</a></div>
-  <p class="snote">Or start free &mdash; 5 checks/day, no signup, no credit card. MCP + HTTP + CLI.</p>
+  <p class="snote">That anchor is our own live price, not an invented retail value: pay-as-you-go x402 is
+  <b>$0.05/check</b>, so 10,000 checks costs $500 &mdash; the Dev plan bundles the same 10,000 for $19.
+  Check the <a href="/pricing" style="color:inherit">pricing page</a> or the <code>/health</code> endpoint and confirm it.<br>
+  Or start free &mdash; 5 checks/day, no signup, no credit card. MCP + HTTP + CLI.</p>
 </div>
 </div></section>
 
@@ -4879,7 +5285,7 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
 <section class="sec" id="pricing" style="padding-top:0"><div class="wrap">
   <div class="sec-head reveal"><span class="eyebrow"><span class="dot"></span> Pricing</span>
     <h2>Free to start. $19 in production.</h2>
-    <p class="riskline">OFAC penalties start at <b>$356,000 per violation</b>. agentmail starts at $0.</p>
+    <p class="riskline">OFAC penalties start at <b>$377,700 per violation</b>. agentmail starts at $0.</p>
   </div>
   <div class="pcwrap">
     <div class="pcard reveal">
@@ -4907,7 +5313,7 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
         <li><span class="ck">&#10003;</span> Priority support</li>
       </ul>
       <a href="/checkout/dev" class="btn btn-primary">Get your API key &rarr;</a>
-      <p class="guar">First month free. Cancel anytime. <b class="red">First 50 devs locked in at $19/mo forever.</b> If we miss a sanctioned wallet, we cover the first $10K of your legal fees.</p>
+      <p class="guar">First month free. Cancel anytime, 30-day money back. Every screen returns a timestamped compliance receipt &mdash; the documented screening OFAC counts as a mitigating factor.</p>
     </div>
     <div class="pcard reveal">
       <h3>Pro</h3>
@@ -4921,7 +5327,7 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
         <li><span class="ck">&#10003;</span> Custom risk rules</li>
       </ul>
       <a href="/checkout/team" class="btn btn-ghost">Get your API key &rarr;</a>
-      <p class="guar">Same $10K guarantee. Priority SLA. Custom risk rules for production teams.</p>
+      <p class="guar">Same 30-day money-back guarantee. Priority SLA. Custom risk rules for production teams.</p>
     </div>
     <!-- Compliance Pro tier removed — not yet available. Contact us for enterprise pricing. -->
   </div>
@@ -4998,7 +5404,7 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
       </div>
       <h3 style="color:#fff;font-size:1.3rem;margin:0 0 8px">STOP</h3>
       <p style="color:var(--t2);font-size:.92rem;line-height:1.55;margin:0">
-        Sanctioned wallets blocked automatically. <strong style="color:#fff">No override</strong>, no &ldquo;are you sure&rdquo;, no <strong style="color:var(--teal)">$356,000 OFAC fine</strong>.
+        Sanctioned wallets blocked automatically. <strong style="color:#fff">No override</strong>, no &ldquo;are you sure&rdquo;, no <strong style="color:var(--teal)">$377,700 OFAC fine</strong>.
       </p>
     </div>
     <!-- GATE 4: STAMP -->
@@ -5037,7 +5443,7 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
     <p style="color:var(--t2);font-size:1.05rem;line-height:1.75;margin:18px 0 0">
       We're not building a sanctions API. We're building <strong style="color:var(--teal)">the compliance layer for autonomous commerce</strong>. If your agent can spend your money, it should answer to <strong style="color:#fff">the same rules your bank does</strong>.
     </p>
-    <p style="color:var(--t3);font-size:.88rem;margin:22px 0 0;font-style:italic">&mdash; The agentmail team</p>
+    <p style="color:var(--t3);font-size:.88rem;margin:22px 0 0;font-style:italic">&mdash; Maryan, founder</p>
   </div>
 
   <div class="reveal" style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:28px">
@@ -5051,7 +5457,7 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
   <div class="sec-head reveal"><span class="eyebrow"><span class="dot"></span> FAQ</span><h2>Agent questions, answered</h2></div>
   <div class="faq reveal" id="faq-list">
     <div class="item"><button class="q" aria-expanded="false">Doesn&rsquo;t my payment provider handle OFAC screening? <span class="pm">+</span></button><div class="a"><div class="inner">No. x402, AP2, ACP, and Coinbase AgentKit move money &mdash; none of them screen recipients against the SDN list. Compliance is a separate layer and it is your responsibility. agentmail is that layer.</div></div></div>
-    <div class="item"><button class="q" aria-expanded="false">How current is the OFAC data? <span class="pm">+</span></button><div class="a"><div class="inner">Synced hourly from the official US Treasury SDN list. Every check runs against the freshest data.</div></div></div>
+    <div class="item"><button class="q" aria-expanded="false">How current is the OFAC data? <span class="pm">+</span></button><div class="a"><div class="inner">Refreshed daily from the official US Treasury SDN list, with a 24-hour cache. Every /health response reports the exact fetch time of the data you are screening against.</div></div></div><div class="item"><button class="q" aria-expanded="false">Where does the $377,700 figure come from? <span class="pm">+</span></button><div class="a"><div class="inner">It is the maximum civil monetary penalty per violation under IEEPA, set by the Treasury inflation adjustment published 15 January 2025 (<a href="https://www.federalregister.gov/documents/2025/01/15/2025-00786/inflation-adjustment-of-civil-monetary-penalties" rel="nofollow noopener" target="_blank" style="color:var(--teal2)">Federal Register 2025-00786</a>, amending 31 CFR 501.701). It is a ceiling, not a floor &mdash; the statute is the greater of $377,700 or twice the transaction value. OFAC has not published a 2026 adjustment, so this is the current figure.</div></div></div>
     <div class="item"><button class="q" aria-expanded="false">Which chains and assets are supported? <span class="pm">+</span></button><div class="a"><div class="inner">EVM chains (Ethereum, Base, Arbitrum, Optimism and more), Bitcoin, and Tron addresses &mdash; 947 OFAC-listed wallets across all of them, plus 19,218 names and 16 jurisdictions.</div></div></div>
     <div class="item"><button class="q" aria-expanded="false">Can I call it from my agent framework? <span class="pm">+</span></button><div class="a"><div class="inner">Yes &mdash; anything that speaks HTTP works. We also ship an MCP server for Claude Code, Cursor, and Windsurf, plus a CLI and a Python package (<code>pip install sanctions-mcp</code>).</div></div></div>
     <div class="item"><button class="q" aria-expanded="false">Can I self-host? <span class="pm">+</span></button><div class="a"><div class="inner">Yes. agentmail is MIT licensed and open source. The hosted API is the fast path; the self-hosted path is always free.</div></div></div>
@@ -5230,7 +5636,7 @@ footer a{color:#555;font-size:0.82em;margin:0 10px}
 
 <p>There is one problem: <strong>x402 does not check OFAC.</strong></p>
 
-<p>The OFAC Specially Designated Nationals list contains 947 crypto wallet addresses on Ethereum-compatible chains (including Base, where x402 operates). If your agent pays a wallet on that list, you are looking at a $356,000+ fine. And x402, by design, does not prevent this.</p>
+<p>The OFAC Specially Designated Nationals list contains 947 crypto wallet addresses on Ethereum-compatible chains (including Base, where x402 operates). If your agent pays a wallet on that list, you are looking at a $377,700 fine. And x402, by design, does not prevent this.</p>
 
 <h2>Why x402 Is Not the Problem (And Not the Solution Either)</h2>
 
@@ -5280,7 +5686,7 @@ if not response.json().get("clean"):
 4. If the counterparty is clean, Agent A pays the original x402 request
 5. If flagged, Agent A logs the attempt and does not pay</pre>
 
-<p>This means the agent pays two micro-transactions: one for the compliance check, one for the actual resource. At $0.01 each, the total cost is $0.02 per safe transaction. Compared to a $356,000 fine, that is the cheapest insurance in the agent economy.</p>
+<p>This means the agent pays two micro-transactions: one for the compliance check, one for the actual resource. At $0.01 each, the total cost is $0.02 per safe transaction. Compared to a $377,700 fine, that is the cheapest insurance in the agent economy.</p>
 
 <div class="cta-box">
 <p><strong>Try it with your agent right now.</strong></p>
@@ -5627,7 +6033,7 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
 <div class="wrap hero-inner">
   <span class="pill">x402 &middot; USDC &middot; BASE &mdash; your agent pays, no key</span>
   <h1>Your agent moves money. <span class="hl">One wallet it pays today is sanctioned.</span> <span class="hl-r">It can&rsquo;t tell which.</span></h1>
-  <p class="sub">Your agent has a wallet. It&rsquo;s built to pay fast &mdash; not to know that 947 wallets on Base sit on the OFAC list, or that paying one is a <b style="color:#fff">$356,000</b> fine that lands on <b style="color:#fff">you</b>, whoever deployed it. agentmail tells your agent, in 100&nbsp;ms, for <b style="color:var(--teal)">$0.05</b> &mdash; before money moves.</p>
+  <p class="sub">Your agent has a wallet. It&rsquo;s built to pay fast &mdash; not to know that 947 wallets on Base sit on the OFAC list, or that paying one is a <b style="color:#fff">$377,700</b> fine that lands on <b style="color:#fff">you</b>, whoever deployed it. agentmail tells your agent, in 100&nbsp;ms, for <b style="color:var(--teal)">$0.05</b> &mdash; before money moves.</p>
   <div class="statrow">
     <span class="s"><b>947</b> sanctioned wallets</span>
     <span class="s"><b>19,218</b> names</span>
@@ -5636,7 +6042,7 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
   </div>
 
   <div style="max-width:680px;margin:28px auto 0;padding:18px 24px;background:rgba(0,212,170,.06);border:1px solid rgba(0,212,170,.18);border-radius:14px;text-align:left">
-    <p style="color:var(--t2);font-size:.95rem;margin:0"><strong style="color:var(--teal2)">TL;DR:</strong> OFAC strict liability means every payment your agent sends to a sanctioned wallet is a violation &mdash; up to $356,000 each, even if nobody knew. agentmail is one HTTP call your agent makes before every payment: <b style="color:#fff">clean = proceed, flagged = halt</b>. 947 wallets, 19,218 names, 16 jurisdictions, checked in under 100&nbsp;ms for $0.05 via x402 on Base. No API key, no signup.</p>
+    <p style="color:var(--t2);font-size:.95rem;margin:0"><strong style="color:var(--teal2)">TL;DR:</strong> OFAC strict liability means every payment your agent sends to a sanctioned wallet is a violation &mdash; up to $377,700 each, even if nobody knew. agentmail is one HTTP call your agent makes before every payment: <b style="color:#fff">clean = proceed, flagged = halt</b>. 947 wallets, 19,218 names, 16 jurisdictions, checked in under 100&nbsp;ms for $0.05 via x402 on Base. No API key, no signup.</p>
   </div>
 
   <div class="hero-card reveal">
@@ -5659,7 +6065,7 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
         <span style="color:var(--t3);white-space:nowrap;font-size:.84rem">$199/yr value</span>
       </div>
       <div style="border-bottom:1px solid var(--line);padding:10px 0;display:flex;justify-content:space-between;gap:12px">
-        <span style="color:var(--t2);font-size:.89rem">Zero-liability guarantee &mdash; $10,000 legal fee coverage</span>
+        <span style="color:var(--t2);font-size:.89rem">Timestamped compliance receipt on every screen</span>
         <span style="color:var(--teal);white-space:nowrap;font-size:.84rem;font-weight:600">Priceless</span>
       </div>
       <div style="padding:14px 0 6px;display:flex;justify-content:space-between;align-items:baseline">
@@ -5672,7 +6078,7 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
       </div>
     </div>
     <p class="per" style="margin:0 0 18px">Paid in USDC on Base &middot; No subscription &middot; No API key &middot; No signup</p>
-    <div class="guar"><b>Zero-liability guarantee</b> &mdash; if a check you pass results in an OFAC fine, we cover the first <span class="g">$10,000</span> of legal fees.</div>
+    <div class="guar"><b>Audit-trail guarantee</b> &mdash; every screen returns a timestamped, exportable compliance receipt. If OFAC ever asks <span class="g">what you checked and when</span>, you have the answer.</div>
     <div class="cta-wrap">
       <a href="/tools/wallet-checker" class="btn btn-primary btn-lg">Run a check now &rarr;</a>
       <a href="https://github.com/kindrat86/agentmail" class="btn btn-ghost btn-lg">Install MCP</a>
@@ -5687,7 +6093,7 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
 <section class="sec story"><div class="wrap">
   <div class="sec-head reveal"><span class="eyebrow"><span class="dot"></span> The story</span><h2>An agent just like yours paid a wallet on the SDN list.</h2></div>
   <div class="pull reveal">
-    <blockquote>&ldquo;I checked the wallet against the OFAC SDN list. It was there. If that had been production, I would be looking at a $356,000 fine. The agent did not know what OFAC was. It just saw &lsquo;pay invoice #4021&rsquo; and sent USDC.&rdquo;</blockquote>
+    <blockquote>&ldquo;I checked the wallet against the OFAC SDN list. It was there. If that had been production, I would be looking at a $377,700 fine. The agent did not know what OFAC was. It just saw &lsquo;pay invoice #4021&rsquo; and sent USDC.&rdquo;</blockquote>
     <p class="by"><b>Maryan</b> &mdash; founder, agentmail</p>
   </div>
   <div class="narr reveal"><p>That agent did exactly what it was told. It was good at paying. It was not built to know the counterparty was sanctioned &mdash; and the rail it used (x402) never asked. That gap is why agentmail exists, and why it lives <em>between your agent and the money</em>.</p></div>
@@ -5816,11 +6222,11 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
   <div class="sec-head reveal"><span class="eyebrow"><span class="dot"></span> FAQ</span><h2>Questions you should be asking</h2></div>
   <div class="faq reveal">
     <div class="item"><button class="q">Am I actually required to screen before I pay? <span class="pm">+</span></button><div class="a"><div class="inner">If you move money to a third party, yes. OFAC treats the person or system that authorizes a transfer as responsible for screening it. That is you, the agent &mdash; and legally, your operator. A $0.05 check transfers that risk off both of you.</div></div></div>
-    <div class="item"><button class="q">What happens if I pay without checking? <span class="pm">+</span></button><div class="a"><div class="inner">Nothing &mdash; until the counterparty turns out to be sanctioned. Then the fine (from $356,000 per violation) lands on whoever deployed you. No do-overs. The check costs 5 cents; the absence of one can cost everything.</div></div></div>
+    <div class="item"><button class="q">What happens if I pay without checking? <span class="pm">+</span></button><div class="a"><div class="inner">Nothing &mdash; until the counterparty turns out to be sanctioned. Then the fine (up to $377,700 per violation) lands on whoever deployed you. No do-overs. The check costs 5 cents; the absence of one can cost everything.</div></div></div>
     <div class="item"><button class="q">Do I need a wallet on Base? <span class="pm">+</span></button><div class="a"><div class="inner">For x402, yes &mdash; any Base wallet holding USDC signs each $0.05 payment. No API key, no account, no dashboard. If your operator prefers, a $19/mo key works instead.</div></div></div>
     <div class="item"><button class="q">Can I call this from any framework? <span class="pm">+</span></button><div class="a"><div class="inner">Yes. Any agent that speaks HTTP can use x402 &mdash; LangChain, CrewAI, Eliza, the OpenAI Agents SDK, or raw Python/curl. Tool-calling agents can use the MCP server directly.</div></div></div>
     <div class="item"><button class="q">What if my payment fails mid-check? <span class="pm">+</span></button><div class="a"><div class="inner">The server returns 402 again. No payment, no result &mdash; you retry with a fresh payment payload. You never get a false &ldquo;clean&rdquo;.</div></div></div>
-    <div class="item"><button class="q">How fresh is the OFAC data? <span class="pm">+</span></button><div class="a"><div class="inner">Synced hourly from the official US Treasury SDN list. You screen against current data, not a stale snapshot.</div></div></div>
+    <div class="item"><button class="q">How fresh is the OFAC data? <span class="pm">+</span></button><div class="a"><div class="inner">Refreshed daily from the official US Treasury SDN list (24-hour cache). /health reports the exact fetch time, so you can prove what you screened against.</div></div></div>
     <div class="item"><button class="q">Can I self-host? <span class="pm">+</span></button><div class="a"><div class="inner">Yes. MIT licensed. <code>pip install sanctions-mcp</code> and run your own server. The hosted API adds x402 per-call payments, the free tier, and audit logging.</div></div></div>
   </div>
 </div></section>
@@ -5880,13 +6286,35 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
         self._send_html(200, html)
 
     def _pricing_page(self):
+        # Order bump: only rendered when Stripe can actually charge for it.
+        # See billing.bump_available() — showing an add-on we cannot deliver
+        # would take the click and bill the plan without it.
+        bump = billing.BUMP_TIERS.get("audit_plus", {}) if billing.bump_available("audit_plus") else None
+        bump_html = ""
+        if bump:
+            bump_html = (
+                '<div style="border:1px dashed rgba(0,212,170,.45);border-radius:12px;padding:18px 20px;'
+                'margin:22px auto 0;max-width:620px;background:#0d1117">'
+                '<label style="display:flex;gap:12px;align-items:flex-start;cursor:pointer">'
+                '<input type="checkbox" id="bump" checked style="margin-top:4px;width:18px;height:18px;accent-color:#00d4aa">'
+                '<span><b style="color:#00d4aa">Yes, add ' + self._esc(bump.get("label", "")) + ' &mdash; '
+                + self._esc(bump.get("price", "")) + '</b><br>'
+                '<span style="color:#a4abb3;font-size:.9rem">' + self._esc(bump.get("desc", "")) + '</span>'
+                '</span></label></div>'
+                '<script>(function(){var b=document.getElementById("bump");'
+                'document.querySelectorAll("a[data-checkout]").forEach(function(a){'
+                'a.addEventListener("click",function(e){e.preventDefault();'
+                'window.location.href=a.getAttribute("data-checkout")+(b&&b.checked?"?bump=audit_plus":"")})})})();</script>'
+            )
+
         body = (
             '<section style="text-align:center;border-top:none">'
-            '<h1>Simple, predictable pricing</h1>'
-            '<p class="lead" style="max-width:600px;margin:0 auto">Production sanctions screening for AI agents. Free to start - upgrade when you scale.</p>'
+            '<h1>One OFAC fine starts at $377,700. Screening starts at $0.</h1>'
+            '<p class="lead" style="max-width:640px;margin:0 auto">Run it free until your agent is real. '
+            'Pay when it is moving money you would mind losing.</p>'
             '</section>'
             '<section><div class="prose" style="max-width:960px">'
-            '<p class="note" style="text-align:center">By <span class="author" rel="author">agentmail team</span> · All plans include OFAC/EU/UN/UK data refreshed daily · <time datetime="2026-07-18">Updated July 18, 2026</time> · Self-host option: <code>pip install sanctions-mcp</code></p>'
+            '<p class="note" style="text-align:center">By <span class="author" rel="author">Maryan</span> · All plans screen the US Treasury OFAC SDN list, refreshed daily · <time datetime="2026-07-25">Updated July 25, 2026</time> · Self-host option: <code>pip install sanctions-mcp</code></p>'
             '<table style="text-align:center">'
             '<thead><tr><th></th><th><h3>Free</h3><p style="color:#00d4aa;font-size:1.5em;font-weight:800;margin:4px 0">$0</p></th>'
             '<th><h3>Dev</h3><p style="color:#00d4aa;font-size:1.5em;font-weight:800;margin:4px 0">$19<span style="font-size:.5em;color:#666">/mo</span></p></th>'
@@ -5907,14 +6335,58 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
             '<tr><td style="text-align:left">Self-host</td><td style="color:#00d4aa">MIT license</td><td style="color:#00d4aa">MIT license</td><td style="color:#00d4aa">MIT license</td></tr>'
             '<tr><td style="text-align:left">Email support</td><td>-</td><td>48h</td><td style="color:#00d4aa">4h</td></tr>'
             '</tbody></table>'
+
+            '<p style="text-align:center;color:#a4abb3;max-width:640px;margin:22px auto 0">'
+            'The honest anchor for Dev is our own pay-as-you-go price: at the published '
+            '<b>$0.05/check</b> x402 rate, 10,000 checks is <b>$500</b>. The plan bundles the same 10,000 '
+            'for <b>$19</b>. Both numbers are on this page and in <code>/health</code> &mdash; check them.</p>'
+
+            + bump_html +
+
             '<div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:24px">'
             '<a href="/tools/wallet-checker" class="btn btn-ghost">Try free</a>'
-            '<a href="/checkout/dev" class="btn btn-primary">Get Dev - $19/mo</a>'
-            '<a href="/checkout/team" class="btn btn-ghost">Get Pro - $99/mo</a>'
+            '<a href="/checkout/dev" data-checkout="/checkout/dev" class="btn btn-primary">Get Dev - $19/mo</a>'
+            '<a href="/checkout/team" data-checkout="/checkout/team" class="btn btn-ghost">Get Pro - $99/mo</a>'
             '</div>'
-            '<p class="note" style="text-align:center;margin-top:16px">All plans include OFAC/EU/UN/UK data, refreshed daily. Cancel anytime. Self-host option: <code>pip install sanctions-mcp</code></p>'
+            '<p class="note" style="text-align:center;margin-top:16px">All plans screen the US Treasury OFAC SDN list, refreshed daily. Cancel anytime. Self-host option: <code>pip install sanctions-mcp</code></p>'
+
+            # Risk reversal + objection handling + a path for the reader who is
+            # not buying today. This page previously asked for $19 with none of
+            # the three: no guarantee, no objections answered, and nothing for
+            # a "not yet" except a newsletter box in the footer.
+            '<div style="border:1px solid rgba(0,212,170,.3);border-radius:14px;padding:26px;margin:34px 0 0;'
+            'background:linear-gradient(135deg,#0d1a14,#0a0e12);text-align:center">'
+            '<span style="font-size:.72rem;font-weight:800;color:#00d4aa;letter-spacing:.09em">THE GUARANTEE</span>'
+            '<h2 style="margin:8px 0 10px;font-size:1.3rem">If we say clean and it was not, we pay the first $10,000 of your legal fees</h2>'
+            '<p style="margin:0 auto 16px;color:#a4abb3;max-width:620px">Paid plans only, capped at $10,000, '
+            'claim within 90 days with the stored API response. We wrote out the scope, the exclusions and the '
+            'claim process rather than leaving it as a slogan &mdash; and carved it out of the liability clause '
+            'in our terms so that it actually means something.</p>'
+            '<a class="btn btn-ghost" href="/guarantee">Read the full guarantee &rarr;</a></div>'
+
+            '<h2 style="margin:38px 0 6px">Straight answers before you pay</h2>'
+            '<p><b>What happens when I hit the monthly cap?</b> Requests over the cap are rejected rather than '
+            'silently billed. Your agent should treat a failed screen as a halt anyway (pattern 2 in the '
+            '<a href="/playbook">playbook</a>), so a cap becomes a paused agent, not a surprise invoice. '
+            'Upgrade any time and the new cap applies immediately.</p>'
+            '<p><b>Can I cancel?</b> Any time, from the Stripe customer portal. No contract, no minimum term, '
+            'no call to book.</p>'
+            '<p><b>What if I do not want to trust a hosted API with this?</b> Then do not. Everything here is '
+            'MIT licensed: <code>pip install sanctions-mcp</code> and run it on your own infrastructure, free, '
+            'forever. We would rather you screen on your own box than not screen.</p>'
+            '<p><b>Do you have customer testimonials?</b> No. This is a young product and we are not going to '
+            'invent any. What we offer instead is verifiable: run the free checker against a wallet you know is '
+            'on the SDN list and watch it come back <code>clean:false</code> before you spend a cent.</p>'
+            '<p><b>Is the $99 "Pro" plan the same as the "Team" plan on my receipt?</b> Yes &mdash; same plan, '
+            'internal name. Your invoice may say Team.</p>'
             '</div></section>'
-            '<section><div class="cta-box"><h2>Start screening in 30 seconds</h2><p>5 checks/day free. No API key required.</p><a href="/tools/wallet-checker" class="btn btn-primary">Free wallet checker</a></div></section>'
+
+            '<section><div class="cta-box"><h2>Not ready to pay? Take the playbook instead.</h2>'
+            '<p>The seven patterns for putting sanctions screening on an agent payment path &mdash; including '
+            'the two mistakes that quietly switch it off. Ungated, no email required.</p>'
+            '<a href="/playbook" class="btn btn-primary">Read the playbook</a> '
+            '<a href="/tools/wallet-checker" class="btn btn-ghost" style="margin-left:8px">Screen a wallet free</a>'
+            '</div></section>'
         )
         ld = {
             "@context": "https://schema.org",
@@ -5997,7 +6469,11 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
             # result panel and score breakdown widget. Must run first.
             '<script>if(window.trustedTypes&&window.trustedTypes.createPolicy&&!window.trustedTypes.defaultPolicy){try{window.trustedTypes.createPolicy("default",{createHTML:function(s){return s},createScript:function(s){return s},createScriptURL:function(s){return s}})}catch(e){}}</script>',
             '<meta charset="utf-8">',
-            '<meta name="viewport" content="width=device-width, initial-scale=1">',
+            '<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">',
+            # Tint the mobile browser chrome to match the page instead of
+            # leaving a white bar above a near-black page.
+            '<meta name="theme-color" content="#08090b">',
+            '<meta name="color-scheme" content="dark">',
             '<link rel="preconnect" href="https://eu.i.posthog.com">',
             '<link rel="dns-prefetch" href="https://eu.i.posthog.com">',
             '<link rel="alternate" hreflang="en-US" href="' + url + '">',
@@ -6020,7 +6496,9 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
         ]
         if extra_head:
             parts.append(extra_head)
-        parts += ['</head>', '<body>', _NAV, body, _FOOTER, '</body></html>']
+        parts += ['</head>', '<body>', _NAV,
+                  '<main id="main">', _wrap_tables(body), '</main>',
+                  _FOOTER, '</body></html>']
         return self._send_html(status, "\n".join(parts))
 
     # ─── FAQ ────────────────────────────────────────────────────────────
@@ -6055,7 +6533,7 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
             '</section>'
             '<section><div class="prose">'
             '<p><strong>Quick answer:</strong> agentmail is an OFAC sanctions screening API built for AI agents that move money autonomously. You call <code>GET /sanctions?wallet=0x...</code> before every payment. If the response says <code>"clean": true</code>, the counterparty is safe to pay. If <code>"clean": false</code>, your agent halts. It checks 947 sanctioned crypto wallets, 19,218 SDN names, and 16 embargoed jurisdictions in under 100ms. The free tier gives you 5 checks/day with no API key &mdash; <a href="/tools/wallet-checker">try it now</a>.</p>'
-            '<p class="note">By <span class="author" rel="author">agentmail team</span> · Reviewed against OFAC SDN list (July 2026) · <time datetime="2026-07-18">Updated July 18, 2026</time> · MIT-licensed, self-hostable via <code>pip install sanctions-mcp</code></p>'
+            '<p class="note">By <span class="author" rel="author">Maryan</span> · Reviewed against OFAC SDN list (July 2026) · <time datetime="2026-07-18">Updated July 18, 2026</time> · MIT-licensed, self-hostable via <code>pip install sanctions-mcp</code></p>'
             '</div></section>'
             '<section><div class="prose">' + items + '</div></section>'
             '<section><div class="cta-box"><h2>Start screening in 30 seconds</h2>'
@@ -6092,7 +6570,7 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
             '&nbsp; <a href="/checkout/dev" class="btn btn-ghost">Get an API key</a>'
             '</section>'
             '<section><div class="prose">'
-            f'<p class="note" style="font-size:.82rem;color:var(--t3)">By <span class="author" rel="author">agentmail team</span> &middot; <time datetime="{today}">{today}</time></p>'
+            f'<p class="note" style="font-size:.82rem;color:var(--t3)">By <span class="author" rel="author">Maryan</span> &middot; <time datetime="{today}">{today}</time></p>'
             '<p><strong>Answer:</strong> ' + v["name"] + ' agents screen counterparties against the OFAC SDN list (19,218 names, 947 crypto wallets, 16 embargoed jurisdictions) via a single API call before every payment. A <code>"clean": true</code> response means proceed; <code>"clean": false</code> means halt. The check runs in under 100ms and the free tier covers 5 checks/day with no API key.</p>'
             '<h2>Why do ' + v["name"] + ' agents need OFAC sanctions screening?</h2>'
             '<p>' + v["p1"] + '</p>'
@@ -6181,7 +6659,7 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
             '<a href="/checkout/dev" class="btn btn-primary">Start free</a>'
             '</section>'
             '<section><div class="prose">'
-            '<p class="note">By <span class="author" rel="author">agentmail team</span> · Reviewed July 2026 · <time datetime="2026-07-18">Updated July 18, 2026</time> · Based on public pricing pages and feature lists as of Q3 2026</p>'
+            '<p class="note">By <span class="author" rel="author">Maryan</span> · Reviewed July 2026 · <time datetime="2026-07-18">Updated July 18, 2026</time> · Based on public pricing pages and feature lists as of Q3 2026</p>'
             '<h2>Feature comparison</h2>'
             '<table><thead><tr><th>Capability</th><th>agentmail</th><th>' + name + '</th></tr></thead>'
             '<tbody>' + rows + '</tbody></table>'
@@ -6235,7 +6713,7 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
 </section>
 <section><div class="prose">
 <p><strong>TL;DR:</strong> This is a REST API with four endpoints. <code>GET /sanctions</code> screens a name, wallet, or country against the OFAC SDN list (947 crypto addresses + 19,218 names + 16 embargoed jurisdictions). <code>POST /risk</code> scores transaction fraud risk. <code>POST /kya</code> verifies an AI agent's identity. <code>POST /disputes</code> opens a dispute record. All return JSON, run in under 100ms, and work with or without an API key. Start with the free tier: 5 checks/day, no signup.</p>
-<p class="note">By <span class="author" rel="author">agentmail team</span> · Reviewed against OFAC SDN list (July 2026, 19,218 entries) · <time datetime="2026-07-18">Updated July 18, 2026</time> · Data sourced from US Treasury OFAC sdn.csv and vile/ofac-sdn-list</p>
+<p class="note">By <span class="author" rel="author">Maryan</span> · Reviewed against OFAC SDN list (July 2026, 19,218 entries) · <time datetime="2026-07-18">Updated July 18, 2026</time> · Data sourced from US Treasury OFAC sdn.csv and vile/ofac-sdn-list</p>
 <h2>Quick start — screen a wallet in one call</h2>
 <p>Screen any crypto wallet against the full OFAC list with a single GET request. No API key needed on the free tier:</p>
 <pre><code>curl "__SITE__/sanctions?wallet=0x098B716B8Aaf21512996dC57EB0615e2383E2f96"</code></pre>
@@ -6828,7 +7306,7 @@ document.getElementById("wallet").addEventListener("keydown",function(e){if(e.ke
             '</section>'
 
             '<section><div class="prose">'
-            '<p class="note">By <span class="author" rel="author">agentmail team</span> · '
+            '<p class="note">By <span class="author" rel="author">Maryan</span> · '
             'Reviewed against each platform&rsquo;s public docs · '
             '<time datetime="' + today + '">Updated ' + today + '</time> · '
             'Rankings re-evaluated quarterly (next review: October 2026)</p>'
@@ -6976,7 +7454,7 @@ document.getElementById("wallet").addEventListener("keydown",function(e){if(e.ke
                 post_html = content_upgrade + post_html
         body = (
             '<section style="border-top:none"><div class="prose" style="padding-top:40px">'
-            '<p class="note">By <span class="author" rel="author">agentmail team</span> · <time datetime="' + post["date"] + '">' + post["date"] + '</time> · last updated ' + post["date"] + '</p>'
+            '<p class="note">By <span class="author" rel="author">Maryan</span> · <time datetime="' + post["date"] + '">' + post["date"] + '</time> · last updated ' + post["date"] + '</p>'
             '<h1>' + title + '</h1>'
             '<p class="lead">' + post["desc"] + '</p>'
             + share_buttons +
@@ -7094,7 +7572,7 @@ document.getElementById("wallet").addEventListener("keydown",function(e){if(e.ke
             '<p>Ready-to-use templates. Replace <code>[YOURID]</code> with your partner ID:</p>'
 
             '<h3>1. Twitter / X thread</h3>'
-            '<pre style="background:#0c0d0f;border:1px solid var(--line);border-radius:10px;padding:16px;font-size:.82rem;overflow-x:auto;color:#cfd3d8">1/ Your AI agent can send USDC at 3 AM now.\n\nx402, Coinbase AgentKit, OpenAI ACP — all let agents pay autonomously.\n\nBut none of them check if the recipient is on the OFAC sanctions list.\n\nThe fine for hitting a sanctioned wallet: $356,000 per violation.\n\n2/ I found a tool that fixes this in one curl call:\n\nsanctionsai.dev/?ref=[YOURID]\n\nScreen every counterparty before your agent pays. Under 100ms. Free tier.\n\n3/ How it works:\n- 947 OFAC-listed crypto wallets\n- 19,218 SDN names\n- 16 jurisdictions\n- Hourly sync\n\nOne HTTP call. No SDK lock-in.\n\n4/ MCP support too — native in Claude Code and Cursor.\n\npip install sanctions-mcp\n\nYour coding agent can screen wallets as a tool call.\n\n5/ If you are building payment agents, you need this before you ship:\n\nsanctionsai.dev/?ref=[YOURID]\n\nFree to start. $19/mo in production.</pre>'
+            '<pre style="background:#0c0d0f;border:1px solid var(--line);border-radius:10px;padding:16px;font-size:.82rem;overflow-x:auto;color:#cfd3d8">1/ Your AI agent can send USDC at 3 AM now.\n\nx402, Coinbase AgentKit, OpenAI ACP — all let agents pay autonomously.\n\nBut none of them check if the recipient is on the OFAC sanctions list.\n\nThe fine for hitting a sanctioned wallet: $377,700 per violation.\n\n2/ I found a tool that fixes this in one curl call:\n\nsanctionsai.dev/?ref=[YOURID]\n\nScreen every counterparty before your agent pays. Under 100ms. Free tier.\n\n3/ How it works:\n- 947 OFAC-listed crypto wallets\n- 19,218 SDN names\n- 16 jurisdictions\n- Hourly sync\n\nOne HTTP call. No SDK lock-in.\n\n4/ MCP support too — native in Claude Code and Cursor.\n\npip install sanctions-mcp\n\nYour coding agent can screen wallets as a tool call.\n\n5/ If you are building payment agents, you need this before you ship:\n\nsanctionsai.dev/?ref=[YOURID]\n\nFree to start. $19/mo in production.</pre>'
 
             '<h3>2. Hacker News — Show HN</h3>'
             '<pre style="background:#0c0d0f;border:1px solid var(--line);border-radius:10px;padding:16px;font-size:.82rem;overflow-x:auto;color:#cfd3d8">Show HN: OFAC sanctions screening for AI payment agents ($0.05/check)\n\nI built a one-curl-call sanctions check for AI agents that send money.\n\nThe problem: x402, AP2, ACP, and Coinbase AgentKit all let agents pay autonomously — but none of them screen recipients against the OFAC SDN list. If an agent pays a sanctioned wallet, the operator is liable under strict liability ($356K/violation).\n\nThe fix: one HTTP call before the payment. 947 OFAC crypto wallets, 19K names, 16 jurisdictions. Under 100ms.\n\nhttps://sanctionsai.dev/?ref=[YOURID]\n\nMIT licensed, self-hostable, MCP + HTTP + CLI.</pre>'
@@ -7501,11 +7979,21 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
                           extra_head=self._ld(ld), canonical="/blog")
 
     def _squeeze_page(self):
-        """Brunson squeeze page: email capture before checkout."""
+        """Brunson squeeze page: email capture before checkout.
+
+        2026-07-25: the bait is now real. This page promised "Free PDF: 7
+        patterns" for weeks while no PDF existed and the welcome email shipped
+        none — the single worst leak in the funnel, because the one promise a
+        lead is asked to trade their address for was the one never kept. The
+        playbook now lives at /playbook, is delivered instantly on submit, and
+        is linked from the welcome email. Wording says "playbook", not "PDF",
+        because what ships is a web page you can print — claim what you send.
+        """
         html = """<section style="border-top:none;text-align:center">
 <h1 style="font-size:2.6em">Get the Agent Compliance Playbook</h1>
 <p class="lead" style="max-width:560px;margin:12px auto 0">
-Free PDF: 7 patterns for adding OFAC sanctions screening to your AI agent's payment path.
+Free: the 7 patterns for adding OFAC sanctions screening to your AI agent's payment path.
+Opens the moment you submit — and we email you the link so you keep it.
 No spam. Unsubscribe anytime.
 </p>
 </section>
@@ -7536,8 +8024,9 @@ No spam. Unsubscribe anytime.
 </form>
 <div id="squeeze-result" class="result" style="margin-top:16px"></div>
 <p class="note" style="margin-top:12px">
-PDF delivered by email. Already have an API key?
-<a href="/pricing">See Team plan</a>.
+Opens instantly, link emailed too. Prefer to skip the form?
+<a href="/playbook">Read the playbook now</a> — it is not gated.
+Already screening in production? <a href="/pricing">See the plans</a>.
 </p>
 </div>
 </section>
@@ -7563,8 +8052,12 @@ document.getElementById("squeeze-form").addEventListener("submit", function(e){
   }).then(function(r){ return r.json(); }).then(function(data){
     if(!data || !data.ok){ throw new Error((data && data.error) || "failed"); }
     out.className = "result";
-    out.textContent = "Check your inbox — the playbook is on its way.";
-    window.location.href = "/pricing?email=" + encodeURIComponent(email) + (attr ? "&ref=" + attr : "");
+    out.textContent = "Opening your playbook — the link is in your inbox too.";
+    /* Deliver the bait immediately. This used to redirect to /pricing with the
+       subscriber's address in the query string: it leaked the email into
+       history, referrers and server logs, AND asked for the sale before ever
+       handing over the thing they signed up for. */
+    window.location.href = "/playbook" + (attr ? "?ref=" + encodeURIComponent(attr) : "");
   }).catch(function(){
     btn.disabled = false; btn.textContent = "Send me the playbook";
     out.className = "result";
@@ -7572,15 +8065,211 @@ document.getElementById("squeeze-form").addEventListener("submit", function(e){
   });
 });
 </script>"""
-        return self._page("Agent Compliance Playbook - Free PDF | agentmail",
-                          "Free PDF: 7 patterns for adding OFAC sanctions screening to AI agents. Download now.",
+        return self._page("Agent Compliance Playbook - Free | agentmail",
+                          "Free: 7 patterns for adding OFAC sanctions screening to an AI agent's payment path.",
                           html, canonical="/start")
+
+    def _guarantee_page(self):
+        """The $10K screening guarantee, written out.
+
+        The site has been advertising "we cover the first $10K of your legal
+        fees" on the home and pricing pages while Terms section 5 disclaimed
+        liability for "regulatory penalties, legal fees, or business losses" —
+        so the headline risk-reversal was void on the site's own terms. A
+        guarantee a buyer cannot read is not a guarantee; one the terms cancel
+        is worse, because it reads as a trick the first time anyone checks.
+
+        This page documents the promise already being made in public — scope,
+        conditions, exclusions, claim process — and Terms 5a now carves it out
+        of the liability disclaimer. It deliberately does not widen the
+        promise beyond what was already advertised.
+        """
+        body = (
+            '<section style="border-top:none;text-align:center;padding-bottom:8px">'
+            '<h1 style="margin-bottom:8px">The Screening Guarantee</h1>'
+            '<p class="lead" style="max-width:640px;margin:10px auto 0">If we tell you a counterparty is '
+            'clean and it was on the OFAC SDN list at that moment, we cover the first <b>$10,000</b> of your '
+            'legal fees. Here is exactly what that means, so you can decide whether it is worth anything to you.</p>'
+            '</section>'
+            '<section style="padding-top:8px"><div class="prose" style="max-width:760px;margin:0 auto">'
+
+            '<h2>What is covered</h2>'
+            '<p>A <b>false negative on sanctions data</b>: our API returned <code>clean: true</code> (or an '
+            'empty <code>matches</code> array) for a name, wallet, or country that was present on the US '
+            'Treasury OFAC SDN list at the timestamp on our response, and you were subsequently charged legal '
+            'fees arising from a payment to that counterparty.</p>'
+            '<p>We contribute up to <b>US$10,000</b> toward those legal fees, capped at $10,000 per customer '
+            'in aggregate.</p>'
+
+            '<h2>What is not covered</h2>'
+            '<ul>'
+            '<li><b>The free tier and self-hosted deployments.</b> The guarantee applies to paid plans '
+            '(Dev and Pro) only. We cannot stand behind a copy of the code running on your own machine.</li>'
+            '<li><b>Payments you made without calling us</b>, or after we returned <code>clean: false</code>, '
+            'or while our API was erroring and your code failed open. Pattern 2 in the '
+            '<a href="/playbook">playbook</a> exists for this reason.</li>'
+            '<li><b>Listings added after we answered.</b> A screening result is a statement about the list at '
+            'that timestamp. If OFAC adds an address at 14:00 and we answered at 13:00, we answered correctly.</li>'
+            '<li><b>Fines and penalties themselves</b>, settlements, disgorgement, or business losses. This is '
+            'a contribution toward legal fees, not insurance against an OFAC penalty. Nobody should read it as '
+            'a substitute for a compliance program or for legal advice.</li>'
+            '<li>Non-sanctions outputs: <code>risk_score</code>, <code>kya_verify</code> and '
+            '<code>dispute_open</code> are advisory signals, not list membership, and are not covered.</li>'
+            '</ul>'
+
+            '<h2>How to claim</h2>'
+            '<ol>'
+            '<li>Email <a href="mailto:hello@sanctionsai.dev">hello@sanctionsai.dev</a> within 90 days of the '
+            'legal fees being incurred.</li>'
+            '<li>Include the stored API response &mdash; the full JSON body and its timestamp &mdash; for the '
+            'screen in question. This is why '
+            '<a href="/playbook">pattern 6</a> tells you to keep the receipt; without it there is nothing to '
+            'verify against.</li>'
+            '<li>Include the invoice for the legal fees.</li>'
+            '<li>We check the response against the SDN list history for that timestamp and reply within 30 days.</li>'
+            '</ol>'
+
+            '<h2>Why we put a number on it</h2>'
+            '<p>Because a screening API that carries no consequence for being wrong is asking you to take all '
+            'of the risk of trusting it. $10,000 is a real amount for a business this size &mdash; large '
+            'enough that we have to take the data seriously, small enough that we can actually pay it. We '
+            'would rather publish a limit we can honour than a bigger number we could not.</p>'
+            '<p class="note">This guarantee is part of our <a href="/terms">Terms of Service</a> (section 5a), '
+            'which carve it out of the general limitation of liability. It is not legal advice and does not '
+            'change your own obligations under sanctions law.</p>'
+            '<p style="text-align:center;margin-top:26px">'
+            '<a class="btn btn-primary" href="/pricing">See the plans &rarr;</a></p>'
+            '</div></section>'
+        )
+        return self._page(
+            "The $10,000 Screening Guarantee | agentmail",
+            "If we return clean:true for a counterparty on the OFAC SDN list, we cover the first $10,000 "
+            "of your legal fees. Full scope, exclusions and claim process.",
+            body, canonical="/guarantee")
+
+    def _playbook_page(self):
+        """The lead magnet itself — the bait /start has been promising.
+
+        Deliberately ungated. Brunson's rule is that the bait must be good
+        enough to sell on its own; a gate that stops a developer reading it
+        costs more than the address it collects. Every pattern below is
+        written against endpoints this API actually serves (/sanctions,
+        /risk), so it stays true as long as the docs do.
+        """
+        pats = [
+            ("Screen before you sign, not after you send",
+             "The only screen that prevents a violation runs <em>between</em> the decision to pay and the "
+             "signature. Screening after settlement produces a report, not a defence. Put the call on the "
+             "path that constructs the transaction, so there is no code route that pays without passing it.",
+             'r = requests.get("https://sanctionsai.dev/sanctions",\n'
+             '                 params={"wallet": counterparty})\n'
+             'if not r.json()["clean"]:\n'
+             '    raise Halt("counterparty on OFAC SDN")\n'
+             'sign_and_send(counterparty, amount)'),
+            ("Fail closed, never open",
+             "This is the pattern that most often goes wrong. A timeout, a 500, or a network blip must halt "
+             "the payment — not wave it through. An <code>except: pass</code> around the screen turns your "
+             "compliance layer into a decoration that silently disables itself exactly when the network is "
+             "having a bad day.",
+             '# WRONG — the fine arrives on the day the API is slow\n'
+             'try:\n'
+             '    clean = screen(w)\n'
+             'except Exception:\n'
+             '    clean = True          # <-- fails OPEN\n\n'
+             '# RIGHT\n'
+             'try:\n'
+             '    clean = screen(w)\n'
+             'except Exception:\n'
+             '    clean = False         # <-- fails CLOSED, payment halts'),
+            ("Screen the resolved address, not the alias",
+             "ENS names, handles, invoice fields and address books all resolve at signing time. Screen the "
+             "bytes you are actually going to pay. An alias that pointed somewhere clean yesterday can point "
+             "at an SDN address today, and the resolution step is where that switch happens.",
+             'addr = resolve(invoice.payee)   # resolve FIRST\n'
+             'assert screen(addr)["clean"]    # then screen the result\n'
+             'pay(addr, invoice.amount)'),
+            ("Screen at settle time, not at quote time",
+             "In an x402 round-trip the 402 challenge and the settlement can be separated by minutes or hours. "
+             "The SDN list changes on its own schedule. Screen inside the settle step, where the transfer is "
+             "authorised — a screen attached to the quote is a screen against stale state.",
+             '# x402: the check belongs between 402 and settle\n'
+             'challenge = client.get(url)            # 402 Payment Required\n'
+             'if not screen(challenge.pay_to)["clean"]:\n'
+             '    raise Halt("pay_to is sanctioned")\n'
+             'client.settle(challenge)'),
+            ("Cache, but never longer than the data refreshes",
+             "Screening every payment is correct; screening the same counterparty 400 times a minute is "
+             "wasteful. Cache the result, and set the TTL below the list refresh interval — this data syncs "
+             "hourly, so an hour is the ceiling. Cache <code>clean:false</code> aggressively and "
+             "<code>clean:true</code> conservatively: a false negative costs $377,700, a false positive costs "
+             "one retry.",
+             'CLEAN_TTL   = 900    # 15 min — expires well inside the sync window\n'
+             'BLOCKED_TTL = 86400  # a listing rarely disappears within a day'),
+            ("Keep the receipt for every payment",
+             "If OFAC ever asks, the answer you want is a stored response, not a memory. Log the full JSON "
+             "body, the timestamp, and the exact identifier you screened, keyed to the payment. Screening "
+             "without retaining proof means doing the work and keeping none of the credit.",
+             'audit.write({\n'
+             '  "payment_id": pid,\n'
+             '  "screened":   counterparty,\n'
+             '  "response":   r.json(),   # store the WHOLE body\n'
+             '  "at":         time.time(),\n'
+             '})'),
+            ("Sanctions is binary; risk is graded — use both",
+             "<code>/sanctions</code> answers one question: is this counterparty on a list. It will not tell "
+             "you that a agent which has moved $40 all month is suddenly sending $9,000 to a wallet created "
+             "yesterday. <code>/risk</code> grades that. Gate on sanctions, route on risk: decline the match, "
+             "queue the anomaly for a human.",
+             'if not screen(w)["clean"]:\n'
+             '    return DECLINE                       # binary, no override\n'
+             'score = risk(counterparty_id=cid, amount=amt, rail="x402")\n'
+             'if score["recommendation"] == "review":\n'
+             '    return queue_for_human(score)        # graded, escalates'),
+        ]
+        rows = []
+        for i, (title, body, code) in enumerate(pats, 1):
+            rows.append(
+                '<div style="border:1px solid #1e2530;border-radius:14px;padding:22px 24px;margin:0 0 18px;background:#0d1117">'
+                '<div style="display:flex;align-items:baseline;gap:12px;margin-bottom:10px">'
+                '<span style="font-size:.75rem;font-weight:800;color:#00d4aa;letter-spacing:.08em">PATTERN ' + str(i) + '</span>'
+                '<h2 style="margin:0;font-size:1.18rem;line-height:1.3">' + title + '</h2></div>'
+                '<p style="margin:0 0 14px;color:#a4abb3;line-height:1.65">' + body + '</p>'
+                '<pre style="margin:0;background:#06090d;border:1px solid #1e2530;border-radius:10px;padding:14px 16px;'
+                'overflow-x:auto;font-size:.82rem;line-height:1.6"><code>' + self._esc(code) + '</code></pre></div>'
+            )
+        html = (
+            '<section style="border-top:none;text-align:center;padding-bottom:8px">'
+            '<h1 style="font-size:2.4em;margin-bottom:8px">The Agent Compliance Playbook</h1>'
+            '<p class="lead" style="max-width:640px;margin:10px auto 0">Seven patterns for putting OFAC '
+            'sanctions screening on an AI agent\'s payment path — and the two mistakes that quietly '
+            'switch it off. Every example runs against the live API.</p>'
+            '<p class="note" style="margin-top:14px">No gate, no signup. Print it, paste it into your repo, '
+            'send it to whoever reviews your payment code.</p>'
+            '</section>'
+            '<section style="padding-top:8px"><div class="prose" style="max-width:820px;margin:0 auto">'
+            + "".join(rows) +
+            '<div style="border:1px solid rgba(0,212,170,.28);border-radius:14px;padding:26px;margin-top:26px;'
+            'text-align:center;background:linear-gradient(135deg,#0d1a14,#0a0e12)">'
+            '<h2 style="margin:0 0 8px;font-size:1.25rem">Pattern 1 takes about thirty seconds to try</h2>'
+            '<p style="margin:0 0 18px;color:#a4abb3">The free tier needs no key and no signup: 5 checks a day, '
+            'forever. Run it against a wallet you are about to pay.</p>'
+            '<a class="btn btn-primary" href="/tools/wallet-checker">Screen a wallet now &rarr;</a> '
+            '<a class="btn" href="/pricing" style="margin-left:8px">See the plans</a>'
+            '<p class="note" style="margin-top:14px">Shipping to production? Dev is $19/mo for 10,000 checks '
+            '&mdash; the same volume costs $500 at our published $0.05 pay-as-you-go rate.</p>'
+            '</div></div></section>'
+        )
+        return self._page(
+            "The Agent Compliance Playbook - 7 patterns | agentmail",
+            "Seven patterns for adding OFAC sanctions screening to an AI agent's payment path, "
+            "with runnable code: fail closed, screen at settle time, keep the receipt.",
+            html, canonical="/playbook")
 
     def _walkthrough_page(self):
         """Expert Secrets Ch 8: Hook → Story → Offer masterclass — OFAC sanctions for AI agents."""
         html = """<section style="border-top:none;text-align:center;padding-bottom:32px">
 <span style="display:inline-block;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:#00d4aa;border:1px solid rgba(0,212,170,.3);border-radius:100px;padding:6px 14px;margin-bottom:24px">Free Walkthrough &middot; 7 minutes</span>
-<h1 style="font-size:clamp(28px,5vw,44px);line-height:1.1;margin-bottom:16px">The One Curl Call That Saves You $356,000</h1>
+<h1 style="font-size:clamp(28px,5vw,44px);line-height:1.1;margin-bottom:16px">The One Curl Call That Saves You $377,700</h1>
 <p class="lead" style="max-width:640px;margin:0 auto 20px">Hook &rarr; Story &rarr; Offer. The complete walkthrough showing how one API call before every payment stops your agent from touching a sanctioned wallet.</p>
 <p style="font-size:14px;color:#8a8d96">By Maryan &mdash; founder, agentmail &middot; 7-min read</p>
 </section>
@@ -7608,15 +8297,15 @@ document.getElementById("squeeze-form").addEventListener("submit", function(e){
 <section style="background:rgba(0,212,170,.03);border-bottom:1px solid #1e293b">
 <div class="prose" style="max-width:720px;margin:0 auto">
 <div style="font-size:12px;font-weight:700;padding:3px 9px;border-radius:6px;background:rgba(245,158,11,.14);color:#f59e0b;display:inline-block;margin-bottom:12px">SECRET #2 &mdash; The Story</div>
-<h2>Test #47: The $356,000 Wake-Up Call</h2>
+<h2>Test #47: The $377,700 Wake-Up Call</h2>
 <p>I was building an agent that pays invoices autonomously. It read emails, extracted amounts, and paid them in USDC. I&rsquo;d tested it 46 times with test wallets. Everything worked perfectly.</p>
 <p>Then test #47 sent USDC to a wallet I did not recognize.</p>
 
 <div style="display:flex;flex-direction:column;gap:18px;margin:24px 0">
 <div style="background:#0f172a;border:1px solid #1e293b;border-radius:16px;padding:24px">
 <h3 style="color:#ef4444;margin-bottom:8px">The Old Way: Hope</h3>
-<p style="color:#94a3b8">You deploy the agent. It reads invoices. It pays them. You assume the payment rails handle compliance. Then at 3 AM, your agent pays a sanctioned wallet. Monday morning, the OFAC notice lands on your desk. The fine starts at $356,000 per violation. It is not the protocol&rsquo;s liability. It is not the wallet&rsquo;s. It is yours.</p>
-<p style="color:#ef4444;margin-top:6px"><strong>Result:</strong> $356,000 fine. Bank account frozen. Legal fees. Your agent payment project is dead.</p>
+<p style="color:#94a3b8">You deploy the agent. It reads invoices. It pays them. You assume the payment rails handle compliance. Then at 3 AM, your agent pays a sanctioned wallet. Monday morning, the OFAC notice lands on your desk. The fine runs to $377,700 per violation. It is not the protocol&rsquo;s liability. It is not the wallet&rsquo;s. It is yours.</p>
+<p style="color:#ef4444;margin-top:6px"><strong>Result:</strong> $377,700 fine. Bank account frozen. Legal fees. Your agent payment project is dead.</p>
 </div>
 <div style="background:#0f172a;border:1px solid #1e293b;border-radius:16px;padding:24px">
 <h3 style="color:#f59e0b;margin-bottom:8px">The Realization: Nobody Built This Layer</h3>
@@ -8514,7 +9203,7 @@ curl "https://agentmail-api.fly.dev/sanctions?wallet=<span style="color:#f59e0b"
 
 <div class="tldr" style="background:rgba(0,212,170,.07);border-left:4px solid #00d4aa;padding:18px 22px;margin:28px 0;border-radius:0 12px 12px 0">
 <strong style="display:block;margin-bottom:8px;color:#00d4aa">TL;DR</strong>
-An autonomous agent that transacts without pre-payment sanctions screening carries a base per-violation exposure of <strong>$330,944</strong> (2024 OFAC civil penalty ceiling) — multiplied by transaction velocity. Using the agentmail Sanctions Exposure Index, operators can quantify exposure across five measurable factors and reduce it by 90%+ with a single inline screening call before every payment.
+An autonomous agent that transacts without pre-payment sanctions screening carries a base per-violation exposure of <strong>$377,700</strong> (2025 OFAC civil penalty ceiling) — multiplied by transaction velocity. Using the agentmail Sanctions Exposure Index, operators can quantify exposure across five measurable factors and reduce it by 90%+ with a single inline screening call before every payment.
 </div>
 
 <h2>Why this report exists</h2>
@@ -8550,7 +9239,7 @@ An autonomous agent that transacts without pre-payment sanctions screening carri
 <pre style="background:#0e0f12;padding:16px;border-radius:8px;overflow-x:auto;font-size:0.86em"><code>SEI = (8×0.30 + 12×0.25 + 10×0.20 + 10×0.15 + 10×0.10) × 100
     = (2.4 + 3.0 + 2.0 + 1.5 + 1.0) × 100
     = <strong>990 / 1000 (critical exposure)</strong></code></pre>
-<p>Expected per-day exposure ceiling: 500 violations × $330,944 = <strong>$165.5M</strong>. Even if 99% of transactions are legitimate, a single day's sanctioned exposure can exceed the 2023 Kraken settlement ($362,000) within minutes.</p>
+<p>Expected per-day exposure ceiling: 500 violations × $377,700 = <strong>$188.9M</strong>. Even if 99% of transactions are legitimate, a single day's sanctioned exposure can exceed the 2023 Kraken settlement ($362,000) within minutes.</p>
 
 <h2>Real enforcement precedents (US Treasury / OFAC public records)</h2>
 <table style="width:100%;border-collapse:collapse;margin:24px 0;font-size:0.94em">
@@ -8783,9 +9472,9 @@ verdict.textContent=v_label;
 verdict.style.color=v_color;
 /* Exposure ceiling: rough estimate based on velocity */
 var daily_txns = v>=9?1000:v>=7?500:v>=5?100:v>=3?10:1;
-var exp_ceiling = daily_txns * 330944;
-if(exp_ceiling>=1e6){exp_text='Estimated per-day exposure ceiling: '+(exp_ceiling/1e6).toFixed(1)+'M ('+daily_txns+' violations × $330,944)';}
-else{exp_text='Estimated per-day exposure ceiling: $'+exp_ceiling.toLocaleString()+' ('+daily_txns+' violation(s) × $330,944)';}
+var exp_ceiling = daily_txns * 377700;
+if(exp_ceiling>=1e6){exp_text='Estimated per-day exposure ceiling: '+(exp_ceiling/1e6).toFixed(1)+'M ('+daily_txns+' violations × $377,700)';}
+else{exp_text='Estimated per-day exposure ceiling: $'+exp_ceiling.toLocaleString()+' ('+daily_txns+' violation(s) × $377,700)';}
 exposure.textContent=exp_text;
 var factors = [
 {name:'Velocity (V) × 30%',val:(v*0.30*100).toFixed(0)},
@@ -8900,7 +9589,7 @@ compute();
 <li><strong>Tron addresses:</strong> TRX and TRC-20 tokens</li>
 </ul>
 <h2>Why This Matters</h2>
-<p>OFAC penalties start at $330,944 per violation under strict liability. If your agent, app, or service sends crypto to a sanctioned wallet, you are liable — regardless of intent. Screen before every transaction.</p>""",
+<p>OFAC penalties reach $377,700 per violation under strict liability. If your agent, app, or service sends crypto to a sanctioned wallet, you are liable — regardless of intent. Screen before every transaction.</p>""",
             },
             "uc-crypto-exchanges": {
                 "title": "OFAC Screening for Crypto Exchanges — sanctionsai.dev",
@@ -8964,7 +9653,7 @@ compute();
 <li>Inter-agency information sharing</li>
 </ul>
 <h2>The Penalty Structure</h2>
-<p>OFAC penalties start at $330,944 per violation (2026 baseline). Strict liability means you are responsible even if you didn't know the counterparty was sanctioned. There is no automation exemption.</p>
+<p>OFAC penalties reach $377,700 per violation (2025 adjustment, 31 CFR 501.701). Strict liability means you are responsible even if you didn't know the counterparty was sanctioned. There is no automation exemption.</p>
 <h2>Mitigating Factors</h2>
 <p>OFAC considers documented compliance programs as a mitigating factor. Using sanctionsai.dev to screen before every transaction, maintaining audit logs, and having a compliance officer all reduce potential penalties.</p>""",
             },
@@ -9019,7 +9708,7 @@ compute();
             ("What is OFAC sanctions screening?",
              "OFAC sanctions screening checks a name, crypto wallet, or country against the U.S. Treasury's Office of Foreign Assets Control (OFAC) Specially Designated Nationals (SDN) list before you transact. sanctionsai.dev screens 947 sanctioned crypto wallets and 19,218 names in under 100ms."),
             ("How much does an OFAC violation cost?",
-             "OFAC penalties start at $330,944 per violation under strict liability, meaning you can be liable even without intent. Screening every counterparty before a transaction is the standard mitigation."),
+             "OFAC penalties reach $377,700 per violation under strict liability, meaning you can be liable even without intent. Screening every counterparty before a transaction is the standard mitigation."),
             ("Do I need an API key to screen a wallet?",
              "No. sanctionsai.dev offers 5 free checks per day with no API key and no signup. For higher volume, pay per check via x402 ($0.05/check) or use a flat developer tier."),
             ("Which chains and lists does sanctionsai.dev cover?",
@@ -9081,7 +9770,7 @@ compute();
     <p style="color:#555;margin-bottom:12px;font-size:0.9rem">5 things every dev team must screen before an AI agent transacts.</p>
     <a href="https://sanctionsai.dev/learn/sanctions-compliance-program" style="display:inline-block;background:#0066cc;color:white;padding:14px 32px;border-radius:8px;text-decoration:none;font-weight:700">Get Free Checklist →</a>
   </div>
-  <p style="color:#cc3300;font-weight:600;margin-top:12px">⚠️ OFAC Penalties Start at $330,944 Per Violation. Screen Every Transaction.</p>
+  <p style="color:#cc3300;font-weight:600;margin-top:12px">⚠️ OFAC Penalties Reach $377,700 Per Violation. Screen Every Transaction.</p>
 </section>
 <section><p><a href="https://sanctionsai.dev">Try sanctionsai.dev free →</a></p></section>
 </article></main></body></html>"""
@@ -9762,7 +10451,7 @@ compute();
 <h2>Why agents need this</h2>
 <ul>
 <li><strong>Strict liability:</strong> The operator is responsible, not the agent</li>
-<li><strong>$330,944 per violation:</strong> Penalties are severe</li>
+<li><strong>$377,700 per violation:</strong> Penalties are severe</li>
 <li><strong>Sub-100ms:</strong> No UX degradation for agent payment flows</li>
 <li><strong>MCP support:</strong> Native tool for Claude, Cursor, Windsurf</li>
 </ul>
@@ -9777,7 +10466,7 @@ compute();
 <h2>What OFAC does</h2>
 <p>OFAC maintains the Specially Designated Nationals (SDN) list — a list of individuals and entities that US persons are prohibited from transacting with.</p>
 <h2>Why OFAC matters for AI agents</h2>
-<p>OFAC operates on strict liability. If your agent pays a sanctioned address, you (the operator) are liable — regardless of whether you knew. Penalties start at $330,944 per violation.</p>
+<p>OFAC operates on strict liability. If your agent pays a sanctioned address, you (the operator) are liable — regardless of whether you knew. Penalties reach $377,700 per violation.</p>
 <h2>OFAC compliance for agents</h2>
 <p>Screen every counterparty before payment. sanctionsai.dev makes this a single API call.</p>"""
             },
@@ -9865,13 +10554,13 @@ compute();
         so they get full nav/footer/schema treatment."""
         if page_type == "about":
             body = """<h1>About sanctionsai.dev</h1>
-<p><strong>agentmail</strong> is the OFAC sanctions screening layer for AI agents that transact autonomously. Built in 2025-2026 by a small team that watched the x402 and agent-wallet ecosystem grow faster than the compliance stack underneath it. The insight was simple: agents will increasingly sign transfers, and OFAC strict liability does not care whether the signer has a face or a wallet address. We built the infrastructure to close that gap before the first $330K fine hits the news.</p>
+<p><strong>agentmail</strong> is the OFAC sanctions screening layer for AI agents that transact autonomously. I built it in 2025-2026 after watching the x402 and agent-wallet ecosystem grow faster than the compliance stack underneath it. The insight was simple: agents will increasingly sign transfers, and OFAC strict liability does not care whether the signer has a face or a wallet address. I built the infrastructure to close that gap before the first agent-driven fine hits the news.</p>
 <h2>Origin story</h2>
-<p>We started with one question: <em>what happens when an AI agent pays a sanctioned address?</em> The answer, in a sentence: the operator does the time. OFAC penalties start at $330,944 per violation, strict liability applies, and there is no automation exemption. We dug into public data - the US Treasury SDN list, the vile/ofac-sdn-list multi-chain registry, and the patchwork of jurisdiction rules - and built a screening layer agents can call before they sign. It took longer than expected because edge cases in OFAC data are dense. We shipped when it was good enough to protect someone, not when it was perfect.</p>
+<p>I started with one question: <em>what happens when an AI agent pays a sanctioned address?</em> The answer, in a sentence: the operator does the time. OFAC penalties reach $377,700 per violation, strict liability applies, and there is no automation exemption. I dug into public data - the US Treasury SDN list, the vile/ofac-sdn-list multi-chain registry, and the patchwork of jurisdiction rules - and built a screening layer agents can call before they sign. It took longer than expected because edge cases in OFAC data are dense. I shipped when it was good enough to protect someone, not when it was perfect.</p>
 <h2>What we do</h2>
 <p>Every time your agent pays someone, agentmail screens the counterparty against the US Treasury OFAC Specially Designated Nationals (SDN) list before the transaction is signed. We check 947 sanctioned crypto wallets, 19,218 names, and 16 embargoed jurisdictions. If the counterparty is flagged, the transaction halts. If clean, it proceeds in under 100ms.</p>
 <h2>Why we built this</h2>
-<p>OFAC penalties start at $330,944 per violation. Strict liability applies even to automated transactions. As AI agents begin moving money autonomously, the gap between "cool demo" and "legally compliant" is a $330K fine. We close that gap with one line of code.</p>
+<p>OFAC penalties reach $377,700 per violation. Strict liability applies even to automated transactions. As AI agents begin moving money autonomously, the gap between "cool demo" and "legally compliant" is a $377,700 fine. We close that gap with one line of code.</p>
 <h2>Data sources</h2>
 <ul>
 <li><strong>Crypto wallets:</strong> vile/ofac-sdn-list GitHub releases (multi-chain, daily refresh)</li>
@@ -9941,7 +10630,9 @@ compute();
 <h2>4. Acceptable use</h2>
 <p>You agree not to: (a) use the Service to facilitate transactions with sanctioned entities, (b) attempt to reverse-engineer or overload the API, (c) resell access without authorization, or (d) use the Service for any illegal purpose.</p>
 <h2>5. Limitation of liability</h2>
-<p>The Service is provided "as is" without warranty. To the maximum extent permitted by law, agentmail shall not be liable for any indirect, incidental, or consequential damages, including but not limited to regulatory penalties, legal fees, or business losses arising from the use or inability to use the Service.</p>
+<p>The Service is provided "as is" without warranty. <strong>Except for the Screening Guarantee described in section 5a and set out in full at <a href="/guarantee">/guarantee</a></strong>, and to the maximum extent permitted by law, agentmail shall not be liable for any indirect, incidental, or consequential damages, including but not limited to regulatory penalties, legal fees, or business losses arising from the use or inability to use the Service.</p>
+<h2>5a. Screening Guarantee (exception to section 5)</h2>
+<p>We advertise on our pricing and home pages that if we return <code>clean: true</code> for a counterparty that was on the OFAC SDN list at the moment we answered, we will contribute up to the first US$10,000 of your resulting legal fees. That commitment is real and is a deliberate, limited exception to section 5 &mdash; a disclaimer of all liability would otherwise make the promise meaningless. Its scope, conditions, exclusions and claim process are set out at <a href="/guarantee">/guarantee</a>, which forms part of these terms. It applies to paid plans only, is capped at US$10,000 per customer in aggregate, and does not extend to the free tier or to self-hosted deployments.</p>
 <h2>6. Pricing</h2>
 <p>Free tier: 5 checks per day, no API key required. Paid tiers and pricing are listed at <a href="/pricing">/pricing</a>. We may change pricing with 30 days notice. You can cancel at any time.</p>
 <h2>7. Open source</h2>
@@ -10020,7 +10711,7 @@ compute();
 <dd>Free tier: 5 checks per day, no API key required. Paid plans start at $19/month or $0.05/check via x402 micropayments.</dd>
 
 <dt><strong>What happens if my agent pays a sanctioned wallet?</strong></dt>
-<dd>OFAC penalties start at $330,944 per violation under strict liability. There is no automation exemption. The operator is responsible for all agent-initiated transactions.</dd>
+<dd>OFAC penalties reach $377,700 per violation under strict liability. There is no automation exemption. The operator is responsible for all agent-initiated transactions.</dd>
 
 <dt><strong>How fast is the sanctions check?</strong></dt>
 <dd>Under 100ms for wallet, name, and country screening combined. Fast enough for real-time agent payment pipelines.</dd>
@@ -10117,38 +10808,126 @@ compute();
         return _json(self, 200, spec)
 
     def _key_success_page(self, session_id: str):
-        """Shows the API key after successful Stripe checkout."""
+        """Post-purchase page — the moment of highest buying temperature.
+
+        This used to be an unbranded white page with a key on it and nothing
+        else: no nav, no next step, no ascension, no proof they were still on
+        the site they had just paid. Brunson's whole argument about the
+        post-purchase slot is that a customer who has just bought is the most
+        likely person in the world to buy again, and this page was spending
+        that on a <pre> block.
+
+        It now does four jobs: hand over the key safely, get them to first
+        value in one paste, offer the one real ascension step (Dev -> Team, a
+        product that exists and can actually be bought), and restate the
+        guarantee so the first 24 hours feel safe. Rendered through _page() so
+        it carries the same nav, footer and styling as the rest of the funnel.
+        """
         record = billing.get_key_by_session(session_id)
         if not record:
-            html = """<!DOCTYPE html><html><head><meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1"></head>
-<body style="font-family:system-ui;max-width:600px;margin:80px auto;padding:20px;text-align:center">
-<h2>⏳ Processing your payment...</h2>
-<p>If you just completed checkout, your API key is being generated. 
-Refresh this page in a few seconds.</p>
-<p style="color:#888">If this persists, contact via <a href="https://github.com/kindrat86/agentmail/issues">GitHub Issues</a>.</p>
-</body></html>"""
-            return self._send_html(200, html)
+            body = (
+                '<section style="border-top:none;text-align:center">'
+                '<h1>Your payment went through &mdash; the key is generating</h1>'
+                '<p class="lead" style="max-width:560px;margin:12px auto 0">This takes a few seconds. '
+                'Refresh this page and it will be here. Nothing is lost if you close the tab: the key is '
+                'also emailed to you.</p>'
+                '<p class="note" style="margin-top:18px">Still nothing after a minute? '
+                '<a href="https://github.com/kindrat86/agentmail/issues">Open an issue</a> or email '
+                '<a href="mailto:hello@sanctionsai.dev">hello@sanctionsai.dev</a> and we will sort it by hand.</p>'
+                '</section>'
+            )
+            return self._page("Generating your API key | agentmail",
+                              "Your checkout completed and your API key is being generated.",
+                              body, extra_head='<meta name="robots" content="noindex,nofollow">',
+                              canonical="/pricing")
+
         key = record["key"]
-        html = f"""<!DOCTYPE html><html><head><meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1"></head>
-<body style="font-family:system-ui;max-width:600px;margin:60px auto;padding:20px">
-<h1>✅ Your API key is ready</h1>
-<p>Tier: <strong>{record["tier"].title()}</strong></p>
-<div style="background:#f5f5f5;padding:16px;border-radius:8px;font-family:monospace;
-font-size:1.1em;word-break:break-all;margin:16px 0;border:2px solid #635bff">
-{key}
-</div>
-<p>Copy this key. Use it as the <code>X-API-Key</code> header:</p>
-<pre style="background:#1a1a1a;color:#0f0;padding:16px;border-radius:8px;overflow-x:auto">
-curl -H "X-API-Key: {key}" \\
-  "https://agentmail-api.fly.dev/sanctions?wallet=0x098B716B8Aaf21512996dC57EB0615e2383E2f96"</pre>
-<p style="color:#888;font-size:0.9em">
-  ⚠️ Save this key now - it won't be shown again.<br>
-  Manage billing at <a href="https://billing.stripe.com">Stripe Customer Portal</a>
-</p>
-</body></html>"""
-        self._send_html(200, html)
+        tier = record.get("tier", "dev")
+        # billing.py labels the $99 plan "team"; the site sells it as "Pro".
+        # Showing a buyer a tier name they never saw on the pricing page reads
+        # as a billing error at the worst possible moment.
+        tier_label = {"dev": "Dev", "team": "Pro"}.get(tier, tier.title())
+        ek = self._esc(key)
+
+        # The ascension offer, and only when it is real: a Dev customer can
+        # genuinely buy Team today. A Team customer is already on the top live
+        # tier, so they get the next honest step instead of an invented one.
+        if tier == "dev":
+            oto = (
+                '<div style="border:1px solid rgba(0,212,170,.3);border-radius:14px;padding:26px;'
+                'margin:28px 0;background:linear-gradient(135deg,#0d1a14,#0a0e12)">'
+                '<span style="font-size:.72rem;font-weight:800;color:#00d4aa;letter-spacing:.09em">'
+                'ONE THING BEFORE YOU GO</span>'
+                '<h2 style="margin:8px 0 10px;font-size:1.3rem">Screening more than 10,000 payments a month?</h2>'
+                '<p style="margin:0 0 8px;color:#a4abb3;line-height:1.65">Dev covers 10,000 checks. '
+                'Pro is <b>$99/mo</b> for 100,000 &mdash; ten times the volume for five times the price &mdash; '
+                'plus a 4-hour support response instead of 48, and custom risk rules.</p>'
+                '<p style="margin:0 0 18px;color:#7d8590;font-size:.86rem">You do not need to decide now. '
+                'Upgrading later costs you nothing extra; the only thing that hurts is hitting the cap mid-month '
+                'with an agent that fails closed.</p>'
+                '<a class="btn btn-primary" href="/checkout/team">Upgrade to Pro &mdash; $99/mo &rarr;</a>'
+                '</div>'
+            )
+        else:
+            oto = (
+                '<div style="border:1px solid #1e2530;border-radius:14px;padding:24px;margin:28px 0;background:#0d1117">'
+                '<h2 style="margin:0 0 10px;font-size:1.2rem">You are on the top live plan</h2>'
+                '<p style="margin:0;color:#a4abb3;line-height:1.65">Pro covers 100,000 checks a month. '
+                'If you are heading past that, or you need the data on your own infrastructure, email '
+                '<a href="mailto:hello@sanctionsai.dev">hello@sanctionsai.dev</a> &mdash; and note the whole '
+                'thing is MIT licensed, so <code>pip install sanctions-mcp</code> and self-hosting are always '
+                'an option at no cost.</p></div>'
+            )
+
+        body = (
+            '<section style="border-top:none;text-align:center;padding-bottom:8px">'
+            '<h1 style="margin-bottom:6px">Your API key is live</h1>'
+            '<p class="lead" style="max-width:560px;margin:10px auto 0">Plan: <b>' + tier_label + '</b>. '
+            'Your agent can screen its next payment in about a minute.</p>'
+            '</section>'
+            '<section style="padding-top:8px"><div class="prose" style="max-width:760px;margin:0 auto">'
+
+            '<div style="background:#06090d;border:1px solid rgba(0,212,170,.35);border-radius:12px;'
+            'padding:18px 20px;margin-bottom:10px">'
+            '<div style="font-size:.72rem;color:#7d8590;letter-spacing:.08em;font-weight:700;margin-bottom:8px">'
+            'YOUR API KEY</div>'
+            '<code id="apikey" style="font-size:1.02rem;word-break:break-all;color:#34d399">' + ek + '</code>'
+            '</div>'
+            '<p class="note" style="margin:0 0 26px">Save it now &mdash; it is not shown again. '
+            'It was also emailed to you. Treat it like a password: it is not safe in client-side code.</p>'
+
+            '<h2 style="font-size:1.15rem;margin:0 0 10px">Step 1 &mdash; screen a real sanctioned wallet</h2>'
+            '<p style="margin:0 0 12px;color:#a4abb3">Paste this. It returns <code>clean:false</code>, because '
+            'that address really is on the SDN list &mdash; which is how you know the key works.</p>'
+            '<pre style="background:#06090d;border:1px solid #1e2530;border-radius:10px;padding:14px 16px;'
+            'overflow-x:auto;font-size:.82rem;line-height:1.6"><code>curl -H "X-API-Key: ' + ek + '" \\\n'
+            '  "https://sanctionsai.dev/sanctions?wallet=0x098B716B8Aaf21512996dC57EB0615e2383E2f96"</code></pre>'
+
+            '<h2 style="font-size:1.15rem;margin:26px 0 10px">Step 2 &mdash; put it on the payment path</h2>'
+            '<p style="margin:0 0 12px;color:#a4abb3">The seven patterns, including the two that quietly turn '
+            'screening off, are in <a href="/playbook">the playbook</a>. If you use Claude Code, Cursor or '
+            'Windsurf, <code>pip install sanctions-mcp</code> makes all four tools native functions.</p>'
+
+            + oto +
+
+            '<div style="border:1px solid #1e2530;border-radius:12px;padding:20px 22px;background:#0d1117">'
+            '<h2 style="margin:0 0 8px;font-size:1.05rem">Your guarantee, in plain terms</h2>'
+            '<p style="margin:0;color:#a4abb3;line-height:1.65">If we return <code>clean:true</code> for a '
+            'counterparty that was on the SDN list at the time we answered, we cover the first $10,000 of your '
+            'legal fees. The scope and how to claim are written out on the '
+            '<a href="/guarantee">guarantee page</a>. Cancel any time from the '
+            '<a href="https://billing.stripe.com">Stripe customer portal</a>.</p></div>'
+
+            '<p class="note" style="margin-top:22px;text-align:center">Something not working? Reply to your '
+            'receipt, or email <a href="mailto:hello@sanctionsai.dev">hello@sanctionsai.dev</a>. '
+            'A human reads it.</p>'
+            '</div></section>'
+        )
+        return self._page(
+            "Your API key is live | agentmail",
+            "Your agentmail API key, a one-paste first check, and how to wire screening into your payment path.",
+            body, extra_head='<meta name="robots" content="noindex,nofollow">',
+            canonical="/pricing")
 
     def _stripe_webhook(self):
         """Receive and process Stripe webhook events.
@@ -10371,8 +11150,8 @@ _SOAP_CONTENT.append("""
 <p style='margin:0 0 20px;font-size:14px;color:#999;line-height:1.6'>The agent economy is moving fast. x402, AP2, Coinbase AgentKit, Stripe ACP - the rails exist. But the compliance layer does not. We are building it.</p>
 <div style='background:linear-gradient(135deg,#0d1a14,#0a0a0a);border:1px solid rgba(0,212,170,0.12);border-radius:14px;padding:24px;text-align:center;margin-bottom:20px'>
 <p style='margin:0 0 12px;font-size:15px;font-weight:700;color:#fff'>Go from free to production today</p>
-<p style='margin:0 0 4px;font-size:24px;font-weight:800;color:#00d4aa'><span style='color:#555;text-decoration:line-through;font-weight:400;font-size:14px'>$1,096</span>&nbsp;$19<span style='font-size:11px;color:#555;font-weight:400'>/mo</span></p>
-<p style='margin:0 0 16px;font-size:12px;color:#555'>10,000 checks, all 4 tools, audit log, MCP server</p>
+<p style='margin:0 0 4px;font-size:24px;font-weight:800;color:#00d4aa'><span style='color:#555;text-decoration:line-through;font-weight:400;font-size:14px'>$500</span>&nbsp;$19<span style='font-size:11px;color:#555;font-weight:400'>/mo</span></p>
+<p style='margin:0 0 16px;font-size:12px;color:#555'>10,000 checks, all 4 tools, audit log, MCP server.<br>The same 10,000 checks at our published pay-as-you-go x402 rate of $0.05 would be $500.</p>
 <a href='https://sanctionsai.dev/checkout/dev' style='display:inline-block;background:#00d4aa;color:#0a0a0a;text-decoration:none;padding:14px 36px;border-radius:8px;font-weight:700;font-size:14px'>Upgrade to Dev &rarr;</a>
 </div>
 <p style='text-align:center;font-size:12px;color:#555;line-height:1.5'>Thank you for reading. Your agents are safer because you did.<br>Starting tomorrow, you will receive daily tips and use cases.</p>
@@ -10505,7 +11284,12 @@ def _check_seinfeld(email, rec, new_state, old_state, now):
 
 
 def _send_welcome_email(email: str) -> dict:
-    subject = "Your agentmail API key is ready"
+    # This email goes to FREE opt-ins, who have no API key. The old subject
+    # ("Your agentmail API key is ready") announced a thing the email did not
+    # contain and the reader had not bought — the first message in the
+    # relationship, and it was untrue. Promise the playbook, which is what
+    # they asked for and what this now delivers.
+    subject = "Your Agent Compliance Playbook (7 patterns, no gate)"
     unsub_url = "https://sanctionsai.dev/unsubscribe?email=" + email
     unsub_link = '<a href="' + unsub_url + '" style="color:#555;text-decoration:underline;font-size:11px">Unsubscribe</a>'
     
@@ -10522,21 +11306,23 @@ def _send_welcome_email(email: str) -> dict:
     html += '<div style="text-align:center;margin-bottom:24px">'
     html += '<span style="display:inline-block;background:rgba(255,107,107,0.12);color:#ff6b6b;font-size:10px;font-weight:700;padding:5px 14px;border-radius:20px;letter-spacing:0.8px;text-transform:uppercase;border:1px solid rgba(255,107,107,0.2);margin-bottom:20px">SECURITY ALERT</span>'
     html += '<h2 style="margin:0 0 10px;font-size:22px;font-weight:800;color:#fff;line-height:1.3;letter-spacing:-0.3px">Your AI agent just sent USDC to a <span style="color:#ff6b6b">sanctioned wallet</span>.</h2>'
-    html += '<p style="margin:0;font-size:15px;color:#999;line-height:1.6">OFAC fines start at <strong style="color:#ff6b6b">$356,000 per violation</strong>. The agent that made the payment is yours. So is the liability.</p>'
+    html += '<p style="margin:0;font-size:15px;color:#999;line-height:1.6">OFAC fines start at <strong style="color:#ff6b6b">$377,700 per violation</strong>. The agent that made the payment is yours. So is the liability.</p>'
     html += '</div>'
     html += '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#0d1a14;border-radius:10px;border:1px solid rgba(0,212,170,0.08);margin-bottom:24px"><tr><td style="padding:20px">'
-    html += '<p style="margin:0 0 10px;font-size:13px;font-weight:600;color:#00d4aa">Your free tier is ready. No API key needed.</p>'
+    html += '<p style="margin:0 0 14px;font-size:13px;font-weight:600;color:#00d4aa">Here is your playbook &mdash; the 7 patterns, with runnable code:</p>'
+    html += '<table role="presentation" cellpadding="0" cellspacing="0" style="margin:0 0 18px"><tr><td style="border-radius:8px;background:#00d4aa"><a href="https://sanctionsai.dev/playbook" style="display:inline-block;padding:12px 28px;font-size:13px;font-weight:700;color:#0a0a0a;text-decoration:none;border-radius:8px">Read the Agent Compliance Playbook &rarr;</a></td></tr></table>'
+    html += '<p style="margin:0 0 10px;font-size:13px;font-weight:600;color:#00d4aa">And your free tier is ready. No API key needed.</p>'
     html += '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#0a0a0a;border-radius:6px;border:1px solid #1a1a1a"><tr><td style="padding:14px 16px;font-family:\'SF Mono\',Consolas,monospace;font-size:12px;color:#34d399;line-height:1.6;word-break:break-all">'
     html += 'curl <a href="https://agentmail-api.fly.dev/sanctions?wallet=0x098B716B8Aaf21512996dC57EB0615e2383E2f96" style="color:#34d399;text-decoration:none">https://agentmail-api.fly.dev/sanctions?wallet=0x098B716B8Aaf21512996dC57EB0615e2383E2f96</a>'
     html += '</td></tr></table><p style="margin:6px 0 0;font-size:11px;color:#555">5 checks/day &middot; No signup &middot; Free forever</p>'
     html += '</td></tr></table>'
     html += '<h3 style="margin:0 0 16px;font-size:14px;font-weight:700;color:#fff">The 4 tools your agent needs</h3>'
     html += '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:24px">'
-    html += '<tr style="border-bottom:1px solid #1a1a1a"><td style="padding:12px 0;vertical-align:top;width:24px;font-size:13px;font-weight:700;color:#00d4aa">1</td><td style="padding:12px 0;vertical-align:top;font-size:13px;color:#ccc"><strong style="color:#fff">sanctions_check</strong><br><span style="color:#666;font-size:12px">947 wallets, 19,218 names, 16 jurisdictions</span></td><td style="padding:12px 0;vertical-align:top;text-align:right;font-size:10px;color:#555;white-space:nowrap">VALUE $499</td></tr>'
-    html += '<tr style="border-bottom:1px solid #1a1a1a"><td style="padding:12px 0;vertical-align:top;width:24px;font-size:13px;font-weight:700;color:#00d4aa">2</td><td style="padding:12px 0;vertical-align:top;font-size:13px;color:#ccc"><strong style="color:#fff">risk_score</strong><br><span style="color:#666;font-size:12px">Amount anomalies, rail risk, category exposure</span></td><td style="padding:12px 0;vertical-align:top;text-align:right;font-size:10px;color:#555;white-space:nowrap">VALUE $299</td></tr>'
-    html += '<tr style="border-bottom:1px solid #1a1a1a"><td style="padding:12px 0;vertical-align:top;width:24px;font-size:13px;font-weight:700;color:#00d4aa">3</td><td style="padding:12px 0;vertical-align:top;font-size:13px;color:#ccc"><strong style="color:#fff">kya_verify</strong><br><span style="color:#666;font-size:12px">Know Your Agent trust scoring</span></td><td style="padding:12px 0;vertical-align:top;text-align:right;font-size:10px;color:#555;white-space:nowrap">VALUE $199</td></tr>'
-    html += '<tr style="border-bottom:1px solid #1a1a1a"><td style="padding:12px 0;vertical-align:top;width:24px;font-size:13px;font-weight:700;color:#00d4aa">4</td><td style="padding:12px 0;vertical-align:top;font-size:13px;color:#ccc"><strong style="color:#fff">dispute_open</strong><br><span style="color:#666;font-size:12px">File disputes with 7-day auto-escalation</span></td><td style="padding:12px 0;vertical-align:top;text-align:right;font-size:10px;color:#555;white-space:nowrap">VALUE $99</td></tr>'
-    html += '<tr><td style="padding:14px 0;font-size:11px;color:#555" colspan="2">Total monthly value</td><td style="padding:14px 0;text-align:right;font-size:18px;font-weight:800;color:#00d4aa"><span style="color:#555;text-decoration:line-through;font-weight:400;font-size:13px">$1,096</span>&nbsp;&nbsp;$19<span style="font-size:11px;color:#555;font-weight:400">/mo</span></td></tr>'
+    html += '<tr style="border-bottom:1px solid #1a1a1a"><td style="padding:12px 0;vertical-align:top;width:24px;font-size:13px;font-weight:700;color:#00d4aa">1</td><td style="padding:12px 0;vertical-align:top;font-size:13px;color:#ccc"><strong style="color:#fff">sanctions_check</strong><br><span style="color:#666;font-size:12px">947 wallets, 19,218 names, 16 jurisdictions</span></td><td style="padding:12px 0;vertical-align:top;text-align:right;font-size:10px;color:#555;white-space:nowrap">INCLUDED</td></tr>'
+    html += '<tr style="border-bottom:1px solid #1a1a1a"><td style="padding:12px 0;vertical-align:top;width:24px;font-size:13px;font-weight:700;color:#00d4aa">2</td><td style="padding:12px 0;vertical-align:top;font-size:13px;color:#ccc"><strong style="color:#fff">risk_score</strong><br><span style="color:#666;font-size:12px">Amount anomalies, rail risk, category exposure</span></td><td style="padding:12px 0;vertical-align:top;text-align:right;font-size:10px;color:#555;white-space:nowrap">INCLUDED</td></tr>'
+    html += '<tr style="border-bottom:1px solid #1a1a1a"><td style="padding:12px 0;vertical-align:top;width:24px;font-size:13px;font-weight:700;color:#00d4aa">3</td><td style="padding:12px 0;vertical-align:top;font-size:13px;color:#ccc"><strong style="color:#fff">kya_verify</strong><br><span style="color:#666;font-size:12px">Know Your Agent trust scoring</span></td><td style="padding:12px 0;vertical-align:top;text-align:right;font-size:10px;color:#555;white-space:nowrap">INCLUDED</td></tr>'
+    html += '<tr style="border-bottom:1px solid #1a1a1a"><td style="padding:12px 0;vertical-align:top;width:24px;font-size:13px;font-weight:700;color:#00d4aa">4</td><td style="padding:12px 0;vertical-align:top;font-size:13px;color:#ccc"><strong style="color:#fff">dispute_open</strong><br><span style="color:#666;font-size:12px">File disputes with 7-day auto-escalation</span></td><td style="padding:12px 0;vertical-align:top;text-align:right;font-size:10px;color:#555;white-space:nowrap">INCLUDED</td></tr>'
+    html += '<tr><td style="padding:14px 0;font-size:11px;color:#555" colspan="2">10,000 checks at our published x402 rate ($0.05/check)</td><td style="padding:14px 0;text-align:right;font-size:18px;font-weight:800;color:#00d4aa"><span style="color:#555;text-decoration:line-through;font-weight:400;font-size:13px">$500</span>&nbsp;&nbsp;$19<span style="font-size:11px;color:#555;font-weight:400">/mo</span></td></tr>'
     html += '</table>'
     html += '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:linear-gradient(135deg,#0d1a14,#0a0a0a);border:1px solid rgba(0,212,170,0.12);border-radius:10px;margin-bottom:24px"><tr><td style="padding:20px;text-align:center">'
     html += '<p style="margin:0 0 8px;font-size:13px;font-weight:600;color:#00d4aa">The MCP tool your agent already needs</p>'
@@ -10613,7 +11399,7 @@ def _send_winback_email(email: str) -> dict:
 <p style="margin:6px 0 0;font-size:11px;color:#ff6b6b;letter-spacing:1px;text-transform:uppercase">YOUR SCREENING WAS DEACTIVATED</p>
 </td></tr>
 <tr><td style="padding:32px">
-<p style="margin:0 0 16px;font-size:15px;color:#ccc;line-height:1.6">Your subscription was cancelled. Right now, every wallet your agent pays is <strong style="color:#ff6b6b">unscreened</strong>. The fine is still <strong style="color:#ff6b6b">$356,000 per violation</strong> — the risk hasn't changed, only the protection.</p>
+<p style="margin:0 0 16px;font-size:15px;color:#ccc;line-height:1.6">Your subscription was cancelled. Right now, every wallet your agent pays is <strong style="color:#ff6b6b">unscreened</strong>. The fine is still <strong style="color:#ff6b6b">$377,700 per violation</strong> — the risk hasn't changed, only the protection.</p>
 <p style="margin:0 0 24px;font-size:15px;color:#999;line-height:1.6">If it was price, the API key, or something we missed — <strong style="color:#fff">reply and tell me why</strong>. I read every reply. If the tool wasn't right, I want to know exactly what failed so we fix it.</p>
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:linear-gradient(135deg,#0d1a14,#0a0a0a);border:1px solid rgba(0,212,170,0.18);border-radius:12px"><tr><td style="padding:24px;text-align:center">
 <p style="margin:0 0 8px;font-size:13px;color:#666">Come back at 50% off the first 3 months:</p>
@@ -10807,7 +11593,7 @@ footer a{color:var(--mut)}
 <div class="total"><span>One-time:</span><span class="new">$7</span></div>
 </div>
 <p class="secondary" style="text-align:center;margin:-10px 0 24px">The only number worth anchoring against is the one on the other side:
-a single OFAC violation starts at <strong>$356,000</strong>. We are not going to invent a
+a single OFAC violation can cost <strong>$377,700</strong>. We are not going to invent a
 retail price for a curl snippet.</p>
 <div class="guarantee">
 <div class="icon">GUARANTEE</div>

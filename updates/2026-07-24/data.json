@@ -1,0 +1,1445 @@
+{
+ "datePublished": "2026-07-24",
+ "publicationType": "Standard Action",
+ "retrieved": "2026-07-25T20:36:40Z",
+ "sourceUrl": "https://sanctionslistservice.ofac.treas.gov/changes/latest",
+ "entities": [
+  {
+   "id": "58188",
+   "action": "add",
+   "type": "Individual",
+   "officialName": "BANI, Solmaz",
+   "displayName": "Solmaz Bani",
+   "names": [
+    {
+     "full": "BANI, Solmaz",
+     "first": "Solmaz",
+     "middle": null,
+     "last": "Bani",
+     "script": "Latin",
+     "aliasType": "",
+     "isPrimary": true,
+     "isLowQuality": false
+    },
+    {
+     "full": "BANI, Niyoosha",
+     "first": "Niyoosha",
+     "middle": null,
+     "last": "Bani",
+     "script": "Latin",
+     "aliasType": "A.K.A.",
+     "isPrimary": false,
+     "isLowQuality": false
+    },
+    {
+     "full": "BANI, Sara",
+     "first": "Sara",
+     "middle": null,
+     "last": "Bani",
+     "script": "Latin",
+     "aliasType": "A.K.A.",
+     "isPrimary": false,
+     "isLowQuality": false
+    }
+   ],
+   "programs": [
+    "IRAN-EO13902"
+   ],
+   "lists": [
+    "SDN List"
+   ],
+   "sanctionsTypes": [
+    "Block"
+   ],
+   "legalAuthorities": [
+    "Executive Order 13902 (Iran)"
+   ],
+   "addresses": [
+    {
+     "country": "United Arab Emirates",
+     "script": "Latin",
+     "parts": [
+      {
+       "type": "ADDRESS1",
+       "value": "Difc, Damac Park Tower A, Floor 7, No. 706"
+      },
+      {
+       "type": "CITY",
+       "value": "Dubai"
+      }
+     ]
+    }
+   ],
+   "features": [
+    {
+     "type": "Birthdate",
+     "value": "11 Feb 1983",
+     "reliability": ""
+    },
+    {
+     "type": "Gender",
+     "value": "Female",
+     "reliability": ""
+    },
+    {
+     "type": "Nationality Country",
+     "value": "Netherlands",
+     "reliability": ""
+    }
+   ],
+   "documents": [
+    {
+     "type": "Passport",
+     "number": "NYH5BKKC4",
+     "country": "Netherlands",
+     "isValid": true,
+     "expires": ""
+    }
+   ],
+   "relationships": [
+    {
+     "type": "Providing support to",
+     "relatedEntity": "ZANJANI, Babak Morteza",
+     "relatedEntityId": "56864"
+    }
+   ],
+   "slug": "solmaz-bani"
+  },
+  {
+   "id": "58183",
+   "action": "add",
+   "type": "Entity",
+   "officialName": "BZ DIAMOND DMCC",
+   "displayName": "BZ DIAMOND DMCC",
+   "names": [
+    {
+     "full": "BZ DIAMOND DMCC",
+     "first": "",
+     "middle": null,
+     "last": "BZ DIAMOND DMCC",
+     "script": "Latin",
+     "aliasType": "",
+     "isPrimary": true,
+     "isLowQuality": false
+    },
+    {
+     "full": "BZ DIAMOND FZCO",
+     "first": "",
+     "middle": null,
+     "last": "BZ DIAMOND FZCO",
+     "script": "Latin",
+     "aliasType": "A.K.A.",
+     "isPrimary": false,
+     "isLowQuality": false
+    }
+   ],
+   "programs": [
+    "IRAN-EO13902"
+   ],
+   "lists": [
+    "SDN List"
+   ],
+   "sanctionsTypes": [
+    "Block"
+   ],
+   "legalAuthorities": [
+    "Executive Order 13902 (Iran)"
+   ],
+   "addresses": [
+    {
+     "country": "United Arab Emirates",
+     "script": "Latin",
+     "parts": [
+      {
+       "type": "ADDRESS1",
+       "value": "Unite No. 1H-07-00 Jewelry & Gemplex 1, Plot No. DMCC-PH2-J&GPlexS"
+      },
+      {
+       "type": "CITY",
+       "value": "Dubai"
+      }
+     ]
+    }
+   ],
+   "features": [
+    {
+     "type": "Organization Established Date",
+     "value": "21 Jan 2022",
+     "reliability": "Confirmed"
+    }
+   ],
+   "documents": [
+    {
+     "type": "Business Registration Number",
+     "number": "DMCC1917588",
+     "country": "United Arab Emirates",
+     "isValid": true,
+     "expires": ""
+    },
+    {
+     "type": "Registration Number",
+     "number": "DMCC827353",
+     "country": "United Arab Emirates",
+     "isValid": true,
+     "expires": ""
+    }
+   ],
+   "relationships": [
+    {
+     "type": "Providing support to",
+     "relatedEntity": "ZEDXION EXCHANGE LTD",
+     "relatedEntityId": "56867"
+    }
+   ],
+   "slug": "bz-diamond-dmcc"
+  },
+  {
+   "id": "58176",
+   "action": "add",
+   "type": "Entity",
+   "officialName": "DOT ONE VALUE CREATION GROUP",
+   "displayName": "DOT ONE VALUE CREATION GROUP",
+   "names": [
+    {
+     "full": "DOT ONE VALUE CREATION GROUP",
+     "first": "",
+     "middle": null,
+     "last": "DOT ONE VALUE CREATION GROUP",
+     "script": "Latin",
+     "aliasType": "",
+     "isPrimary": true,
+     "isLowQuality": false
+    },
+    {
+     "full": "‫گروه بین‌ المللی توسعه مالی و اقتصادی آوان‬",
+     "first": "",
+     "middle": null,
+     "last": "‫گروه بین‌ المللی توسعه مالی و اقتصادی آوان‬",
+     "script": "Arabic",
+     "aliasType": "",
+     "isPrimary": false,
+     "isLowQuality": false
+    },
+    {
+     "full": "DOTONE",
+     "first": "",
+     "middle": null,
+     "last": "DOTONE",
+     "script": "Latin",
+     "aliasType": "A.K.A.",
+     "isPrimary": false,
+     "isLowQuality": false
+    },
+    {
+     "full": "AVAN INTERNATIONAL FINANCIAL AND ECONOMIC DEVELOPMENT GROUP",
+     "first": "",
+     "middle": null,
+     "last": "AVAN INTERNATIONAL FINANCIAL AND ECONOMIC DEVELOPMENT GROUP",
+     "script": "Latin",
+     "aliasType": "A.K.A.",
+     "isPrimary": false,
+     "isLowQuality": false
+    },
+    {
+     "full": "A.ONE INTERNATIONAL FINANCIAL AND ECONOMIC DEVELOPMENT GROUP",
+     "first": "",
+     "middle": null,
+     "last": "A.ONE INTERNATIONAL FINANCIAL AND ECONOMIC DEVELOPMENT GROUP",
+     "script": "Latin",
+     "aliasType": "A.K.A.",
+     "isPrimary": false,
+     "isLowQuality": false
+    },
+    {
+     "full": "ONE GROUP",
+     "first": "",
+     "middle": null,
+     "last": "ONE GROUP",
+     "script": "Latin",
+     "aliasType": "A.K.A.",
+     "isPrimary": false,
+     "isLowQuality": false
+    },
+    {
+     "full": "ONE INTERNATIONAL FINANCIAL AND ECONOMIC DEVELOPMENT GROUP",
+     "first": "",
+     "middle": null,
+     "last": "ONE INTERNATIONAL FINANCIAL AND ECONOMIC DEVELOPMENT GROUP",
+     "script": "Latin",
+     "aliasType": "A.K.A.",
+     "isPrimary": false,
+     "isLowQuality": false
+    },
+    {
+     "full": "DOT ONE HOLDING",
+     "first": "",
+     "middle": null,
+     "last": "DOT ONE HOLDING",
+     "script": "Latin",
+     "aliasType": "A.K.A.",
+     "isPrimary": false,
+     "isLowQuality": false
+    }
+   ],
+   "programs": [
+    "IRAN-EO13902"
+   ],
+   "lists": [
+    "SDN List"
+   ],
+   "sanctionsTypes": [
+    "Block"
+   ],
+   "legalAuthorities": [
+    "Executive Order 13902 (Iran)"
+   ],
+   "addresses": [
+    {
+     "country": "Iran",
+     "script": "Latin",
+     "parts": [
+      {
+       "type": "ADDRESS1",
+       "value": "DotOne Tower, Jahan Koodak"
+      },
+      {
+       "type": "CITY",
+       "value": "Tehran"
+      }
+     ]
+    },
+    {
+     "country": "Iran",
+     "script": "Latin",
+     "parts": [
+      {
+       "type": "ADDRESS1",
+       "value": "Ground Floor, No. 33, Africa Street, Kaman Alley, Kavousieh"
+      },
+      {
+       "type": "CITY",
+       "value": "Tehran"
+      }
+     ]
+    }
+   ],
+   "features": [
+    {
+     "type": "Additional Sanctions Information",
+     "value": "Subject to Secondary Sanctions",
+     "reliability": ""
+    },
+    {
+     "type": "Organization Established Date",
+     "value": "17 Nov 2024",
+     "reliability": "Confirmed"
+    },
+    {
+     "type": "Organization Type",
+     "value": "Activities of holding companies",
+     "reliability": ""
+    },
+    {
+     "type": "Website",
+     "value": "https://one-holding.ir",
+     "reliability": "Confirmed"
+    },
+    {
+     "type": "Website",
+     "value": "https://dotone.ir",
+     "reliability": ""
+    }
+   ],
+   "documents": [
+    {
+     "type": "National ID No.",
+     "number": "14013956780",
+     "country": "Iran",
+     "isValid": true,
+     "expires": ""
+    },
+    {
+     "type": "Registration Number",
+     "number": "641700",
+     "country": "Iran",
+     "isValid": true,
+     "expires": ""
+    }
+   ],
+   "relationships": [
+    {
+     "type": "Owned or Controlled By",
+     "relatedEntity": "ZANJANI, Babak Morteza",
+     "relatedEntityId": "56864"
+    }
+   ],
+   "slug": "dot-one-value-creation-group"
+  },
+  {
+   "id": "58181",
+   "action": "add",
+   "type": "Entity",
+   "officialName": "DOTONE AIRLINES COMPANY",
+   "displayName": "DOTONE AIRLINES COMPANY",
+   "names": [
+    {
+     "full": "DOTONE AIRLINES COMPANY",
+     "first": "",
+     "middle": null,
+     "last": "DOTONE AIRLINES COMPANY",
+     "script": "Latin",
+     "aliasType": "",
+     "isPrimary": true,
+     "isLowQuality": false
+    },
+    {
+     "full": "‫دات وان ایرلاینز‬",
+     "first": "",
+     "middle": null,
+     "last": "‫دات وان ایرلاینز‬",
+     "script": "Arabic",
+     "aliasType": "",
+     "isPrimary": false,
+     "isLowQuality": false
+    },
+    {
+     "full": "AVAN AIRSA AIRLINES COMPANY",
+     "first": "",
+     "middle": null,
+     "last": "AVAN AIRSA AIRLINES COMPANY",
+     "script": "Latin",
+     "aliasType": "A.K.A.",
+     "isPrimary": false,
+     "isLowQuality": false
+    },
+    {
+     "full": "AVAN IRSA AIRLINES COMPANY",
+     "first": "",
+     "middle": null,
+     "last": "AVAN IRSA AIRLINES COMPANY",
+     "script": "Latin",
+     "aliasType": "A.K.A.",
+     "isPrimary": false,
+     "isLowQuality": false
+    },
+    {
+     "full": "AVAN AIR",
+     "first": "",
+     "middle": null,
+     "last": "AVAN AIR",
+     "script": "Latin",
+     "aliasType": "A.K.A.",
+     "isPrimary": false,
+     "isLowQuality": false
+    },
+    {
+     "full": "DOT ONE AIR AIRLINE COMPANY",
+     "first": "",
+     "middle": null,
+     "last": "DOT ONE AIR AIRLINE COMPANY",
+     "script": "Latin",
+     "aliasType": "A.K.A.",
+     "isPrimary": false,
+     "isLowQuality": false
+    }
+   ],
+   "programs": [
+    "IRAN-EO13902"
+   ],
+   "lists": [
+    "SDN List"
+   ],
+   "sanctionsTypes": [
+    "Block"
+   ],
+   "legalAuthorities": [
+    "Executive Order 13902 (Iran)"
+   ],
+   "addresses": [
+    {
+     "country": "Iran",
+     "script": "Latin",
+     "parts": []
+    }
+   ],
+   "features": [
+    {
+     "type": "Additional Sanctions Information",
+     "value": "Subject to Secondary Sanctions",
+     "reliability": ""
+    },
+    {
+     "type": "Organization Established Date",
+     "value": "07 Nov 2025",
+     "reliability": "Confirmed"
+    },
+    {
+     "type": "Website",
+     "value": "airlines.dotone.ir",
+     "reliability": ""
+    }
+   ],
+   "documents": [
+    {
+     "type": "National ID No.",
+     "number": "14014864290",
+     "country": "Iran",
+     "isValid": true,
+     "expires": ""
+    },
+    {
+     "type": "Registration Number",
+     "number": "660597",
+     "country": "Iran",
+     "isValid": true,
+     "expires": ""
+    }
+   ],
+   "relationships": [
+    {
+     "type": "Owned or Controlled By",
+     "relatedEntity": "DOT ONE VALUE CREATION GROUP",
+     "relatedEntityId": "58176"
+    }
+   ],
+   "slug": "dotone-airlines-company"
+  },
+  {
+   "id": "58180",
+   "action": "add",
+   "type": "Entity",
+   "officialName": "DOTONE BARTER COMPANY",
+   "displayName": "DOTONE BARTER COMPANY",
+   "names": [
+    {
+     "full": "DOTONE BARTER COMPANY",
+     "first": "",
+     "middle": null,
+     "last": "DOTONE BARTER COMPANY",
+     "script": "Latin",
+     "aliasType": "",
+     "isPrimary": true,
+     "isLowQuality": false
+    },
+    {
+     "full": "‫شرکت آوان تهاتر‬",
+     "first": "",
+     "middle": null,
+     "last": "‫شرکت آوان تهاتر‬",
+     "script": "Arabic",
+     "aliasType": "",
+     "isPrimary": false,
+     "isLowQuality": false
+    },
+    {
+     "full": "AVAN TAHATOR COMPANY",
+     "first": "",
+     "middle": null,
+     "last": "AVAN TAHATOR COMPANY",
+     "script": "Latin",
+     "aliasType": "A.K.A.",
+     "isPrimary": false,
+     "isLowQuality": false
+    },
+    {
+     "full": "AVAN BARTER COMPANY",
+     "first": "",
+     "middle": null,
+     "last": "AVAN BARTER COMPANY",
+     "script": "Latin",
+     "aliasType": "A.K.A.",
+     "isPrimary": false,
+     "isLowQuality": false
+    }
+   ],
+   "programs": [
+    "IRAN-EO13902"
+   ],
+   "lists": [
+    "SDN List"
+   ],
+   "sanctionsTypes": [
+    "Block"
+   ],
+   "legalAuthorities": [
+    "Executive Order 13902 (Iran)"
+   ],
+   "addresses": [
+    {
+     "country": "Iran",
+     "script": "Latin",
+     "parts": []
+    }
+   ],
+   "features": [
+    {
+     "type": "Additional Sanctions Information",
+     "value": "Subject to Secondary Sanctions",
+     "reliability": ""
+    }
+   ],
+   "documents": [
+    {
+     "type": "National ID No.",
+     "number": "14014100280",
+     "country": "Iran",
+     "isValid": true,
+     "expires": ""
+    },
+    {
+     "type": "Registration Number",
+     "number": "644308",
+     "country": "Iran",
+     "isValid": true,
+     "expires": ""
+    }
+   ],
+   "relationships": [
+    {
+     "type": "Owned or Controlled By",
+     "relatedEntity": "DOT ONE VALUE CREATION GROUP",
+     "relatedEntityId": "58176"
+    }
+   ],
+   "slug": "dotone-barter-company"
+  },
+  {
+   "id": "58178",
+   "action": "add",
+   "type": "Entity",
+   "officialName": "DOTONE GOLD COMPANY",
+   "displayName": "DOTONE GOLD COMPANY",
+   "names": [
+    {
+     "full": "DOTONE GOLD COMPANY",
+     "first": "",
+     "middle": null,
+     "last": "DOTONE GOLD COMPANY",
+     "script": "Latin",
+     "aliasType": "",
+     "isPrimary": true,
+     "isLowQuality": false
+    },
+    {
+     "full": "‫شرکت زرین سیم آوان‬",
+     "first": "",
+     "middle": null,
+     "last": "‫شرکت زرین سیم آوان‬",
+     "script": "Arabic",
+     "aliasType": "",
+     "isPrimary": false,
+     "isLowQuality": false
+    },
+    {
+     "full": "ZARRIN SIM AVAN COMPANY",
+     "first": "",
+     "middle": null,
+     "last": "ZARRIN SIM AVAN COMPANY",
+     "script": "Latin",
+     "aliasType": "A.K.A.",
+     "isPrimary": false,
+     "isLowQuality": false
+    },
+    {
+     "full": "TALA TOKEN",
+     "first": "",
+     "middle": null,
+     "last": "TALA TOKEN",
+     "script": "Latin",
+     "aliasType": "A.K.A.",
+     "isPrimary": false,
+     "isLowQuality": false
+    },
+    {
+     "full": "TALA GOLD",
+     "first": "",
+     "middle": null,
+     "last": "TALA GOLD",
+     "script": "Latin",
+     "aliasType": "A.K.A.",
+     "isPrimary": false,
+     "isLowQuality": false
+    }
+   ],
+   "programs": [
+    "IRAN-EO13902"
+   ],
+   "lists": [
+    "SDN List"
+   ],
+   "sanctionsTypes": [
+    "Block"
+   ],
+   "legalAuthorities": [
+    "Executive Order 13902 (Iran)"
+   ],
+   "addresses": [
+    {
+     "country": "",
+     "script": "Latin",
+     "parts": [
+      {
+       "type": "REGION",
+       "value": "Iran"
+      }
+     ]
+    }
+   ],
+   "features": [
+    {
+     "type": "Additional Sanctions Information",
+     "value": "Subject to Secondary Sanctions",
+     "reliability": ""
+    },
+    {
+     "type": "Website",
+     "value": "talatoken.com",
+     "reliability": ""
+    }
+   ],
+   "documents": [
+    {
+     "type": "National ID No.",
+     "number": "14014200364",
+     "country": "Iran",
+     "isValid": true,
+     "expires": ""
+    },
+    {
+     "type": "Registration Number",
+     "number": "646255",
+     "country": "Iran",
+     "isValid": true,
+     "expires": ""
+    }
+   ],
+   "relationships": [
+    {
+     "type": "Owned or Controlled By",
+     "relatedEntity": "ZANJANI, Babak Morteza",
+     "relatedEntityId": "56864"
+    }
+   ],
+   "slug": "dotone-gold-company"
+  },
+  {
+   "id": "58179",
+   "action": "add",
+   "type": "Entity",
+   "officialName": "DOTONE RAIL COMPANY",
+   "displayName": "DOTONE RAIL COMPANY",
+   "names": [
+    {
+     "full": "DOTONE RAIL COMPANY",
+     "first": "",
+     "middle": null,
+     "last": "DOTONE RAIL COMPANY",
+     "script": "Latin",
+     "aliasType": "",
+     "isPrimary": true,
+     "isLowQuality": false
+    },
+    {
+     "full": "‫شرکت قطارهای آوان‌ ریل‬",
+     "first": "",
+     "middle": null,
+     "last": "‫شرکت قطارهای آوان‌ ریل‬",
+     "script": "Arabic",
+     "aliasType": "",
+     "isPrimary": false,
+     "isLowQuality": false
+    },
+    {
+     "full": "AVAN RAIL TRAINS COMPANY",
+     "first": "",
+     "middle": null,
+     "last": "AVAN RAIL TRAINS COMPANY",
+     "script": "Latin",
+     "aliasType": "A.K.A.",
+     "isPrimary": false,
+     "isLowQuality": false
+    }
+   ],
+   "programs": [
+    "IRAN-EO13902"
+   ],
+   "lists": [
+    "SDN List"
+   ],
+   "sanctionsTypes": [
+    "Block"
+   ],
+   "legalAuthorities": [
+    "Executive Order 13902 (Iran)"
+   ],
+   "addresses": [
+    {
+     "country": "Iran",
+     "script": "Latin",
+     "parts": []
+    }
+   ],
+   "features": [],
+   "documents": [
+    {
+     "type": "National ID No.",
+     "number": "14014036380",
+     "country": "Iran",
+     "isValid": true,
+     "expires": ""
+    },
+    {
+     "type": "Registration Number",
+     "number": "643252",
+     "country": "Iran",
+     "isValid": true,
+     "expires": ""
+    }
+   ],
+   "relationships": [
+    {
+     "type": "Owned or Controlled By",
+     "relatedEntity": "DOT ONE VALUE CREATION GROUP",
+     "relatedEntityId": "58176"
+    }
+   ],
+   "slug": "dotone-rail-company"
+  },
+  {
+   "id": "58182",
+   "action": "add",
+   "type": "Entity",
+   "officialName": "DOTONE TRIP",
+   "displayName": "DOTONE TRIP",
+   "names": [
+    {
+     "full": "DOTONE TRIP",
+     "first": "",
+     "middle": null,
+     "last": "DOTONE TRIP",
+     "script": "Latin",
+     "aliasType": "",
+     "isPrimary": true,
+     "isLowQuality": false
+    },
+    {
+     "full": "‫شرکت دات وان سفر‬",
+     "first": "",
+     "middle": null,
+     "last": "‫شرکت دات وان سفر‬",
+     "script": "Arabic",
+     "aliasType": "",
+     "isPrimary": false,
+     "isLowQuality": false
+    },
+    {
+     "full": "AVAN SAFAR COMPANY",
+     "first": "",
+     "middle": null,
+     "last": "AVAN SAFAR COMPANY",
+     "script": "Latin",
+     "aliasType": "A.K.A.",
+     "isPrimary": false,
+     "isLowQuality": false
+    },
+    {
+     "full": "DOTONE TRAVEL",
+     "first": "",
+     "middle": null,
+     "last": "DOTONE TRAVEL",
+     "script": "Latin",
+     "aliasType": "A.K.A.",
+     "isPrimary": false,
+     "isLowQuality": false
+    }
+   ],
+   "programs": [
+    "IRAN-EO13902"
+   ],
+   "lists": [
+    "SDN List"
+   ],
+   "sanctionsTypes": [
+    "Block"
+   ],
+   "legalAuthorities": [
+    "Executive Order 13902 (Iran)"
+   ],
+   "addresses": [
+    {
+     "country": "Iran",
+     "script": "Latin",
+     "parts": [
+      {
+       "type": "ADDRESS1",
+       "value": "DotOne Tower"
+      }
+     ]
+    }
+   ],
+   "features": [
+    {
+     "type": "Additional Sanctions Information",
+     "value": "Subject to Secondary Sanctions",
+     "reliability": ""
+    },
+    {
+     "type": "Website",
+     "value": "dotonetrip.com",
+     "reliability": ""
+    }
+   ],
+   "documents": [
+    {
+     "type": "National ID No.",
+     "number": "14014367155",
+     "country": "Iran",
+     "isValid": true,
+     "expires": ""
+    },
+    {
+     "type": "Registration Number",
+     "number": "649885",
+     "country": "Iran",
+     "isValid": true,
+     "expires": ""
+    }
+   ],
+   "relationships": [
+    {
+     "type": "Owned or Controlled By",
+     "relatedEntity": "DOT ONE VALUE CREATION GROUP",
+     "relatedEntityId": "58176"
+    }
+   ],
+   "slug": "dotone-trip"
+  },
+  {
+   "id": "58187",
+   "action": "add",
+   "type": "Individual",
+   "officialName": "OIMAKHMADOV, Sukhrob",
+   "displayName": "Sukhrob Oimakhmadov",
+   "names": [
+    {
+     "full": "OIMAKHMADOV, Sukhrob",
+     "first": "Sukhrob",
+     "middle": null,
+     "last": "Oimakhmadov",
+     "script": "Latin",
+     "aliasType": "",
+     "isPrimary": true,
+     "isLowQuality": false
+    },
+    {
+     "full": "OYMAKHMADOV, Sukhrob",
+     "first": "Sukhrob",
+     "middle": null,
+     "last": "Oymakhmadov",
+     "script": "Latin",
+     "aliasType": "A.K.A.",
+     "isPrimary": false,
+     "isLowQuality": false
+    }
+   ],
+   "programs": [
+    "IRAN-EO13902"
+   ],
+   "lists": [
+    "SDN List"
+   ],
+   "sanctionsTypes": [
+    "Block"
+   ],
+   "legalAuthorities": [
+    "Executive Order 13902 (Iran)"
+   ],
+   "addresses": [
+    {
+     "country": "Tajikistan",
+     "script": "Latin",
+     "parts": [
+      {
+       "type": "ADDRESS1",
+       "value": "Rudaki 85, Lohuty 4-33"
+      },
+      {
+       "type": "CITY",
+       "value": "Dushanbe"
+      }
+     ]
+    }
+   ],
+   "features": [
+    {
+     "type": "Birthdate",
+     "value": "05 Oct 1979",
+     "reliability": ""
+    },
+    {
+     "type": "Gender",
+     "value": "Male",
+     "reliability": ""
+    },
+    {
+     "type": "Nationality Country",
+     "value": "Tajikistan",
+     "reliability": ""
+    },
+    {
+     "type": "Place of Birth",
+     "value": "Vahdat, Tajikistan",
+     "reliability": ""
+    }
+   ],
+   "documents": [
+    {
+     "type": "Passport",
+     "number": "402383646",
+     "country": "Tajikistan",
+     "isValid": true,
+     "expires": ""
+    }
+   ],
+   "relationships": [
+    {
+     "type": "Acting for or on behalf of",
+     "relatedEntity": "ZEDX DMCC",
+     "relatedEntityId": "58177"
+    }
+   ],
+   "slug": "sukhrob-oimakhmadov"
+  },
+  {
+   "id": "58186",
+   "action": "add",
+   "type": "Individual",
+   "officialName": "REZAZADEH, Mehdi",
+   "displayName": "Mehdi Rezazadeh",
+   "names": [
+    {
+     "full": "REZAZADEH, Mehdi",
+     "first": "Mehdi",
+     "middle": null,
+     "last": "Rezazadeh",
+     "script": "Latin",
+     "aliasType": "",
+     "isPrimary": true,
+     "isLowQuality": false
+    },
+    {
+     "full": "‫مهدی رضازاده‬",
+     "first": "مهدی",
+     "middle": null,
+     "last": "رضازاده",
+     "script": "Arabic",
+     "aliasType": "",
+     "isPrimary": false,
+     "isLowQuality": false
+    },
+    {
+     "full": "RIZAZADEH, Mehdi",
+     "first": "Mehdi",
+     "middle": null,
+     "last": "Rizazadeh",
+     "script": "Latin",
+     "aliasType": "A.K.A.",
+     "isPrimary": false,
+     "isLowQuality": false
+    }
+   ],
+   "programs": [
+    "IRAN-EO13902"
+   ],
+   "lists": [
+    "SDN List"
+   ],
+   "sanctionsTypes": [
+    "Block"
+   ],
+   "legalAuthorities": [
+    "Executive Order 13902 (Iran)"
+   ],
+   "addresses": [
+    {
+     "country": "Iran",
+     "script": "Latin",
+     "parts": [
+      {
+       "type": "ADDRESS1",
+       "value": "210 Sharghi Bin Mozaffari V Sajdehi, Tehranpars 9863"
+      },
+      {
+       "type": "CITY",
+       "value": "Tehran"
+      }
+     ]
+    }
+   ],
+   "features": [
+    {
+     "type": "Birthdate",
+     "value": "12 Nov 1975",
+     "reliability": "Confirmed"
+    },
+    {
+     "type": "Gender",
+     "value": "Male",
+     "reliability": "Confirmed"
+    },
+    {
+     "type": "Nationality Country",
+     "value": "Iran",
+     "reliability": "Confirmed"
+    }
+   ],
+   "documents": [
+    {
+     "type": "National ID No.",
+     "number": "0068859341",
+     "country": "Iran",
+     "isValid": true,
+     "expires": ""
+    }
+   ],
+   "relationships": [
+    {
+     "type": "Acting for or on behalf of",
+     "relatedEntity": "ZEDPAY FINANSAL SISTEM VE HIZMETLERI ANONIM SIRKETI",
+     "relatedEntityId": "58174"
+    }
+   ],
+   "slug": "mehdi-rezazadeh"
+  },
+  {
+   "id": "58185",
+   "action": "add",
+   "type": "Individual",
+   "officialName": "ZANJANI, Bahareh Morteza",
+   "displayName": "Bahareh Morteza Zanjani",
+   "names": [
+    {
+     "full": "ZANJANI, Bahareh Morteza",
+     "first": "Bahareh",
+     "middle": "Morteza",
+     "last": "Zanjani",
+     "script": "Latin",
+     "aliasType": "",
+     "isPrimary": true,
+     "isLowQuality": false
+    },
+    {
+     "full": "‫بهاره مرتضی زنجانی‬",
+     "first": "بهاره",
+     "middle": "مرتضی",
+     "last": "زنجانی",
+     "script": "Arabic",
+     "aliasType": "",
+     "isPrimary": false,
+     "isLowQuality": false
+    },
+    {
+     "full": "ZANJANI, Bahareh Mortaza",
+     "first": "Bahareh",
+     "middle": "Mortaza",
+     "last": "Zanjani",
+     "script": "Latin",
+     "aliasType": "A.K.A.",
+     "isPrimary": false,
+     "isLowQuality": false
+    }
+   ],
+   "programs": [
+    "IRAN-EO13902"
+   ],
+   "lists": [
+    "SDN List"
+   ],
+   "sanctionsTypes": [
+    "Block"
+   ],
+   "legalAuthorities": [
+    "Executive Order 13902 (Iran)"
+   ],
+   "addresses": [
+    {
+     "country": "United Arab Emirates",
+     "script": "Latin",
+     "parts": [
+      {
+       "type": "CITY",
+       "value": "Dubai"
+      }
+     ]
+    }
+   ],
+   "features": [
+    {
+     "type": "Birthdate",
+     "value": "21 Sep 1981",
+     "reliability": "Confirmed"
+    },
+    {
+     "type": "Gender",
+     "value": "Female",
+     "reliability": "Confirmed"
+    },
+    {
+     "type": "Nationality Country",
+     "value": "Iran",
+     "reliability": "Confirmed"
+    }
+   ],
+   "documents": [
+    {
+     "type": "National ID No.",
+     "number": "0068146681",
+     "country": "United Arab Emirates",
+     "isValid": true,
+     "expires": ""
+    },
+    {
+     "type": "Residency Number",
+     "number": "784-1981-2649786-0",
+     "country": "United Arab Emirates",
+     "isValid": true,
+     "expires": ""
+    }
+   ],
+   "relationships": [
+    {
+     "type": "Acting for or on behalf of",
+     "relatedEntity": "BZ DIAMOND DMCC",
+     "relatedEntityId": "58183"
+    }
+   ],
+   "slug": "bahareh-morteza-zanjani"
+  },
+  {
+   "id": "58174",
+   "action": "add",
+   "type": "Entity",
+   "officialName": "ZEDPAY FINANSAL SISTEM VE HIZMETLERI ANONIM SIRKETI",
+   "displayName": "ZEDPAY FINANSAL SISTEM VE HIZMETLERI ANONIM SIRKETI",
+   "names": [
+    {
+     "full": "ZEDPAY FINANSAL SISTEM VE HIZMETLERI ANONIM SIRKETI",
+     "first": "",
+     "middle": null,
+     "last": "ZEDPAY FINANSAL SISTEM VE HIZMETLERI ANONIM SIRKETI",
+     "script": "Latin",
+     "aliasType": "",
+     "isPrimary": true,
+     "isLowQuality": false
+    },
+    {
+     "full": "ZEDPAY FINANSAL SISTEM VE HIZMETLERI ANONIM SIRKETI",
+     "first": "",
+     "middle": null,
+     "last": "ZEDPAY FINANSAL SISTEM VE HIZMETLERI ANONIM SIRKETI",
+     "script": "Latin",
+     "aliasType": "",
+     "isPrimary": false,
+     "isLowQuality": false
+    },
+    {
+     "full": "ZEDPAY DIJITAL YAZILIM SISTEMLERI ANONIM SIRKETI",
+     "first": "",
+     "middle": null,
+     "last": "ZEDPAY DIJITAL YAZILIM SISTEMLERI ANONIM SIRKETI",
+     "script": "Latin",
+     "aliasType": "A.K.A.",
+     "isPrimary": false,
+     "isLowQuality": false
+    },
+    {
+     "full": "ZEDPAY FINANCIAL SYSTEM AND SERVICES P.J.S.C.",
+     "first": "",
+     "middle": null,
+     "last": "ZEDPAY FINANCIAL SYSTEM AND SERVICES P.J.S.C.",
+     "script": "Latin",
+     "aliasType": "A.K.A.",
+     "isPrimary": false,
+     "isLowQuality": false
+    },
+    {
+     "full": "ZEDPAY",
+     "first": "",
+     "middle": null,
+     "last": "ZEDPAY",
+     "script": "Latin",
+     "aliasType": "A.K.A.",
+     "isPrimary": false,
+     "isLowQuality": false
+    }
+   ],
+   "programs": [
+    "IRAN-EO13902"
+   ],
+   "lists": [
+    "SDN List"
+   ],
+   "sanctionsTypes": [
+    "Block"
+   ],
+   "legalAuthorities": [
+    "Executive Order 13902 (Iran)"
+   ],
+   "addresses": [
+    {
+     "country": "Turkey",
+     "script": "Latin",
+     "parts": [
+      {
+       "type": "ADDRESS1",
+       "value": "D 142, Floor: 14, No: 12B, Blok: A, Orucreis Area, Tekstilkent Plaza, 34235 Esenler"
+      },
+      {
+       "type": "CITY",
+       "value": "Istanbul"
+      }
+     ]
+    }
+   ],
+   "features": [
+    {
+     "type": "Organization Established Date",
+     "value": "24 May 2022",
+     "reliability": "Confirmed"
+    },
+    {
+     "type": "Organization Type",
+     "value": "Computer programming activities",
+     "reliability": "Confirmed"
+    },
+    {
+     "type": "Website",
+     "value": "www.zedpay.com",
+     "reliability": "Confirmed"
+    }
+   ],
+   "documents": [
+    {
+     "type": "Business Registration Number",
+     "number": "381783",
+     "country": "Turkey",
+     "isValid": true,
+     "expires": ""
+    },
+    {
+     "type": "Trade License No.",
+     "number": "09971730211",
+     "country": "Turkey",
+     "isValid": true,
+     "expires": ""
+    }
+   ],
+   "relationships": [
+    {
+     "type": "Acting for or on behalf of",
+     "relatedEntity": "ZEDXION EXCHANGE LTD",
+     "relatedEntityId": "56867"
+    }
+   ],
+   "slug": "zedpay-finansal-sistem-ve-hizmetleri-anonim-sirketi"
+  },
+  {
+   "id": "58177",
+   "action": "add",
+   "type": "Entity",
+   "officialName": "ZEDX DMCC",
+   "displayName": "ZEDX DMCC",
+   "names": [
+    {
+     "full": "ZEDX DMCC",
+     "first": "",
+     "middle": null,
+     "last": "ZEDX DMCC",
+     "script": "Latin",
+     "aliasType": "",
+     "isPrimary": true,
+     "isLowQuality": false
+    }
+   ],
+   "programs": [
+    "IRAN-EO13902"
+   ],
+   "lists": [
+    "SDN List"
+   ],
+   "sanctionsTypes": [
+    "Block"
+   ],
+   "legalAuthorities": [
+    "Executive Order 13902 (Iran)"
+   ],
+   "addresses": [
+    {
+     "country": "United Arab Emirates",
+     "script": "Latin",
+     "parts": [
+      {
+       "type": "ADDRESS1",
+       "value": "Unit No. 1509, JBC2, Plot No. JLT-PH2-V1A, Jumeirah Lakes Towers"
+      },
+      {
+       "type": "CITY",
+       "value": "Dubai"
+      }
+     ]
+    },
+    {
+     "country": "United Arab Emirates",
+     "script": "Latin",
+     "parts": [
+      {
+       "type": "ADDRESS1",
+       "value": "ALMAS-48-CV56"
+      },
+      {
+       "type": "CITY",
+       "value": "Dubai"
+      }
+     ]
+    }
+   ],
+   "features": [
+    {
+     "type": "Organization Established Date",
+     "value": "13 Jan 2023",
+     "reliability": "Confirmed"
+    }
+   ],
+   "documents": [
+    {
+     "type": "Business Registration Number",
+     "number": "DMCC195753",
+     "country": "United Arab Emirates",
+     "isValid": true,
+     "expires": ""
+    },
+    {
+     "type": "Business Registration Number",
+     "number": "DMCC872364",
+     "country": "United Arab Emirates",
+     "isValid": true,
+     "expires": ""
+    }
+   ],
+   "relationships": [
+    {
+     "type": "Acting for or on behalf of",
+     "relatedEntity": "ZEDCEX EXCHANGE LTD",
+     "relatedEntityId": "56865"
+    }
+   ],
+   "slug": "zedx-dmcc"
+  }
+ ],
+ "counts": {
+  "total": 13,
+  "add": 13,
+  "remove": 0,
+  "other": 0
+ }
+}
