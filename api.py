@@ -4876,6 +4876,43 @@ curl "https://sanctionsai.dev/sanctions?wallet=0x098B716B8Aaf21512996dC57EB0615e
 - Names: US Treasury OFAC sdn.csv
 - Countries: 16 comprehensive sanctions jurisdictions
 
+## Bulk download — the SDN list as JSON and CSV (no key, no signup)
+
+- **Landing page** — https://sanctionsai.dev/data/ofac-sdn-list/
+- **JSON** — https://sanctionsai.dev/data/ofac-sdn-list/ofac-sdn.json
+- **CSV** — https://sanctionsai.dev/data/ofac-sdn-list/ofac-sdn.csv
+- **Metadata only** (counts, dates, schema; no records) — https://sanctionsai.dev/data/ofac-sdn-list/metadata.json
+- **Mirror** — https://github.com/kindrat86/ofac-sdn-json
+
+The full Specially Designated Nationals list as a static file: 19,254 designated
+entries and 20,350 alternate identities (39,604 names), each with its OFAC uid,
+entity type (individual / entity / vessel / aircraft) and sanctions program codes.
+Parsed directly from Treasury's own SDN.CSV and ALT.CSV exports and reproduced
+verbatim — the only transformations are splitting the bracketed program column
+into a list and joining alternate names onto their primary entry by uid.
+
+Every record carries the publication date OFAC itself assigned, read from their
+export URL — not the date the file was built. Use this when you need the whole
+list at once; use /sanctions when you need to screen one counterparty.
+
+Licence: the list is a U.S. Government work in the public domain (17 U.S.C. 105);
+the packaging is CC0. Attribute Treasury, not us.
+
+Scope: SDN list only. It excludes the OFAC Consolidated (non-SDN) lists, the SSI
+list, and EU/UK/UN lists, and performs no 50 Percent Rule ownership analysis.
+OFAC's own search at https://sanctionssearch.ofac.treas.gov/ is authoritative for
+any compliance decision. Nothing here is legal or compliance advice.
+
+## Free browser tools (nothing is uploaded)
+
+- **Hub** — https://sanctionsai.dev/free
+- **Bulk SDN name screening** — https://sanctionsai.dev/free/ofac-screening
+
+Paste or upload a list of names and screen it against the full SDN list. Matching
+runs client-side in the visitor's own browser, so the names screened are never
+transmitted or logged. Answers "how do I screen a list of names against OFAC for
+free" without an account or an API key.
+
 ## OFAC SDN Change Log (updated on OFAC's publication cadence)
 
 - **Hub** — https://sanctionsai.dev/updates/
@@ -6526,6 +6563,8 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
 </div></nav>
 
 <style>
+.skip-link{position:fixed;top:-100px;left:16px;z-index:200;background:var(--teal);color:#04130e!important;padding:10px 20px;border-radius:0 0 10px 10px;font-weight:700;font-size:.88rem;text-decoration:none;transition:top .2s}
+.skip-link:focus{top:0}
 .urgbar{max-width:760px;margin:-26px auto 0;background:linear-gradient(135deg,rgba(255,107,107,.10),rgba(255,107,107,.02));border:1px solid rgba(255,107,107,.22);border-radius:14px;padding:18px 22px;font-size:.96rem;color:#e6c9c9;line-height:1.6}
 .urgbar b{color:var(--red)}
 .ritual{max-width:680px;margin:0 auto;background:var(--surf);border:1px solid var(--line);border-radius:18px;padding:30px 28px}
@@ -6556,7 +6595,7 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
 </style>
 
 <!-- HERO -->
-<section class="hero"><div class="bg"><div class="grid"></div><div class="glow1"></div></div>
+<section class="hero" id="main"><div class="bg"><div class="grid"></div><div class="glow1"></div></div>
 <div class="wrap hero-inner">
   <span class="pill">x402 &middot; USDC &middot; BASE &mdash; your agent pays, no key</span>
   <h1>Your agent moves money. <span class="hl">One wallet it pays today is sanctioned.</span> <span class="hl-r">It can&rsquo;t tell which.</span></h1>

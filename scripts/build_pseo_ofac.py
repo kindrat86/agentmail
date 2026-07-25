@@ -8,9 +8,10 @@
 Everything on these pages is derived from OFAC's ENHANCED_XML export. Nothing is
 estimated, inferred or written from memory: counts are counted, dates are the
 dates OFAC published, program descriptions are the legal-authority strings OFAC
-itself attaches to the designation. That constraint is the point — the site
-already carries pages with "(est.)" pricing tables, and those are the pages a
-compliance reader has no reason to trust.
+itself attaches to the designation. That constraint is the point: the /cost-of/
+cluster had to be rebuilt once because it shipped invented "(est.)" pricing
+ranges, and on a compliance domain those are the pages a reader has no reason to
+trust. See scripts/build_cost_of.py and scripts/check_vendor_pricing.py.
 
 Two-stage so the 100 MB source is never committed:
 

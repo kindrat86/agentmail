@@ -9,13 +9,24 @@ while every page aimed at head terms ("chainalysis sanctions screening",
 shape this domain currently wins, and only three of them were built.
 
 Honesty rule, enforced by hand and worth stating because it is the whole risk
-of a page like this: none of these vendors publish list prices, so this script
-does NOT invent dollar ranges for them. It states the verifiable fact (pricing
-is quote-gated), explains what drives the number, and compares against
-SanctionsAI's own published prices, which are checkable on /pricing. Inventing
-a "$30K-$150K/yr" for a vendor that has never published a figure would be a
+of a page like this: this script does NOT invent dollar ranges. Every vendor
+carries either a `published` block read verbatim off the vendor's own pricing
+page, or `published: None` plus an `evidence` link and a note recording what
+that page showed instead. Both shapes print the URL and the date it was checked.
+Inventing a "$30K-$150K/yr" for a vendor that has never published a figure is a
 fabrication dressed as research, and it is exactly what a competitor would
 screenshot.
+
+Do not assume the answer is always "quote-only". That assumption is what
+produced the ranges this cluster replaced, and it is wrong twice over:
+ComplyAdvantage publishes a $99/month self-serve Starter plan and Sumsub
+publishes per-verification rates. The earlier pages had ComplyAdvantage's entry
+tier at "~$20K-$40K/yr (est.)" — about twenty times its actual published price,
+on the page a buyer comparing us to them was most likely to read.
+
+Re-verify the whole table with scripts/check_vendor_pricing.py, which fetches
+each evidence URL and fails if a vendor marked quote-only has started publishing
+figures, or vice versa.
 
 Re-runnable: rewrites every page from the data below, so fixing a fact here
 fixes it everywhere. Writes both `<slug>/index.html` and `<slug>.html` because
@@ -30,6 +41,12 @@ SITE = "https://sanctionsai.dev"
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT = os.path.join(ROOT, "cost-of")
 PUBLISHED = "2026-07-25"
+
+# The date every vendor claim below was last read off the vendor's own page.
+# It is printed on the page next to the source link, because "quote-only" and
+# "$99/month" are both perishable facts and a reader deserves to know how stale
+# the one they are reading is. Re-verify with scripts/check_vendor_pricing.py.
+CHECKED = "2026-07-26"
 
 # SanctionsAI's own prices — verifiable at /pricing. Kept in one place so a
 # price change cannot leave half the cluster quoting a stale number.
@@ -54,10 +71,31 @@ VENDORS = [
             ("Region coverage", "Document coverage for additional countries changes the per-verification rate."),
         ],
         "fit": "Sumsub is the right tool when you are onboarding human users and need identity documents verified. It is the wrong shape when an autonomous agent needs a yes/no on a counterparty name or wallet before it releases a payment — there is no applicant to onboard.",
+        "evidence": "https://sumsub.com/pricing/",
+        "evidence_label": "sumsub.com/pricing",
+        "published": {
+            "headline": "per-verification rates with a monthly minimum",
+            "plans": [
+                ("Basic", "$1.35 per verification, $149 minimum monthly commitment"),
+                ("Compliance", "$1.85 per verification, $299 minimum monthly commitment — adds AML screening, ongoing AML monitoring and proof-of-address"),
+                ("AML screening line item", "$0.08 per initial check and per checked match thereafter"),
+                ("Enterprise", "Not published — contact sales"),
+            ],
+            "caveat": "The unit is a verification of a person, not a screen of a name: on the Basic and "
+                      "Compliance plans a user verification is billed at full rate even if you do not use "
+                      "every feature it bundles. The $0.08 AML line item sits in the detailed-features "
+                      "table further down that page.",
+            # Rendered client-side, so it is absent from the HTML curl receives.
+            # check_vendor_pricing.py would otherwise report it missing forever.
+            # It was read in a real browser on the CHECKED date; re-verify the
+            # same way, not with curl.
+            "js_only": ["$0.08"],
+        },
         "faqs": [
-            ("Does Sumsub publish its pricing?", "No. Sumsub quotes per deployment based on verification volume and which modules you enable. There is no public price list to compare against."),
+            ("Does Sumsub publish its pricing?", "Yes, unusually for this category. Sumsub publishes per-verification rates on its pricing page: $1.35 per verification on Basic with a $149 minimum monthly commitment, and $1.85 on Compliance with a $299 minimum, which adds AML screening and ongoing monitoring. Enterprise is quoted. Figures read from sumsub.com/pricing on 2026-07-26."),
+            ("How much does Sumsub's AML screening cost on its own?", "Sumsub lists AML screening at $0.08 per initial check and per checked match thereafter. Note the pricing page's own footnote: on the Basic and Compliance plans a user verification is charged in full even if you do not use all the bundled features, so the line-item rate is not the same as a standalone screening price."),
             ("Can I buy only Sumsub's sanctions screening?", "Sanctions and PEP screening is sold as a module of the verification platform rather than as a standalone screening API. Ask explicitly whether a screening-only contract is available before you scope the rest."),
-            ("What is the cheapest way to screen a name against OFAC?", "The free tier of an OFAC-specific API. SanctionsAI allows 5 checks/day with no API key and no signup; paid plans start at $19/month for 10,000 checks."),
+            ("What is the cheapest way to screen a name against OFAC?", "The free tier of an OFAC-specific API. SanctionsAI allows 5 checks/day with no API key and no signup; paid plans start at $19/month for 10,000 checks, and pay-per-call is $0.05 per check over x402."),
         ],
     },
     {
@@ -72,6 +110,10 @@ VENDORS = [
             ("Contract term", "Annual minimums are standard; there is no month-to-month entry point."),
         ],
         "fit": "Elliptic answers \"how risky is this address, and what is it connected to\" — a forensic question. An OFAC screen answers \"is this counterparty on a sanctions list right now\" — a compliance question with a binary answer. If you only need the second one, an analytics contract is a large amount of capability you will not call.",
+        "evidence": "https://www.elliptic.co/",
+        "evidence_label": "elliptic.co",
+        "evidence_note": "no pricing page (elliptic.co/pricing returns 404) and no figure anywhere on the site; the only route to a number is “Book a demo”",
+        "published": None,
         "faqs": [
             ("Does Elliptic publish pricing?", "No. Elliptic is quote-based with annual contracts and no public price list or free tier."),
             ("Is Elliptic the same as sanctions screening?", "No. Elliptic scores blockchain risk, including exposure to sanctioned entities several hops away. A sanctions screen is a direct list match against the OFAC SDN list. They answer different questions and many teams need only the second."),
@@ -90,6 +132,10 @@ VENDORS = [
             ("Implementation", "Enterprise blockchain-intelligence rollouts routinely run months, and that engineering time is a real part of the cost even when the vendor does not bill for it."),
         ],
         "fit": "TRM is built for a compliance team with analysts in the loop. An agent that has to decide in under a second whether to release a payment has no analyst and no time for a case queue — it needs a list match and an audit record.",
+        "evidence": "https://www.trmlabs.com/",
+        "evidence_label": "trmlabs.com",
+        "evidence_note": "no pricing page (trmlabs.com/pricing returns 404) and no published figure; the site's only pricing route is “Request a demo”",
+        "published": None,
         "faqs": [
             ("Does TRM Labs publish pricing?", "No. TRM Labs quotes per deployment and does not list prices publicly or offer a self-serve free tier."),
             ("Is there a free tier for TRM Labs?", "There is no public self-serve free tier. Evaluation is handled through their sales process."),
@@ -108,6 +154,10 @@ VENDORS = [
             ("Redistribution rights", "If you screen on behalf of your own customers, redistribution terms apply and change the contract materially."),
         ],
         "fit": "Dow Jones sells research depth — the state-ownership data behind the OFAC 50% Rule is genuinely hard to replicate. If your obligation is direct SDN list matching before a payment, you are licensing a research library to answer a lookup.",
+        "evidence": "https://www.dowjones.com/professional/risk/",
+        "evidence_label": "dowjones.com/professional/risk",
+        "evidence_note": "no figure published anywhere on the Risk & Compliance pages; the only route is “Contact sales”",
+        "published": None,
         "faqs": [
             ("Does Dow Jones Risk & Compliance publish pricing?", "No. It is licensed by data scope, delivery method and named users, quoted per organisation."),
             ("Do I need Dow Jones data for OFAC compliance?", "Not for direct SDN list matching — the OFAC SDN list is published by the US Treasury and is free to use. Licensed data becomes relevant for PEP screening, adverse media, and 50% Rule ownership research."),
@@ -126,10 +176,107 @@ VENDORS = [
             ("Travel Rule", "Travel Rule messaging, if you need it, is a separate product from risk scoring."),
         ],
         "fit": "Scorechain is a reasonable mid-market fit for a VASP with a compliance function. It is still a platform subscription, which is a poor match for a single pre-payment list check embedded in an agent's code path.",
+        "evidence": "https://www.scorechain.com/",
+        "evidence_label": "scorechain.com",
+        "evidence_note": "no pricing page (scorechain.com/pricing returns 404) and no published figure; the only route is “Book a demo”",
+        "published": None,
         "faqs": [
             ("Does Scorechain publish pricing?", "No. Scorechain quotes based on address volume, chain modules and seats."),
             ("Is Scorechain cheaper than Chainalysis or Elliptic?", "Scorechain positions itself at the mid-market rather than the enterprise tier, but since none of the three publish list prices, any ranking is a claim about positioning and not a verified price comparison."),
             ("Do I need risk scoring, or just sanctions screening?", "Sanctions screening is the legal obligation: do not transact with a designated party. Risk scoring is a judgement about proximity to illicit activity. Many teams need the first and adopt the second later."),
+        ],
+    },
+]
+
+VENDORS += [
+    # ── The three slugs that already existed, and shipped invented ranges.
+    # Regenerating them here is the fix: the files are overwritten in place, so
+    # the URLs, their internal links and their Search Console history survive.
+    {
+        "slug": "complyadvantage-pricing",
+        "name": "ComplyAdvantage",
+        "url": "https://complyadvantage.com",
+        "what": "an AML platform selling sanctions, PEP and adverse-media screening plus transaction monitoring, with a self-serve entry tier",
+        "drivers": [
+            ("Monitored entities", "The Starter plan is priced by how many entities you keep under ongoing monitoring — 100 to 2,000 — not by how many one-off screens you run."),
+            ("Essentials vs Agentic", "The published Starter price has two variants; the agentic-workflow variant is the more expensive of the two."),
+            ("Moving to Enterprise", "Payments screening, transaction monitoring and unlimited usage are Enterprise-only, and Enterprise is quoted rather than published."),
+            ("Data breadth", "Adverse media and PEP/RCA data are the expensive part of the dataset; sanctions lists alone are public."),
+        ],
+        "fit": "ComplyAdvantage is a genuine option for a small team that needs ongoing monitoring of a "
+               "customer base with PEP and adverse-media coverage, and it is one of the few vendors here "
+               "you can buy without a sales call. It is still a per-entity monitoring subscription: if you "
+               "need a stateless list check on a counterparty an agent will never see again, you are "
+               "paying to monitor a relationship that does not exist.",
+        "evidence": "https://complyadvantage.com/pricing/",
+        "evidence_label": "complyadvantage.com/pricing",
+        "published": {
+            "headline": "a self-serve Starter plan from $99/month",
+            "plans": [
+                ("Starter — Essentials", "From $99/month, for 100 to 2,000 monitored entities"),
+                ("Starter — Agentic", "Published on the same slider as Essentials, at a higher rate"),
+                ("Enterprise", "Not published — “Talk to Sales”. Adds payments screening, transaction monitoring and unlimited usage"),
+                ("ComplyLaunch", "Free programme for early-stage start-ups, by application"),
+            ],
+            "caveat": "Starter is self-service and includes sanctions and watchlists, PEPs and RCAs, "
+                      "adverse media, customer and company screening, and ongoing monitoring. The $99 "
+                      "figure is the floor of a volume slider, not a flat rate.",
+        },
+        "faqs": [
+            ("How much does ComplyAdvantage cost?", "ComplyAdvantage publishes a self-serve Starter plan from $99 per month covering 100 to 2,000 monitored entities, in Essentials and Agentic variants. Enterprise, which adds payments screening and transaction monitoring, is quoted rather than published. Read from complyadvantage.com/pricing on 2026-07-26."),
+            ("Is there a free version of ComplyAdvantage?", "There is ComplyLaunch, a free programme for early-stage start-ups that you apply to rather than sign up for. The commercial plans start at the published $99/month Starter tier."),
+            ("Is ComplyAdvantage cheaper than an OFAC screening API?", "They are priced on different units, so the comparison depends on your shape. ComplyAdvantage bills per monitored entity from $99/month and includes PEP and adverse-media data that an OFAC-only API does not have. SanctionsAI bills per check — free for 5/day, $19/month for 10,000 — and screens the SDN list only. If you are monitoring a customer base, the first unit fits; if you are screening counterparties an agent meets once, the second does."),
+        ],
+    },
+    {
+        "slug": "chainalysis-pricing",
+        "name": "Chainalysis",
+        "url": "https://www.chainalysis.com",
+        "what": "the enterprise blockchain-data platform — investigations (Reactor), transaction monitoring (KYT) and sanctions/wallet screening — sold to exchanges, banks and government agencies",
+        "drivers": [
+            ("Product line", "Reactor (investigations), KYT (transaction monitoring) and the screening API are separate products on separate contracts. A quote for one says nothing about the others."),
+            ("Transaction volume", "KYT is metered against the volume you push through it, normally as an annual committed amount rather than pay-as-you-go."),
+            ("Analyst seats", "Reactor is licensed per named investigator, so the number moves with headcount independently of screening volume."),
+            ("Implementation", "Enterprise rollouts run months of integration work. Whether or not the vendor invoices for it, it is a real line in your budget."),
+        ],
+        "fit": "Chainalysis is the reference tool for tracing where funds came from and where they went — "
+               "a forensic question a human analyst asks after the fact. An OFAC screen is a binary "
+               "question asked before a payment moves, by code, in under a second. Buying the first to "
+               "answer the second means paying for an investigations platform nobody on your team will "
+               "open.",
+        "evidence": "https://www.chainalysis.com/",
+        "evidence_label": "chainalysis.com",
+        "evidence_note": "no pricing page (chainalysis.com/pricing returns 404) and no figure anywhere on the site; the only route to a number is “Request a demo”",
+        "published": None,
+        "faqs": [
+            ("How much does Chainalysis cost?", "Chainalysis does not publish prices. There is no pricing page — chainalysis.com/pricing returns a 404 — and no figure on the site; the only route is “Request a demo”. Any dollar range you find online, including ones previously published on this site, is somebody's estimate of somebody else's contract rather than a Chainalysis price."),
+            ("Is there a free tier for Chainalysis?", "There is no public self-serve free tier for the commercial products. Chainalysis does publish free public resources such as its sanctioned-address data and research reports, but those are not the platform."),
+            ("What should I ask for in a Chainalysis quote?", "Which product the number covers (Reactor, KYT or screening), what the annual committed volume is, how overage is billed, how many named seats are included, and what the vendor's own estimate of implementation time is. Those four answers make two vendors' quotes comparable; the headline figure on its own does not."),
+        ],
+    },
+    {
+        "slug": "refinitiv-worldcheck-pricing",
+        "name": "LSEG World-Check",
+        "url": "https://www.lseg.com/en/risk-intelligence/screening-solutions/world-check-kyc-screening",
+        "what": "the risk-intelligence database formerly sold as Refinitiv World-Check: sanctions, PEP, state-ownership and adverse-media records, delivered as a screening product or a data feed",
+        "drivers": [
+            ("Data scope", "Sanctions is the cheap slice. PEP, state-ownership and adverse-media research are what the licence is actually for, and each widens the number."),
+            ("Delivery model", "A hosted screening UI, an API, and a bulk feed you host yourself are three different contracts against the same data."),
+            ("Named users", "Screening-UI access is licensed per named analyst, so cost tracks headcount as well as volume."),
+            ("Redistribution rights", "Screening on behalf of your own customers requires redistribution terms and changes the contract materially."),
+        ],
+        "fit": "World-Check is bought for research depth — the ownership data behind the OFAC 50% Rule is "
+               "genuinely hard to reproduce, and that is a real reason to license it. If your obligation "
+               "is direct SDN list matching before a payment, you are licensing a research library to "
+               "answer a lookup against a list the US Treasury publishes for free.",
+        "evidence": "https://www.lseg.com/en/risk-intelligence/screening-solutions/world-check-kyc-screening",
+        "evidence_label": "lseg.com — World-Check",
+        "evidence_note": "no pricing page and no figure on the product pages; the routes offered are “Email sales”, “Call sales” and “Contact sales”",
+        "published": None,
+        "faqs": [
+            ("How much does World-Check cost?", "LSEG does not publish World-Check prices. The product pages carry no figure and offer only “Email sales”, “Call sales” and “Contact sales”. Ranges circulating online, including ones previously published on this site, are estimates of private contracts and not LSEG prices."),
+            ("Is World-Check the same as Refinitiv World-Check?", "It is the same product under new ownership. Refinitiv was acquired by the London Stock Exchange Group, and World-Check is now sold under LSEG Risk Intelligence. Older material, including much of the pricing commentary online, still uses the Refinitiv name."),
+            ("Do I need World-Check for OFAC compliance?", "Not for direct SDN list matching. The OFAC SDN list is published by the US Treasury and free to use — SanctionsAI serves it through an API with a free tier of 5 checks/day, and you are paying for the interface, freshness and audit trail rather than for the list. World-Check earns its licence when you need PEP screening, adverse media, or the ownership research behind the 50% Rule."),
         ],
     },
 ]
@@ -153,6 +300,11 @@ th,td{border:1px solid #e5e7eb;padding:.6rem .75rem;text-align:left}
 th{background:#f9fafb;font-weight:600}
 .callout{background:#f0f7ff;border-left:4px solid #0066cc;padding:1rem 1.25rem;margin:1.5rem 0;border-radius:0 .375rem .375rem 0}
 .callout.warn{background:#fef3c7;border-left-color:#d97706}
+.callout.good{background:#ecfdf5;border-left-color:#059669}
+/* Provenance line under every pricing claim: the source URL and the date it was
+   read. Deliberately small and muted — it is a footnote, but it is the part
+   that makes the claim above it checkable. */
+.checked{font-size:.85rem;color:#6b7280;margin-bottom:0}
 .related-links{background:#f9fafb;padding:1rem 1.25rem;border-radius:.5rem;margin-top:2rem}
 .related-links ul{list-style:none;padding-left:0}.related-links li{padding:.25rem 0}
 .cta{background:linear-gradient(135deg,#0066cc,#004499);color:#fff;padding:2rem;border-radius:.75rem;margin-top:2rem;text-align:center}
@@ -166,6 +318,8 @@ footer{margin-top:3rem;padding-top:1.5rem;border-top:1px solid #e5e7eb;color:#6b
  th{background:#141414}th,td{border-color:#262626}
  .callout{background:#0e1a26;border-left-color:#4da3ff}
  .callout.warn{background:#241d05;border-left-color:#d97706}
+ .callout.good{background:#07211a;border-left-color:#34d399}
+ .checked{color:#9a9a9a}
  .related-links{background:#111}
  footer{border-top-color:#262626;color:#8a8a8a}
 }
@@ -269,30 +423,60 @@ def page(slug, title, desc, h1, lede, body, faqs, crumb):
 """
 
 
+def opener(v):
+    """The top of the page: what the vendor actually publishes, with evidence.
+
+    Two shapes, and which one a vendor gets is a checked fact, not a guess.
+    "Nobody in compliance publishes pricing" is the assumption that produced the
+    fabricated ranges this cluster replaced — and it is false. ComplyAdvantage
+    publishes a $99/mo self-serve tier and Sumsub publishes per-verification
+    rates, so a page telling a buyer to go get a quote from either is wasting
+    their time with the same confidence the invented ranges had.
+    """
+    pub = v.get("published")
+    if not pub:
+        return f"""<div class="callout warn">
+<p><strong>{esc(v["name"])} does not publish a price list.</strong> Every figure you will find online is
+someone's estimate of someone else's contract. This page does not add another one — it sets out what
+actually moves the number, so the quote you receive is one you can read.</p>
+<p class="checked">Checked {CHECKED}: <a href="{esc(v["evidence"])}" rel="nofollow noopener">{esc(v["evidence_label"])}</a>
+&mdash; {esc(v["evidence_note"])}</p>
+</div>"""
+    rows = "".join(f"<tr><td>{esc(p)}</td><td>{esc(q)}</td></tr>" for p, q in pub["plans"])
+    return f"""<div class="callout good">
+<p><strong>{esc(v["name"])} does publish pricing</strong>, which makes it one of the few in this
+category you can price without a sales call. These figures are read from the vendor's own page,
+not estimated:</p>
+<table>
+<thead><tr><th>Plan</th><th>Published price</th></tr></thead>
+<tbody>{rows}</tbody>
+</table>
+<p class="checked">Read from <a href="{esc(v["evidence"])}" rel="nofollow noopener">{esc(v["evidence_label"])}</a>
+on {CHECKED}. {esc(pub["caveat"])}</p>
+</div>"""
+
+
 def vendor_page(v):
     others = [o for o in VENDORS if o["slug"] != v["slug"]][:3]
     drivers = "".join(
         f"<tr><td><strong>{esc(d)}</strong></td><td>{t}</td></tr>" for d, t in v["drivers"])
     related = "".join(
         f'<li><a href="/cost-of/{o["slug"]}">What does {esc(o["name"])} cost?</a></li>' for o in others)
+    quoted = not v.get("published")
     body = f"""
-<div class="callout warn">
-<p><strong>{esc(v["name"])} does not publish a price list.</strong> Every figure you will find online is
-someone's estimate of someone else's contract. This page does not add another one — it sets out what
-actually moves the number, so the quote you receive is one you can read.</p>
-</div>
+{opener(v)}
 
 <h2>What you are buying</h2>
 <p>{esc(v["name"])} is {v["what"]}. That framing matters more than the number: the cost of a
 compliance tool is mostly a function of how much of it you will use.</p>
 
-<h2>What drives the {esc(v["name"])} quote</h2>
+<h2>{"What drives the " + esc(v["name"]) + " quote" if quoted else "What moves the " + esc(v["name"]) + " number"}</h2>
 <table>
 <thead><tr><th>Cost driver</th><th>How it moves the number</th></tr></thead>
 <tbody>{drivers}</tbody>
 </table>
 
-<h2>Questions to put in writing before you sign</h2>
+<h2>{"Questions to put in writing before you sign" if quoted else "Questions worth asking before you outgrow the published tier"}</h2>
 <ul>
 <li>What is the annual minimum, and what is the shortest available term?</li>
 <li>What happens on overage — hard stop, or per-unit billing at a higher rate?</li>
@@ -333,10 +517,17 @@ are the ones that sell them — the comparison is about scope, not about who is 
 </div>
 """
     title = f"How Much Does {v['name']} Cost? [2026 Pricing]"
-    desc = (f"{v['name']} pricing is quote-based and not published. Here is what actually drives the "
-            f"number, what to ask before you sign, and what OFAC screening costs without a platform contract.")
-    lede = (f"{esc(v['name'])} does not publish list prices. What follows is the cost structure behind the "
-            f"quote — and the published alternative if all you need is an OFAC list check.")
+    if quoted:
+        desc = (f"{v['name']} pricing is quote-based and not published. Here is what actually drives the "
+                f"number, what to ask before you sign, and what OFAC screening costs without a platform "
+                f"contract.")
+        lede = (f"{esc(v['name'])} does not publish list prices. What follows is the cost structure behind "
+                f"the quote — and the published alternative if all you need is an OFAC list check.")
+    else:
+        desc = (f"{v['name']} publishes {v['published']['headline']}. Here are the published figures, what "
+                f"they do and do not cover, and what OFAC screening costs on its own.")
+        lede = (f"{esc(v['name'])} publishes {esc(v['published']['headline'])} — unusual in this category. "
+                f"Here is what that price covers, and where it stops.")
     return page(v["slug"], title, desc, f"How much does {v['name']} cost?", lede, body,
                 v["faqs"], f"{v['name']} pricing")
 
