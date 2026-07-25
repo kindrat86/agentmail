@@ -118,6 +118,66 @@ def fetch_delta():
     return body
 
 
+RECENT_CACHE = os.path.join(HERE, "data", "sdn-deltas", "recent-actions.json")
+
+
+def load_recent_cache():
+    try:
+        with open(RECENT_CACHE, encoding="utf-8") as fh:
+            return json.load(fh)
+    except (OSError, ValueError):
+        return {}
+
+
+def recent_action_title(date, cache, offline):
+    """OFAC's own headline for the publication on `date`, e.g. 'Iran-related
+    Designations; Issuance of Amended Russia-related General License…'.
+
+    OFAC serves a page per action date at /recent-actions/<YYYYMMDD> whose
+    <title> is the official name of that action — far more informative than a
+    generated "13 additions" summary, and authoritative rather than ours.
+
+    Cached permanently in data/sdn-deltas/recent-actions.json: one request per
+    publication, ever. This is deliberately NOT a crawl of OFAC's site — it is a
+    single lookup for a date we already hold a delta file for, and a date with no
+    page (404) is cached as absent so it is never re-requested.
+
+    Returns (title, url) with title possibly "" — a failed or missing lookup
+    leaves the page saying nothing rather than guessing at a headline.
+    """
+    key = date.replace("-", "")
+    if key in cache:
+        entry = cache[key]
+        return entry.get("title", ""), entry.get("url", "")
+    if offline:
+        return "", ""
+    url = "%s/%s" % (OFAC_RECENT, key)
+    r = subprocess.run(
+        ["curl", "-sL", "--max-time", "45", "-w", "\n%{http_code}", url],
+        capture_output=True,
+    )
+    title = ""
+    ok = False
+    if r.returncode == 0:
+        body, _, code = r.stdout.rpartition(b"\n")
+        if code.decode().strip() == "200":
+            m = re.search(r"<title>(.*?)</title>", body.decode("utf-8", "replace"), re.S)
+            if m:
+                t = html.unescape(re.sub(r"\s+", " ", m.group(1))).strip()
+                # strip OFAC's site suffix; keep their wording otherwise verbatim
+                t = re.sub(r"\s*\|\s*Office of Foreign Assets Control\s*$", "", t)
+                if t and "Page Not Found" not in t:
+                    title, ok = t, True
+    cache[key] = {"title": title, "url": url if ok else ""}
+    try:
+        os.makedirs(os.path.dirname(RECENT_CACHE), exist_ok=True)
+        with open(RECENT_CACHE, "w", encoding="utf-8") as fh:
+            json.dump(cache, fh, ensure_ascii=False, indent=1, sort_keys=True)
+    except OSError:
+        pass
+    return title, (url if ok else "")
+
+
 def child_text(node, name):
     for c in node:
         if strip_ns(c.tag) == name:
@@ -362,7 +422,7 @@ def capture(offline):
     return is_new, date
 
 
-def load_archive():
+def load_archive(offline=False):
     """Every captured publication, newest first.
 
     Re-parsed from the archived XML rather than the JSON beside it. The XML is
@@ -374,6 +434,7 @@ def load_archive():
     pubs = []
     if not os.path.isdir(ARCHIVE):
         return pubs
+    recent_cache = load_recent_cache()
     for fn in sorted(os.listdir(ARCHIVE)):
         if not fn.endswith(".xml"):
             continue
@@ -391,6 +452,11 @@ def load_archive():
                 parsed["retrieved"] = json.load(fh).get("retrieved", parsed["retrieved"])
         except (OSError, ValueError):
             pass
+        t, u = recent_action_title(parsed["datePublished"], recent_cache, offline)
+        if t:
+            parsed["ofacActionTitle"] = t
+        if u:
+            parsed["ofacActionUrl"] = u
         with open(json_path, "w", encoding="utf-8") as fh:
             json.dump(parsed, fh, ensure_ascii=False, indent=1)
         pubs.append(parsed)
@@ -663,10 +729,31 @@ def render_publication_page(pub, newer, older):
         parts.append("%d modification%s" % (c["other"], "" if c["other"] == 1 else "s"))
     summary = ", ".join(parts) or "no entity-level changes"
 
+    # OFAC's own headline for this action, when they published one.
+    ofac_title = pub.get("ofacActionTitle") or ""
+    ofac_url = pub.get("ofacActionUrl") or ""
+
     title = "OFAC SDN List Update — %s (%s)" % (human_date(date), summary)
     desc = ("Every change OFAC published to the SDN List on %s: %s. Names, aliases, programs and "
             "legal authorities verbatim from Treasury's official delta file, plus a machine-readable "
             "JSON copy." % (human_date(date), summary))
+
+    action_block = ""
+    if ofac_title:
+        # Quoted and attributed: this is OFAC's wording, not a description of
+        # ours, and it names parts of the action (general licences, FAQs) that
+        # the delta file does not carry at all.
+        action_block = (
+            "<h2>OFAC's announcement</h2>"
+            "<p>Treasury published this action as “<strong>%s</strong>”.%s</p>"
+            "<p>The delta file below covers only the sanctions-list changes. Where an "
+            "action also issues general licences, FAQs or regulatory amendments, those "
+            "are in OFAC's announcement and not in the list data.</p>"
+        ) % (
+            esc(ofac_title),
+            (' <a href="%s" rel="nofollow noopener">Read it on ofac.treasury.gov →</a>'
+             % esc(ofac_url)) if ofac_url else "",
+        )
 
     cards = []
     for ent in pub["entities"]:
@@ -694,6 +781,7 @@ def render_publication_page(pub, newer, older):
         'Raw OFAC XML archived as published. '
         'Cross-check at <a href="%s" rel="nofollow noopener">OFAC Recent Actions</a>.</div>'
         "%s"
+        "%s"
         "<h2>Changes in this publication</h2>%s"
         '<div class="cta"><strong>Track this automatically.</strong> Subscribe to the '
         '<a href="/updates/feed.xml">RSS feed</a> or the <a href="/updates/feed.json">JSON feed</a>, '
@@ -708,7 +796,8 @@ def render_publication_page(pub, newer, older):
         (" affecting %s" % esc(", ".join(programs))) if programs else "",
         esc(pub.get("publicationType") or "Standard Action"),
         esc(pub.get("retrieved", "")[:10]),
-        esc(date), OFAC_RECENT,
+        esc(date), (ofac_url or OFAC_RECENT),
+        action_block,
         ("<p><strong>Programs affected:</strong> %s</p>" % esc(", ".join(programs))) if programs else "",
         "".join(cards) or "<p>OFAC published this delta with no entity-level changes.</p>",
         ('<p class="crumb">%s</p>' % " · ".join(nav)) if nav else "",
@@ -879,19 +968,26 @@ def render_feeds(pubs):
                 ("%d modified" % c["other"]) if c["other"] else ""]
         summary = ", ".join(b for b in bits if b) or "no entity-level changes"
         names = [e["displayName"] or e["officialName"] for e in p["entities"]]
-        text = "OFAC published %s to the SDN List on %s.%s" % (
+        # Lead with OFAC's own name for the action where they published one —
+        # "Iran-related Designations; …" tells a subscriber what happened;
+        # "13 added" does not. Falls back to the counts when absent.
+        official = p.get("ofacActionTitle") or ""
+        item_title = "OFAC SDN List Update — %s: %s" % (
+            human_date(date), official) if official else (
+            "OFAC SDN List Update — %s (%s)" % (human_date(date), summary))
+        text = "%sOFAC published %s to the SDN List on %s.%s" % (
+            ('Treasury titled this action "%s". ' % official) if official else "",
             summary, human_date(date),
             (" Records: " + "; ".join(names) + ".") if names else "")
         url = "%s/updates/%s/" % (SITE, date)
         items_xml.append(
             "<item><title>%s</title><link>%s</link><guid isPermaLink=\"true\">%s</guid>"
             "<pubDate>%s</pubDate><description>%s</description></item>" % (
-                esc("OFAC SDN List Update — %s (%s)" % (human_date(date), summary)),
-                esc(url), esc(url), rfc2822(date), esc(text)))
+                esc(item_title), esc(url), esc(url), rfc2822(date), esc(text)))
         items_json.append({
             "id": url,
             "url": url,
-            "title": "OFAC SDN List Update — %s (%s)" % (human_date(date), summary),
+            "title": item_title,
             "content_text": text,
             "date_published": date + "T00:00:00Z",
         })
@@ -954,7 +1050,7 @@ def main():
     args = ap.parse_args()
 
     is_new, date = capture(args.offline)
-    pubs = load_archive()
+    pubs = load_archive(offline=args.offline)
     if not pubs:
         sys.exit("no publications in the archive and nothing fetched — nothing to build")
 
