@@ -204,9 +204,15 @@ def _record_anon_check(ip: str) -> dict:
         "resets_in_hours": round(max(0.0, (86400 - (now - oldest)) / 3600), 1),
     }
     # Nudge on the final two checks of the daily cap (e.g. checks 4 and 5 of 5).
+    # `used` is uncapped on purpose — _check_free_tier only blocks when
+    # AGENTMAIL_REQUIRE_AUTH is set, which the hosted deploy does not set, so the
+    # counter runs past the cap. Report it truthfully in `used`, but clamp it in
+    # the sentence: "you've used 35 of 5 free checks today" reads as broken
+    # arithmetic, which is an expensive thing to show on a product whose whole
+    # claim is that it counts things correctly.
     if remaining <= 1:
         info["upgrade_nudge"] = (
-            f"You've used {used} of {cap} free checks today. "
+            f"You've used {min(used, cap)} of {cap} free checks today. "
             f"Production agents run 10,000 checks/month - that's $19/mo, "
             f"and it keeps you out of a $377,700 OFAC fine. "
             f"Upgrade: {_SITE}/pricing"
@@ -5718,6 +5724,7 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
   <div class="narr reveal">
     <p>I sat there staring at the screen thinking: if I had deployed this to production, I would be looking for a new job right now.</p>
     <p>The problem was not the agent. The problem was that <strong>nobody was checking</strong>. The big payment rails handle moving money &mdash; they do not screen recipients. That gap is why I built agentmail.</p>
+    <p>I have been building with AI since 2013 &mdash; about a decade before ChatGPT made it a category &mdash; so I have watched a lot of things get called inevitable and then not happen. Agents signing their own transfers is not one of those. It is already running, in my own code and probably in yours, and the compliance layer underneath it does not exist yet. I would rather be early and wrong about the timing than right about the risk and late.</p>
     <p>The first question developers ask me: <span class="obj">&ldquo;Doesn&rsquo;t my payment provider handle this?&rdquo;</span> No. x402, AP2, ACP, Coinbase AgentKit &mdash; none of them check OFAC. They move money. They do not screen recipients. That is your responsibility &mdash; and ours.</p>
   </div>
   <div class="callout reveal"><strong>Your agent needs this check.</strong> Not next quarter. Not after the compliance notice. Before you deploy.</div>
