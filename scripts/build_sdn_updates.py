@@ -16,11 +16,30 @@ the page — there are no placeholders and no "unknown" filler.
 Why this exists: every other page on sanctionsai.dev is commentary that competes
 with Chainalysis and ComplyAdvantage on head terms. This is the one surface where
 the site holds primary-source material nobody else has packaged — and it renews
-itself on OFAC's publication cadence, so the archive compounds. Publication IDs
-in OFAC's API are UUIDs and are not enumerable, so history cannot be back-filled:
-each publication is only capturable while it is `latest`. That is precisely why
-the raw XML is archived to data/sdn-deltas/ on every run and never deleted —
-the archive IS the asset, and a missed run is a permanent hole in it.
+itself on OFAC's publication cadence, so the archive compounds. The raw XML is
+archived to data/sdn-deltas/ on every run and never deleted — the archive IS the
+asset.
+
+CORRECTION (2026-07-26): an earlier version of this docstring claimed history
+could not be back-filled, on the grounds that publication ids are UUIDs. That is
+wrong, and anything relying on it is wrong. `/changes/<integer>` serves
+historical publications — id 1 is 2022-09-22, id 150 is 2023-10-18 — each one
+OFAC's own delta carrying OFAC's own <datePublished>. The UUID in the SDN.CSV
+redirect is a different identifier and is indeed not enumerable, which is what
+caused the mistake.
+
+Two things to know before writing anything that walks that id space:
+  * The service RATE-LIMITS, and a throttled response is HTTP 400 with the same
+    body as a genuinely absent id ("Could not retrieve delta with publication
+    ID N"). A parallel scan of ids 136-199 returned zero hits; the same ids
+    fetched sequentially all returned 200. Treating a 400 as "no publication"
+    without retrying therefore records throttling as absence.
+  * Real gaps exist inside the range (ids 98-100, 104-106 are genuinely absent),
+    so a gap is not an end-of-range signal.
+A back-fill is therefore possible but has NOT been run — it is several hundred
+sequential requests against a government API, and the page-count consequences
+(one entity page per designated party, over ~4 years) need a deliberate scope
+decision first, not a default.
 
 Run:   python3 scripts/build_sdn_updates.py
 Flags: --offline   rebuild pages from the existing archive, fetch nothing
