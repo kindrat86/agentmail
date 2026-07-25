@@ -47,6 +47,13 @@ COPY updates/ ./updates/
 COPY ux.css ux.js ./
 # published CC BY dataset served by /ofac-enforcement-2026.csv (read from disk, not embedded)
 COPY ofac-enforcement-2026.csv ./
+# /image-sitemap.xml is routed in do_GET and the file is 34 KB in the repo, but
+# it was never COPY'd — so the route resolved to no file and served
+# {"error": "not found"} with a 200-shaped request. Exactly the failure the
+# COPY data/ comment above describes: a route without its COPY is a dead URL.
+# This matters because the site asks for max-image-preview:large on every
+# response, i.e. it requests Google Discover eligibility it could not satisfy.
+COPY image-sitemap.xml ./
 # Public static assets (related-tools hub, network, answers, badge, verification files)
 COPY public/ ./public/
 
