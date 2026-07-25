@@ -872,6 +872,11 @@ _FOOTER = (
         ("/countries", "Countries", ""),
     ])
     + _ft_col("OFAC Data", None, [
+        # The bulk download and the browser screener were reachable only from the
+        # sitemap — orphans with no internal link from any of the ~250 rendered
+        # pages. These two lines are the whole corpus's link path into them.
+        ("/data/ofac-sdn-list/", "SDN List: JSON + CSV", ""),
+        ("/free/ofac-screening", "Free SDN Screener", ""),
         ("/programs", "Sanctions Programs", ""),
         ("/sanctioned-addresses", "Sanctioned Crypto Addresses", ""),
         ("/designations", "Designations by Year", ""),
@@ -3671,7 +3676,15 @@ License: https://creativecommons.org/licenses/by/4.0/
             _screen_start = time.perf_counter()
             result = core.sanctions_check(
                 name=subject["name"], wallet=subject["wallet"], country=subject["country"])
-            _screen_ms = round((time.perf_counter() - _screen_start) * 1000)
+            _screen_exact_ms = (time.perf_counter() - _screen_start) * 1000
+            # Screening is an in-memory set/index lookup, so it lands around
+            # 0.001-0.005 ms. Rounded to a whole millisecond it was always 0,
+            # which made the advertised latency_ms field useless. The audit log
+            # keeps the integer it has always stored; the response carries the
+            # real measurement. Note this is screening time only -- the ~50-90 ms
+            # a caller observes is network round trip, which is what the "under
+            # 100 ms" claim on the site refers to.
+            _screen_ms = round(_screen_exact_ms)
             # Provenance for the Screening Guarantee (/guarantee, Terms 5a).
             #
             # The guarantee turns on whether the counterparty was on the SDN list
@@ -3702,7 +3715,7 @@ License: https://creativecommons.org/licenses/by/4.0/
             # do not screen EU, UN or UK lists, so ALLOW means "no OFAC SDN
             # match at screened_at", nothing wider. /docs says so explicitly.
             result["action"] = "BLOCK" if result.get("matches") else "ALLOW"
-            result["latency_ms"] = _screen_ms
+            result["latency_ms"] = round(_screen_exact_ms, 3)
             try:
                 _cs = core.compliance_status()
                 result["checked_against"] = {
@@ -4970,7 +4983,7 @@ Base URL: https://sanctionsai.dev
 #### GET /sanctions - Screen a counterparty
 Query params: name, wallet, country (at least one required)
 curl "https://sanctionsai.dev/sanctions?wallet=0x098B716B8Aaf21512996dC57EB0615e2383E2f96"
-Response: {"matches": [...], "clean": bool, "action": "ALLOW"|"BLOCK", "screened_at": RFC3339, "screen_id": str, "checked_against": {"wallets": int, "names": int}, "list_version": {...}, "latency_ms": int}. "action" is the OFAC SDN verdict only.
+Response: {"matches": [...], "clean": bool, "action": "ALLOW"|"BLOCK", "screened_at": RFC3339, "screen_id": str, "checked_against": {"wallets": int, "names": int}, "list_version": {...}, "latency_ms": float}. "latency_ms" is screening time only, not round trip. "action" is the OFAC SDN verdict only.
 
 #### POST /risk - Transaction risk score
 Body: {"counterparty_id": str, "amount": str, "currency": str, "rail": str, "category": str}
@@ -5620,13 +5633,13 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
     <a href="/tools/wallet-checker" class="text-link">No signup &middot; 5 checks/day free &middot; runs in 30 seconds</a>
   </div>
   <div class="codewin">
-    <div class="top"><span class="d"></span><span class="d"></span><span class="d"></span><span class="file">screen before payment &mdash; 92ms</span><button class="copy-btn" data-copy='curl "https://sanctionsai.dev/sanctions?wallet=0x742d35Cc6634C0532925a3b844Bc9e7595f0bEbb"'>Copy</button></div>
+    <div class="top"><span class="d"></span><span class="d"></span><span class="d"></span><span class="file">screen before payment &mdash; 92ms round trip</span><button class="copy-btn" data-copy='curl "https://sanctionsai.dev/sanctions?wallet=0x742d35Cc6634C0532925a3b844Bc9e7595f0bEbb"'>Copy</button></div>
     <pre><span class="c-cmd">$</span> curl <span class="c-str">"https://sanctionsai.dev/sanctions?wallet=0x742d35Cc6634C0532925a3b844Bc9e7595f0bEbb"</span>
 {
   <span class="c-key">"clean"</span>: <span class="c-ok">true</span>,
   <span class="c-key">"action"</span>: <span class="c-str">"ALLOW"</span>,
   <span class="c-key">"checked_against"</span>: { <span class="c-key">"wallets"</span>: <span class="c-num">947</span>, <span class="c-key">"names"</span>: <span class="c-num">19218</span> },
-  <span class="c-key">"latency_ms"</span>: <span class="c-num">92</span>
+  <span class="c-key">"latency_ms"</span>: <span class="c-num">0.004</span>
 }</pre>
   </div>
   <div class="urgency">
@@ -7316,7 +7329,7 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
   "screened_at": "2026-07-25T21:00:18Z",
   "screen_id": "1925fe6ea5404b7f",
   "checked_against": {"wallets": 947, "names": 19218},
-  "latency_ms": 34
+  "latency_ms": 0.004
 }</code></pre>
 <p>The <code>clean</code> boolean is your go/no-go signal: <code>true</code> means the counterparty is not on any sanctions list, <code>false</code> means a match was found and your agent should halt the payment.</p>
 <h2>Authentication</h2>
@@ -7335,7 +7348,7 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
   "screened_at": "2026-07-25T21:00:18Z",
   "screen_id": "1925fe6ea5404b7f",
   "checked_against": {"wallets": 947, "names": 19218},
-  "latency_ms": 34
+  "latency_ms": 0.004
 }</code></pre>
 
 <h2>2. Transaction risk score - <code>POST /risk</code></h2>
@@ -9173,10 +9186,10 @@ document.getElementById("squeeze-form").addEventListener("submit", function(e){
 
 <!-- Code Demo -->
 <div style="background:#000;border:1px solid #1e293b;border-radius:12px;padding:18px;overflow-x:auto;font-size:13.5px;color:#cfd2d8;margin-bottom:32px;text-align:left">
-<span style="color:#6b7280"># One curl call. 92ms. Your agent is protected.</span><br>
+<span style="color:#6b7280"># One curl call, 92ms round trip. Your agent is protected.</span><br>
 curl "https://sanctionsai.dev/sanctions?wallet=<span style="color:#f59e0b">0x742d35Cc6634C0532925a3b844Bc9e7595f0bEbb</span>"<br><br>
 <span style="color:#6b7280"># agentmail returns:</span><br>
-{ <span style="color:#00d4aa">"clean"</span>: true, <span style="color:#00d4aa">"action"</span>: <span style="color:#f59e0b">"ALLOW"</span>, <span style="color:#00d4aa">"checked_against"</span>: { <span style="color:#00d4aa">"wallets"</span>: 947, <span style="color:#00d4aa">"names"</span>: 19218 }, <span style="color:#00d4aa">"latency_ms"</span>: 92 }
+{ <span style="color:#00d4aa">"clean"</span>: true, <span style="color:#00d4aa">"action"</span>: <span style="color:#f59e0b">"ALLOW"</span>, <span style="color:#00d4aa">"checked_against"</span>: { <span style="color:#00d4aa">"wallets"</span>: 947, <span style="color:#00d4aa">"names"</span>: 19218 }, <span style="color:#00d4aa">"latency_ms"</span>: 0.004 }
 </div>
 
 <!-- CTA -->
