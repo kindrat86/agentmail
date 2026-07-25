@@ -190,49 +190,24 @@ def fetch():
 
 # ───────────────────────────────────────────────────────────── page furniture
 
-# Both themes are declared explicitly. Setting a text colour without a
-# background is what makes a page render near-black-on-black for a reader whose
-# OS is in dark mode: the browser supplies its own dark canvas and the
-# hardcoded #0a0a0a text stays. Tokens here, and a dark block below, so neither
-# direction depends on what the browser happens to default to.
-CSS = """:root{color-scheme:light dark;
---bg:#fff;--fg:#0a0a0a;--muted:#374151;--dim:#6b7280;--line:#e5e7eb;
---panel:#f9fafb;--link:#0066cc;--note:#f0f7ff;--warn:#fef3c7;--warn-line:#d97706}
-@media(prefers-color-scheme:dark){:root{
---bg:#0b1117;--fg:#e6edf3;--muted:#c3ccd6;--dim:#9aa6b2;--line:#26303b;
---panel:#141c25;--link:#5aa9f8;--note:#10202f;--warn:#2b2310;--warn-line:#d99b06}}
-body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;line-height:1.65;color:var(--fg);background:var(--bg);max-width:820px;margin:0 auto;padding:2rem 1.25rem}
-h1{font-size:2.1rem;line-height:1.2;margin:.3em 0}
-h2{font-size:1.45rem;margin-top:2.25rem;border-bottom:2px solid var(--line);padding-bottom:.3rem}
-h3{font-size:1.1rem;margin-top:1.5rem}
-a{color:var(--link);text-decoration:none}a:hover{text-decoration:underline}
-.lede{font-size:1.1rem;color:var(--muted);margin-bottom:1.5rem}
-table{border-collapse:collapse;width:100%;margin:1rem 0;font-size:.93rem}
-th,td{border:1px solid var(--line);padding:.55rem .7rem;text-align:left;vertical-align:top}
-th{background:var(--panel);font-weight:600}
-td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
-.wrap{overflow-x:auto;margin:1rem 0}
-code,.addr{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.86em;word-break:break-all}
-pre{background:#0f172a;color:#e2e8f0;padding:1rem;border-radius:.5rem;overflow-x:auto;font-size:.85rem;line-height:1.5}
-pre code{color:inherit}
-.callout{background:var(--note);border-left:4px solid var(--link);padding:1rem 1.25rem;margin:1.5rem 0;border-radius:0 .375rem .375rem 0}
-.callout.warn{background:var(--warn);border-left-color:var(--warn-line)}
-.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:.75rem;margin:1.5rem 0}
-@media(min-width:620px){.stats{grid-template-columns:repeat(4,1fr)}}
-.stat{background:var(--panel);border:1px solid var(--line);border-radius:.5rem;padding:.9rem 1rem}
-.stat .n{font-size:1.5rem;font-weight:700;line-height:1.1;font-variant-numeric:tabular-nums}
-.stat .l{font-size:.78rem;color:var(--dim);text-transform:uppercase;letter-spacing:.03em;margin-top:.2rem}
-.related-links{background:var(--panel);padding:1rem 1.25rem;border-radius:.5rem;margin-top:2rem}
-.related-links ul{list-style:none;padding-left:0;margin:0}
-.related-links li{padding:.25rem 0}
-.cta{background:linear-gradient(135deg,#0066cc,#004499);color:#fff;padding:1.75rem;border-radius:.75rem;margin-top:2rem}
-.cta h2{color:#fff;border:none;margin-top:0}
-.cta a{color:#fff;text-decoration:underline}
-.cta .btn{display:inline-block;background:#fff;color:#0066cc;padding:.7rem 1.4rem;border-radius:.375rem;font-weight:600;margin-top:.75rem;text-decoration:none}
-.prov{font-size:.85rem;color:var(--dim);border-top:1px solid var(--line);margin-top:2.5rem;padding-top:1rem}
-.prov strong{color:var(--muted)}
-footer{margin-top:2rem;color:var(--dim);font-size:.9rem}
-nav.crumbs{font-size:.85rem;color:var(--dim);margin-bottom:.5rem}
+# api.py's _shell_static() injects the site design system (_DARK_CSS +
+# _STATIC_CSS), the nav and the footer into every static page it serves, AFTER
+# this file's <head>. So a stylesheet here does not decorate the page, it
+# fights one that wins on order — and any token named --bg or --fg is simply
+# overwritten by the design system's, leaving rules that reference it painting
+# with the wrong colour. The first cut of these pages shipped its own light
+# theme and rendered near-invisible in production for exactly that reason.
+#
+# So: no tokens, no element selectors, no theme. Use the design system's own
+# classes (.stat-grid/.stat-card/.num, .callout, .cta, .related-links,
+# .breadcrumb, .disc) and add only what it has no class for, under an sa-
+# prefix that cannot collide. Tables are deliberately left unwrapped —
+# _wrap_tables() gives each one a scrolling .tbl container, and bails entirely
+# if it finds a wrapper already there.
+CSS = """.sa-r{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.sa-addr{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.8125rem;word-break:break-all}
+.sa-auth{margin:12px 0 0;padding-left:1.1rem}
+.sa-auth li{margin:4px 0}
 """
 
 POSTHOG = ('<script>!function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],'
@@ -320,7 +295,7 @@ def page(title, desc, canonical, body, extra_ld, as_of):
 <body>
 <article>
 {body}
-<div class="prov">
+<div class="disc">
 <p><strong>Source.</strong> Every figure on this page is counted from the U.S. Treasury
 OFAC <a href="{xml}">SDN enhanced XML export</a>, published <strong>{as_of}</strong>.
 No figure is estimated. The authoritative list is OFAC's own
@@ -351,10 +326,13 @@ official list and, where the stakes warrant it, counsel.</p>
 def stat_grid(pairs):
     # Labels are authored here, not user data, and a couple carry an entity —
     # so they go through unescaped. Values always escape.
-    cells = "".join('<div class="stat"><div class="n">%s</div>'
-                    '<div class="l">%s</div></div>' % (esc(n), l)
+    # .num here is the design system's big accent figure, which is what a stat
+    # card wants. Table cells use .sa-r instead — .num on a <th> is what turned
+    # "ADDRESSES" into a 1.75rem green heading in the first deploy.
+    cells = "".join('<div class="stat-card"><div class="num">%s</div>'
+                    '<div class="stat-desc">%s</div></div>' % (esc(n), l)
                     for n, l in pairs)
-    return '<div class="stats">%s</div>' % cells
+    return '<div class="stat-grid">%s</div>' % cells
 
 
 def api_block(kind, sample):
@@ -467,7 +445,7 @@ def build_programs(entities, as_of, out_root):
                 "counted from Treasury's own export of %s. Breakdown by type, "
                 "country and designation date." % (len(rows), code, as_of))
 
-        body = ['<nav class="crumbs"><a href="/">Home</a> &rsaquo; '
+        body = ['<nav class="breadcrumb"><a href="/">Home</a> &rsaquo; '
                 '<a href="/programs">Sanctions programs</a> &rsaquo; %s</nav>' % esc(code)]
         body.append("<h1>OFAC %s sanctions program</h1>" % esc(code))
         body.append('<p class="lede">%s is one of the program codes OFAC attaches to '
@@ -508,22 +486,22 @@ def build_programs(entities, as_of, out_root):
             % (esc(TYPE_LABEL.get(t, t or "unspecified").capitalize()), f"{n:,}",
                round(100.0 * n / len(rows), 1))
             for t, n in types.most_common())
-        body.append('<div class="wrap"><table><thead><tr><th>Type</th>'
-                    '<th class="num">Entries</th><th class="num">Share</th></tr></thead>'
-                    '<tbody>%s</tbody></table></div>' % rows_html)
+        body.append('<table><thead><tr><th>Type</th>'
+                    '<th class="sa-r">Entries</th><th class="sa-r">Share</th></tr></thead>'
+                    '<tbody>%s</tbody></table>' % rows_html)
 
         if first:
             body.append("<h2>When %s designations were made</h2>" % esc(code))
             years = Counter(r["listed"][:4] for r in dated)
             yr_html = "".join(
-                '<tr><td>%s</td><td class="num">%s</td></tr>' % (esc(y), f"{n:,}")
+                '<tr><td>%s</td><td class="sa-r">%s</td></tr>' % (esc(y), f"{n:,}")
                 for y, n in sorted(years.items(), reverse=True)[:10])
             body.append("<p>The earliest entry still carrying this code was published "
                         "<strong>%s</strong>; the most recent was <strong>%s</strong>. "
                         "Designations per year, most recent first:</p>" % (esc(first), esc(last)))
-            body.append('<div class="wrap"><table><thead><tr><th>Year published</th>'
-                        '<th class="num">Entries</th></tr></thead><tbody>%s</tbody>'
-                        '</table></div>' % yr_html)
+            body.append('<table><thead><tr><th>Year published</th>'
+                        '<th class="sa-r">Entries</th></tr></thead><tbody>%s</tbody>'
+                        '</table>' % yr_html)
 
         if countries:
             body.append("<h2>Countries recorded against %s entries</h2>" % esc(code))
@@ -532,11 +510,11 @@ def build_programs(entities, as_of, out_root):
                         "country, and many record none, so these do not sum to the "
                         "entry count:</p>")
             c_html = "".join(
-                '<tr><td>%s</td><td class="num">%s</td></tr>' % (esc(c), f"{n:,}")
+                '<tr><td>%s</td><td class="sa-r">%s</td></tr>' % (esc(c), f"{n:,}")
                 for c, n in countries)
-            body.append('<div class="wrap"><table><thead><tr><th>Country</th>'
-                        '<th class="num">Entries</th></tr></thead><tbody>%s</tbody>'
-                        '</table></div>' % c_html)
+            body.append('<table><thead><tr><th>Country</th>'
+                        '<th class="sa-r">Entries</th></tr></thead><tbody>%s</tbody>'
+                        '</table>' % c_html)
 
         if recent:
             body.append("<h2>Most recent %s designations</h2>" % esc(code))
@@ -544,9 +522,9 @@ def build_programs(entities, as_of, out_root):
                 "<tr><td>%s</td><td>%s</td><td>%s</td></tr>"
                 % (esc(r["name"] or "—"), esc(r["type"] or "—"), esc(r["listed"]))
                 for r in recent)
-            body.append('<div class="wrap"><table><thead><tr><th>Name as published</th>'
+            body.append('<table><thead><tr><th>Name as published</th>'
                         '<th>Type</th><th>Date published</th></tr></thead><tbody>%s'
-                        '</tbody></table></div>' % r_html)
+                        '</tbody></table>' % r_html)
             body.append("<p>Names are reproduced exactly as OFAC publishes them. OFAC "
                         "also publishes alternate identities (a.k.a. spellings and "
                         "transliterations) for many entries, and a screening system "
@@ -613,12 +591,12 @@ list, and an audit trail of what matched. Free tier, no signup.</p>
     # ── hub
     total = len({id(r) for v in kept.values() for r in v})
     hub_rows = "".join(
-        '<tr><td><a href="/programs/%s">%s</a></td><td class="num">%s</td>'
-        '<td class="num">%s</td><td class="num">%s</td><td>%s</td></tr>'
+        '<tr><td><a href="/programs/%s">%s</a></td><td class="sa-r">%s</td>'
+        '<td class="sa-r">%s</td><td class="sa-r">%s</td><td>%s</td></tr>'
         % (slugify(c), esc(c), f"{n:,}", f"{t.get('Individual', 0):,}",
            f"{t.get('Entity', 0):,}", esc(last or "—"))
         for _, c, n, t, last in urls)
-    body = ['<nav class="crumbs"><a href="/">Home</a> &rsaquo; Sanctions programs</nav>',
+    body = ['<nav class="breadcrumb"><a href="/">Home</a> &rsaquo; Sanctions programs</nav>',
             "<h1>OFAC sanctions programs on the SDN list</h1>",
             '<p class="lede">OFAC tags every entry on the Specially Designated '
             'Nationals list with the program it was designated under. This is every '
@@ -636,10 +614,10 @@ list, and an audit trail of what matched. Free tier, no signup.</p>
             "against the whole SDN list and use the program code afterwards, to "
             "explain a hit rather than to narrow the search.</p>",
             "<h2>Every OFAC program code with %d or more SDN entries</h2>" % MIN_PROGRAM_ENTRIES,
-            '<div class="wrap"><table><thead><tr><th>Program code</th>'
-            '<th class="num">Entries</th><th class="num">Individuals</th>'
-            '<th class="num">Entities</th><th>Latest designation</th></tr></thead>'
-            '<tbody>%s</tbody></table></div>' % hub_rows,
+            '<table><thead><tr><th>Program code</th>'
+            '<th class="sa-r">Entries</th><th class="sa-r">Individuals</th>'
+            '<th class="sa-r">Entities</th><th>Latest designation</th></tr></thead>'
+            '<tbody>%s</tbody></table>' % hub_rows,
             related([("/sanctioned-addresses", "OFAC-sanctioned crypto addresses by chain"),
                      ("/designations", "OFAC designations by year"),
                      ("/sanctions-lists/ofac-sdn", "What the OFAC SDN list is"),
@@ -697,7 +675,7 @@ def build_addresses(entities, as_of, out_root):
                 "Counted from Treasury's export of %s."
                 % (name, len(pairs), len(owners), as_of))
 
-        body = ['<nav class="crumbs"><a href="/">Home</a> &rsaquo; '
+        body = ['<nav class="breadcrumb"><a href="/">Home</a> &rsaquo; '
                 '<a href="/sanctioned-addresses">Sanctioned addresses</a> &rsaquo; %s</nav>'
                 % esc(name)]
         body.append("<h1>OFAC-sanctioned %s addresses</h1>" % esc(name))
@@ -742,13 +720,13 @@ def build_addresses(entities, as_of, out_root):
 
         body.append("<h2>Who these %s addresses belong to</h2>" % esc(name))
         o_html = "".join(
-            '<tr><td>%s</td><td class="num">%s</td><td>%s</td></tr>'
+            '<tr><td>%s</td><td class="sa-r">%s</td><td>%s</td></tr>'
             % (esc(o or "—"), f"{n:,}",
                esc(", ".join(next(e for _, e in pairs if e["name"] == o)["programs"])))
             for o, n in owners.most_common(25))
-        body.append('<div class="wrap"><table><thead><tr><th>Designated person</th>'
-                    '<th class="num">%s addresses</th><th>OFAC programs</th></tr></thead>'
-                    '<tbody>%s</tbody></table></div>' % (esc(sym), o_html))
+        body.append('<table><thead><tr><th>Designated person</th>'
+                    '<th class="sa-r">%s addresses</th><th>OFAC programs</th></tr></thead>'
+                    '<tbody>%s</tbody></table>' % (esc(sym), o_html))
 
         body.append("<h2>All %s %s addresses on the SDN list</h2>"
                     % (f"{len(pairs):,}", esc(name)))
@@ -758,21 +736,21 @@ def build_addresses(entities, as_of, out_root):
         srt = sorted(pairs, key=lambda x: (x[1]["listed"] or "", x[1]["name"] or ""),
                      reverse=True)
         a_html = "".join(
-            '<tr><td class="addr">%s</td><td>%s</td><td>%s</td></tr>'
+            '<tr><td class="sa-addr">%s</td><td>%s</td><td>%s</td></tr>'
             % (esc(a), esc(e["name"] or "—"), esc(e["listed"] or "—"))
             for a, e in srt)
-        body.append('<div class="wrap"><table><thead><tr><th>%s address</th>'
+        body.append('<table><thead><tr><th>%s address</th>'
                     '<th>Designated person</th><th>Date published</th></tr></thead>'
-                    '<tbody>%s</tbody></table></div>' % (esc(sym), a_html))
+                    '<tbody>%s</tbody></table>' % (esc(sym), a_html))
 
         if progs:
             body.append("<h2>Programs these addresses were designated under</h2>")
             p_html = "".join(
-                '<tr><td>%s</td><td class="num">%s</td></tr>'
+                '<tr><td>%s</td><td class="sa-r">%s</td></tr>'
                 % (program_cell(p), f"{n:,}") for p, n in progs.most_common(10))
-            body.append('<div class="wrap"><table><thead><tr><th>Program</th>'
-                        '<th class="num">Addresses</th></tr></thead><tbody>%s</tbody>'
-                        '</table></div>' % p_html)
+            body.append('<table><thead><tr><th>Program</th>'
+                        '<th class="sa-r">Addresses</th></tr></thead><tbody>%s</tbody>'
+                        '</table>' % p_html)
 
         body.append(api_block("wallet", srt[0][0]))
 
@@ -823,11 +801,11 @@ copy, with an audit trail of what matched. Free tier, no signup.</p>
 
     hub_rows = "".join(
         '<tr><td><a href="%s">%s</a></td><td><code>%s</code></td>'
-        '<td class="num">%s</td><td class="num">%s</td></tr>'
+        '<td class="sa-r">%s</td><td class="sa-r">%s</td></tr>'
         % (u, esc(n), esc(s), f"{a:,}", f"{o:,}")
         for u, n, s, a, o in urls)
     tail = [c for c in by_chain if c not in kept]
-    body = ['<nav class="crumbs"><a href="/">Home</a> &rsaquo; Sanctioned addresses</nav>',
+    body = ['<nav class="breadcrumb"><a href="/">Home</a> &rsaquo; Sanctioned addresses</nav>',
             "<h1>OFAC-sanctioned crypto addresses, by chain</h1>",
             '<p class="lede">OFAC publishes digital-currency addresses as fields on '
             'SDN entries. As of %s there are <strong>%s</strong> of them across '
@@ -839,9 +817,9 @@ copy, with an audit trail of what matched. Free tier, no signup.</p>
                        (f"{total_ent:,}", "designated persons"),
                        (as_of, "list published")]),
             "<h2>Addresses by chain</h2>",
-            '<div class="wrap"><table><thead><tr><th>Chain</th><th>OFAC ticker</th>'
-            '<th class="num">Addresses</th><th class="num">Designated persons</th>'
-            '</tr></thead><tbody>%s</tbody></table></div>' % hub_rows]
+            '<table><thead><tr><th>Chain</th><th>OFAC ticker</th>'
+            '<th class="sa-r">Addresses</th><th class="sa-r">Designated persons</th>'
+            '</tr></thead><tbody>%s</tbody></table>' % hub_rows]
     if tail:
         body.append("<p>OFAC also publishes one or two addresses each on %s. Those are "
                     "included in the API's matching set but do not have their own page "
@@ -922,7 +900,7 @@ def build_designations(entities, as_of, out_root):
                 "type and country, counted from Treasury's export of %s."
                 % (len(rows), y, as_of))
 
-        body = ['<nav class="crumbs"><a href="/">Home</a> &rsaquo; '
+        body = ['<nav class="breadcrumb"><a href="/">Home</a> &rsaquo; '
                 '<a href="/designations">Designations by year</a> &rsaquo; %s</nav>' % y]
         body.append("<h1>OFAC designations in %s</h1>" % y)
         body.append('<p class="lede">OFAC published <strong>%s</strong> entries to the '
@@ -940,22 +918,22 @@ def build_designations(entities, as_of, out_root):
 
         body.append("<h2>Which programs %s designations were made under</h2>" % y)
         p_html = "".join(
-            '<tr><td>%s</td><td class="num">%s</td><td class="num">%s%%</td></tr>'
+            '<tr><td>%s</td><td class="sa-r">%s</td><td class="sa-r">%s%%</td></tr>'
             % (program_cell(p), f"{n:,}", round(100.0 * n / len(rows), 1))
             for p, n in progs.most_common(15))
-        body.append('<div class="wrap"><table><thead><tr><th>Program</th>'
-                    '<th class="num">Entries</th><th class="num">Share of %s</th>'
-                    '</tr></thead><tbody>%s</tbody></table></div>' % (y, p_html))
+        body.append('<table><thead><tr><th>Program</th>'
+                    '<th class="sa-r">Entries</th><th class="sa-r">Share of %s</th>'
+                    '</tr></thead><tbody>%s</tbody></table>' % (y, p_html))
         body.append("<p>Shares sum to more than 100% because a single entry can be "
                     "designated under several programs at once.</p>")
 
         body.append("<h2>%s designations by month</h2>" % y)
         m_html = "".join(
-            '<tr><td>%s</td><td class="num">%s</td></tr>' % (esc(m), f"{n:,}")
+            '<tr><td>%s</td><td class="sa-r">%s</td></tr>' % (esc(m), f"{n:,}")
             for m, n in sorted(months.items()))
-        body.append('<div class="wrap"><table><thead><tr><th>Month published</th>'
-                    '<th class="num">Entries</th></tr></thead><tbody>%s</tbody>'
-                    '</table></div>' % m_html)
+        body.append('<table><thead><tr><th>Month published</th>'
+                    '<th class="sa-r">Entries</th></tr></thead><tbody>%s</tbody>'
+                    '</table>' % m_html)
         body.append("<p>OFAC publishes in batches rather than continuously, so the "
                     "month-to-month shape is the designation calendar, not a trend. A "
                     "screening system that refreshes weekly can be a full batch behind "
@@ -963,21 +941,21 @@ def build_designations(entities, as_of, out_root):
 
         body.append("<h2>Entity types designated in %s</h2>" % y)
         t_html = "".join(
-            '<tr><td>%s</td><td class="num">%s</td></tr>'
+            '<tr><td>%s</td><td class="sa-r">%s</td></tr>'
             % (esc(TYPE_LABEL.get(t, t or "unspecified").capitalize()), f"{n:,}")
             for t, n in types.most_common())
-        body.append('<div class="wrap"><table><thead><tr><th>Type</th>'
-                    '<th class="num">Entries</th></tr></thead><tbody>%s</tbody>'
-                    '</table></div>' % t_html)
+        body.append('<table><thead><tr><th>Type</th>'
+                    '<th class="sa-r">Entries</th></tr></thead><tbody>%s</tbody>'
+                    '</table>' % t_html)
 
         if countries:
             body.append("<h2>Countries recorded on %s designations</h2>" % y)
             c_html = "".join(
-                '<tr><td>%s</td><td class="num">%s</td></tr>' % (esc(c), f"{n:,}")
+                '<tr><td>%s</td><td class="sa-r">%s</td></tr>' % (esc(c), f"{n:,}")
                 for c, n in countries)
-            body.append('<div class="wrap"><table><thead><tr><th>Country</th>'
-                        '<th class="num">Entries</th></tr></thead><tbody>%s</tbody>'
-                        '</table></div>' % c_html)
+            body.append('<table><thead><tr><th>Country</th>'
+                        '<th class="sa-r">Entries</th></tr></thead><tbody>%s</tbody>'
+                        '</table>' % c_html)
 
         if crypto_n:
             body.append("<h2>Digital-currency addresses added in %s</h2>" % y)
@@ -1028,11 +1006,11 @@ free tier, no signup.</p>
         urls.append((url, y, len(rows), progs.most_common(1)[0][0] if progs else "—"))
 
     hub_rows = "".join(
-        '<tr><td><a href="%s">%s</a></td><td class="num">%s</td><td>%s</td></tr>'
+        '<tr><td><a href="%s">%s</a></td><td class="sa-r">%s</td><td>%s</td></tr>'
         % (u, y, f"{n:,}", esc(top)) for u, y, n, top in urls)
     older = sum(len(v) for k, v in by_year.items()
                 if not (k.isdigit() and int(k) >= FIRST_YEAR))
-    body = ['<nav class="crumbs"><a href="/">Home</a> &rsaquo; Designations by year</nav>',
+    body = ['<nav class="breadcrumb"><a href="/">Home</a> &rsaquo; Designations by year</nav>',
             "<h1>OFAC designations by year</h1>",
             '<p class="lede">Every entry on the SDN list carries the date OFAC '
             'published it. Grouped by year, that shows how much the list has grown and '
@@ -1042,9 +1020,9 @@ free tier, no signup.</p>
                        (f"{older:,}", "published before %d" % FIRST_YEAR),
                        (as_of, "list published")]),
             "<h2>SDN entries published per year</h2>",
-            '<div class="wrap"><table><thead><tr><th>Year</th>'
-            '<th class="num">Entries published</th><th>Most-used program</th>'
-            '</tr></thead><tbody>%s</tbody></table></div>' % hub_rows,
+            '<table><thead><tr><th>Year</th>'
+            '<th class="sa-r">Entries published</th><th>Most-used program</th>'
+            '</tr></thead><tbody>%s</tbody></table>' % hub_rows,
             "<p>Entries published before %d are still on the list and still blocked — "
             "%s of them. A designation does not expire; it stays until OFAC removes it."
             "</p>" % (FIRST_YEAR, f"{older:,}"),
