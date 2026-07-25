@@ -21,6 +21,25 @@ CSS = ("<style>body{font:16px/1.65 system-ui,-apple-system,Segoe UI,Roboto,sans-
        "{ul{columns:1}}</style>")
 
 
+# Terms that take a plural verb. Small and explicit rather than a heuristic:
+# guessing from a trailing "s" turns "SDN List" into "What are SDN List?".
+_PLURAL = {"Secondary Sanctions"}
+
+
+def _q(term):
+    """"What is X?" / "What are X?" — the phrasing people actually search."""
+    return f"What {'are' if term in _PLURAL else 'is'} {term}?"
+
+
+def _clip(text, limit=157):
+    """Trim on a word boundary. Slicing mid-word produced descriptions that
+    ended "...and volu" in the SERP."""
+    text = " ".join(str(text).split())
+    if len(text) <= limit:
+        return text
+    return text[:limit].rsplit(" ", 1)[0].rstrip(" ,;:—-") + "…"
+
+
 def page(title, desc, canonical, jsonld, body):
     scripts = "".join(
         f'<script type="application/ld+json">{json.dumps(j, separators=(",", ":"))}</script>'
@@ -65,7 +84,7 @@ for t in TERMS:
         "mainEntity": [
             {
                 "@type": "Question",
-                "name": f"What is {term}?",
+                "name": _q(term),
                 "acceptedAnswer": {"@type": "Answer", "text": d + " " + DISC},
             }
         ],
@@ -95,8 +114,8 @@ for t in TERMS:
     ) as f:
         f.write(
             page(
-                f"What is {term}? — Sanctions & AI-Agent Compliance Glossary | SanctionsAI",
-                f"{term}: {d[:150]}",
+                f"{_q(term)} — Sanctions Glossary",
+                _clip(f"{term}: {d}"),
                 canonical,
                 [defined, faq],
                 body,
@@ -139,7 +158,7 @@ with open(
 ) as f:
     f.write(
         page(
-            "Sanctions & AI-Agent Compliance Glossary — OFAC, SDN, 50% Rule, KYA, x402 | SanctionsAI",
+            "Sanctions Glossary for AI Agents — OFAC, SDN, KYA, x402",
             "Plain-English glossary of sanctions and AI-agent compliance terms: OFAC, SDN List, 50% Rule, secondary sanctions, facilitation, KYA, wallet screening, x402, and more.",
             f"{BASE}/learn/sanctions-glossary",
             [term_set],

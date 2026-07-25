@@ -4504,9 +4504,6 @@ License: https://creativecommons.org/licenses/by/4.0/
             ("/for/gaming", "monthly", "0.7", "OFAC sanctions for gaming agents"),
             ("/for/nft", "monthly", "0.7", "OFAC sanctions for NFT marketplace agents"),
             ("/for/lending", "monthly", "0.7", "OFAC sanctions for lending agents"),
-            ("/compare/chainalysis", "monthly", "0.7", "agentmail vs Chainalysis - OFAC sanctions for agents"),
-            ("/compare/elliptic", "monthly", "0.7", "agentmail vs Elliptic - OFAC sanctions for agents"),
-            ("/compare/complyadvantage", "monthly", "0.7", "agentmail vs ComplyAdvantage - OFAC sanctions for agents"),
             ("/compare/sumsub", "monthly", "0.7", "agentmail vs SumSub - OFAC sanctions for agents"),
             ("/blog/ofac-for-agents", "monthly", "0.6", "Why AI agents need OFAC sanctions screening"),
             ("/blog/know-your-agent", "monthly", "0.6", "Know Your Agent (KYA) explained"),
@@ -4740,8 +4737,9 @@ License: https://creativecommons.org/licenses/by/4.0/
         ("/faq/how-to-screen-crypto-wallets-ofac", "monthly", "0.7", "How to screen crypto wallets against OFAC"),
         # Round 21: section-index pages (AEO — AI crawler entry points)
         ("/for", "weekly", "0.7", "OFAC sanctions screening by industry — SanctionsAI"),
-        # /compare 301s to /vs — a sitemap must list the destination, not the
-        # redirect. The /vs hub below is that destination.
+        # /compare and /compare/<vendor> all 301 into the /vs family, whose
+        # members are listed below. A sitemap names destinations, not redirects:
+        # every hop costs a round trip and dilutes the signal being consolidated.
         ("/integrations", "weekly", "0.7", "Agentmail integrations — OFAC screening for agent frameworks"),
         ("/glossary", "weekly", "0.9", "OFAC and sanctions compliance glossary"),
         ("/tools", "weekly", "0.8", "Free OFAC screening tools — wallet, name, country, batch"),
@@ -4994,7 +4992,8 @@ The server exposes four tools (call by these exact names):
 <title>OFAC Sanctions Check for AI Agents | $0.05/screen</title>
 <meta name="description" content="OFAC sanctions screening for x402 payment agents. Screen every counterparty before your agent pays — 947 wallets, 19,218 names, under 100ms. Free tier.">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-<meta name="theme-color" content="#0a0a0a">
+<meta name="theme-color" content="#08090b">
+<meta name="color-scheme" content="dark">
 <meta name="indexnow" content="87aaa199acaf7d14c812e974ce115e32">
 <meta property="og:title" content="OFAC Sanctions Check for AI Agents | $0.05/screen">
 <meta property="og:description" content="OFAC sanctions screening for x402 payment agents. Screen every counterparty before your agent pays — 947 wallets, 19,218 names, under 100ms.">
@@ -6347,7 +6346,8 @@ const payment = await x402.pay({
 <title>x402 Compliance Check for AI Agents | $0.05/check | agentmail</title>
 <meta name="description" content="OFAC sanctions screening for AI agents. Pay $0.05 USDC per check via x402 on Base. No API key. No signup. 947 wallets, 19,218 names, 16 jurisdictions.">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-<meta name="theme-color" content="#0a0a0a">
+<meta name="theme-color" content="#08090b">
+<meta name="color-scheme" content="dark">
 <meta name="indexnow" content="87aaa199acaf7d14c812e974ce115e32">
 <style>
 :root{
