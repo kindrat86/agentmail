@@ -66,6 +66,27 @@ ul.cross{list-style:none;padding-left:0}ul.cross li::before{content:"✗  ";colo
 <li>Authoritative source</li><li>Public domain</li>
 </ul>
 
+<h2>If you just want the file, take the file</h2>
+<p>Most people who search for this want the list, not a product. So we publish it,
+free and without an account: <a href="/data/ofac-sdn-list/">the SDN list as JSON and
+CSV</a> &mdash; 19,254 designated entries and 20,350 alternate identities, parsed from
+OFAC's own <code>SDN.CSV</code> and <code>ALT.CSV</code> and rebuilt daily.</p>
+<p>It solves the parts of OFAC's raw export that cost everyone the same afternoon:
+the CSV ships headerless, alternate names live in a second file you have to join on
+<code>ent_num</code>, the programs column packs multiple values as
+<code>[SDGT] [IFSR]</code>, and empty fields are the literal string <code>-0-</code>.
+The published copy carries the publication date OFAC itself assigned, not the date it
+was built. The list is a U.S. Government work in the public domain
+(17 U.S.C. &sect; 105); only our packaging is CC0, so cite Treasury rather than us.</p>
+<p>To screen a list of names against it without writing any code, the
+<a href="/free/ofac-screening">browser screener</a> does the matching locally &mdash;
+the names you screen are never uploaded.</p>
+<p>Downloading the file is the right answer when you need the whole list, a point-in-time
+copy, or something to diff. It stops being the right answer when you need fuzzy and
+transliterated matching, wallet-address screening, an audit trail of what you screened
+and when, or the 50 Percent Rule &mdash; none of which a flat file can give you. That is
+the actual comparison below.</p>
+
 <h2>Where SanctionsAI wins</h2>
 <ul class="check">
 <li>Free OFAC sanctions screening API</li>
@@ -89,14 +110,14 @@ ul.cross{list-style:none;padding-left:0}ul.cross li::before{content:"✗  ";colo
 
 <div class="cta"><a href="https://sanctionsai.dev/">Try SanctionsAI &rarr;</a></div>
 
-<section class="related-links"><h3>Related pages</h3><ul><li><a href="/vs/chainalysis">Chainalysis</a></li><li><a href="/vs/elliptic">Elliptic</a></li><li><a href="/vs/trm-labs">TRM Labs</a></li><li><a href="/vs/refinitiv">Refinitiv (World-Check)</a></li></ul></section>
+<section class="related-links"><h3>Related pages</h3><ul><li><a href="/vs/chainalysis">Chainalysis</a></li><li><a href="/vs/elliptic">Elliptic</a></li><li><a href="/vs/trm-labs">TRM Labs</a></li><li><a href="/compare/world-check">Refinitiv (World-Check)</a></li></ul></section>
 
 
 <!-- mesh-round19 -->
 <section class="mesh-links" style="background:#f9fafb;padding:1.25rem;border-radius:.5rem;margin-top:2rem">
 <h3 style="margin-top:0">Related resources</h3>
 <ul style="list-style:none;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:.4rem 1rem;font-size:.95rem">
-<li><a href="/vs/elliptic">SanctionsAI vs Elliptic: which is right for you?</a></li><li><a href="/vs/comply-advantage">SanctionsAI vs Comply Advantage — Which Is Better in 2026?</a></li><li><a href="/vs/refinitiv">SanctionsAI vs Refinitiv (World-Check): which is right for you?</a></li><li><a href="/checklists/shipper-ofac-checklist">Shipping &amp; Trade OFAC Compliance Checklist [2026 Checklist]</a></li><li><a href="/penalties/etry">eToro OFAC penalty</a></li><li><a href="/checklists/sanctions-risk-assessment-checklist">Sanctions Risk Assessment Checklist [2026 Checklist]</a></li>
+<li><a href="/vs/elliptic">SanctionsAI vs Elliptic: which is right for you?</a></li><li><a href="/vs/comply-advantage">SanctionsAI vs Comply Advantage — Which Is Better in 2026?</a></li><li><a href="/compare/world-check">SanctionsAI vs Refinitiv (World-Check): which is right for you?</a></li><li><a href="/checklists/shipper-ofac-checklist">Shipping &amp; Trade OFAC Compliance Checklist [2026 Checklist]</a></li><li><a href="/checklists/sanctions-risk-assessment-checklist">Sanctions Risk Assessment Checklist [2026 Checklist]</a></li>
 </ul>
 </section></article>
 <footer>
