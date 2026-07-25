@@ -319,3 +319,46 @@ kept so existing inbound links and indexed URLs still resolve. Verified live:
 One capacity note observed while crawling: the single `shared-cpu-1x` 512MB
 machine starts timing out at roughly 14 concurrent requests. Fine at current
 traffic, but it is the ceiling if any distribution effort actually lands.
+
+---
+
+## Re-score at close — 61.3 (from 59.2 mid-audit, 55.5 on 07-18)
+
+The 59.2 was measured mid-flight. Enough shipped during the window to warrant
+re-scoring against the site as it now stands.
+
+| Book | 07-18 | mid-audit | **now** |
+|---|---:|---:|---:|
+| DotCom Secrets (40%) | 63.0 | 61.3 | **63.1** |
+| Expert Secrets (30%) | 56.5 | 66.4 | **69.9** |
+| Traffic Secrets (30%) | 44.5 | 49.1 | **50.4** |
+| **Composite** | **55.5** | **59.2** | **61.3** |
+
+What moved, and why:
+
+| Chapter | Was | Now | Cause |
+|---|---:|---:|---|
+| Expert — **Big Domino** | 55 | **84** | One figure, correct, cited to the Federal Register, with a "Where does the $377,700 figure come from?" FAQ answering it on the page |
+| Expert — **Teachable framework** | 85 | **92** | `/protocol` — 1,678 words giving the 4-Gate Protocol away entirely. "No signup, no email, no video." Textbook Expert Secrets: teach the method, sell the execution |
+| Expert — Stack Slide | 72 | **80** | The fabricated "$1,096 total value" replaced with an anchor the reader can verify: 10,000 checks at the published $0.05 x402 rate = $500, you pay $19 |
+| DotCom — Unboxing funnel | 45 | **58** | Fake countdown gone, phantom testimonial replaced with an honest FAQ. Still a mailto checkout |
+| DotCom — Front-end lead funnel | 66 | **74** | `/playbook` is a real, ungated 692-word asset instead of a promised PDF that 404'd |
+| DotCom — Q3 Bait | 74 | **80** | Same |
+| Expert — Customer stories | 38 | **44** | Still zero testimonials, but the $10K guarantee is now scoped at `/guarantee` and written into Terms 5a — a contractual claim, not a marketing one |
+| Traffic — Earned | 45 | **52** | `/enforcement` — 258 pages of primary-source OFAC penalty data. The first asset here anyone would have a reason to link to |
+
+**The shape of the score has changed.** In July the problem was that things were
+not built. Now DotCom and Expert are both credible and the entire deficit is one
+number: Traffic at 50.4, with 0 clicks and 11 referring domains.
+
+Two items in this audit remain open and neither is mine to close:
+
+- **A rung above $99.** The $499 tier was deliberately removed on 2026-07-22
+  because no Stripe price existed for it and it was, correctly, treated as false
+  advertising. Re-adding it needs a real product and a pricing decision.
+- **`/tripwire` checkout.** Still "email and we send payment details by hand."
+  Automating it needs a Stripe price and the kit to actually exist.
+
+One small gap worth closing cheaply: `/playbook` is not linked from the homepage,
+so the site's best ungated lead magnet is reachable only from `/start` and the
+footer.
