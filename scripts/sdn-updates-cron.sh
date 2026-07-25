@@ -64,10 +64,18 @@ if ! flyctl deploy -a agentmail-api --now 2>&1 | tail -20; then
   exit 1
 fi
 
-# Tell IndexNow the new URLs exist. Best-effort: a failed ping is not a failed run.
-# This key is served inline by api.py and verified to match its filename, so
-# submissions are accepted — unlike the placeholder keys that silently 404 on
-# other sites in the portfolio.
+# Tell IndexNow the new URLs exist. Best-effort by design: the ping is not what
+# gets these pages found, and a failure must not fail the run.
+#
+# As of 2026-07-25 it returns HTTP 403 UserForbiddedToAccessSite. That is NOT the
+# portfolio's usual broken-key problem — the key file is byte-perfect (32 hex
+# chars, no trailing newline, text/plain, matches its filename). It is Bing
+# refusing the host, i.e. sanctionsai.dev is not claimed in Bing Webmaster Tools.
+# Claiming it is an owner task. Until then this line logs 403 and moves on.
+#
+# Discovery does not depend on it: /updates/sitemap.xml is registered in
+# sitemap-index.xml and robots.txt, and the hub is linked from the primary nav
+# and the sitewide footer.
 URLS=$("$PY" - "$DATE" <<'PY'
 import json, sys
 KEY = "87aaa199acaf7d14c812e974ce115e32"
