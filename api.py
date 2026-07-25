@@ -2870,6 +2870,7 @@ AgentMail is the compliance layer for autonomous agent payments. Before any agen
 | **Risk Score** | `POST /risk` | Pre-payment fraud scoring — returns allow/review/decline. |
 | **Know Your Agent** | `POST /kya` | Verify AI agent identity: wallet, domain, wallet age, pubkey. |
 | **Dispute** | `POST /disputes` | File a dispute with audit trail + 7-day auto-escalation. |
+| **Bulk list download** | `GET /data/ofac-sdn-list/ofac-sdn.json` | The whole SDN list as a static file — 19,254 entries, 39,604 names. No key. Use when you need the list itself rather than one lookup. |
 
 ## MCP tools (exact names for tool-calls)
 
@@ -4996,6 +4997,24 @@ Returns: {agent_id, kya_score, verdict}
 #### POST /disputes - Open a dispute
 Body: {"transaction_id": str, "reason": str, "evidence": dict}
 Returns: {dispute_id, status, escalates_at}
+
+#### GET /data/ofac-sdn-list/ - Bulk download, no key
+The whole SDN list as a static file, for when you need the list itself rather
+than a single lookup. 19,254 designated entries and 20,350 alternate identities
+(39,604 names), each with its OFAC uid, entity type and sanctions programs.
+
+- JSON: https://sanctionsai.dev/data/ofac-sdn-list/ofac-sdn.json
+- CSV:  https://sanctionsai.dev/data/ofac-sdn-list/ofac-sdn.csv
+- Metadata only (counts, dates, schema): https://sanctionsai.dev/data/ofac-sdn-list/metadata.json
+- Mirror: https://github.com/kindrat86/ofac-sdn-json
+
+Parsed verbatim from Treasury's SDN.CSV and ALT.CSV. The publication date carried
+in the file is OFAC's own, not the build date. Public domain (17 U.S.C. 105);
+packaging CC0. SDN list only — no Consolidated/SSI/EU/UK/UN lists, no 50 Percent
+Rule analysis. OFAC's own search is authoritative for compliance decisions.
+
+Also free and unauthenticated: https://sanctionsai.dev/free/ofac-screening screens
+a pasted list of names against this data entirely in the visitor's browser.
 
 ### Pricing
 - Free: 5 checks/day
