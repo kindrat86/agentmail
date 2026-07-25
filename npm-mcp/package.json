@@ -1,0 +1,48 @@
+{
+  "name": "sanctions-mcp",
+  "version": "0.1.0",
+  "description": "OFAC sanctions screening as an MCP server. Screen names, crypto wallets and countries against the US Treasury SDN list before your agent pays. Free tier, no API key, zero dependencies.",
+  "bin": {
+    "sanctions-mcp": "index.js"
+  },
+  "main": "index.js",
+  "type": "commonjs",
+  "files": [
+    "index.js",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "keywords": [
+    "mcp",
+    "mcp-server",
+    "modelcontextprotocol",
+    "ofac",
+    "sanctions",
+    "sanctions-screening",
+    "sdn",
+    "sdn-list",
+    "aml",
+    "kyc",
+    "kya",
+    "compliance",
+    "ai-agents",
+    "agent-payments",
+    "x402",
+    "claude",
+    "cursor"
+  ],
+  "author": "Maryan Kindrat",
+  "license": "MIT",
+  "homepage": "https://sanctionsai.dev",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kindrat86/agentmail.git",
+    "directory": "npm-mcp"
+  },
+  "bugs": {
+    "url": "https://github.com/kindrat86/agentmail/issues"
+  }
+}
