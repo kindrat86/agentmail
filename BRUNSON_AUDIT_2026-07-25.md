@@ -243,3 +243,79 @@ are the whole of the remaining gap: Traffic scored **49.1** against DotCom's 61.
 and Expert's 66.4, and 246 pages currently return 3 clicks per 28 days.
 
 Fixing every credibility defect on the page does not by itself produce a visitor.
+
+---
+
+## Appendix — Traffic Secrets, with the actual Search Console data
+
+Pulled from the Search Console API for `https://sanctionsai.dev/`, 90 days to
+2026-07-23. This is the evidence behind the 49.1.
+
+**0 clicks. 357 impressions. 121 queries.** Not a low number — zero.
+
+### Where the entire search footprint actually is
+
+| page | impressions | position | share |
+|---|---:|---:|---:|
+| `/compare/world-check` | 181 | 28.5 | 51% |
+| `/cost-of/refinitiv-worldcheck-pricing` | 23 | 11.1 | 6% |
+| `/compare/chainalysis` | 20 | 55.6 | 6% |
+| everything else (300+ pages) | 133 | 50–95 | 37% |
+
+**57% of all search visibility is one competitor's brand name** — Refinitiv
+World-Check. Google has decided this domain is topically relevant to exactly one
+thing, and it is not agent compliance.
+
+### The finding that should change strategy
+
+Broken out by query, `/cost-of/refinitiv-worldcheck-pricing` is **already
+top-5**:
+
+| query | position | impressions / 90d |
+|---|---:|---:|
+| world check cost | **3.0** | 2 |
+| world check pricing | **3.0** | 1 |
+| world check price | **4.0** | 1 |
+| world-check pricing | **5.0** | 1 |
+
+Position 3 with two impressions in ninety days is not an SEO problem. At position
+3 you appear for essentially every search of that term, so the impression count
+*is* the demand. **These queries have almost no volume.**
+
+The inverse holds for the head terms — `ofac screening` (position 63),
+`sanctions screening ofac` (79), `ofac compliance software` (73). Their low
+impression counts do **not** indicate low demand; at position 63 you simply never
+appear. Those terms have real volume and are entirely out of reach.
+
+So the estate splits cleanly in two: terms the site can win but nobody searches,
+and terms people search but the site cannot win. Adding pages does not move a
+page from the second group to the first — only authority does.
+
+### It is not indexation, and it is not thinness
+
+- **Indexation** — 40 URLs sampled via the URL Inspection API: **29 indexed
+  (72.5%)**, 8 "Discovered – currently not indexed", 2 unknown, 1 redirect. A
+  72% indexation rate producing 0 clicks rules indexation out as the constraint.
+  ("Discovered – currently not indexed" is Google saying it found the page and
+  declined it — a quality/authority judgment, not a crawl failure.)
+- **Thinness** — the two pages carrying 57% of impressions are 770 and 860 words
+  with proper H2 structure. Median pairwise similarity across every cluster tops
+  out at 49% (`/learn/`), nowhere near duplicate territory.
+
+The constraint is off-site authority. That is Traffic Secrets Secret #4 — work
+your way in, buy your way in — and it is the one thing on the whole list that
+cannot be shipped from this repo.
+
+### Fixed in this pass
+
+Three sitemap entries were 301 redirects (`/compare/chainalysis`,
+`/compare/elliptic`, `/compare/complyadvantage` → `/vs/*`), and seven internal
+links pointed at them. Since `/compare/chainalysis` is the #3 impression earner,
+this was splitting signals on a page that matters. Removed from the sitemap,
+internal links repointed at the canonical `/vs/` URLs, and the 301s themselves
+kept so existing inbound links and indexed URLs still resolve. Verified live:
+561/561 sitemap URLs now return 200.
+
+One capacity note observed while crawling: the single `shared-cpu-1x` 512MB
+machine starts timing out at roughly 14 concurrent requests. Fine at current
+traffic, but it is the ceiling if any distribution effort actually lands.
