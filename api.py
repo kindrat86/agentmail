@@ -2353,12 +2353,66 @@ _FUNNEL_STEPS = ("visit_pricing", "optin", "checkout_started",
                  "checkout_abandoned", "purchased")
 
 
-def _funnel(step: str, distinct_id: str = None, **props):
-    """Record one step of the acquisition funnel."""
+# Crawler user-agent tokens, lowercase. Deliberately conservative: it is far
+# better to leave a bot unflagged than to mark a real developer's curl as one
+# and quietly delete them from the funnel.
+_BOT_UA_TOKENS = (
+    "bot", "crawler", "spider", "slurp", "archiver", "scrapy",
+    "gptbot", "claudebot", "claude-web", "anthropic", "perplexity",
+    "ccbot", "bytespider", "amazonbot", "applebot", "facebookexternalhit",
+    "semrush", "ahrefs", "mj12", "dotbot", "petalbot", "dataforseo",
+    "headlesschrome", "phantomjs", "lighthouse", "pagespeed",
+    "python-requests", "python-urllib", "go-http-client", "okhttp",
+    "wget/", "libwww", "httpclient", "postmanruntime", "insomnia",
+    "uptime", "pingdom", "statuscake", "monitor",
+)
+
+
+def _classify_ua(ua: str) -> tuple:
+    """Return (is_bot, family) for a User-Agent string.
+
+    `curl` is treated as a HUMAN on this site, on purpose. The entire hero CTA
+    is "run this one curl call", so a curl hit on /sanctions is the product
+    working as designed — the single most valuable signal we have. Lumping it
+    in with crawlers would delete real activation from the funnel.
+    """
+    u = (ua or "").lower()
+    if u == "stripe-webhook":
+        # Server-to-server callback we raise ourselves. A purchase is real
+        # money whatever UA Stripe sends, so never let it reach the token scan.
+        return False, "stripe-webhook"
+    if not u:
+        # No UA at all is far more often a script than a browser, but it is
+        # also what some privacy tooling sends. Flag it separately so it can
+        # be included or excluded deliberately rather than guessed at.
+        return True, "no-ua"
+    for token in _BOT_UA_TOKENS:
+        if token in u:
+            return True, token.strip("/")
+    if u.startswith("curl/"):
+        return False, "curl"
+    return False, "browser"
+
+
+def _funnel(step: str, distinct_id: str = None, ua: str = None, **props):
+    """Record one step of the acquisition funnel.
+
+    Always carries `is_bot`. This site has a documented history of ~0 human
+    visitors and heavy AI-crawler traffic, and the app suppresses request
+    logging, so without a flag recorded AT CAPTURE TIME there is no way to
+    tell a crawler sweeping /pricing from a buyer considering it — and the
+    funnel reads as real demand that is not there. Events are flagged, never
+    dropped: filter with `properties.is_bot = false` in the insight, so the
+    raw counts stay available and the classifier can be revised later without
+    having lost the data.
+    """
     if step not in _FUNNEL_STEPS:
         return
+    is_bot, family = _classify_ua(ua)
     props["step"] = step
     props["step_index"] = _FUNNEL_STEPS.index(step)
+    props["is_bot"] = is_bot
+    props["ua_family"] = family
     _capture_async("funnel_step", distinct_id, props)
 
 
@@ -2759,6 +2813,7 @@ Allow: Storing
         if p.path == "/unsubscribe" or p.path == "/api/unsubscribe":
             return self._unsubscribe_page()
         if p.path == "/blog":
+            self._clean_hub_links = True
             return self._blog_index_page()
         if p.path == "/blog/x402-compliance-check":
             return self._blog_x402_page()
@@ -3471,7 +3526,7 @@ License: https://creativecommons.org/licenses/by/4.0/
             # Stripe's cancel_url lands here. Abandoners are the warmest
             # non-buyers the funnel ever produces and nothing acknowledged them.
             _cancelled = "cancelled" in parse_qs(p.query)
-            _funnel("checkout_abandoned" if _cancelled else "visit_pricing")
+            _funnel("checkout_abandoned" if _cancelled else "visit_pricing", ua=self.headers.get("User-Agent", ""))
             return self._pricing_page(cancelled=_cancelled)
         # Walkthrough / masterclass (public) — Expert Secrets Ch 8
         if p.path == "/walkthrough":
@@ -3496,14 +3551,14 @@ License: https://creativecommons.org/licenses/by/4.0/
             bump = qs.get("bump", [None])[0]
             try:
                 result = billing.create_checkout_session(plan, bump=bump)
-                _funnel("checkout_started", plan=plan, bump=bump or "")
+                _funnel("checkout_started", ua=self.headers.get("User-Agent", ""), plan=plan, bump=bump or "")
                 self.send_response(302)
                 self.send_header("Location", result["url"])
                 self.end_headers()
             except Exception as e:
                 # A checkout that 500s is a lost sale that leaves no trace in
                 # the funnel; count it rather than only logging it.
-                _funnel("checkout_started", plan=plan, bump=bump or "", failed=str(e)[:120])
+                _funnel("checkout_started", ua=self.headers.get("User-Agent", ""), plan=plan, bump=bump or "", failed=str(e)[:120])
                 _json(self, 500, {"error": str(e)})
             return
         # Tripwire page ($7 one-time OFAC Compliance Quick-Start Kit)
@@ -3629,6 +3684,7 @@ License: https://creativecommons.org/licenses/by/4.0/
                 return self._penalty_page(slug)
             return _json(self, 404, {"error": "not found"})
         if p.path == "/penalties":
+            self._clean_hub_links = True
             return self._penalties_index_page()
         # /guides/ - compliance how-to guides
         if p.path.startswith("/guides/"):
@@ -3639,6 +3695,7 @@ License: https://creativecommons.org/licenses/by/4.0/
                 return self._guide_page(slug)
             return _json(self, 404, {"error": "not found"})
         if p.path == "/guides":
+            self._clean_hub_links = True
             return self._guides_index_page()
         # ─── Section-index and child pages (AEO crawlability) ──
         # Section indexes. /countries (20 pages), /checklists (4), /best (2) and
@@ -3656,6 +3713,7 @@ License: https://creativecommons.org/licenses/by/4.0/
         if p.path == "/for":
             return self._for_index_page()
         if p.path == "/glossary":
+            self._clean_hub_links = True
             return self._glossary_index_page()
         if p.path == "/tools":
             return self._tools_index_page()
@@ -3666,10 +3724,12 @@ License: https://creativecommons.org/licenses/by/4.0/
         if p.path == "/integrations":
             return self._integrations_index_page()
         if p.path == "/vs":
+            self._clean_hub_links = True
             return self._vs_index_page()
         if p.path == "/how-to":
             return self._how_to_index_page()
         if p.path == "/cost":
+            self._clean_hub_links = True
             return self._cost_index_page()
         # Original research / proprietary framework
         if p.path == "/research/agent-payment-sanctions-exposure-2026":
@@ -3980,7 +4040,7 @@ License: https://creativecommons.org/licenses/by/4.0/
                 except Exception as e:
                     print(f"Email send failed for {email}: {e}", flush=True)
                 _capture("subscribed", email, {"source": source, "email_sent": sent})
-                _funnel("optin", email, source=source, email_sent=sent)
+                _funnel("optin", email, ua=self.headers.get("User-Agent", ""), source=source, email_sent=sent)
                 # A browser form POST (the footer box, and the content upgrade
                 # on every article page) used to land the reader on a blank
                 # page of raw JSON. That is the delivery step of the opt-in —
@@ -4109,6 +4169,12 @@ License: https://creativecommons.org/licenses/by/4.0/
 
     # ─── Billing pages ──────────────────────────────────────────────────
     def _send_html(self, status: int, html: str):
+        # Section hubs opt in via _clean_hub_links; see _resolve_hub_links.
+        # Hooked here rather than in _serve_text because every dynamically
+        # assembled page goes out through _page -> _send_html.
+        if getattr(self, "_clean_hub_links", False):
+            self._clean_hub_links = False
+            html = self._resolve_hub_links(html)
         body = html.encode("utf-8")
         self.send_response(status)
         self.send_header("Content-Type", "text/html; charset=utf-8")
@@ -4246,33 +4312,22 @@ License: https://creativecommons.org/licenses/by/4.0/
         now redirects into. Both are stale menus: a reader clicks through a hop,
         and a crawler spends budget rediscovering the same destination.
 
-        Where the destination is already linked on the page the entry is
-        dropped, because repointing would just print the same link twice.
-        Otherwise the entry is repointed and keeps its label.
+        This only rewrites the href and leaves the label and the surrounding
+        markup untouched. An earlier version also deleted the whole <li> when
+        the destination was already linked, to avoid printing the same link
+        twice — but these hubs emit list items without closing tags, so the
+        "up to the next </li>" match ran past the end of the item and swallowed
+        its neighbours: /vs lost four of its seven vendors and /cost lost every
+        child it had. A duplicate link on a hub costs nothing; a hub missing
+        half its entries costs real crawl paths. Repoint only.
         """
-        present = set(_re.findall(r'href="(/[^"#?]*)"', html))
-        present = {p.rstrip("/") or "/" for p in present}
         for src, dst in _CONSOLIDATION_REDIRECTS.items():
-            if src not in present:
-                continue
             for variant in ('href="%s"' % src, 'href="%s/"' % src):
-                if variant not in html:
-                    continue
-                if dst in present:
-                    item = _re.compile(
-                        r"<li\b[^>]*>(?:(?!</li>).)*?%s(?:(?!</li>).)*?</li>" % _re.escape(variant), _re.S)
-                    html, dropped = item.subn("", html)
-                    if not dropped:
-                        html = html.replace(variant, 'href="%s"' % dst)
-                else:
+                if variant in html:
                     html = html.replace(variant, 'href="%s"' % dst)
-                    present.add(dst)
         return html
 
     def _serve_text(self, text: str, content_type: str = "text/plain"):
-        if getattr(self, "_clean_hub_links", False) and content_type.startswith("text/html"):
-            self._clean_hub_links = False
-            text = self._resolve_hub_links(text)
         body = text.encode()
         self.send_response(200)
         self.send_header("Content-Type", f"{content_type}; charset=utf-8")
@@ -12236,7 +12291,7 @@ compute();
             etype = result.get("event_type", "")
             # Fire post-purchase onboarding email immediately after checkout
             if etype == "checkout.session.completed" and result.get("email"):
-                _funnel("purchased", result["email"], plan=result.get("plan", "dev"))
+                _funnel("purchased", result["email"], ua="stripe-webhook", plan=result.get("plan", "dev"))
                 try:
                     _send_post_purchase_email(result["email"], result.get("plan", "dev"))
                 except Exception as e:
