@@ -33,7 +33,7 @@ _API_KEYS = {k.strip() for k in os.environ.get("AGENTMAIL_API_KEYS", "").split("
 # requests per hour per identity (key, or IP in free tier)
 _RATE_LIMIT = int(os.environ.get("AGENTMAIL_RATE_LIMIT", "0") or 0)
 # free-tier daily cap for unauthenticated callers (by IP). 0 = no anon access when auth required.
-_FREE_TIER_DAILY = int(os.environ.get("AGENTMAIL_FREE_TIER_DAILY", "100") or 100)
+_FREE_TIER_DAILY = int(os.environ.get("AGENTMAIL_FREE_TIER_DAILY", "5") or 5)
 _AUDIT_LOG = os.environ.get("AGENTMAIL_AUDIT_LOG", "")  # path to append-only JSONL
 _PUBLIC_URL = os.environ.get("AGENTMAIL_PUBLIC_URL", "https://agentmail-api.fly.dev")
 
@@ -5771,13 +5771,12 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
             '<th><h3>Dev</h3><p style="color:#00d4aa;font-size:1.5em;font-weight:800;margin:4px 0">$19<span style="font-size:.5em;color:#666">/mo</span></p></th>'
             '<th><h3>Pro</h3><p style="color:#00d4aa;font-size:1.5em;font-weight:800;margin:4px 0">$99<span style="font-size:.5em;color:#666">/mo</span></p></th></tr></thead>'
             '<tbody>'
-            # 2026-07-24: was "5 / 1,000 / 10,000" per day for Free/Dev/Pro —
-            # contradicts this page's own JSON-LD below, the homepage copy
-            # (free tier is 50/day everywhere else on the site), and the
-            # limits actually enforced in billing.py (TIERS: dev=10,000/mo,
-            # team=100,000/mo). Buyers were being overpromised ~3x on the
-            # page where they decide. See conversion-audit-scored-2026-07-24.
-            '<tr><td style="text-align:left">Sanctions checks</td><td>50/day</td><td>10,000/mo</td><td>100,000/mo</td></tr>'
+            # Numbers here must match what is actually ENFORCED, not what the
+            # marketing copy wishes: Free = AGENTMAIL_FREE_TIER_DAILY (live
+            # value 5/day — confirmed via the /sanctions quota field, NOT the
+            # "100" default in this file, which the Fly secret overrides);
+            # Dev/Pro = billing.py TIERS monthly_limit.
+            '<tr><td style="text-align:left">Sanctions checks</td><td>5/day</td><td>10,000/mo</td><td>100,000/mo</td></tr>'
             '<tr><td style="text-align:left">Risk scoring</td><td>-</td><td style="color:#00d4aa">All 4 tools</td><td style="color:#00d4aa">All 4 tools</td></tr>'
             '<tr><td style="text-align:left">KYA verification</td><td>-</td><td style="color:#00d4aa">Included</td><td style="color:#00d4aa">Included</td></tr>'
             '<tr><td style="text-align:left">Disputes</td><td>-</td><td style="color:#00d4aa">Included</td><td style="color:#00d4aa">Included</td></tr>'
@@ -5794,7 +5793,7 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
             '</div>'
             '<p class="note" style="text-align:center;margin-top:16px">All plans include OFAC/EU/UN/UK data, refreshed daily. Cancel anytime. Self-host option: <code>pip install sanctions-mcp</code></p>'
             '</div></section>'
-            '<section><div class="cta-box"><h2>Start screening in 30 seconds</h2><p>50 checks/day free. No API key required.</p><a href="/tools/wallet-checker" class="btn btn-primary">Free wallet checker</a></div></section>'
+            '<section><div class="cta-box"><h2>Start screening in 30 seconds</h2><p>5 checks/day free. No API key required.</p><a href="/tools/wallet-checker" class="btn btn-primary">Free wallet checker</a></div></section>'
         )
         ld = {
             "@context": "https://schema.org",
