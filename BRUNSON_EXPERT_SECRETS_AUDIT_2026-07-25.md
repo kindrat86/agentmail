@@ -251,7 +251,7 @@ Committed `cea7225` plus edits carried in `6f345cc`. All live.
 
 ---
 
-# Re-score after remediation — **70 / 100** (was 47)
+# Re-score after remediation — **72 / 100** (was 47)
 
 Verified against production on 2026-07-26 (Fly v394, image
 `deployment-01KYDHEW19ZMD15HWNS94YRENJ`, health check passing, `ready: true`,
@@ -259,14 +259,14 @@ Verified against production on 2026-07-26 (Fly v394, image
 
 | Section | Was | Now |
 |---|---|---|
-| One — Creating Your Movement | 59 | **69** |
-| Two — Creating Belief | 58 | **74** |
+| One — Creating Your Movement | 59 | **70** |
+| Two — Creating Belief | 58 | **78** |
 | Three — 10X Secrets | 24 | **69** |
-| **Composite** | **47** | **70** |
+| **Composite** | **47** | **72** |
 
 | # | Secret | Was | Now | What moved it |
 |---|---|---|---|---|
-| 1 | Finding Your Voice | 48 | 62 | Seven "agentmail team" bylines → Maryan; /about rewritten first person. Still no photo, no bio, and the brand collision is now *four*-way. |
+| 1 | Finding Your Voice | 48 | 68 | Seven "agentmail team" bylines → Maryan; /about rewritten first person; the founder now has a stated reason to be listened to (building with AI since 2013, ~a decade before ChatGPT) — authority via mechanism, not adjectives. Still no photo, no bio, and the brand collision is now *four*-way. |
 | 2 | Teaching Your Framework | 71 | 86 | `/protocol` teaches all four gates end to end — what each does, what failing it looks like in production, the exact call. |
 | 3 | Three Core Markets | 66 | 66 | Unchanged. |
 | 4 | The New Opportunity | 74 | 78 | `/protocol` restates the opportunity switch; `/pricing` is still comparison-framed. |
@@ -274,7 +274,7 @@ Verified against production on 2026-07-26 (Fly v394, image
 | 6 | The Future-Based Cause | 63 | 70 | Signed by the founder; giving the whole method away is itself a movement move. No manifesto, no name for the tribe. |
 | 7 | The Big Domino | 44 | 82 | Correct figure, cited to 31 CFR 501.701 and FR 2025-00786. The claim now gets *stronger* when checked. |
 | 8 | The Epiphany Bridge | 79 | 82 | Retold on `/protocol` in a second context, with the correct figure inside the quote. |
-| 9 | The Hero's Two Journeys | 51 | 58 | The self-audit puts the reader in their own story. Still no explicit identity shift. |
+| 9 | The Hero's Two Journeys | 51 | 74 | The self-audit puts the reader in their own story, and "And if you do" now pairs the loss-aversion block with the transformation: the agent acquires a property (it *cannot* pay a sanctioned address) rather than the reader adopting a policy. |
 | 10 | The Four Core Stories | 58 | 74 | All three belief stories now told with story → strategy → a proof the reader can run. Still no customer story. |
 | 11 | The Perfect Webinar | **8** | **64** | `/protocol` is a real one-to-many asset. Not video, no replay, no urgency mechanism — that is the remaining 36. |
 | 12 | The Three Secrets | 22 | 76 | Explicitly structured on `/protocol`. |
@@ -325,6 +325,20 @@ Verified against production on 2026-07-26 (Fly v394, image
 3. **One real customer story (#10, 74).** The refusal to fabricate is correct and
    should hold. Go earn one.
 4. **A name for the tribe (#6, 70).** A movement needs a noun for its members.
+
+## The constraint this audit does not touch
+
+Expert Secrets is a **conversion** framework, and conversion is a multiplier on
+traffic. Per `sanctionsai-traffic-ceiling`, this domain recorded **0 clicks in 90
+days**, and the earlier portfolio audit scored its Traffic Secrets at **28/100** —
+the lowest of the three books by a wide margin, on every site in the portfolio.
+
+So read the 47 → 72 correctly: the funnel is now honest and structurally sound, and
+it is converting almost nobody, because almost nobody arrives. Every remaining
+Expert Secrets point is worth less than the first real traffic source. The
+recommendations above are still worth doing — a broken funnel wastes traffic you
+later buy — but they are not the binding constraint and this document should not be
+read as if they were.
 
 ## Note on concurrency
 
