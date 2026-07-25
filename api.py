@@ -355,6 +355,108 @@ _BLOG_SLUGS = frozenset((
 ))
 
 # ─── Guide pages (compliance how-to guides) ──────────────────────────
+# SEO consolidation, 2026-07-26. Search Console showed 19 queries split
+# across 2-4 near-identical pages of ours, and 68 of 246 URLs drawing any
+# impression at all. Five overlapping families were each restating the
+# same handful of topics at 300-800 words: /countries vs /by-country,
+# /learn vs /glossary, /how-to vs /guides vs /faq, and eight separate
+# pages on "what an OFAC violation costs". Each cluster now folds into
+# one canonical page, which absorbs the others' content.
+#
+# /compare/world-check is deliberately a TARGET, never a source: at 174
+# impressions and position 26 it is the best-ranking page on the site,
+# and the rest of /compare already 301s the other way, toward /vs. Do not
+# "make it consistent" by redirecting it into /vs — that both discards
+# the only real ranking asset here and creates a redirect loop.
+_CONSOLIDATION_REDIRECTS = {
+    # duplicate country family — /countries has the fuller set
+    "/by-country": "/countries",
+    "/by-country/belarus": "/countries/belarus",
+    "/by-country/china": "/countries/china",
+    "/by-country/cuba": "/countries/cuba",
+    "/by-country/iran": "/countries/iran",
+    "/by-country/myanmar": "/countries/myanmar",
+    "/by-country/north-korea": "/countries/north-korea",
+    "/by-country/pakistan": "/countries/pakistan",
+    "/by-country/russia": "/countries/russia",
+    "/by-country/syria": "/countries/syria",
+    "/by-country/venezuela": "/countries/venezuela",
+    "/by-country/lebanon-hezbollah": "/countries/lebanon",
+    # definitions live in /glossary
+    "/learn/what-is-the-sdn-list": "/glossary/ofac-sdn-list",
+    "/glossary/specially-designated-nationals": "/glossary/ofac-sdn-list",
+    "/learn/what-is-the-ofac-50-percent-rule": "/glossary/ofac-50-percent-rule",
+    "/learn/what-is-voluntary-self-disclosure": "/glossary/voluntary-self-disclosure",
+    "/penalties/voluntary-self-disclosure": "/glossary/voluntary-self-disclosure",
+    "/learn/what-is-a-blocked-person": "/glossary/blocked-person",
+    "/learn/what-is-strict-liability-in-ofac": "/glossary/strict-liability",
+    "/learn/what-is-know-your-agent": "/glossary/know-your-agent",
+    "/blog/know-your-agent": "/glossary/know-your-agent",
+    "/learn/what-is-x402": "/glossary/x402-protocol",
+    "/learn/sanctions-glossary": "/glossary",
+    # procedures live in /how-to
+    "/faq/how-to-comply-with-ofac": "/how-to/comply-with-ofac",
+    "/guides/avoid-ofac-violations": "/how-to/avoid-ofac-violations",
+    "/guides/build-compliance-program": "/how-to/build-a-compliance-program",
+    "/guides/sanctions-compliance-program": "/how-to/build-a-compliance-program",
+    "/faq/how-to-screen-crypto-wallets-ofac": "/how-to/screen-crypto-wallet",
+    "/blog/how-to-screen-wallet-agent": "/how-to/screen-crypto-wallet",
+    # duplicate FAQs
+    "/faq/is-crypto-ofac-screening-required": "/faq/is-ofac-screening-required-for-crypto",
+    "/faq/how-often-ofac-list-updated": "/faq/how-often-update-sdn-list",
+    # "what does a violation cost" — one statutory page, one data page
+    "/cost/ofac-fine-per-violation": "/penalties/ofac-violation-costs",
+    "/cost/ofac-criminal-penalties": "/penalties/ofac-violation-costs",
+    "/cost/ofac-penalty-multiplier": "/penalties/ofac-violation-costs",
+    "/cost/cost-of-non-compliance": "/penalties/ofac-violation-costs",
+    "/faq/what-are-ofac-penalties": "/penalties/ofac-violation-costs",
+    "/faq/what-happens-if-you-violate-ofac": "/penalties/ofac-violation-costs",
+    "/cost/ofac-enforcement-actions": "/enforcement",
+    "/cost/ofac-settlement-costs": "/enforcement",
+    "/data/ofac-enforcement": "/enforcement",
+    # Case-study pages superseded by sourced records in /enforcement.
+    # Five of them asserted OFAC penalties that appear nowhere in OFAC's
+    # published 2003-2026 chart (Coinbase, EtherDelta, eToro, Bitfinex,
+    # Ripple — those settlements were NYDFS, SEC, none, CFTC and FinCEN
+    # respectively), and three more carried the wrong figure. "etry" is a
+    # corrupted "etoro" slug from the generator that produced them.
+    "/penalties/binance": "/enforcement/binance-2023",
+    "/penalties/binance-ofac-2023": "/enforcement/binance-2023",
+    "/penalties/kraken": "/enforcement/payward-inc-kraken-2022",
+    "/penalties/kraken-ofac-2022": "/enforcement/payward-inc-kraken-2022",
+    "/penalties/bitpay-ofac-2021": "/enforcement/bitpay-inc-2021",
+    "/penalties/bitgo-ofac-2021": "/enforcement/2020",
+    "/penalties/standard-chartered": "/enforcement/standard-chartered-bank-2019",
+    "/penalties/societe-generale": "/enforcement/societe-generale-s-a-2018",
+    "/penalties/coinbase-ofac-2023": "/enforcement/2023",
+    "/penalties/etherdelta-ofac-2018": "/enforcement/2018",
+    "/penalties/ofac-acd-penalties-2023": "/enforcement/2023",
+    "/penalties/etry": "/enforcement",
+    "/penalties/bitfinex": "/enforcement",
+    "/penalties/ripple": "/enforcement",
+    # One page per vendor per intent. Three pages were competing for the same
+    # comparison intent on Refinitiv; Search Console over 90 days gives
+    # /compare/world-check 181 impressions at position 28.5 (and the footer
+    # link), while /vs/refinitiv and /vs/refinitiv-worldcheck have zero
+    # impressions between them — so consolidating costs nothing and stops the
+    # three splitting the signal for "refinitiv world-check" (101 impressions,
+    # position 26.6). /compare/trm-labs vs /vs/trm-labs is the same split with
+    # no equity on either side.
+    "/vs/refinitiv": "/compare/world-check",
+    "/vs/refinitiv-worldcheck": "/compare/world-check",
+    "/alternatives-to/refinitiv": "/compare/world-check",
+    "/alternatives-to/chainalysis": "/vs/chainalysis",
+    "/alternatives-to/elliptic": "/vs/elliptic",
+    "/alternatives-to/dow-jones": "/vs/dow-jones-rdc",
+    "/alternatives-to/dow-jones-risk": "/vs/dow-jones-rdc",
+    "/compare/trm-labs": "/vs/trm-labs",
+}
+# A hub must not 301 to one of its own leaves; /compare pointed at
+# /vs/chainalysis, so every hub-level link and citation landed on a
+# single competitor page.
+_CONSOLIDATION_REDIRECTS["/compare"] = "/vs"
+
+
 _GUIDE_KEYS = frozenset((
     "setup-ofac-screening",
     "choose-sanctions-api",
@@ -1963,7 +2065,7 @@ _GUIDE_CONTENT = {
         "desc": "A step-by-step guide to adding OFAC sanctions screening to any AI agent using HTTP, MCP, or CLI. Zero configuration required for the free tier.",
         "h1": "How to Set Up OFAC Sanctions Screening for Your AI Agent",
         "tldr": "Add sanctions screening to your AI agent with one HTTP call: <code>curl \"https://sanctionsai.dev/sanctions?wallet=0x...\"</code>. If the response says <code>clean: false</code>, halt the payment. Free tier: 5 checks/day, no API key. Integration takes under 5 minutes via HTTP, MCP, or CLI.",
-        "html": "<p>Adding sanctions screening to your AI agent takes one API call and under five minutes. This guide covers all three integration methods: HTTP API, MCP tool, and CLI.</p><h2>Method 1: HTTP API (simplest, works with any agent framework)</h2><p>Call our HTTP endpoint with the wallet address, name, or country you want to check. No API key needed for the free tier (5 checks/day per IP).</p><pre><code>curl &quot;https://sanctionsai.dev/sanctions?wallet=0x098B716B8Aaf21512996dC57EB0615e2383E2f96&quot;</code></pre><p>Response includes <code>clean</code> (boolean), <code>matches</code> (array of matched SDN entries), and <code>quota</code> (remaining free checks). Wire this before your agent&rsquo;s payment function.</p><h2>Method 2: MCP tool (works with Claude Code, Cursor, Windsurf)</h2><p>Install pip install sanctions-mcp, configure the MCP server, and your agent can call <code>sanctions_check</code> as a native tool.</p><pre><code>pip install sanctions-mcp\n# Add to your MCP config:\n# mcpServers.sanctions.command = &quot;python -m sanctions_mcp&quot;</code></pre><h2>Method 3: CLI (for scripts and cron jobs)</h2><pre><code>sanctions check --wallet 0x098B716B8Aaf21512996dC57EB0615e2383E2f96</code></pre><h2>What to do with the result</h2><p>If clean=True, the transaction is safe to proceed. If clean=False, halt the transaction, log the match, and alert a human. Every check is timestamped for your compliance audit trail.</p>",
+        "html": "<p>Adding sanctions screening to your AI agent takes one API call and under five minutes. This guide covers all three integration methods: HTTP API, MCP tool, and CLI.</p><h2>Method 1: HTTP API (simplest, works with any agent framework)</h2><p>Call our HTTP endpoint with the wallet address, name, or country you want to check. No API key needed for the free tier (5 checks/day per IP).</p><pre><code>curl &quot;https://sanctionsai.dev/sanctions?wallet=0x098B716B8Aaf21512996dC57EB0615e2383E2f96&quot;</code></pre><p>Response includes <code>clean</code> (boolean), <code>action</code> (<code>ALLOW</code> / <code>BLOCK</code>), <code>matches</code> (array of matched SDN entries), <code>screened_at</code> and <code>screen_id</code> (keep these &mdash; they are what a <a href='/guarantee'>guarantee claim</a> is checked against), <code>checked_against</code>, <code>list_version</code>, <code>latency_ms</code>, and <code>quota</code> (remaining free checks). Wire this before your agent&rsquo;s payment function. Note that <code>action</code> is the OFAC SDN verdict only &mdash; <code>ALLOW</code> means no SDN match at <code>screened_at</code>, not that a payment is clear of EU, UN or UK measures, which we do not screen.</p><h2>Method 2: MCP tool (works with Claude Code, Cursor, Windsurf)</h2><p>Install pip install sanctions-mcp, configure the MCP server, and your agent can call <code>sanctions_check</code> as a native tool.</p><pre><code>pip install sanctions-mcp\n# Add to your MCP config:\n# mcpServers.sanctions.command = &quot;python -m sanctions_mcp&quot;</code></pre><h2>Method 3: CLI (for scripts and cron jobs)</h2><pre><code>sanctions check --wallet 0x098B716B8Aaf21512996dC57EB0615e2383E2f96</code></pre><h2>What to do with the result</h2><p>If clean=True, no OFAC SDN match was found and your agent can proceed &mdash; that is a statement about the SDN list at <code>screened_at</code>, not a general all-clear. If clean=False, halt the transaction, log the match, and alert a human. Every check carries <code>screened_at</code> and <code>screen_id</code> for your compliance audit trail.</p>",
         "steps": [
             {"name": "Choose your integration mode", "text": "Pick HTTP API (simplest, works with any framework), MCP tool (for Claude Code, Cursor, Windsurf), or CLI (for scripts). All check the same 947 OFAC-sanctioned wallets."},
             {"name": "Add the screening call before your payment function", "text": "Wire the sanctions check into your agent's payment path. For HTTP: curl the endpoint with the wallet address. The free tier allows 5 checks/day with no API key."},
@@ -2377,100 +2479,7 @@ class Handler(BaseHTTPRequestHandler):
             "/badge": "/badge/clean",
             "/verified-badge": "/badge/clean",
         }
-        # SEO consolidation, 2026-07-26. Search Console showed 19 queries split
-        # across 2-4 near-identical pages of ours, and 68 of 246 URLs drawing any
-        # impression at all. Five overlapping families were each restating the
-        # same handful of topics at 300-800 words: /countries vs /by-country,
-        # /learn vs /glossary, /how-to vs /guides vs /faq, and eight separate
-        # pages on "what an OFAC violation costs". Each cluster now folds into
-        # one canonical page, which absorbs the others' content.
-        #
-        # /compare/world-check is deliberately a TARGET, never a source: at 174
-        # impressions and position 26 it is the best-ranking page on the site,
-        # and the rest of /compare already 301s the other way, toward /vs. Do not
-        # "make it consistent" by redirecting it into /vs — that both discards
-        # the only real ranking asset here and creates a redirect loop.
-        CONSOLIDATION_REDIRECTS = {
-            # duplicate country family — /countries has the fuller set
-            "/by-country": "/countries",
-            "/by-country/belarus": "/countries/belarus",
-            "/by-country/china": "/countries/china",
-            "/by-country/cuba": "/countries/cuba",
-            "/by-country/iran": "/countries/iran",
-            "/by-country/myanmar": "/countries/myanmar",
-            "/by-country/north-korea": "/countries/north-korea",
-            "/by-country/pakistan": "/countries/pakistan",
-            "/by-country/russia": "/countries/russia",
-            "/by-country/syria": "/countries/syria",
-            "/by-country/venezuela": "/countries/venezuela",
-            "/by-country/lebanon-hezbollah": "/countries/lebanon",
-            # definitions live in /glossary
-            "/learn/what-is-the-sdn-list": "/glossary/ofac-sdn-list",
-            "/glossary/specially-designated-nationals": "/glossary/ofac-sdn-list",
-            "/learn/what-is-the-ofac-50-percent-rule": "/glossary/ofac-50-percent-rule",
-            "/learn/what-is-voluntary-self-disclosure": "/glossary/voluntary-self-disclosure",
-            "/penalties/voluntary-self-disclosure": "/glossary/voluntary-self-disclosure",
-            "/learn/what-is-a-blocked-person": "/glossary/blocked-person",
-            "/learn/what-is-strict-liability-in-ofac": "/glossary/strict-liability",
-            "/learn/what-is-know-your-agent": "/glossary/know-your-agent",
-            "/blog/know-your-agent": "/glossary/know-your-agent",
-            "/learn/what-is-x402": "/glossary/x402-protocol",
-            "/learn/sanctions-glossary": "/glossary",
-            # procedures live in /how-to
-            "/faq/how-to-comply-with-ofac": "/how-to/comply-with-ofac",
-            "/guides/avoid-ofac-violations": "/how-to/avoid-ofac-violations",
-            "/guides/build-compliance-program": "/how-to/build-a-compliance-program",
-            "/guides/sanctions-compliance-program": "/how-to/build-a-compliance-program",
-            "/faq/how-to-screen-crypto-wallets-ofac": "/how-to/screen-crypto-wallet",
-            "/blog/how-to-screen-wallet-agent": "/how-to/screen-crypto-wallet",
-            # duplicate FAQs
-            "/faq/is-crypto-ofac-screening-required": "/faq/is-ofac-screening-required-for-crypto",
-            "/faq/how-often-ofac-list-updated": "/faq/how-often-update-sdn-list",
-            # "what does a violation cost" — one statutory page, one data page
-            "/cost/ofac-fine-per-violation": "/penalties/ofac-violation-costs",
-            "/cost/ofac-criminal-penalties": "/penalties/ofac-violation-costs",
-            "/cost/ofac-penalty-multiplier": "/penalties/ofac-violation-costs",
-            "/cost/cost-of-non-compliance": "/penalties/ofac-violation-costs",
-            "/faq/what-are-ofac-penalties": "/penalties/ofac-violation-costs",
-            "/faq/what-happens-if-you-violate-ofac": "/penalties/ofac-violation-costs",
-            "/cost/ofac-enforcement-actions": "/enforcement",
-            "/cost/ofac-settlement-costs": "/enforcement",
-            "/data/ofac-enforcement": "/enforcement",
-            # Case-study pages superseded by sourced records in /enforcement.
-            # Five of them asserted OFAC penalties that appear nowhere in OFAC's
-            # published 2003-2026 chart (Coinbase, EtherDelta, eToro, Bitfinex,
-            # Ripple — those settlements were NYDFS, SEC, none, CFTC and FinCEN
-            # respectively), and three more carried the wrong figure. "etry" is a
-            # corrupted "etoro" slug from the generator that produced them.
-            "/penalties/binance": "/enforcement/binance-2023",
-            "/penalties/binance-ofac-2023": "/enforcement/binance-2023",
-            "/penalties/kraken": "/enforcement/payward-inc-kraken-2022",
-            "/penalties/kraken-ofac-2022": "/enforcement/payward-inc-kraken-2022",
-            "/penalties/bitpay-ofac-2021": "/enforcement/bitpay-inc-2021",
-            "/penalties/bitgo-ofac-2021": "/enforcement/2020",
-            "/penalties/standard-chartered": "/enforcement/standard-chartered-bank-2019",
-            "/penalties/societe-generale": "/enforcement/societe-generale-s-a-2018",
-            "/penalties/coinbase-ofac-2023": "/enforcement/2023",
-            "/penalties/etherdelta-ofac-2018": "/enforcement/2018",
-            "/penalties/ofac-acd-penalties-2023": "/enforcement/2023",
-            "/penalties/etry": "/enforcement",
-            "/penalties/bitfinex": "/enforcement",
-            "/penalties/ripple": "/enforcement",
-            # one page per vendor
-            "/vs/refinitiv": "/compare/world-check",
-            "/vs/refinitiv-worldcheck": "/compare/world-check",
-            "/alternatives-to/refinitiv": "/compare/world-check",
-            "/alternatives-to/chainalysis": "/vs/chainalysis",
-            "/alternatives-to/elliptic": "/vs/elliptic",
-            "/alternatives-to/dow-jones": "/vs/dow-jones-rdc",
-            "/alternatives-to/dow-jones-risk": "/vs/dow-jones-rdc",
-            "/compare/trm-labs": "/vs/trm-labs",
-        }
-        # A hub must not 301 to one of its own leaves; /compare pointed at
-        # /vs/chainalysis, so every hub-level link and citation landed on a
-        # single competitor page.
-        CONSOLIDATION_REDIRECTS["/compare"] = "/vs"
-        HALLUCINATED_REDIRECTS.update(CONSOLIDATION_REDIRECTS)
+        HALLUCINATED_REDIRECTS.update(_CONSOLIDATION_REDIRECTS)
         # Collapse chains. Consolidating turned three existing redirect targets
         # into redirect sources themselves (/learn -> /learn/sanctions-glossary
         # -> /glossary), and a hop costs both a round trip and link equity.
@@ -4564,8 +4573,9 @@ License: https://creativecommons.org/licenses/by/4.0/
         ("/vs/dow-jones-rdc", "monthly", "0.7", "SanctionsAI vs Dow Jones RDC"),
         ("/vs/elliptic", "monthly", "0.7", "SanctionsAI vs Elliptic"),
         ("/vs/ofac-list-download", "monthly", "0.7", "SanctionsAI vs OFAC list download"),
-        ("/vs/refinitiv-worldcheck", "monthly", "0.7", "SanctionsAI vs Refinitiv World-Check"),
-        ("/vs/refinitiv", "monthly", "0.7", "SanctionsAI vs Refinitiv"),
+        # /vs/refinitiv and /vs/refinitiv-worldcheck now 301 to
+        # /compare/world-check, which is already listed. A sitemap names
+        # destinations, not redirects.
         ("/vs/swift-sanctions", "monthly", "0.7", "SanctionsAI vs SWIFT Sanctions Screening"),
         ("/vs/trm-labs", "monthly", "0.7", "SanctionsAI vs TRM Labs"),
         ("/learn/crypto-sanctions-risk", "monthly", "0.6", "Crypto sanctions risk guide"),
@@ -4715,7 +4725,7 @@ License: https://creativecommons.org/licenses/by/4.0/
         # Interactive SEI calculator
         ("/tools/sei-calculator", "weekly", "0.9", "SEI Calculator — agentmail Sanctions Exposure Index"),
         # pSEO URLs (from sitemap-pseo.xml — now merged into main for discoverability)
-        ("/compare/trm-labs", "weekly", "0.8", "Compare TRM Labs"),
+        # /compare/trm-labs now 301s to /vs/trm-labs, which is already listed.
         ("/for/nft-marketplaces", "weekly", "0.8", "OFAC sanctions for NFT marketplaces"),
         ("/for/dao-treasuries", "weekly", "0.8", "OFAC sanctions for DAO treasuries"),
         ("/for/cross-border-payments", "weekly", "0.8", "OFAC sanctions for cross-border payments"),
@@ -4751,6 +4761,23 @@ License: https://creativecommons.org/licenses/by/4.0/
             pass
         xml = '<?xml version="1.0" encoding="UTF-8"?>\n'
         xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+        # The OFAC Civil Penalties Database. Read from the file the builder
+        # writes so this list cannot drift from what was actually generated.
+        import os as _os
+        for _base in (_os.path.dirname(_os.path.abspath(__file__)),
+                      "/home/agentmail/app", _os.getcwd()):
+            try:
+                with open(_os.path.join(_base, "enforcement", "urls.txt"), encoding="utf-8") as _fh:
+                    pages += [(_u.strip(), "monthly", "0.7", "OFAC enforcement record")
+                              for _u in _fh if _u.strip()]
+                break
+            except OSError:
+                continue
+        # A sitemap must list destinations, not sources. These 301 now, and a
+        # redirecting URL in a sitemap is a Search Console "Page with redirect"
+        # error rather than an indexed page.
+        pages = [_p for _p in pages if _p[0] not in _CONSOLIDATION_REDIRECTS]
+
         for path, freq, priority, desc in pages:
             _lm = URL_LASTMOD.get(path)
             if _lm is None and _pseo_lastmod and path.startswith(
@@ -4872,7 +4899,7 @@ Base URL: https://sanctionsai.dev
 #### GET /sanctions - Screen a counterparty
 Query params: name, wallet, country (at least one required)
 curl "https://sanctionsai.dev/sanctions?wallet=0x098B716B8Aaf21512996dC57EB0615e2383E2f96"
-Response: {"matches": [...], "clean": bool, "checked_at": int}
+Response: {"matches": [...], "clean": bool, "action": "ALLOW"|"BLOCK", "screened_at": RFC3339, "screen_id": str, "checked_against": {"wallets": int, "names": int}, "list_version": {...}, "latency_ms": int}. "action" is the OFAC SDN verdict only.
 
 #### POST /risk - Transaction risk score
 Body: {"counterparty_id": str, "amount": str, "currency": str, "rail": str, "category": str}
@@ -6618,12 +6645,11 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
   <div class="proof">
     <div class="card ok reveal"><h4><span class="d">&#10003;</span> Clean wallet</h4>
 <pre><span class="k">$ curl</span> ".../sanctions?wallet=0x098B...
-<span class="k">$</span>  { "checked": "0x098B...Fa3",
-    "clean": <span class="k">true</span>,
+<span class="k">$</span>  { "clean": <span class="k">true</span>,
+    "action": "ALLOW",
     "matches": [],
-    "confidence": 1.0,
-    "list": null,
-    "checked_at": "2026-06-30T12:04:11Z" }
+    "checked_against": { "wallets": 947, "names": 19218 },
+    "screened_at": "2026-06-30T12:04:11Z" }
 
    &rarr; proceed with the payment.</pre>
     </div>
@@ -6631,10 +6657,11 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
 <pre><span class="k">$ curl</span> ".../sanctions?wallet=0x83AB...
 <span class="k">$</span>  { "checked": "0x83AB...c2",
     "clean": <span class="r">false</span>,
-    "matches": [{ "list": "SDN",
-        "match_type": "address",
+    "action": "BLOCK",
+    "matches": [{ "list": "OFAC_SDN",
+        "match_type": "wallet_exact",
         "confidence": 1.0 }],
-    "checked_at": "2026-06-30T12:04:11Z" }
+    "screened_at": "2026-06-30T12:04:11Z" }
 
    &rarr; <span class="r">do NOT pay.</span></pre>
     </div>
@@ -7206,10 +7233,14 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
 <pre><code>curl "__SITE__/sanctions?wallet=0x098B716B8Aaf21512996dC57EB0615e2383E2f96"</code></pre>
 <pre><code>{
   "matches": [
-    {"list": "OFAC_SDN", "match_type": "wallet", "confidence": 1.0}
+    {"list": "OFAC_SDN", "match_type": "wallet_exact", "confidence": 1.0}
   ],
   "clean": false,
-  "checked_at": 1718000000
+  "action": "BLOCK",
+  "screened_at": "2026-07-25T21:00:18Z",
+  "screen_id": "1925fe6ea5404b7f",
+  "checked_against": {"wallets": 947, "names": 19218},
+  "latency_ms": 34
 }</code></pre>
 <p>The <code>clean</code> boolean is your go/no-go signal: <code>true</code> means the counterparty is not on any sanctions list, <code>false</code> means a match was found and your agent should halt the payment.</p>
 <h2>Authentication</h2>
@@ -7221,10 +7252,14 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
 <pre><code>curl "__SITE__/sanctions?wallet=0x098B716B8Aaf21512996dC57EB0615e2383E2f96"</code></pre>
 <pre><code>{
   "matches": [
-    {"list": "OFAC_SDN", "match_type": "wallet", "confidence": 1.0}
+    {"list": "OFAC_SDN", "match_type": "wallet_exact", "confidence": 1.0}
   ],
   "clean": false,
-  "checked_at": 1718000000
+  "action": "BLOCK",
+  "screened_at": "2026-07-25T21:00:18Z",
+  "screen_id": "1925fe6ea5404b7f",
+  "checked_against": {"wallets": 947, "names": 19218},
+  "latency_ms": 34
 }</code></pre>
 
 <h2>2. Transaction risk score - <code>POST /risk</code></h2>
@@ -9150,20 +9185,21 @@ curl "https://sanctionsai.dev/sanctions?wallet=<span style="color:#f59e0b">0x742
 <meta name="description" content="Historical OFAC civil enforcement penalties 2017-2024. Downloadable CSV with company, amount, violation type, and source. CC BY 4.0. Built for compliance teams and AI agent builders.">
 <link rel="canonical" href="https://sanctionsai.dev/data/ofac-enforcement">
 <script type="application/ld+json">{dataset_schema}</script>
-<style>body{{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#0a0a0a;color:#e2e8f0;margin:0;padding:0}}nav{{background:#111;padding:1rem 2rem;border-bottom:1px solid #222}}nav a{{color:#94a3b8;text-decoration:none;margin-right:1.5rem;font-size:0.875rem}}nav a:hover{{color:#fff}}.container{{max-width:900px;margin:0 auto;padding:2rem}}h1{{font-size:1.75rem;margin-bottom:0.5rem}}.sub{{color:#94a3b8;margin-bottom:1.5rem}}table{{width:100%;border-collapse:collapse;margin:2rem 0;font-size:0.875rem}}th{{background:#1a1a2e;padding:0.75rem;text-align:left;border-bottom:2px solid #333;font-weight:600}}td{{padding:0.75rem;border-bottom:1px solid #222}}.amt{{color:#00d4aa;font-weight:600;white-space:nowrap}}.cite-block{{background:#1a1a2e;border:1px solid #333;border-radius:0.5rem;padding:1.25rem;margin:2rem 0;font-size:0.8125rem;color:#94a3b8}}.cite-block strong{{color:#e2e8f0}}a{{color:#00d4aa}}.btn{{display:inline-block;background:#00d4aa;color:#0a0a0a;padding:0.75rem 1.5rem;border-radius:0.5rem;text-decoration:none;font-weight:600;margin:1rem 0}}footer{{border-top:1px solid #222;padding:1.5rem 2rem;text-align:center;font-size:0.8125rem;color:#64748b}}</style></head><body>
-<nav><div style="font-weight:700;color:#fff;display:inline;margin-right:2rem">sanctionsai.dev</div><a href="/">Home</a><a href="/teardown">How It Works</a><a href="/faq">FAQ</a><a href="/docs">Docs</a><a href="/pricing">Pricing</a></nav>
-<div class="container">
+<meta name="theme-color" content="#08090b"><meta name="color-scheme" content="dark"><style>{_DARK_CSS}{_STATIC_CSS}</style></head><body>
+{_NAV}
+<main id="main" class="prose">
 <h1>OFAC Enforcement Database 2017-2024</h1>
 <p class="sub">Historical civil penalty enforcement actions by the U.S. Treasury Office of Foreign Assets Control. Updated with each new enforcement release. <strong>CC BY 4.0</strong> — free to use, cite, and redistribute.</p>
 <a href="/ofac-enforcement-2026.csv" class="btn">Download CSV</a>
-<table><thead><tr><th>Year</th><th>Company</th><th>Penalty</th><th>Violation</th><th>Description</th></tr></thead><tbody>{rows}</tbody></table>
+<div class="tbl"><table><thead><tr><th>Year</th><th>Company</th><th>Penalty</th><th>Violation</th><th>Description</th></tr></thead><tbody>{rows}</tbody></table></div>
 <div class="cite-block"><strong>Cite this data:</strong><br>sanctionsai.dev. "OFAC Enforcement Database 2017-2024," 2026. CC BY 4.0.<br>CSV: <a href="/ofac-enforcement-2026.csv">ofac-enforcement-2026.csv</a></div>
 <h2>Why This Data Matters</h2>
 <p>The maximum OFAC civil penalty is $377,700 per violation. For crypto exchanges processed $24M+ in penalties. An AI agent that autonomously sends a single USDC payment to a sanctioned wallet exposes the operator to the same liability. The cost of compliance screening (~$19/month) is four orders of magnitude smaller than the cost of one violation.</p>
 <h2>Methodology</h2>
 <p>Data sourced from <a href="https://ofac.treasury.gov/civil-penalties-and-enforcement-information">OFAC Civil Penalties and Enforcement Information</a>. Penalty amounts reflect civil monetary penalties as published in enforcement releases. Criminal penalties and settlements with other agencies are excluded. Last updated: July 2026.</p>
-</div>
-<footer>&copy; 2026 sanctionsai.dev. OFAC enforcement data is public domain; compilation CC BY 4.0.</footer>
+<p class="note">&copy; 2026 sanctionsai.dev. OFAC enforcement data is public domain; compilation CC BY 4.0.</p>
+</main>
+{_FOOTER}
 </body></html>'''
         self._send_html(200, page)
 
@@ -9599,7 +9635,26 @@ curl "https://sanctionsai.dev/sanctions?wallet=<span style="color:#f59e0b">0x742
             ("startup", "OFAC sanctions for startup agents"),
             ("freelance-developer", "OFAC sanctions API for freelance developers"),
             ("enterprise", "OFAC sanctions for enterprise agents"),
+            # These nine exist and are in the sitemap but the hub never listed
+            # them, so nothing on the site linked to them at all — Google had
+            # them only via the sitemap, with no internal signal about what
+            # they are worth. The hub is the only page that can carry that.
+            ("crypto-exchanges", "OFAC screening for crypto exchange deposits and withdrawals"),
+            ("stablecoin-issuers", "Sanctions screening for stablecoin mint and redeem flows"),
+            ("defi-protocols", "OFAC screening at the protocol contract boundary"),
+            ("cross-border-payments", "Sanctions screening for cross-border payment rails"),
+            ("remittance", "OFAC checks for remittance agents"),
+            ("fintech-startups", "OFAC screening for early-stage fintech without a compliance team"),
+            ("kyc-providers", "Sanctions list matching for KYC and onboarding providers"),
+            ("nft-marketplaces", "OFAC screening for NFT marketplace settlement"),
+            ("rwa-tokenization", "Sanctions screening for tokenised real-world assets"),
+            ("dao-treasuries", "OFAC screening before a DAO treasury disburses"),
         ]
+        # "remittance" appears twice in the list above once the additions land;
+        # de-duplicate while preserving order so the hub never renders a slug
+        # twice and never emits two links to the same URL.
+        _seen = set()
+        slugs = [(s, d) for s, d in slugs if not (s in _seen or _seen.add(s))]
         items = "".join(
             f'<div style="padding:18px 0;border-bottom:1px solid #1a1a1a">'
             f'<h3><a href="/for/{slug}" style="color:#fff;text-decoration:none">{slug.replace("-"," ").title()}</a></h3>'
