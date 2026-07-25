@@ -217,3 +217,29 @@ belongs where the money is, not one page upstream.
 Items 1–6 are the ones that pay back immediately, because they are all credibility
 defects on a product whose entire value proposition is *being trustworthy about
 compliance*.
+
+---
+
+## Status at close of audit (2026-07-26, ~00:20)
+
+A second agent session was rewriting this repo throughout the audit and deploying
+on a ~90-second cadence (v374 → v392). It independently reached the same
+conclusions on most of the above and shipped them live. Verified against the
+running site at close:
+
+| # | Defect | Status | Verified by |
+|---|---|---|---|
+| 1 | Penalty figure stale / 7 variants | **Fixed** — unified to `$377,700` with a Federal Register citation and a "where does this figure come from?" FAQ | 10 occurrences live on `/`, zero stale figures anywhere |
+| 2 | "hourly sync" false | **Fixed (this session)** | 0 across 11 sampled live pages; `/health` `ttl=24h` now agrees with the copy |
+| 3 | EU/UN/UK screening overclaim | **Fixed** | `OFAC/EU/UN/UK` gone; `/pricing` now says "screen the US Treasury OFAC SDN list, refreshed daily" |
+| 4 | Phantom `/tripwire` testimonial | **Fixed** — replaced with an honest FAQ: "Nobody has bought it yet, so there is nothing honest to put here." | live |
+| 5 | Fake 15:00 countdown | **Fixed** — timer removed (only dead CSS remains) | live |
+| 6 | `/data/*` soft-404 (HTTP 200 "not found") | **Fixed** — `COPY data/` added to the Dockerfile | `/data/` serves real HTML |
+| 7 | `/pricing` no risk reversal | **Fixed** — guarantee + objection handling + a path for non-buyers | 3 guarantee mentions live |
+
+Items 8 and 9 from the table above (a rung above $99, and the Traffic work —
+resume publishing, work the Dream 100, any paid traffic at all) remain open. They
+are the whole of the remaining gap: Traffic scored **49.1** against DotCom's 61.3
+and Expert's 66.4, and 246 pages currently return 3 clicks per 28 days.
+
+Fixing every credibility defect on the page does not by itself produce a visitor.
