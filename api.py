@@ -930,6 +930,18 @@ ul.cross li::before{content:"\\2715";position:absolute;left:0;color:var(--danger
 .page-sources{margin-top:36px;padding-top:18px;border-top:1px solid var(--line);color:var(--fg-3);font-size:.875rem}
 .page-sources p{color:var(--fg-3)}
 .hidden{display:none}
+
+/* ── pSEO template (/how-to, /cost, /countries, /check, /tools …) ─ */
+/* A <section> nested inside .prose must not re-apply the horizontal
+   padding its wrapper already provides. */
+.prose section{padding-inline:0}
+.faq details,details.faq-item,article details{margin:0 0 10px;border:1px solid var(--line);border-radius:var(--r);background:var(--bg-1);overflow:hidden}
+.faq details[open],article details[open]{border-color:var(--accent-line)}
+.faq summary,article details summary{display:flex;align-items:center;gap:12px;min-height:56px;padding:16px 18px;cursor:pointer;font-weight:600;font-size:.9375rem;color:#fff;list-style:none}
+.faq summary::-webkit-details-marker,article details summary::-webkit-details-marker{display:none}
+.faq summary::before,article details summary::before{content:"+";flex:0 0 auto;width:16px;text-align:center;color:var(--accent);font-size:1.15em;font-weight:700}
+.faq details[open] summary::before,article details[open] summary::before{content:"\\2212"}
+.faq details > p,article details > p{padding:0 18px 18px;margin:0}
 """
 
 
@@ -2365,6 +2377,112 @@ class Handler(BaseHTTPRequestHandler):
             "/badge": "/badge/clean",
             "/verified-badge": "/badge/clean",
         }
+        # SEO consolidation, 2026-07-26. Search Console showed 19 queries split
+        # across 2-4 near-identical pages of ours, and 68 of 246 URLs drawing any
+        # impression at all. Five overlapping families were each restating the
+        # same handful of topics at 300-800 words: /countries vs /by-country,
+        # /learn vs /glossary, /how-to vs /guides vs /faq, and eight separate
+        # pages on "what an OFAC violation costs". Each cluster now folds into
+        # one canonical page, which absorbs the others' content.
+        #
+        # /compare/world-check is deliberately a TARGET, never a source: at 174
+        # impressions and position 26 it is the best-ranking page on the site,
+        # and the rest of /compare already 301s the other way, toward /vs. Do not
+        # "make it consistent" by redirecting it into /vs — that both discards
+        # the only real ranking asset here and creates a redirect loop.
+        CONSOLIDATION_REDIRECTS = {
+            # duplicate country family — /countries has the fuller set
+            "/by-country": "/countries",
+            "/by-country/belarus": "/countries/belarus",
+            "/by-country/china": "/countries/china",
+            "/by-country/cuba": "/countries/cuba",
+            "/by-country/iran": "/countries/iran",
+            "/by-country/myanmar": "/countries/myanmar",
+            "/by-country/north-korea": "/countries/north-korea",
+            "/by-country/pakistan": "/countries/pakistan",
+            "/by-country/russia": "/countries/russia",
+            "/by-country/syria": "/countries/syria",
+            "/by-country/venezuela": "/countries/venezuela",
+            "/by-country/lebanon-hezbollah": "/countries/lebanon",
+            # definitions live in /glossary
+            "/learn/what-is-the-sdn-list": "/glossary/ofac-sdn-list",
+            "/glossary/specially-designated-nationals": "/glossary/ofac-sdn-list",
+            "/learn/what-is-the-ofac-50-percent-rule": "/glossary/ofac-50-percent-rule",
+            "/learn/what-is-voluntary-self-disclosure": "/glossary/voluntary-self-disclosure",
+            "/penalties/voluntary-self-disclosure": "/glossary/voluntary-self-disclosure",
+            "/learn/what-is-a-blocked-person": "/glossary/blocked-person",
+            "/learn/what-is-strict-liability-in-ofac": "/glossary/strict-liability",
+            "/learn/what-is-know-your-agent": "/glossary/know-your-agent",
+            "/blog/know-your-agent": "/glossary/know-your-agent",
+            "/learn/what-is-x402": "/glossary/x402-protocol",
+            "/learn/sanctions-glossary": "/glossary",
+            # procedures live in /how-to
+            "/faq/how-to-comply-with-ofac": "/how-to/comply-with-ofac",
+            "/guides/avoid-ofac-violations": "/how-to/avoid-ofac-violations",
+            "/guides/build-compliance-program": "/how-to/build-a-compliance-program",
+            "/guides/sanctions-compliance-program": "/how-to/build-a-compliance-program",
+            "/faq/how-to-screen-crypto-wallets-ofac": "/how-to/screen-crypto-wallet",
+            "/blog/how-to-screen-wallet-agent": "/how-to/screen-crypto-wallet",
+            # duplicate FAQs
+            "/faq/is-crypto-ofac-screening-required": "/faq/is-ofac-screening-required-for-crypto",
+            "/faq/how-often-ofac-list-updated": "/faq/how-often-update-sdn-list",
+            # "what does a violation cost" — one statutory page, one data page
+            "/cost/ofac-fine-per-violation": "/penalties/ofac-violation-costs",
+            "/cost/ofac-criminal-penalties": "/penalties/ofac-violation-costs",
+            "/cost/ofac-penalty-multiplier": "/penalties/ofac-violation-costs",
+            "/cost/cost-of-non-compliance": "/penalties/ofac-violation-costs",
+            "/faq/what-are-ofac-penalties": "/penalties/ofac-violation-costs",
+            "/faq/what-happens-if-you-violate-ofac": "/penalties/ofac-violation-costs",
+            "/cost/ofac-enforcement-actions": "/enforcement",
+            "/cost/ofac-settlement-costs": "/enforcement",
+            "/data/ofac-enforcement": "/enforcement",
+            # Case-study pages superseded by sourced records in /enforcement.
+            # Five of them asserted OFAC penalties that appear nowhere in OFAC's
+            # published 2003-2026 chart (Coinbase, EtherDelta, eToro, Bitfinex,
+            # Ripple — those settlements were NYDFS, SEC, none, CFTC and FinCEN
+            # respectively), and three more carried the wrong figure. "etry" is a
+            # corrupted "etoro" slug from the generator that produced them.
+            "/penalties/binance": "/enforcement/binance-2023",
+            "/penalties/binance-ofac-2023": "/enforcement/binance-2023",
+            "/penalties/kraken": "/enforcement/payward-inc-kraken-2022",
+            "/penalties/kraken-ofac-2022": "/enforcement/payward-inc-kraken-2022",
+            "/penalties/bitpay-ofac-2021": "/enforcement/bitpay-inc-2021",
+            "/penalties/bitgo-ofac-2021": "/enforcement/2020",
+            "/penalties/standard-chartered": "/enforcement/standard-chartered-bank-2019",
+            "/penalties/societe-generale": "/enforcement/societe-generale-s-a-2018",
+            "/penalties/coinbase-ofac-2023": "/enforcement/2023",
+            "/penalties/etherdelta-ofac-2018": "/enforcement/2018",
+            "/penalties/ofac-acd-penalties-2023": "/enforcement/2023",
+            "/penalties/etry": "/enforcement",
+            "/penalties/bitfinex": "/enforcement",
+            "/penalties/ripple": "/enforcement",
+            # one page per vendor
+            "/vs/refinitiv": "/compare/world-check",
+            "/vs/refinitiv-worldcheck": "/compare/world-check",
+            "/alternatives-to/refinitiv": "/compare/world-check",
+            "/alternatives-to/chainalysis": "/vs/chainalysis",
+            "/alternatives-to/elliptic": "/vs/elliptic",
+            "/alternatives-to/dow-jones": "/vs/dow-jones-rdc",
+            "/alternatives-to/dow-jones-risk": "/vs/dow-jones-rdc",
+            "/compare/trm-labs": "/vs/trm-labs",
+        }
+        # A hub must not 301 to one of its own leaves; /compare pointed at
+        # /vs/chainalysis, so every hub-level link and citation landed on a
+        # single competitor page.
+        CONSOLIDATION_REDIRECTS["/compare"] = "/vs"
+        HALLUCINATED_REDIRECTS.update(CONSOLIDATION_REDIRECTS)
+        # Collapse chains. Consolidating turned three existing redirect targets
+        # into redirect sources themselves (/learn -> /learn/sanctions-glossary
+        # -> /glossary), and a hop costs both a round trip and link equity.
+        # Resolving here keeps that true for entries added later, instead of
+        # depending on whoever edits the map next to notice.
+        for _src in HALLUCINATED_REDIRECTS:
+            _dst = HALLUCINATED_REDIRECTS[_src]
+            for _ in range(5):
+                if _dst not in HALLUCINATED_REDIRECTS or HALLUCINATED_REDIRECTS[_dst] == _dst:
+                    break
+                _dst = HALLUCINATED_REDIRECTS[_dst]
+            HALLUCINATED_REDIRECTS[_src] = _dst
         if p.path in HALLUCINATED_REDIRECTS:
             target = "https://sanctionsai.dev" + HALLUCINATED_REDIRECTS[p.path]
             self.send_response(301)
@@ -3524,8 +3642,28 @@ License: https://creativecommons.org/licenses/by/4.0/
             # an id both sides can quote.
             result["screened_at"] = _iso_utc(time.time())
             result["screen_id"] = uuid.uuid4().hex[:16]
+            # action / checked_against / latency_ms have been advertised in the
+            # hero sample, the sanctioned-wallet proof block, the x402 example on
+            # /agent and the landing email template -- and were never returned.
+            # The embeddable widget at /widgets/screen reads
+            # d.checked_against.wallets on the CLEAN branch, so every clean
+            # result threw a TypeError and rendered "Network error" on whatever
+            # third-party site had embedded it. Publishing the documented shape
+            # rather than rewriting four samples: the widget needs these, the
+            # latency is already measured, and the counts are already loaded.
+            #
+            # "action" is the OFAC SDN screening verdict only -- BLOCK on an SDN
+            # match, ALLOW on none. It is not a judgement about the payment: we
+            # do not screen EU, UN or UK lists, so ALLOW means "no OFAC SDN
+            # match at screened_at", nothing wider. /docs says so explicitly.
+            result["action"] = "BLOCK" if result.get("matches") else "ALLOW"
+            result["latency_ms"] = _screen_ms
             try:
                 _cs = core.compliance_status()
+                result["checked_against"] = {
+                    "wallets": _cs.get("wallets_tracked"),
+                    "names": _cs.get("names_tracked"),
+                }
                 result["list_version"] = {
                     "source": _cs.get("detail", ""),
                     "fetched_at": _iso_utc(_cs.get("lists_fetched_at")),
@@ -5630,7 +5768,7 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
         <li><span class="ck">&#10003;</span> Priority support</li>
       </ul>
       <a href="/checkout/dev" class="btn btn-primary">Get your API key &rarr;</a>
-      <p class="guar">First month free. Cancel anytime. If we call a counterparty clean and it was on the SDN list at that timestamp, we cover the first <b class="red">$10,000</b> of your legal fees &mdash; written into <a href="/terms">Terms 5a</a>, scope and exclusions at <a href="/guarantee">/guarantee</a>.</p>
+      <p class="guar">Cancel anytime. If we call a counterparty clean and it was on the SDN list at that timestamp, we cover the first <b class="red">$10,000</b> of your legal fees &mdash; written into <a href="/terms">Terms 5a</a>, scope and exclusions at <a href="/guarantee">/guarantee</a>.</p>
     </div>
     <div class="pcard reveal">
       <h3>Pro</h3>
@@ -8180,7 +8318,7 @@ async function screen(){
     const r=await fetch('https://sanctionsai.dev/sanctions?wallet='+encodeURIComponent(wallet));
     const d=await r.json();
     if(!r.ok){result.className='result error';result.textContent='Error: '+((d.error||d.message||'Unknown'))}
-    else if(d.clean){result.className='result clean';result.innerHTML='<strong>✓ CLEAN</strong> — No OFAC match for this wallet.<br><small>Checked against '+d.checked_against.wallets+' wallets in '+d.latency_ms+'ms</small>'}
+    else if(d.clean){result.className='result clean';var _w=(d.checked_against&&d.checked_against.wallets)||(d.list_version&&d.list_version.wallets);var _det=_w?('Checked against '+_w+' wallets'+(d.latency_ms?' in '+d.latency_ms+'ms':'')):'Checked against the OFAC SDN list';result.innerHTML='<strong>✓ CLEAN</strong> — No OFAC match for this wallet.<br><small>'+_det+'</small>'}
     else{result.className='result flagged';result.innerHTML='<strong>⚠ FLAGGED</strong> — This wallet matches the OFAC SDN list.<br><small>Matches: '+(d.matches?JSON.stringify(d.matches).substring(0,200):'Yes')+'</small>'}
   }catch(e){result.className='result error';result.textContent='Network error: '+e.message}
 }
@@ -8617,7 +8755,7 @@ document.getElementById("squeeze-form").addEventListener("submit", function(e){
             '<div style="margin-top:14px"><a href="/tools/wallet-checker" class="btn btn-ghost">Screen a wallet '
             'free</a>&nbsp; <a href="/playbook" class="btn btn-ghost">Take the seven patterns</a></div>'
             '</div>'
-            '<p class="note" style="margin-top:20px">First month free &middot; cancel anytime &middot; '
+            '<p class="note" style="margin-top:20px">Cancel anytime &middot; '
             '<a href="/guarantee">$10,000 screening guarantee</a> &middot; MIT licensed, so you can leave and '
             'keep running it.</p>'
             '</div></section>'
