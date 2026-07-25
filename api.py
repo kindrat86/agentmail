@@ -4237,7 +4237,42 @@ License: https://creativecommons.org/licenses/by/4.0/
         self.end_headers()
         self.wfile.write(body)
 
+    def _resolve_hub_links(self, html: str) -> str:
+        """Stop section hubs advertising their own consolidated children.
+
+        The hubs enumerate everything that ever lived under their prefix, so
+        after consolidation /cost listed six children that 301 elsewhere and
+        /glossary offered "specially-designated-nationals" beside the page it
+        now redirects into. Both are stale menus: a reader clicks through a hop,
+        and a crawler spends budget rediscovering the same destination.
+
+        Where the destination is already linked on the page the entry is
+        dropped, because repointing would just print the same link twice.
+        Otherwise the entry is repointed and keeps its label.
+        """
+        present = set(_re.findall(r'href="(/[^"#?]*)"', html))
+        present = {p.rstrip("/") or "/" for p in present}
+        for src, dst in _CONSOLIDATION_REDIRECTS.items():
+            if src not in present:
+                continue
+            for variant in ('href="%s"' % src, 'href="%s/"' % src):
+                if variant not in html:
+                    continue
+                if dst in present:
+                    item = _re.compile(
+                        r"<li\b[^>]*>(?:(?!</li>).)*?%s(?:(?!</li>).)*?</li>" % _re.escape(variant), _re.S)
+                    html, dropped = item.subn("", html)
+                    if not dropped:
+                        html = html.replace(variant, 'href="%s"' % dst)
+                else:
+                    html = html.replace(variant, 'href="%s"' % dst)
+                    present.add(dst)
+        return html
+
     def _serve_text(self, text: str, content_type: str = "text/plain"):
+        if getattr(self, "_clean_hub_links", False) and content_type.startswith("text/html"):
+            self._clean_hub_links = False
+            text = self._resolve_hub_links(text)
         body = text.encode()
         self.send_response(200)
         self.send_header("Content-Type", f"{content_type}; charset=utf-8")
@@ -8826,8 +8861,10 @@ document.getElementById("squeeze-form").addEventListener("submit", function(e){
             '<li>Everything worked, and eighteen months later nobody could prove it. A compliance program you '
             'cannot evidence is, to a regulator, the same as no compliance program.</li>'
             '</ul>'
-            '<p>SCREEN answers the first question. STOP makes the answer binding. SCORE catches what the list '
-            'cannot know. STAMP makes it provable. Drop any one and the other three stop being worth much.</p>'
+            '<p>SCREEN answers the first question. SCORE catches what the list cannot know. STOP makes the '
+            'answer binding. STAMP makes it provable. They run in that order for a reason: scoring a payment '
+            'you have not screened tells you nothing, and stopping is worthless if nothing recorded why. '
+            'Drop any one gate and the other three stop being worth much.</p>'
             '</div></section>'
 
             # ---- THE THREE SECRETS --------------------------------------
@@ -10185,7 +10222,7 @@ An autonomous agent that transacts without pre-payment sanctions screening carri
 <pre style="background:#0e0f12;padding:16px;border-radius:8px;overflow-x:auto;font-size:0.86em"><code>SEI = (8×0.30 + 12×0.25 + 10×0.20 + 10×0.15 + 10×0.10) × 100
     = (2.4 + 3.0 + 2.0 + 1.5 + 1.0) × 100
     = <strong>990 / 1000 (critical exposure)</strong></code></pre>
-<p>Expected per-day exposure ceiling: 500 violations × $377,700 = <strong>$188.9M</strong>. Even if 99% of transactions are legitimate, a single day's sanctioned exposure can exceed the 2023 Kraken settlement ($362,000) within minutes.</p>
+<p>Expected per-day exposure ceiling: 500 violations × $377,700 = <strong>$188.9M</strong>. Even if 99% of transactions are legitimate, a single day's sanctioned exposure can exceed the 2022 Kraken settlement ($362,158) within minutes.</p>
 
 <h2>Real enforcement precedents (US Treasury / OFAC public records)</h2>
 <table style="width:100%;border-collapse:collapse;margin:24px 0;font-size:0.94em">
@@ -10194,9 +10231,9 @@ An autonomous agent that transacts without pre-payment sanctions screening carri
 </tr></thead>
 <tbody>
 <tr style="border-bottom:1px solid #222"><td style="padding:10px 12px">Binance</td><td style="padding:10px 12px">2023</td><td style="padding:10px 12px"><strong>$968M</strong></td><td style="padding:10px 12px">Iran, Syria, Crimea transactions</td></tr>
-<tr style="border-bottom:1px solid #222"><td style="padding:10px 12px">Kraken (Payward)</td><td style="padding:10px 12px">2022</td><td style="padding:10px 12px"><strong>$362,000</strong></td><td style="padding:10px 12px">Iran transactions</td></tr>
+<tr style="border-bottom:1px solid #222"><td style="padding:10px 12px">Kraken (Payward)</td><td style="padding:10px 12px">2022</td><td style="padding:10px 12px"><strong>$362,158</strong></td><td style="padding:10px 12px">Iran transactions</td></tr>
 <tr style="border-bottom:1px solid #222"><td style="padding:10px 12px">EtherDelta (Zachary Coburn)</td><td style="padding:10px 12px">2018</td><td style="padding:10px 12px"><strong>$450,000</strong></td><td style="padding:10px 12px">Iran, Syria, Crimea traders</td></tr>
-<tr style="border-bottom:1px solid #222"><td style="padding:10px 12px">BitGo</td><td style="padding:10px 12px">2021</td><td style="padding:10px 12px"><strong>$98,830</strong></td><td style="padding:10px 12px">Specially Designated Nationals</td></tr>
+<tr style="border-bottom:1px solid #222"><td style="padding:10px 12px">BitGo</td><td style="padding:10px 12px">2020</td><td style="padding:10px 12px"><strong>$98,830</strong></td><td style="padding:10px 12px">Specially Designated Nationals</td></tr>
 <tr style="border-bottom:1px solid #222"><td style="padding:10px 12px">BitPay</td><td style="padding:10px 12px">2021</td><td style="padding:10px 12px"><strong>$507,375</strong></td><td style="padding:10px 12px">Crimea, Iran, Syria, Cuba</td></tr>
 <tr style="border-bottom:1px solid #222"><td style="padding:10px 12px">Société Générale</td><td style="padding:10px 12px">2018</td><td style="padding:10px 12px"><strong>$53.9M</strong></td><td style="padding:10px 12px">Cuba sanctions</td></tr>
 <tr style="border-bottom:1px solid #222"><td style="padding:10px 12px">Standard Chartered</td><td style="padding:10px 12px">2012</td><td style="padding:10px 12px"><strong>$132M</strong></td><td style="padding:10px 12px">Iran, Sudan, Myanmar</td></tr>
