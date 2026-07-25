@@ -39,6 +39,9 @@ from .base import ComplianceProvider
 # vile/ofac-sdn-list exposes multi-chain crypto addresses as release assets.
 # We resolve the latest release's sdn.json via the GitHub API.
 _VILE_API_LATEST = "https://api.github.com/repos/vile/ofac-sdn-list/releases/latest"
+# Stable "latest release asset" redirect — serves the asset off the release
+# CDN without touching the rate-limited api.github.com. Preferred path.
+_VILE_DIRECT_LATEST = "https://github.com/vile/ofac-sdn-list/releases/latest/download/sdn.json"
 # Treasury SDN CSV — authoritative names + countries.
 _TREASURY_SDN_CSV = "https://www.treasury.gov/ofac/downloads/sdn.csv"
 
@@ -168,8 +171,12 @@ class OsintComplianceProvider(ComplianceProvider):
             if self._loaded and not force:
                 return
             now = time.time()
+            # Capture each helper's specific failure before the next one can
+            # overwrite the shared _degraded_reason slot.
             wallet_ok = self._maybe_refresh_wallets(force, now)
+            wallet_reason = "" if wallet_ok else self._degraded_reason
             names_ok = self._maybe_refresh_names(force, now)
+            names_reason = "" if names_ok else self._degraded_reason
             self._loaded = True
             if not (wallet_ok and names_ok):
                 self._degraded = True
@@ -178,8 +185,14 @@ class OsintComplianceProvider(ComplianceProvider):
                     bad.append("wallets")
                 if not names_ok:
                     bad.append("names")
+                # Keep the underlying cause (HTTP 403, parse error, ...). This
+                # used to overwrite it with the summary alone, which is why a
+                # 3-address fallback looked identical in /health to any other
+                # degradation and took an hour of bisecting to diagnose.
+                specifics = [r for r in (wallet_reason, names_reason) if r]
                 self._degraded_reason = (
                     f"using stale/fallback data for: {', '.join(bad)}"
+                    + (f" — {'; '.join(specifics)}" if specifics else "")
                 )
             else:
                 self._degraded = False
@@ -233,25 +246,56 @@ class OsintComplianceProvider(ComplianceProvider):
         except (OSError, ValueError):
             return False
 
-    def _fetch_wallets(self) -> tuple[dict[str, str], str]:
-        """Fetch latest vile/ofac-sdn-list release sdn.json."""
-        raw = _http_get(_VILE_API_LATEST, timeout=20)
-        rel = json.loads(raw)
-        tag = rel.get("tag_name", "unknown")
-        json_asset = [a for a in rel.get("assets", [])
-                      if a.get("name", "").endswith(".json")]
-        if not json_asset:
-            raise RuntimeError("no JSON asset in latest vile release")
-        url = json_asset[0]["browser_download_url"]
-        data = json.loads(_http_get(url, timeout=45))
+    @staticmethod
+    def _parse_wallets(data) -> dict[str, str]:
         wallets: dict[str, str] = {}
         for entry in data:
             addr = (entry.get("address") or "").strip()
             if addr:
                 wallets[addr.lower()] = entry.get("type", "Digital Currency Address")
-        if not wallets:
-            raise RuntimeError("vile sdn.json contained no addresses")
-        return wallets, f"vile/ofac-sdn-list@{tag[:24]}"
+        return wallets
+
+    def _fetch_wallets(self) -> tuple[dict[str, str], str]:
+        """Fetch latest vile/ofac-sdn-list release sdn.json.
+
+        Primary path is GitHub's stable `releases/latest/download/<asset>`
+        redirect, which serves the asset straight off the release CDN. The
+        old primary — resolving the asset through api.github.com — is
+        UNAUTHENTICATED-rate-limited at 60 req/hr per IP, and on shared
+        datacenter egress (Fly) that budget is routinely already spent by
+        other tenants. When it 403s here there is no cache to fall back on
+        (Fly's filesystem is ephemeral, so every deploy starts cold), so the
+        provider silently dropped to the 3-address _FALLBACK_WALLETS list
+        while the site advertised the full set. Keep the API call only as a
+        secondary path.
+        """
+        errors = []
+        try:
+            data = json.loads(_http_get(_VILE_DIRECT_LATEST, timeout=45))
+            wallets = self._parse_wallets(data)
+            if wallets:
+                return wallets, "vile/ofac-sdn-list@latest"
+            errors.append("direct: sdn.json contained no addresses")
+        except Exception as e:
+            errors.append(f"direct: {e}")
+
+        # Secondary: resolve via the GitHub API (rate-limited; see above).
+        try:
+            rel = json.loads(_http_get(_VILE_API_LATEST, timeout=20))
+            tag = rel.get("tag_name", "unknown")
+            json_asset = [a for a in rel.get("assets", [])
+                          if a.get("name", "").endswith(".json")]
+            if not json_asset:
+                raise RuntimeError("no JSON asset in latest vile release")
+            data = json.loads(_http_get(json_asset[0]["browser_download_url"], timeout=45))
+            wallets = self._parse_wallets(data)
+            if not wallets:
+                raise RuntimeError("vile sdn.json contained no addresses")
+            return wallets, f"vile/ofac-sdn-list@{tag[:24]}"
+        except Exception as e:
+            errors.append(f"api: {e}")
+
+        raise RuntimeError("; ".join(errors))
 
     def _maybe_refresh_names(self, force: bool, now: float) -> bool:
         if (not force) and self._cache_fresh(_NAME_META) and os.path.exists(_NAME_CACHE):
