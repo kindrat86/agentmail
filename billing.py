@@ -200,6 +200,21 @@ BUMP_TIERS = {
 }
 
 
+def bump_available(bump: str = "audit_plus") -> bool:
+    """True only when this order bump can actually be delivered.
+
+    create_checkout_session() silently skips an unconfigured bump so that
+    checkout never breaks. That is the right behaviour for the API and the
+    wrong behaviour for the UI: rendering a bump checkbox whose price_id env
+    is unset would show a buyer an add-on, take their click, and charge them
+    for a plan without it. The pricing page gates the bump on this, so the
+    offer appears by itself the moment STRIPE_PRICE_BUMP_AUDIT is set and
+    stays invisible until then.
+    """
+    spec = BUMP_TIERS.get(bump)
+    return bool(spec and os.environ.get(spec["price_id_env"], ""))
+
+
 # ─── Stripe Checkout ────────────────────────────────────────────────────
 def create_checkout_session(plan: str, bump: str | None = None) -> dict:
     """Create a Stripe Checkout Session for a plan. Returns {url, session_id}.

@@ -803,6 +803,12 @@ _STATIC_CSS = """
 body{max-width:none;margin:0;padding:0;color:var(--fg);background:var(--bg)}
 main.prose{padding-block:clamp(28px,6vw,48px)}
 h2{border-bottom:0;padding-bottom:0}
+/* the generator sets `border:1px solid #e5e7eb` on every cell — a light-grey
+   grid on a near-black page; reset all four sides before restyling */
+th,td{border:0;border-bottom:1px solid var(--line)}
+/* 3-column comparison tables squeezed into 335px broke to one word per line.
+   Give them room and let the .tbl wrapper scroll instead. */
+@media (max-width:640px){.tbl > table{min-width:520px}}
 .lede,.lead{font-size:clamp(1.0625rem,1rem + .4vw,1.25rem);color:var(--fg-2);margin-bottom:24px}
 .subtitle,.updated,.disc,.note{color:var(--fg-3);font-size:.875rem}
 .disc{border-top:1px solid var(--line);margin-top:32px;padding-top:16px}
