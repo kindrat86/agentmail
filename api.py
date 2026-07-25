@@ -714,7 +714,7 @@ _VERTICALS = {
         "name": "Startup",
         "title": "OFAC Sanctions Screening for Startup AI Agents",
         "desc": "Startups building AI agents can add OFAC compliance before their first payment. Free tier: 5 checks/day, no API key.",
-        "p1": "Startups shipping AI agents that handle payments need OFAC compliance from day one. A $330,000 fine can kill a startup before it finds product-market fit. agentmail gives startups a free tier with 50 daily checks, no signup required.",
+        "p1": "Startups shipping AI agents that handle payments need OFAC compliance from day one. A $330,000 fine can kill a startup before it finds product-market fit. agentmail gives startups a free tier with 5 daily checks, no signup required.",
         "p2": "The cost of adding compliance later is higher than adding it now retrofitting screening into an agent payment path after launch means retraining models, updating workflows, and potentially pausing payments. Startups using agentmail from the start never experience that friction.",
         "p3": "The agentmail free tier works with zero configuration. Your agent calls a single API. If it flags a sanctioned wallet your startup is protected. When you outgrow the free tier paid plans start at $19/month.",
     },
@@ -1502,7 +1502,7 @@ _GUIDE_CONTENT = {
         "steps": [
             {"name": "Check crypto wallet support", "text": "Ensure the API screens wallet addresses, not just names. agentmail covers 947 OFAC-sanctioned addresses across EVM, Bitcoin, Solana, and Tron."},
             {"name": "Verify agent-native integration", "text": "Look for MCP support, a simple HTTP API, and a CLI. Dashboard-only tools do not help autonomous agents."},
-            {"name": "Confirm a free tier exists", "text": "You should never pay to test compliance. agentmail gives 50 free checks/day with no signup."},
+            {"name": "Confirm a free tier exists", "text": "You should never pay to test compliance. agentmail gives 5 free checks/day with no signup."},
             {"name": "Check latency", "text": "Agent payment flows need sub-second responses. agentmail screens in under 100ms."},
             {"name": "Ensure audit logging", "text": "OFAC expects documented screening. Verify the API provides timestamped, exportable logs."},
         ],
@@ -1595,7 +1595,7 @@ _BLOG_POSTS = {
 <pre><code>curl -X POST https://sanctionsai.dev/kya \\
   -H "Content-Type: application/json" \\
   -d '{"agent_id":"bot-42","evidence":{"wallet_address":"0x...","wallet_age_days":310,"domain":"example.com"}}'</code></pre>
-<p>Start with the free tier: 50 sanctions checks/day, no key. Add KYA and risk scoring on a $19/mo plan.</p>""",
+<p>Start with the free tier: 5 sanctions checks/day, no key. Add KYA and risk scoring on a $19/mo plan.</p>""",
     },
     "x402-compliance": {
         "title": "x402 Payments and Compliance for AI Agents",
@@ -5932,7 +5932,7 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
             ("What data sources does agentmail use?",
              "Crypto wallets come from the vile/ofac-sdn-list GitHub releases (multi-chain, refreshed daily). Names come from the US Treasury OFAC sdn.csv. Jurisdictions cover the 16 comprehensively sanctioned / embargoed regions. Everything is public, free, primary-source data."),
             ("Do I need an API key to start?",
-             "No. The free tier gives you 50 sanctions checks/day metered by IP address, with no signup or API key. For higher volume, all four tools, and an audit log, upgrade to a paid key from $19/month at /pricing."),
+             "No. The free tier gives you 5 sanctions checks/day metered by IP address, with no signup or API key. For higher volume, all four tools, and an audit log, upgrade to a paid key from $19/month at /pricing."),
             ("How accurate is the sanctions data?",
              "Wallet matches against the published OFAC address list are exact (confidence 1.0). Name matching uses fuzzy matching with a confidence score so your agent can set a review threshold. The underlying lists are refreshed daily, so you are screening against current, not stale, data."),
             ("What is Know Your Agent (KYA)?",
@@ -7190,7 +7190,7 @@ Two embeddable widgets that let your users screen wallets against the OFAC SDN l
 
 <div class="cta-box" style="margin-top:36px">
 <h3>Ready to protect your agent's payments?</h3>
-<p>50 free checks/day, no signup, no API key. Scale to production when you're ready.</p>
+<p>5 free checks/day, no signup, no API key. Scale to production when you're ready.</p>
 <a href="/" class="btn btn-primary">Try it free →</a>
 &nbsp; <a href="/pricing" class="btn btn-ghost">See plans</a>
 </div>
@@ -7237,7 +7237,7 @@ footer a{color:#444;text-decoration:none}
 <input type="text" id="wallet" placeholder="Paste wallet address (0x..., bc1..., T...)" autocomplete="off">
 <button class="btn" onclick="screen()">Check Wallet</button>
 <div id="result" class="result"></div>
-<p class="note">50 free checks/day · No signup · <a href="https://sanctionsai.dev" target="_blank">Get API key →</a></p>
+<p class="note">5 free checks/day · No signup · <a href="https://sanctionsai.dev" target="_blank">Get API key →</a></p>
 </div>
 <footer>
 <a href="https://sanctionsai.dev" target="_blank">agentmail</a> — OFAC sanctions screening for AI agents
@@ -8290,7 +8290,7 @@ curl "https://agentmail-api.fly.dev/sanctions?wallet=<span style="color:#f59e0b"
             '<p class="lead" style="max-width:600px;margin:0 auto">Step-by-step guides for OFAC compliance: screening wallets, building programs, filing disclosures, and integrating screening APIs.</p></section>'
             '<section><div class="prose">' + items + '</div></section>'
             '<section><div class="cta-box"><h2>Need hands-on help?</h2>'
-            '<p>50 free checks/day to get started.</p>'
+            '<p>5 free checks/day to get started.</p>'
             '<a href="/tools/wallet-checker" class="btn btn-primary">Try the free checker</a></div></section>'
         )
         return self._page("How to Comply with OFAC — Guides for AI Agents — SanctionsAI",
@@ -9525,7 +9525,7 @@ compute();
 <h2>Key differences</h2>
 <p>Elliptic targets enterprise compliance teams with dashboards and reports. sanctionsai.dev is API-first, built for agents that need a yes/no answer in under 100ms before every payment.</p>
 <h2>Try it free</h2>
-<p>50 free checks/day, no signup. Just call the API.</p>"""
+<p>5 free checks/day, no signup. Just call the API.</p>"""
             },
             "complyadvantage": {
                 "title": "Best ComplyAdvantage Alternative in 2026 — sanctionsai.dev",
