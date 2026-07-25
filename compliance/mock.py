@@ -19,7 +19,7 @@ import threading
 import time
 from .base import ComplianceProvider
 
-# Tiny embedded test list — simulates what osint.py pulls from OFAC/EU/UN.
+# Tiny embedded test list — simulates what osint.py pulls from the OFAC SDN list.
 # Real provider replaces this with the live lists.
 _EMBEDDED_FLAGGED = {
     "names": {"john doe sanctions", "test sanctioned entity", "acme blocked ltd"},

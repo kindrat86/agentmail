@@ -77,6 +77,20 @@ FLOOR_FRAMING = [
     r"starts?\s+at\s+\$377,700",
 ]
 
+# compliance/osint.py fetches exactly two sources, both OFAC: the
+# vile/ofac-sdn-list releases (wallets) and Treasury sdn.csv (names). EU, UN and
+# UK consolidated lists are NOT screened. Claiming otherwise on a compliance
+# product exposes a customer to the fine we sell against.
+#
+# This has now slipped through twice in two different phrasings — the slashed
+# form "OFAC/EU/UN/UK" and the prose form "OFAC SDN, EU, UN, or UK". The second
+# was live inside the wallet checker's clean-result message, i.e. shown at the
+# exact moment a user is told their counterparty is safe. Match both shapes.
+COVERAGE_CLAIMS = [
+    r"OFAC\s*/\s*EU\s*/\s*UN(\s*/\s*UK)?",
+    r"OFAC[^.<>\n]{0,24}\b(?:EU|UN|UK)\b[^.<>\n]{0,24}\b(?:and|or)\b\s*(?:the\s+)?\b(?:EU|UN|UK)\b",
+]
+
 # Real enforcement settlements. These are history and must never be rewritten
 # by a well-meaning sweep — they are the reason this checker matches on the
 # specific stale figures above rather than on "any dollar amount".
@@ -121,7 +135,8 @@ def main():
         rel = os.path.relpath(path, ROOT)
         for label, pats in (("stale civil figure", STALE_CIVIL),
                             ("overstated criminal penalty", STALE_CRIMINAL),
-                            ("ceiling described as a floor", FLOOR_FRAMING)):
+                            ("ceiling described as a floor", FLOOR_FRAMING),
+                            ("claims EU/UN/UK coverage we do not have", COVERAGE_CLAIMS)):
             for pat in pats:
                 for m in re.finditer(pat, src, re.I):
                     line = src.count("\n", 0, m.start()) + 1

@@ -3112,7 +3112,7 @@ License: MIT
         if p.path == "/api/mcp":
             import json as _mcpjson
             _mcp_tools = [
-                {"name": "screen_name", "description": "Screen a person or entity name against OFAC SDN, EU consolidated, and UN sanctions lists. Returns match status, confidence, and list source.",
+                {"name": "screen_name", "description": "Screen a person or entity name against the US Treasury OFAC SDN list. Returns match status, confidence, and list source.",
                  "inputSchema": {"type": "object", "properties": {"name": {"type": "string", "description": "Full name or entity name to screen"}}, "required": ["name"]}},
                 {"name": "screen_wallet", "description": "Screen a cryptocurrency wallet address against OFAC SDN sanctions list. Returns match status and any associated sanctioned entity.",
                  "inputSchema": {"type": "object", "properties": {"address": {"type": "string", "description": "Wallet address to screen"}}, "required": ["address"]}},
@@ -7557,7 +7557,10 @@ function checkWallet(){
       var matches=data.matches||[];
       var matchStr="";
       if(!clean&&matches.length){
-        matchStr='<div style="margin-top:8px;font-size:.82rem;color:var(--red)">Matched: '+matches.map(function(m){return m.name||m.address||JSON.stringify(m)}).join(", ")+'</div>';
+        // OFAC wallet matches carry entity/detail, never name/address — reading the
+        // wrong fields meant every match fell through to JSON.stringify and the
+        // user was shown a raw object.
+        matchStr='<div style="margin-top:8px;font-size:.82rem;color:var(--red)">Matched: '+matches.map(function(m){var lbl=m.entity||m.name||m.address||"listed entry";return m.detail?lbl+" ("+m.detail+")":lbl}).join(", ")+'</div>';
       }
       var addrShort=w.slice(0,8)+"..."+w.slice(-6);
       r.innerHTML=
@@ -7571,7 +7574,7 @@ function checkWallet(){
         '<div class="result-detail">'+
         '<div class="result-verdict '+vClass+'">'+verdict+'</div>'+
         '<div class="result-meta">Address: <code style="font-size:.8rem;word-break:break-all">'+w+'</code></div>'+
-        (clean?'<div class="result-meta" style="color:var(--teal);margin-top:4px">✓ Not found on OFAC SDN, EU, UN, or UK sanctions lists</div>':'')+
+        (clean?'<div class="result-meta" style="color:var(--teal);margin-top:4px">✓ Not found on the US Treasury OFAC SDN list</div>':'')+
         matchStr+
         '</div></div>';
       // Animate gauge

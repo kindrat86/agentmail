@@ -6,7 +6,11 @@ agent can decide whether to pay before authorizing via x402 / AP2 / ACP / TAP.
 
 Providers:
   - mock  : local, deterministic, no key needed (tests + demos)
-  - osint : FREE open sanctions data (OFAC/EU/UN via github), wallet age heuristics (default)
+  - osint : FREE open sanctions data — US Treasury OFAC SDN ONLY (wallets from the
+            vile/ofac-sdn-list releases, names from Treasury sdn.csv), plus wallet
+            age heuristics (default). It does NOT fetch EU, UN or UK consolidated
+            lists; this docstring used to say it did, and that error propagated
+            into the site copy, the docs and the MCP tool description.
   - paid  : ComplyAdvantage / SumSub / Sift passthrough (Phase 2, B2D enterprise)
 
 A provider implements four capability methods + status():
