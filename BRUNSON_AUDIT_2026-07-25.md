@@ -362,3 +362,22 @@ Two items in this audit remain open and neither is mine to close:
 One small gap worth closing cheaply: `/playbook` is not linked from the homepage,
 so the site's best ungated lead magnet is reachable only from `/start` and the
 footer.
+
+### Footnote on the AEO score of 88
+
+The 88 stands — the asset layer really is the best in the portfolio. But the
+delivery path to Bing is worth knowing, because ChatGPT Search and Copilot both
+retrieve from Bing's index, and this site's entire positioning is "for AI agents."
+
+**IndexNow is dead for this domain.** Submissions 403 with
+`UserForbiddedToAccessSite` on both `api.indexnow.org` and `bing.com/indexnow`.
+The key is not the problem: the identical payload is accepted by Yandex (202) and
+Naver (200), and `sanctionsai.dev` *is* claimed in Bing Webmaster Tools. So the
+misleading "please verify the site" message points at something other than
+verification.
+
+**The working route is the Bing Webmaster API** (`SubmitUrlBatch`), which is
+already in use. Its quota is 100 URLs/day and it is shared across every agent
+session touching this repo — it was fully spent today on the `/enforcement`
+push, with 600 left for the month. Anything that needs fast Bing pickup should
+check `GetUrlSubmissionQuota` first rather than assume headroom.
