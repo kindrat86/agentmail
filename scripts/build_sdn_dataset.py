@@ -88,8 +88,17 @@ def render_page(card):
         "@type": "Dataset",
         "@id": BASE + "/#dataset",
         "name": card["name"],
+        # The names people actually search for. Google Dataset Search matches on
+        # alternateName, and almost nobody types the full official title.
+        "alternateName": [
+            "OFAC SDN List",
+            "Specially Designated Nationals and Blocked Persons List",
+            "SDN list JSON",
+            "OFAC sanctions list CSV",
+        ],
         "description": card["description"],
         "url": BASE + "/",
+        "identifier": BASE + "/",
         "license": card["licenseUrl"],
         "isAccessibleForFree": True,
         "datePublished": card["published"],
@@ -109,7 +118,18 @@ def render_page(card):
             "name": "U.S. Department of the Treasury, Office of Foreign Assets Control",
             "url": "https://ofac.treasury.gov/",
         },
-        "publisher": {"@id": SITE + "/#organization"},
+        # Complete node, not a bare pointer. The @id still merges it with the
+        # Organization defined on the homepage, but carrying name and url means
+        # Dataset Search resolves a publisher from THIS document alone rather
+        # than depending on having already crawled the home page. Keeping @type
+        # is only safe because the node is complete — a typed node missing its
+        # required fields is read as a real entity and flagged for what it lacks.
+        "publisher": {
+            "@type": "Organization",
+            "@id": SITE + "/#organization",
+            "name": "SanctionsAI",
+            "url": SITE + "/",
+        },
         "includedInDataCatalog": {
             "@type": "DataCatalog",
             "name": "SanctionsAI Research Data",
