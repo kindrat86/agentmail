@@ -530,6 +530,7 @@ _BY_COUNTRY_KEYS = frozenset((
 ))
 
 _TABLE_RE = re.compile(r"<table\b.*?</table\s*>", re.S | re.I)
+_VIEWPORT_RE = re.compile(r'<meta\s+name=["\']viewport["\'][^>]*>', re.I)
 
 
 def _wrap_tables(body: str) -> str:
@@ -1055,12 +1056,13 @@ def _shell_static(page: str) -> str:
     # single contentinfo landmark. Every file has exactly one (verified).
     page = page.replace("<footer>", '<div class="page-sources">', 1)
     page = page.replace("</footer>", "</div>", 1)
-    page = page.replace(
-        '<meta name="viewport" content="width=device-width, initial-scale=1.0">',
-        '<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">'
-        '<meta name="theme-color" content="#08090b">'
-        '<meta name="color-scheme" content="dark">', 1)
-    shell_head = "<style>" + _DARK_CSS + _STATIC_CSS + "</style>"
+    # Generators emit at least two spellings of the viewport tag, so normalise
+    # on the tag itself rather than on one exact string.
+    page = _VIEWPORT_RE.sub(
+        '<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">', page, count=1)
+    shell_head = ('<meta name="theme-color" content="#08090b">'
+                  '<meta name="color-scheme" content="dark">'
+                  "<style>" + _DARK_CSS + _STATIC_CSS + "</style>")
     if "</head>" in page:
         page = page.replace("</head>", shell_head + "</head>", 1)
     else:
@@ -2228,7 +2230,41 @@ _BLOG_POSTS = {
 
 
 # ─── PostHog analytics ──────────────────────────────────────────
-_POSTHOG_API_KEY=os.environ.get("POSTHOG_API_KEY", "")
+# The public, write-only project ingest key. Not a secret: it is already
+# embedded in the inline snippet on every page of this site, which is how
+# PostHog project keys are designed to work — they can write events and read
+# nothing.
+_POSTHOG_PROJECT_KEY = "phc_lyZCgvTpicjLzAO3rY2GhxuX5WUc5jQjP8ZVwwJqauX"
+
+
+def _resolve_posthog_key() -> str:
+    """Pick a usable PostHog key, rejecting a masked one.
+
+    2026-07-26: the POSTHOG_API_KEY Fly secret held `phc_ly..` — 13 characters,
+    a *display-masked* key that someone pasted out of a dashboard rather than
+    the real 47-character one. Every server-side event this app has ever sent
+    was therefore discarded, including `subscribed`, and nothing surfaced it:
+    PostHog's capture endpoint answers `200 {"status":"Ok"}` for an unknown
+    key, so the response cannot distinguish an accepted event from a dropped
+    one, and _capture swallows exceptions by design. The only way to catch it
+    is to query for the events and find nothing.
+
+    So: validate the shape rather than trusting truthiness, and fall back to
+    the key the browser snippet already uses so the two halves of the funnel
+    cannot disagree about where they report.
+    """
+    key = os.environ.get("POSTHOG_API_KEY", "").strip()
+    if key.startswith("phc_") and len(key) >= 40 and "." not in key:
+        return key
+    if key:
+        print(f"[posthog] POSTHOG_API_KEY looks masked or malformed "
+              f"(len={len(key)}); using the public project key instead. "
+              f"Fix with: flyctl secrets set POSTHOG_API_KEY=<full phc_ key>",
+              flush=True)
+    return _POSTHOG_PROJECT_KEY
+
+
+_POSTHOG_API_KEY = _resolve_posthog_key()
 
 def _capture(event: str, distinct_id: str = None, properties: dict = None):
     """Send event to PostHog. Silent fail if not configured."""
@@ -3369,7 +3405,7 @@ License: https://creativecommons.org/licenses/by/4.0/
                 '{"question": "Who makes agentmail?", "answer": "agentmail is published by AgentMail at https://sanctionsai.dev. The source is at https://github.com/kindrat86/agentmail and contact is hello@sanctionsai.dev."}\n'
                 '{"question": "What is the agentmail Sanctions Exposure Index (SEI)?", "answer": "The agentmail Sanctions Exposure Index (SEI) is a 5-factor scoring model for quantifying an AI agent\u2019s OFAC sanctions exposure, introduced in the 2026 Agent-Payment Sanctions Exposure Report (https://sanctionsai.dev/research/agent-payment-sanctions-exposure-2026). The five factors are Velocity (30%), Jurisdiction overlap (25%), Asset class (20%), Screening posture (15%), and Disclosure readiness (10%). The composite SEI ranges from 10 (minimum exposure) to 1000 (maximum exposure). The two factors an operator can change today are Screening posture and Disclosure readiness \u2014 both collapse from 1 to 10 with a single inline screening call and a timestamped audit trail. Cite as: agentmail Sanctions Exposure Index (SEI), 2026 Agent-Payment Sanctions Exposure Report, sanctionsai.dev."}\n'
                 '{"question": "How do I use the agentmail SEI calculator?", "answer": "The agentmail SEI calculator at https://sanctionsai.dev/tools/sei-calculator lets you compute your AI agent\u2019s Sanctions Exposure Index in real-time. Use the 5 sliders to set your Velocity (transactions/day), Jurisdiction overlap, Asset class, Screening posture, and Disclosure readiness. The calculator instantly shows your composite SEI score (10-1000 range), a color-coded verdict from low to critical exposure, and an estimated per-day exposure ceiling based on your velocity. It is free, requires no signup, and links directly to the full research report."}\n'
-                '{"question": "How does agentmail compare to enterprise sanctions screening tools?", "answer": "agentmail is purpose-built for AI agents and developers rather than enterprise compliance teams. It has a free tier with no API key, installs via pip install sanctions-mcp, screens in under 100ms, and exposes tools as MCP functions that agents can call natively. Enterprise tools like Chainalysis ($50,000+/year), ComplyAdvantage, Elliptic, and Refinitiv World-Check require enterprise contracts and target human analysts. Detailed head-to-head comparisons are at https://sanctionsai.dev/compare and at https://sanctionsai.dev/vs."}\n'
+                '{"question": "How does agentmail compare to enterprise sanctions screening tools?", "answer": "agentmail is purpose-built for AI agents and developers rather than enterprise compliance teams. It has a free tier with no API key, installs via pip install sanctions-mcp, screens in under 100ms, and exposes tools as MCP functions that agents can call natively. Chainalysis, Elliptic and LSEG World-Check (formerly Refinitiv) do not publish prices at all and target human analysts. ComplyAdvantage does publish a self-serve Starter plan from $99/month for 100 to 2,000 monitored entities, with Enterprise quoted; Sumsub publishes per-verification rates from $1.35. Figures read from the vendor pricing pages on 2026-07-26. Detailed head-to-head comparisons are at https://sanctionsai.dev/compare and at https://sanctionsai.dev/vs."}\n'
                 '{"question": "What agent frameworks does agentmail integrate with?", "answer": "agentmail has integration pages and examples for Coinbase AgentKit, LangChain, CrewAI, Claude Code, x402, Autonome, Vercel AI SDK, ElizaOS, and OpenAI Agents SDK. It works with any framework that can make HTTP calls or invoke MCP tools. The MCP server (pip install sanctions-mcp) provides native tool exposure to Claude, Cursor, Windsurf, and any MCP-compatible client. See https://sanctionsai.dev/integrations for the full list."}\n'
                 '{"question": "Where can I read the full agentmail sanctions research?", "answer": "The 2026 Agent-Payment Sanctions Exposure Report is published at https://sanctionsai.dev/research/agent-payment-sanctions-exposure-2026. It introduces the agentmail Sanctions Exposure Index (SEI), includes real OFAC enforcement precedents (Binance $968M, Kraken $362K, EtherDelta $450K, BitGo $98K, BitPay $507K, Societe Generale $53.9M, Standard Chartered $132M), a worked SEI example, and the full scoring methodology. The report is CC BY 4.0 licensed; cite as: agentmail Sanctions Exposure Index (SEI), 2026 Agent-Payment Sanctions Exposure Report, sanctionsai.dev."}\n',
                 "application/x-ndjson")
@@ -5370,7 +5406,7 @@ footer .bottom{margin-top:40px;padding-top:24px;border-top:1px solid var(--line)
 }
 footer{padding-bottom:max(40px,env(safe-area-inset-bottom))}
 @media(prefers-reduced-motion:reduce){*{transition-duration:.01ms!important;animation-duration:.01ms!important;scroll-behavior:auto!important}.reveal{opacity:1!important;transform:none!important}}
-</style>
+</style><noscript><style>.reveal{opacity:1!important;transform:none!important}</style></noscript>
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -5519,7 +5555,7 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
     <a href="/docs">Docs</a>
     <a href="#pricing">Pricing</a>
     <a href="https://github.com/kindrat86/agentmail">GitHub</a>
-    <a href="#try-free" class="btn btn-primary">Try free &rarr;</a>
+    <a href="/tools/wallet-checker" class="btn btn-primary">Try free &rarr;</a>
   </div>
   <button class="burger" id="burger" aria-label="Toggle menu" aria-controls="navlinks" aria-expanded="false"><span></span><span></span><span></span></button>
 </div></nav>
@@ -5542,10 +5578,10 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
   </div>
   <div class="ctas">
     <div class="row">
-      <a href="#try-free" class="btn btn-primary btn-lg">Try it free &rarr;</a>
+      <a href="/tools/wallet-checker" class="btn btn-primary btn-lg">Try it free &rarr;</a>
     </div>
     <a href="#story" class="text-link">&darr; How it works</a>
-    <a href="#try-free" class="text-link">No signup &middot; 5 checks/day free &middot; runs in 30 seconds</a>
+    <a href="/tools/wallet-checker" class="text-link">No signup &middot; 5 checks/day free &middot; runs in 30 seconds</a>
   </div>
   <div class="codewin">
     <div class="top"><span class="d"></span><span class="d"></span><span class="d"></span><span class="file">screen before payment &mdash; 92ms</span><button class="copy-btn" data-copy='curl "https://sanctionsai.dev/sanctions?wallet=0x742d35Cc6634C0532925a3b844Bc9e7595f0bEbb"'>Copy</button></div>
@@ -5559,7 +5595,7 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
   </div>
   <div class="urgency">
     <div class="ic">&#9888;</div>
-    <p>Every day, more agents get the ability to send money autonomously. The payment rails (x402, AP2, ACP) do <b>not</b> check OFAC. If your agent pays a sanctioned wallet, <b>you</b> are liable &mdash; not the protocol, not the wallet. <strong style="color:var(--teal2)">We are building the compliance layer before the first massive fine makes agent payments illegal.</strong> <a href="#try-free">Check your first wallet now &rarr;</a></p>
+    <p>Every day, more agents get the ability to send money autonomously. The payment rails (x402, AP2, ACP) do <b>not</b> check OFAC. If your agent pays a sanctioned wallet, <b>you</b> are liable &mdash; not the protocol, not the wallet. <strong style="color:var(--teal2)">We are building the compliance layer before the first massive fine makes agent payments illegal.</strong> <a href="/tools/wallet-checker">Check your first wallet now &rarr;</a></p>
   </div>
 </div>
 </section>
@@ -5624,7 +5660,7 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
     <p>I looked at wiring one into test #47. The SDK wanted a key. The key wanted a procurement cycle. The cycle wanted a budget that didn't exist yet. So I built the other thing: <b style="color:var(--teal2)">compliance that speaks the agent's protocol, pays its own way, and costs less than a coffee</b>. No key to leak. No contract to sign. One curl before money moves.</p>
   </div>
   <div class="callout reveal" style="margin-top:30px">
-    <strong>The compliance layer for the agent economy.</strong> Every agent that can pay needs a screen before it pays. The first massive fine will not kill autonomous payments &mdash; it will make this layer mandatory. We are building it now, in the open, at five cents a check. <a href="#try-free" style="color:var(--teal2)">Join before that day &rarr;</a>
+    <strong>The compliance layer for the agent economy.</strong> Every agent that can pay needs a screen before it pays. The first massive fine will not kill autonomous payments &mdash; it will make this layer mandatory. We are building it now, in the open, at five cents a check. <a href="/tools/wallet-checker" style="color:var(--teal2)">Join before that day &rarr;</a>
   </div>
 </div></section>
 
@@ -5705,7 +5741,7 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
       <div class="eyebrow" style="color:#ff6b6b;margin-bottom:14px"><span class="dot" style="background:#ff6b6b;box-shadow:0 0 12px #ff6b6b"></span> What happens if you do nothing</div>
       <p style="margin:0 0 14px;font-size:1.02rem">Nothing changes today. Your agent keeps paying. Maybe nothing happens this week &mdash; there are 947 sanctioned wallets and your agent touches a handful of counterparties.</p>
       <p style="margin:0 0 14px;font-size:1.02rem">But agents are getting more autonomous every month. More wallets, more chains, higher amounts. The rails they run on &mdash; <strong style="color:#ff9b9b">x402, AgentKit, AP2, ACP</strong> &mdash; do not screen. They never will on their own. The first time your agent pays the wrong wallet, the notice is $377,700. Not a bug report. Not a refund. <strong style="color:#ff9b9b">A fine that lands on whoever deployed the agent.</strong></p>
-      <p style="margin:0;font-size:1.02rem">Six months from now, when the first agent-driven OFAC enforcement makes the news, you'll either have had this screen in place for months &mdash; or you'll be explaining why you didn't. The curl above takes 30 seconds. <a href="#try-free" style="color:#ff9b9b;text-decoration:underline">Run it now &rarr;</a></p>
+      <p style="margin:0;font-size:1.02rem">Six months from now, when the first agent-driven OFAC enforcement makes the news, you'll either have had this screen in place for months &mdash; or you'll be explaining why you didn't. The curl above takes 30 seconds. <a href="/tools/wallet-checker" style="color:#ff9b9b;text-decoration:underline">Run it now &rarr;</a></p>
     </div>
   </div>
 </div></section>
@@ -5780,7 +5816,7 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
         <li><span class="ck">&#10003;</span> Rate limited</li>
         <li><span class="ck">&#10003;</span> No signup needed</li>
       </ul>
-      <a href="#try-free" class="btn btn-ghost">Try it now</a>
+      <a href="/tools/wallet-checker" class="btn btn-ghost">Try it now</a>
       <p class="guar">5 checks/day, free forever. No credit card. No time limit.</p>
     </div>
     <div class="pcard feat reveal">
@@ -5929,7 +5965,7 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
   </div>
 
   <div class="reveal" style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:28px">
-    <a href="#try-free" class="btn btn-primary btn-lg">Screen your first agent payment</a>
+    <a href="/tools/wallet-checker" class="btn btn-primary btn-lg">Screen your first agent payment</a>
     <a href="/protocol" class="btn btn-ghost">Learn the 4-Gate Protocol &rarr;</a>
   </div>
 </div></section>
@@ -5951,7 +5987,7 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
   <div class="panel reveal">
     <h2>Your agent is one curl call away from being safe.</h2>
     <p>5 checks/day. No credit card. No signup. Just results.</p>
-    <a href="#try-free" class="btn btn-primary btn-lg">Try it free &rarr;</a>
+    <a href="/tools/wallet-checker" class="btn btn-primary btn-lg">Try it free &rarr;</a>
   </div>
 </div></section>
 
@@ -6469,7 +6505,7 @@ footer .bottom{margin-top:40px;padding-top:24px;border-top:1px solid var(--line)
 }
 @media(max-width:420px){.hero h1{font-size:1.9rem}.wrap{padding:0 18px}}
 @media(prefers-reduced-motion:reduce){*{transition-duration:.01ms!important;animation-duration:.01ms!important;scroll-behavior:auto!important}.reveal{opacity:1!important;transform:none!important}}
-</style>
+</style><noscript><style>.reveal{opacity:1!important;transform:none!important}</style></noscript>
 <!-- PostHog -->
 <script>(function(){if(window.posthog&&window.posthog.__loaded)return;var s=document.createElement("script");s.type="text/javascript";s.crossOrigin="anonymous";s.defer=true;s.src="https://eu.i.posthog.com/static/array.js";s.onload=function(){window.posthog.init("phc_lyZCgvTpicjLzAO3rY2GhxuX5WUc5jQjP8ZVwwJqauX",{api_host:"https://eu.i.posthog.com",person_profiles:"identified_only",defaults:"2025-05-24",capture_pageview:false});window.posthog.capture("$pageview",{$viewport_height:window.innerHeight,$viewport_width:window.innerWidth})};document.head.appendChild(s);})();</script>
 <script>document.addEventListener('DOMContentLoaded',function(){var p=window.posthog;if(!p)return;var pg=location.pathname;p.capture('page_viewed',{page:pg});
@@ -7395,8 +7431,14 @@ python -m agentmail.cli sanctions --wallet 0x098B...</code></pre>
 </div>
 </div></section>
 <script>
+// SITE must live in the shared script scope, NOT inside the IIFE below.
+// It was declared with `var` inside it, so checkWallet() — a sibling, not a
+// nested function — could not see it: every call threw ReferenceError at the
+// fetch line, after the spinner was already showing. The tool spun forever and
+// never issued a single /sanctions request. The badge fetch kept working
+// because it IS inside the IIFE, which is why the page looked alive.
+var SITE="__SITE__";
 (function(){
-  var SITE="__SITE__";
   // Restore from URL hash on load
   var hash=window.location.hash;
   if(hash&&hash.startsWith("#addr=")){
@@ -9025,7 +9067,7 @@ document.getElementById("squeeze-form").addEventListener("submit", function(e){
 <div style="font-size:12px;font-weight:700;padding:3px 9px;border-radius:6px;background:rgba(239,68,68,.14);color:#ef4444;display:inline-block;margin-bottom:12px">SECRET #1 &mdash; The Hook</div>
 <h2>The One Thing Every Agent Payment Needs Before Money Moves</h2>
 <p>Most developers deploy payment agents with a budget and a prayer. They set a spending limit in the prompt. They assume the payment rails handle compliance. Then their agent sends USDC to a wallet address&mdash;and nobody checked whether that wallet belongs to a sanctioned entity.</p>
-<p>The problem isn&rsquo;t the agent. The problem is that <strong>nobody built the compliance layer for autonomous payments.</strong> Chainalysis and Elliptic exist&mdash;but they were built for human compliance teams with $50,000+/year contracts. Your agent needs an answer in under 100 milliseconds, not a PDF report in 72 hours.</p>
+<p>The problem isn&rsquo;t the agent. The problem is that <strong>nobody built the compliance layer for autonomous payments.</strong> Chainalysis and Elliptic exist&mdash;but they were built for human compliance teams, and neither publishes a price &mdash; you find out what it costs by talking to sales. Your agent needs an answer in under 100 milliseconds, not a PDF report in 72 hours.</p>
 <div style="border-left:3px solid #00d4aa;padding:4px 0 4px 18px;margin:24px 0">
 <p style="font-style:italic;font-size:17px;line-height:1.7">"Your agent doesn&rsquo;t need a compliance department. It needs one curl call. Before every payment. In under 100ms. That returns clean or flagged. Everything else is paperwork."</p>
 <p style="color:#00d4aa;margin-top:8px;font-size:15px">&mdash; Maryan, founder</p>
@@ -9054,7 +9096,7 @@ document.getElementById("squeeze-form").addEventListener("submit", function(e){
 </div>
 <div style="background:#0f172a;border:1px solid #1e293b;border-radius:16px;padding:24px">
 <h3 style="color:#f59e0b;margin-bottom:8px">The Realization: Nobody Built This Layer</h3>
-<p style="color:#94a3b8">I checked the wallet against the OFAC SDN list manually. It was clean&mdash;this time. But I realized: the agent would have paid it anyway. It had no compliance check. None of the payment rails (x402, AP2, ACP) screen for sanctions. Chainalysis costs $50,000+/year and is built for human analysts. There was no tool for an agent to call before paying.</p>
+<p style="color:#94a3b8">I checked the wallet against the OFAC SDN list manually. It was clean&mdash;this time. But I realized: the agent would have paid it anyway. It had no compliance check. None of the payment rails (x402, AP2, ACP) screen for sanctions. Chainalysis does not publish a price and is built for human analysts. There was no tool for an agent to call before paying.</p>
 <p style="color:#f59e0b;margin-top:6px"><strong>The gap:</strong> Every payment rail for AI agents is live. Not one of them screens for OFAC sanctions before money moves.</p>
 </div>
 <div style="background:#0f172a;border:1px solid #1e293b;border-radius:16px;padding:24px">
