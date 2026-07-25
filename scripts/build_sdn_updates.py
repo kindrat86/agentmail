@@ -622,7 +622,10 @@ def render_entity_page(ent, pub):
 def render_publication_page(pub, newer, older):
     date = pub["datePublished"]
     c = pub["counts"]
-    canonical = "%s/updates/%s" % (SITE, date)
+    # trailing slash deliberately: every internal link and the sitemap entry use
+    # the slash form, and the handler serves both, so a slashless canonical would
+    # point Google at a URL nothing links to.
+    canonical = "%s/updates/%s/" % (SITE, date)
     programs = sorted({p for e in pub["entities"] for p in e["programs"]})
 
     parts = []
