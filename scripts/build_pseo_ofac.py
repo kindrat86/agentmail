@@ -36,6 +36,10 @@ import sys
 import xml.etree.ElementTree as ET
 from datetime import date
 
+import sys as _sys, os as _os
+_sys.path.insert(0, _os.path.dirname(_os.path.abspath(__file__)))
+from _meta import clip_desc, clip_title
+
 HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA = os.path.join(HERE, "data", "ofac-pseo.json")
 XML_URL = ("https://sanctionslistservice.ofac.treas.gov/api/PublicationPreview"
@@ -272,6 +276,8 @@ def dataset_ld(name, desc, url, as_of):
 
 
 def page(title, desc, canonical, body, extra_ld, as_of):
+    # See scripts/_meta.py — clipped here so every caller inherits it.
+    title, desc = clip_title(title), clip_desc(desc)
     trail_ld = extra_ld
     return """<!DOCTYPE html>
 <html lang="en">

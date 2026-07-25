@@ -75,6 +75,17 @@ COPY public/ ./public/
 COPY scripts/validate_jsonld.py /tmp/validate_jsonld.py
 RUN python3 /tmp/validate_jsonld.py . && rm /tmp/validate_jsonld.py
 
+# --- meta-length gate ---
+# Same placement and same reasoning as the JSON-LD gate above: it must see the
+# exact page set do_GET will serve. A crawl on 2026-07-26 found 337 of 561 live
+# pages carrying a meta description past what Google renders, from four
+# generators that had each grown the same mid-word slicing bug independently.
+# Clipping lives in scripts/_meta.py; this is what stops the next generator
+# shipping the same defect.
+COPY scripts/_meta.py /tmp/_meta.py
+COPY scripts/check_meta_lengths.py /tmp/check_meta_lengths.py
+RUN python3 /tmp/check_meta_lengths.py . && rm /tmp/check_meta_lengths.py /tmp/_meta.py
+
 RUN pip install --no-cache-dir ".[mcp]" && \
     cp /home/agentmail/app/api.py /usr/local/lib/python3.11/site-packages/agentmail/api.py && \
     cp /home/agentmail/app/core.py /usr/local/lib/python3.11/site-packages/agentmail/core.py && \

@@ -39,6 +39,10 @@ import sys
 import xml.etree.ElementTree as ET
 from datetime import datetime, timezone
 
+import sys as _sys, os as _os
+_sys.path.insert(0, _os.path.dirname(_os.path.abspath(__file__)))
+from _meta import clip_desc, clip_title
+
 SITE = "https://sanctionsai.dev"
 DELTA_URL = "https://sanctionslistservice.ofac.treas.gov/changes/latest"
 OFAC_SEARCH = "https://sanctionssearch.ofac.treas.gov/"
@@ -425,6 +429,9 @@ CSS = (
 
 
 def page(title, description, canonical, body, jsonld):
+    # See scripts/_meta.py. Clipped centrally so every caller inherits it;
+    # scripts/check_meta_lengths.py fails the build if one slips past.
+    title, description = clip_title(title), clip_desc(description)
     blocks = "".join(
         '<script type="application/ld+json">%s</script>'
         % json.dumps(b, ensure_ascii=False, separators=(",", ":"))
