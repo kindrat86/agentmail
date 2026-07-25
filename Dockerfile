@@ -27,6 +27,13 @@ COPY best/ ./best/
 COPY stats/ ./stats/
 # Interactive shareable tools (compliance-check, ai-spend-optimizer)
 COPY tools/ ./tools/
+# Free client-side tools (/free/ofac-screening). Served via the static-prefix
+# loop in do_GET, same mechanism as /vs/ and /learn/.
+COPY free/ ./free/
+# Research Data hub + published datasets (/data/). This COPY was missing, which
+# is why every /data/ URL — hub, landing pages, CSV and JSON downloads — was
+# dead in production while the files sat in the repo.
+COPY data/ ./data/
 # R17 UX system — shared design system across portfolio
 COPY ux.css ux.js ./
 # published CC BY dataset served by /ofac-enforcement-2026.csv (read from disk, not embedded)

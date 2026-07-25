@@ -1,0 +1,131 @@
+{
+ "name": "OFAC Specially Designated Nationals (SDN) List — machine-readable",
+ "description": "The U.S. Treasury OFAC SDN list parsed into JSON and CSV: 19254 designated entries and 20350 alternate identities (39604 names total), each with its OFAC uid, entity type and sanctions programs. Published 2026-07-23 by OFAC.",
+ "source": "U.S. Treasury OFAC — Specially Designated Nationals and Blocked Persons List (SDN)",
+ "sourceUrl": "https://sanctionslistservice.ofac.treas.gov/api/PublicationPreview/exports/SDN.CSV",
+ "altSourceUrl": "https://sanctionslistservice.ofac.treas.gov/api/PublicationPreview/exports/ALT.CSV",
+ "officialSearchUrl": "https://sanctionssearch.ofac.treas.gov/",
+ "published": "2026-07-23",
+ "retrieved": "2026-07-25",
+ "counts": {
+  "entries": 19254,
+  "alternateNames": 20350,
+  "totalNames": 39604
+ },
+ "typeCounts": {
+  "entity": 9873,
+  "individual": 7520,
+  "vessel": 1517,
+  "aircraft": 344
+ },
+ "topPrograms": [
+  [
+   "RUSSIA-EO14024",
+   6353
+  ],
+  [
+   "SDGT",
+   3249
+  ],
+  [
+   "IFSR",
+   1540
+  ],
+  [
+   "SDNTK",
+   1400
+  ],
+  [
+   "NPWMD",
+   1174
+  ],
+  [
+   "IRAN-EO13902",
+   884
+  ],
+  [
+   "GLOMAG",
+   740
+  ],
+  [
+   "ILLICIT-DRUGS-EO14059",
+   704
+  ],
+  [
+   "IRAN",
+   674
+  ],
+  [
+   "UKRAINE-EO13662",
+   533
+  ],
+  [
+   "IRAN-EO13846",
+   470
+  ],
+  [
+   "TCO",
+   416
+  ],
+  [
+   "IRGC",
+   287
+  ],
+  [
+   "CYBER2",
+   260
+  ],
+  [
+   "IRAN-HR",
+   222
+  ]
+ ],
+ "scope": "OFAC SDN list primary names and alternate identities only. Does NOT include the OFAC Consolidated (non-SDN) lists, the Sectoral Sanctions Identifications list, EU/UK/UN or any other jurisdiction's list, and does NOT perform 50 Percent Rule ownership analysis.",
+ "disclaimer": "This is an unofficial machine-readable mirror provided for engineering use. OFAC's own SDN search at https://sanctionssearch.ofac.treas.gov/ is the authoritative source and should be used for any compliance decision. Nothing here is legal or compliance advice.",
+ "license": "CC0-1.0 (packaging). The underlying list is a U.S. Government work in the public domain (17 U.S.C. 105).",
+ "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+ "landingPage": "https://sanctionsai.dev/data/ofac-sdn-list/",
+ "distributions": [
+  {
+   "format": "JSON",
+   "url": "https://sanctionsai.dev/data/ofac-sdn-list/ofac-sdn.json",
+   "mediaType": "application/json"
+  },
+  {
+   "format": "CSV",
+   "url": "https://sanctionsai.dev/data/ofac-sdn-list/ofac-sdn.csv",
+   "mediaType": "text/csv"
+  }
+ ],
+ "fields": [
+  {
+   "name": "uid",
+   "type": "integer",
+   "description": "OFAC's own entity number (ent_num) for the designated party."
+  },
+  {
+   "name": "name",
+   "type": "string",
+   "description": "Primary designated name, verbatim from OFAC's SDN.CSV."
+  },
+  {
+   "name": "type",
+   "type": "string",
+   "description": "individual, entity, vessel or aircraft."
+  },
+  {
+   "name": "programs",
+   "type": "array<string>",
+   "description": "OFAC sanctions program codes, e.g. RUSSIA-EO14024, SDGT."
+  },
+  {
+   "name": "alternateNames",
+   "type": "array<string>",
+   "description": "AKAs joined from OFAC's ALT.CSV on the same uid."
+  }
+ ],
+ "bytes": {
+  "json": 3737630,
+  "csv": 1665337
+ }
+}

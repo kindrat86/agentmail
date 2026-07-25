@@ -1,0 +1,547 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Free OFAC SDN Screening Tool — Bulk Name Check in Your Browser | SanctionsAI</title>
+<meta name="description" content="Screen names against the official OFAC SDN list — primary names and alternate identities — entirely in your browser. Paste a list or upload a CSV, get fuzzy matches with scores, programs and links to the official record. No signup, no upload, no per-day limit." />
+<meta name="robots" content="index, follow" />
+<link rel="canonical" href="https://sanctionsai.dev/free/ofac-screening" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="SanctionsAI" />
+<meta property="og:title" content="Free OFAC SDN screening — bulk, in your browser" />
+<meta property="og:description" content="Screen a whole counterparty list against the official OFAC SDN list without sending a single name anywhere. Free, no signup." />
+<meta property="og:url" content="https://sanctionsai.dev/free/ofac-screening" />
+<meta name="twitter:card" content="summary_large_image" />
+
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","@id":"https://sanctionsai.dev/free/ofac-screening#webapp","name":"OFAC SDN Screening Tool — SanctionsAI","url":"https://sanctionsai.dev/free/ofac-screening","applicationCategory":"BusinessApplication","applicationSubCategory":"Sanctions compliance screening","operatingSystem":"Web","browserRequirements":"Requires JavaScript. Downloads the SDN index once, then screens entirely in the browser.","isAccessibleForFree":true,"featureList":["Screens against OFAC SDN primary names and alternate identities","Bulk screening from a pasted list or an uploaded CSV","Fuzzy matching with an adjustable score threshold","Match type shown: exact, alternate identity, or fuzzy","Links every hit to the official OFAC record","CSV export of results for a compliance file","Runs client-side — no name is transmitted"],"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://sanctionsai.dev/"},{"@type":"ListItem","position":2,"name":"Free Tools","item":"https://sanctionsai.dev/free"},{"@type":"ListItem","position":3,"name":"OFAC SDN Screening","item":"https://sanctionsai.dev/free/ofac-screening"}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"HowTo","name":"How to screen a counterparty list against the OFAC SDN list","totalTime":"PT2M","step":[{"@type":"HowToStep","position":1,"name":"Load the list","text":"Paste one name per line, or upload a CSV and pick the column holding the names. The file is read in your browser and is not uploaded."},{"@type":"HowToStep","position":2,"name":"Set the match threshold","text":"75 is a reasonable default. Lower it to catch transliteration variants at the cost of more false positives; raise it for exact-only screening."},{"@type":"HowToStep","position":3,"name":"Review every hit against the official record","text":"Each hit links to OFAC's own Sanctions List Search. A name match is not a determination — identity must be confirmed against the official record before any decision is taken."},{"@type":"HowToStep","position":4,"name":"Export the results","text":"Download the results as CSV for the compliance file, including the OFAC publication date the screen was run against."}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"Are the names I screen uploaded anywhere?","acceptedAnswer":{"@type":"Answer","text":"No. The SDN index is downloaded to your browser once, and every comparison happens locally. No name you screen is transmitted to SanctionsAI or anyone else, which matters because a counterparty list is usually confidential. You can confirm it in your browser's network panel: after the index loads there are no further requests."}},
+{"@type":"Question","name":"Which lists does this cover?","acceptedAnswer":{"@type":"Answer","text":"The OFAC Specially Designated Nationals and Blocked Persons list only — both primary names and alternate identities (aka, fka, nka). It does NOT include the OFAC Consolidated (non-SDN) lists, the Sectoral Sanctions Identifications list, or EU, UK, UN or any other jurisdiction's list, and it does NOT perform 50 Percent Rule ownership analysis. A clean result here does not mean a counterparty is clear of sanctions exposure."}},
+{"@type":"Question","name":"Is a match a compliance determination?","acceptedAnswer":{"@type":"Answer","text":"No. This is a screening aid. A name match indicates a name that resembles a designated party — it does not establish that your counterparty is that party, and a near-miss does not establish that they are not. Identity must be confirmed against the official OFAC record, and the 50 Percent Rule and other jurisdictions considered, before any decision is taken. This tool is not legal advice."}},
+{"@type":"Question","name":"How current is the list?","acceptedAnswer":{"@type":"Answer","text":"The tool displays the publication date of the OFAC export it screens against, taken from OFAC's own publication path rather than the date the file was processed. If that date is more than seven days old the page shows a staleness warning. OFAC can add designations on any business day, so for a decision that matters, re-check against OFAC's live Sanctions List Search."}},
+{"@type":"Question","name":"How does the fuzzy matching work?","acceptedAnswer":{"@type":"Answer","text":"Names are normalised (case, accents, punctuation, and common corporate suffixes such as LLC or OOO), then compared three ways: exact normalised equality, token-set overlap so word order and extra words do not defeat a match, and a character-level edit-distance ratio for transliteration variants. The highest of the three becomes the score. An inverted token index keeps bulk screening fast by only scoring plausible candidates."}},
+{"@type":"Question","name":"What is the difference between this and the paid API?","acceptedAnswer":{"@type":"Answer","text":"This screens a list when you decide to run it, in your browser, and produces a CSV. The API screens automatically in the payment path before funds move, and keeps the timestamped audit trail that evidences a compliance program — which is what matters when an examiner asks what you checked and when."}}]}</script>
+
+<style>
+  :root{--bg:#0b1220;--card:#141d2f;--card2:#0f1728;--text:#e6ecf5;--muted:#94a3b8;--accent:#38bdf8;--accent2:#0ea5e9;--ok:#22c55e;--warn:#f59e0b;--bad:#ef4444;--border:#243147;--r:12px}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--text);line-height:1.65;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:980px;margin:0 auto;padding:22px 20px 80px}
+  a{color:var(--accent)}
+  .back{color:var(--muted);text-decoration:none;font-size:.9rem;display:inline-block;min-height:44px;line-height:44px}
+  h1{font-size:clamp(1.7rem,4vw,2.4rem);line-height:1.2;margin-bottom:12px}
+  h2{font-size:1.3rem;margin:34px 0 12px}
+  h3{font-size:1.03rem;margin:0 0 6px}
+  p{margin-bottom:1em}
+  .lede{color:var(--muted);font-size:1.06rem;max-width:72ch;margin-bottom:20px}
+  .card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:20px;margin-bottom:18px}
+  .banner{display:flex;gap:12px;align-items:flex-start;border-radius:10px;padding:13px 15px;font-size:.92rem;margin-bottom:16px}
+  .banner.ok{background:rgba(34,197,94,.09);border:1px solid rgba(34,197,94,.32)}
+  .banner.warn{background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.35)}
+  .banner.info{background:rgba(56,189,248,.09);border:1px solid rgba(56,189,248,.3)}
+  .banner b{color:var(--text)}
+  textarea{width:100%;min-height:150px;background:var(--card2);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:12px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.88rem}
+  input[type=text],input[type=number],select{background:var(--card2);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:11px 13px;font:inherit;font-size:.95rem;min-height:46px;width:100%}
+  input:focus,textarea:focus,select:focus{outline:none;border-color:var(--accent)}
+  button{font:inherit;font-size:.96rem;font-weight:600;padding:12px 20px;min-height:46px;border-radius:8px;border:1px solid var(--accent2);background:var(--accent2);color:#04121c;cursor:pointer}
+  button:hover{background:var(--accent)}
+  button.ghost{background:transparent;color:var(--accent);border-color:var(--border)}
+  button.ghost:hover{border-color:var(--accent)}
+  button:disabled{opacity:.5;cursor:not-allowed}
+  .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+  .row>*{flex:0 0 auto}
+  .ctl{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px;margin-top:16px}
+  .ctl label{display:block;font-size:.85rem;font-weight:600;color:var(--muted);margin-bottom:5px}
+  .stat{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:16px}
+  .stat div{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:13px 15px}
+  .stat b{display:block;font-size:1.6rem;font-variant-numeric:tabular-nums;line-height:1.2}
+  .stat span{font-size:.8rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+  table{border-collapse:collapse;width:100%;font-size:.9rem}
+  th,td{border:1px solid var(--border);padding:8px 10px;text-align:left;vertical-align:top}
+  th{background:var(--card2);font-weight:600;position:sticky;top:0}
+  td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+  .scroll{overflow:auto;max-height:620px;border:1px solid var(--border);border-radius:10px;margin-bottom:1em}
+  .scroll table{border:0}
+  .pill{display:inline-block;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;padding:2px 8px;border-radius:20px}
+  .p-exact{background:rgba(239,68,68,.16);color:#fca5a5}
+  .p-alias{background:rgba(245,158,11,.16);color:#fcd34d}
+  .p-fuzzy{background:rgba(56,189,248,.16);color:#7dd3fc}
+  .p-clear{background:rgba(34,197,94,.14);color:#86efac}
+  details{border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:9px;background:var(--card)}
+  summary{cursor:pointer;font-weight:600}
+  details[open] summary{margin-bottom:8px}
+  code{background:var(--card2);padding:2px 5px;border-radius:4px;font-size:.88em}
+  .note{font-size:.85rem;color:var(--muted);margin:-.4em 0 1.1em}
+  .hidden{display:none!important}
+  .prog{height:6px;background:var(--card2);border-radius:6px;overflow:hidden;margin-top:10px}
+  .prog i{display:block;height:100%;background:var(--accent);width:0}
+  footer{margin-top:46px;padding-top:20px;border-top:1px solid var(--border);color:var(--muted);font-size:.85rem}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="/free">← All free tools</a>
+  <h1>OFAC SDN screening, in your browser</h1>
+  <p class="lede">Screen one name or ten thousand against the official OFAC Specially Designated Nationals list — primary names <em>and</em> alternate identities — without sending a single name anywhere. The list downloads once; every comparison happens locally. Free, no signup, no per-day limit.</p>
+
+  <div class="banner ok" id="privacy">
+    <span aria-hidden="true">🔒</span>
+    <div><b>Your counterparty names never leave this page.</b> The SDN index is fetched once from this site, then all matching runs in your browser. Nothing you screen is transmitted, logged or stored — check the network panel after the index loads. That matters because a counterparty list is usually confidential.</div>
+  </div>
+
+  <div id="listbanner" class="banner info"><span aria-hidden="true">⏳</span><div>Loading the OFAC SDN index…<div class="prog"><i id="progbar"></i></div></div></div>
+
+  <div class="card">
+    <div class="row" style="justify-content:space-between">
+      <div class="row">
+        <button type="button" id="tab-paste">Paste names</button>
+        <button type="button" class="ghost" id="tab-file">Upload CSV</button>
+      </div>
+      <button type="button" class="ghost" id="btn-sample">Load a sample list</button>
+    </div>
+
+    <div id="pane-paste" style="margin-top:14px">
+      <label for="names" style="display:block;font-size:.85rem;font-weight:600;color:var(--muted);margin-bottom:5px">One name per line</label>
+      <textarea id="names" spellcheck="false" placeholder="Acme Trading Ltd&#10;Banco Nacional de Cuba&#10;Ivan Petrov&#10;Some Legitimate Vendor GmbH"></textarea>
+    </div>
+
+    <div id="pane-file" class="hidden" style="margin-top:14px">
+      <input type="file" id="file" accept=".csv,.tsv,.txt,text/csv,text/plain" />
+      <p class="note" style="margin-top:10px">Read in your browser with the File API — not uploaded. After loading, pick the column that holds the names.</p>
+      <div id="colpick" class="hidden"><label for="col">Name column</label><select id="col"></select></div>
+    </div>
+
+    <div class="ctl">
+      <div><label for="threshold">Match threshold <span id="thval">75</span></label>
+        <input type="range" id="threshold" min="55" max="100" step="1" value="75" style="width:100%;min-height:auto" /></div>
+      <div><label for="types">Designation types</label>
+        <select id="types"><option value="all">All types</option><option value="individual">Individuals only</option><option value="entity">Entities only</option><option value="vessel,aircraft">Vessels &amp; aircraft</option></select></div>
+      <div><label for="maxhits">Max hits per name</label>
+        <select id="maxhits"><option value="3">3</option><option value="5" selected>5</option><option value="10">10</option></select></div>
+    </div>
+
+    <div class="row" style="margin-top:18px">
+      <button type="button" id="run" disabled>Screen the list</button>
+      <button type="button" class="ghost" id="reset">Clear</button>
+    </div>
+  </div>
+
+  <div id="messages"></div>
+  <div id="results" class="hidden"></div>
+  <div id="exportrow" class="row hidden" style="margin-bottom:26px">
+    <button type="button" class="ghost" id="csv">Download results (CSV)</button>
+    <button type="button" class="ghost" id="md">Copy summary</button>
+  </div>
+
+  <div class="banner warn">
+    <span aria-hidden="true">⚠️</span>
+    <div><b>A match here is not a compliance determination.</b> A name match means a name <em>resembles</em> a designated party — it does not establish that your counterparty is that party, and a near-miss does not establish that they are not. Confirm identity against <a href="https://sanctionssearch.ofac.treas.gov/" rel="noopener">OFAC's own Sanctions List Search</a>, consider the 50 Percent Rule and the other lists this tool does not cover, and treat the result as a starting point. Nothing here is legal advice.</div>
+  </div>
+
+  <h2>What this covers — and what it does not</h2>
+  <p>Being explicit matters more than looking comprehensive:</p>
+  <table>
+    <thead><tr><th>Covered</th><th>Not covered</th></tr></thead>
+    <tbody>
+      <tr>
+        <td>OFAC <b>SDN</b> primary names<br>OFAC SDN <b>alternate identities</b> (aka / fka / nka)<br>Individuals, entities, vessels, aircraft<br>Sanctions programme shown per hit</td>
+        <td>OFAC <b>Consolidated (non-SDN)</b> lists<br>Sectoral Sanctions Identifications (SSI)<br><b>EU, UK, UN</b> and all other jurisdictions<br><b>50 Percent Rule</b> ownership analysis<br>Addresses, dates of birth, passport and tax IDs<br>Wallet / crypto address screening</td>
+      </tr>
+    </tbody>
+  </table>
+  <p class="note">A clean result on this page does <b>not</b> mean a counterparty is clear of sanctions exposure. It means no similar name appears on the one list this page screens. Wallet screening and multi-list coverage are what the <a href="/docs">API</a> is for.</p>
+
+  <h2>How the matching works</h2>
+  <details><summary>Normalisation</summary><p>Both the query and every OFAC name are folded to a comparable form: uppercased, accents stripped, punctuation removed, whitespace collapsed. For entities, common corporate suffixes are also removed for comparison purposes — <code>LLC, LTD, INC, CO, CORP, PLC, SA, AG, GMBH, BV, NV, OOO, OAO, ZAO, JSC, PJSC, LLP, PTE, PTY, SPA, SARL, AS, AB</code> — so <em>Acme Trading Ltd.</em> and <em>ACME TRADING</em> compare equal. The name shown in the results is always OFAC's original string, never the normalised one.</p></details>
+  <details><summary>Three comparisons, highest score wins</summary><p><b>Exact normalised equality</b> scores 100. <b>Token-set overlap</b> compares the sets of words, so word order, middle names and extra words do not defeat a match; full containment of the shorter name in the longer scores high. <b>Character-level edit-distance ratio</b> catches transliteration variants where the letters differ but the shape is the same. The final score is the highest of the three, and the result labels which comparison produced it.</p></details>
+  <details><summary>Why bulk screening is fast</summary><p>Comparing every query against 39,000+ names with an edit-distance algorithm would be far too slow in a browser. An inverted index maps each token to the entries containing it, so only plausible candidates are scored; exact matches short-circuit through a hash lookup. Very common tokens are skipped during candidate gathering, which is why a single extremely common word on its own may not retrieve everything — screen full names, not fragments.</p></details>
+  <details><summary>Choosing a threshold</summary><p>75 is a reasonable default for a first pass. Below about 70 the false-positive rate rises sharply on short names, which is a real cost: every false positive is manual review time. Above 90 you are effectively screening for exact and near-exact names only and will miss transliteration variants — the failure mode that matters most for Russian, Arabic and Chinese names. Sanctions screening deliberately errs toward over-inclusion; a missed hit is a strict-liability problem, a false positive is an inconvenience.</p></details>
+
+  <h2>Frequently asked questions</h2>
+  <details><summary>Are the names I screen uploaded anywhere?</summary><p>No. The SDN index downloads to your browser once, and every comparison happens locally. No name you screen is transmitted to SanctionsAI or anyone else. Confirm it in your network panel — after the index loads there are no further requests.</p></details>
+  <details><summary>How current is the list?</summary><p>The banner at the top shows the publication date of the OFAC export being screened against, read from OFAC's own publication path rather than the date the file was processed. If it is more than seven days old the banner turns into a staleness warning. OFAC can designate on any business day, so for a decision that matters, re-check against OFAC's live search.</p></details>
+  <details><summary>Can I screen crypto wallet addresses?</summary><p>Not on this page — it screens names. OFAC does publish digital-currency addresses for some designated parties, and wallet screening is available through the <a href="/docs">API</a>, which also covers the lists this page does not.</p></details>
+  <details><summary>What is the difference between this and the paid API?</summary><p>This screens a list when you decide to run it and hands you a CSV. The API screens in the payment path before funds move and keeps the timestamped audit trail that evidences a compliance program — which is what matters when an examiner asks what you checked and when.</p></details>
+
+  <h2>Related</h2>
+  <p><a href="/free">All free tools</a> · <a href="/tools/compliance-check">Agent compliance readiness check</a> · <a href="/learn/ofac-compliance-guide">OFAC compliance guide</a> · <a href="/learn/sanctions-glossary">Sanctions glossary</a> · <a href="/docs">Screening API docs</a></p>
+
+  <footer>
+    <p>© 2026 SanctionsAI — OFAC sanctions screening, transaction risk scoring and Know-Your-Agent verification for autonomous agents.</p>
+    <p style="margin-top:8px">This tool is a screening aid, not legal advice and not a compliance determination. Source data: U.S. Treasury OFAC SDN list, retrieved from OFAC's published export. Always verify against <a href="https://sanctionssearch.ofac.treas.gov/" rel="noopener">OFAC's official Sanctions List Search</a>.</p>
+  </footer>
+</div>
+
+<script>
+(function(){
+"use strict";
+var $=function(s){return document.querySelector(s)};
+var esc=function(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})};
+var IDX=null, NAMES=null, TOKEN=null, EXACT=null, state={rows:null,cols:null,results:null};
+
+/* ---------- normalisation ---------- */
+var SUFFIX=/\b(LLC|L L C|LTD|LIMITED|INC|INCORPORATED|CO|COMPANY|CORP|CORPORATION|PLC|SA|S A|AG|GMBH|MBH|BV|N V|NV|OOO|OAO|ZAO|PAO|JSC|PJSC|OJSC|LLP|LP|PTE|PTY|SPA|S P A|SARL|S A R L|AS|A S|AB|OY|KG|SE|EOOD|OOD|DOO|SRL|BHD|SDN)\b/g;
+function fold(s){
+  s=String(s==null?"":s);
+  try{ s=s.normalize("NFD").replace(/[̀-ͯ]/g,"") }catch(e){}
+  return s.toUpperCase().replace(/[^A-Z0-9\s]/g," ").replace(/\s+/g," ").trim();
+}
+function norm(s){ return fold(s) }
+function normNoSuffix(s){ return fold(s).replace(SUFFIX," ").replace(/\s+/g," ").trim() }
+function tokens(s){ var t=normNoSuffix(s).split(" ").filter(function(x){return x.length>1}); return t.length?t:normNoSuffix(s).split(" ").filter(Boolean) }
+
+/* ---------- similarity ---------- */
+function editRatio(a,b){
+  if(a===b) return 1;
+  var la=a.length, lb=b.length;
+  if(!la||!lb) return 0;
+  if(Math.abs(la-lb)/Math.max(la,lb) > 0.5) return 0;     // too different in length to reach threshold
+  var prev=new Array(lb+1), cur=new Array(lb+1), i, j;
+  for(j=0;j<=lb;j++) prev[j]=j;
+  for(i=1;i<=la;i++){
+    cur[0]=i;
+    var ca=a.charCodeAt(i-1);
+    for(j=1;j<=lb;j++){
+      var cost=(ca===b.charCodeAt(j-1))?0:1;
+      var m=prev[j]+1, n=cur[j-1]+1, o=prev[j-1]+cost;
+      cur[j]=m<n?(m<o?m:o):(n<o?n:o);
+    }
+    var tmp=prev;prev=cur;cur=tmp;
+  }
+  return 1-(prev[lb]/Math.max(la,lb));
+}
+/* Token similarity, deliberately ASYMMETRIC.
+   A containment score (intersection / shorter side) looks reasonable and is badly
+   wrong here: a one-word designation like "SUNRISE" then scores 97 against any
+   name containing that word, and raising the threshold cannot fix it because the
+   score is already near the top. Measured 18% false positives on clean business
+   names before this was replaced.
+   The rule that holds up: an unmatched token on the QUERY side is close to fatal
+   (words the designated party does not have suggest a different party), while an
+   unmatched token on the OFAC side is only mildly penalised (designations
+   routinely carry patronymics, titles and extra name parts for the same party).
+   Tokens are matched fuzzily so transliteration drift inside a word still counts. */
+function tokenSet(qt,ct){
+  if(!qt.length||!ct.length) return 0;
+  var uq=[],uc=[],seen=Object.create(null),i;
+  for(i=0;i<qt.length;i++){ if(!seen[qt[i]]){seen[qt[i]]=1;uq.push(qt[i])} }
+  seen=Object.create(null);
+  for(i=0;i<ct.length;i++){ if(!seen[ct[i]]){seen[ct[i]]=1;uc.push(ct[i])} }
+  var used=new Array(uc.length), matched=0;
+  for(i=0;i<uq.length;i++){
+    var best=0,bi=-1;
+    for(var j=0;j<uc.length;j++){
+      if(used[j]) continue;
+      var r = uq[i]===uc[j] ? 1 : editRatio(uq[i],uc[j]);
+      if(r>best){best=r;bi=j}
+    }
+    if(best>=0.82 && bi>-1){ matched+=best; used[bi]=1 }
+  }
+  if(!matched) return 0;
+  var unmatchedC=0;
+  for(i=0;i<uc.length;i++) if(!used[i]) unmatchedC++;
+  return matched/(uq.length + 0.35*unmatchedC);
+}
+function score(qNorm,qTok,cName){
+  var cNorm=normNoSuffix(cName);
+  if(cNorm===qNorm) return {s:100,how:"exact"};
+  var ts=tokenSet(qTok,tokens(cName));
+  var er=editRatio(qNorm,cNorm);
+  var best=Math.max(ts,er);
+  return {s:Math.round(best*100),how: ts>=er ? "tokens" : "spelling"};
+}
+
+/* ---------- index build ---------- */
+function buildIndex(payload){
+  IDX=payload;
+  NAMES=[]; EXACT=Object.create(null); TOKEN=Object.create(null);
+  var e=payload.entries,i,j;
+  for(i=0;i<e.length;i++){
+    var ent=e[i];             // [ent_num, name, type, program, [alts]]
+    var all=[[ent[1],"primary"]];
+    var alts=ent[4]||[];
+    for(j=0;j<alts.length;j++) all.push([alts[j],"alias"]);
+    for(j=0;j<all.length;j++){
+      var idn=NAMES.length;
+      NAMES.push({e:i,name:all[j][0],kind:all[j][1]});
+      var nn=normNoSuffix(all[j][0]);
+      if(nn){ (EXACT[nn]||(EXACT[nn]=[])).push(idn) }
+      var tk=tokens(all[j][0]);
+      for(var k=0;k<tk.length;k++){ (TOKEN[tk[k]]||(TOKEN[tk[k]]=[])).push(idn) }
+    }
+  }
+  // tokens appearing in a large share of names are useless for candidate retrieval
+  var cutoff=Math.max(400,Math.floor(NAMES.length*0.02));
+  var common=0;
+  for(var t in TOKEN){ if(TOKEN[t].length>cutoff){ TOKEN[t]=null; common++ } }
+  return {names:NAMES.length,commonTokens:common};
+}
+
+/* ---------- screening ---------- */
+function screenOne(q,threshold,typeFilter,maxHits){
+  var qNorm=normNoSuffix(q), qTok=tokens(q);
+  if(!qNorm) return [];
+  var cand=Object.create(null), i, k;
+  var ex=EXACT[qNorm];
+  if(ex) for(i=0;i<ex.length;i++) cand[ex[i]]=1;
+  for(k=0;k<qTok.length;k++){
+    var list=TOKEN[qTok[k]];
+    if(!list) continue;
+    for(i=0;i<list.length;i++) cand[list[i]]=1;
+  }
+  var out=[];
+  for(var idn in cand){
+    var rec=NAMES[idn], ent=IDX.entries[rec.e];
+    if(typeFilter && typeFilter.indexOf(ent[2])===-1) continue;
+    var sc=score(qNorm,qTok,rec.name);
+    if(sc.s<threshold) continue;
+    out.push({query:q,name:rec.name,kind:rec.kind,how:sc.how,score:sc.s,
+              ent:ent[0],type:ent[2],program:ent[3],primary:ent[1]});
+  }
+  out.sort(function(a,b){return b.score-a.score||(a.kind==="primary"?-1:1)});
+  // one hit per designated entity — the highest-scoring name for it
+  var seen=Object.create(null), dedup=[];
+  for(i=0;i<out.length;i++){ if(seen[out[i].ent])continue; seen[out[i].ent]=1; dedup.push(out[i]); if(dedup.length>=maxHits)break }
+  return dedup;
+}
+
+function msg(html,cls){ $("#messages").innerHTML = html?'<div class="banner '+(cls||"warn")+'"><span aria-hidden="true">•</span><div>'+html+'</div></div>':"" }
+
+/* ---------- CSV parsing (shared with upload) ---------- */
+function parseCSV(text){
+  text=text.replace(/^﻿/,"");
+  var line="",i,inq=false;
+  for(i=0;i<text.length;i++){var c=text[i];if(c==='"')inq=!inq;if(c==="\n"&&!inq)break;line+=c}
+  var d=",",bn=-1;
+  [",",";","\t","|"].forEach(function(x){var n=0,q=false;for(var j=0;j<line.length;j++){if(line[j]==='"')q=!q;else if(line[j]===x&&!q)n++}if(n>bn){bn=n;d=x}});
+  var rows=[],row=[],cur="",q2=false;i=0;
+  while(i<text.length){
+    var ch=text[i];
+    if(q2){ if(ch==='"'){ if(text[i+1]==='"'){cur+='"';i+=2;continue} q2=false;i++;continue } cur+=ch;i++;continue }
+    if(ch==='"'){q2=true;i++;continue}
+    if(ch===d){row.push(cur);cur="";i++;continue}
+    if(ch==="\r"){i++;continue}
+    if(ch==="\n"){row.push(cur);rows.push(row);row=[];cur="";i++;continue}
+    cur+=ch;i++;
+  }
+  if(cur.length||row.length){row.push(cur);rows.push(row)}
+  return rows.filter(function(r){return r.some(function(c){return String(c).trim()!==""})});
+}
+
+/* ---------- render ---------- */
+function render(res,meta){
+  var hits=res.filter(function(r){return r.hits.length});
+  var h="";
+  h+='<h2>Screening result</h2>';
+  h+='<div class="stat">'+
+     '<div><b>'+res.length.toLocaleString("en-US")+'</b><span>names screened</span></div>'+
+     '<div><b style="color:'+(hits.length?"#fca5a5":"#86efac")+'">'+hits.length.toLocaleString("en-US")+'</b><span>with possible matches</span></div>'+
+     '<div><b>'+(res.length-hits.length).toLocaleString("en-US")+'</b><span>no match found</span></div>'+
+     '<div><b>'+meta.threshold+'</b><span>threshold used</span></div>'+
+     '</div>';
+  h+='<p class="note">Screened against the OFAC SDN list published <b>'+esc(IDX.published)+'</b> ('+IDX.counts.entries.toLocaleString("en-US")+' designated parties, '+IDX.counts.totalNames.toLocaleString("en-US")+' names including alternate identities). '+
+     (meta.typeLabel?('Types: '+esc(meta.typeLabel)+'. '):'')+'Every hit below must be confirmed against the official record before any decision.</p>';
+  if(!hits.length){
+    h+='<div class="banner ok"><span aria-hidden="true">✓</span><div><b>No name on your list resembled an SDN entry at threshold '+meta.threshold+'.</b> That is not a clearance: it means nothing similar appeared on this one list. The Consolidated lists, other jurisdictions and the 50 Percent Rule are out of scope here.</div></div>';
+    return h;
+  }
+  h+='<div class="scroll"><table><thead><tr><th>Your name</th><th>Matched OFAC name</th><th class="num">Score</th><th>Match</th><th>Type</th><th>Programme</th><th>Official record</th></tr></thead><tbody>';
+  hits.forEach(function(r){
+    r.hits.forEach(function(m,i){
+      var pill = m.score>=100?'<span class="pill p-exact">exact</span>':(m.kind==="alias"?'<span class="pill p-alias">alias</span>':'<span class="pill p-fuzzy">'+esc(m.how)+'</span>');
+      h+='<tr>'+
+        '<td>'+(i===0?esc(r.query):'<span style="color:var(--muted)">↳</span>')+'</td>'+
+        '<td><b>'+esc(m.name)+'</b>'+(m.kind==="alias"?'<br><span style="color:var(--muted);font-size:.85em">alias of '+esc(m.primary)+'</span>':'')+'</td>'+
+        '<td class="num">'+m.score+'</td>'+
+        '<td>'+pill+'</td>'+
+        '<td>'+esc(m.type)+'</td>'+
+        '<td>'+esc(m.program||"—")+'</td>'+
+        '<td><a href="https://sanctionssearch.ofac.treas.gov/Details.aspx?id='+encodeURIComponent(m.ent)+'" rel="noopener nofollow">OFAC #'+m.ent+'</a></td>'+
+        '</tr>';
+    });
+  });
+  h+='</tbody></table></div>';
+  h+='<p class="note">One row per designated party per screened name, highest-scoring name shown. <b>OFAC #</b> links to OFAC’s own record — verify identity there, not here.</p>';
+  return h;
+}
+
+function toCSV(res,meta){
+  var rows=[["screened_name","matched_ofac_name","match_score","match_basis","name_kind","designation_type","programme","ofac_uid","primary_name_of_entity"]];
+  res.forEach(function(r){
+    if(!r.hits.length){ rows.push([r.query,"","","no_match","","","","",""]); return }
+    r.hits.forEach(function(m){ rows.push([r.query,m.name,m.score,m.how,m.kind,m.type,m.program,m.ent,m.primary]) });
+  });
+  var head=[
+    ["# OFAC SDN screening result"],
+    ["# source",IDX.source],
+    ["# ofac_list_published",IDX.published],
+    ["# index_retrieved",IDX.retrieved],
+    ["# names_in_index",IDX.counts.totalNames],
+    ["# match_threshold",meta.threshold],
+    ["# scope",IDX.scope],
+    ["# disclaimer","Screening aid only. Not a compliance determination and not legal advice. Verify every hit against https://sanctionssearch.ofac.treas.gov/"],
+    ["# generated_by","https://sanctionsai.dev/free/ofac-screening"],
+    []
+  ];
+  return head.concat(rows).map(function(r){
+    return r.map(function(c){ c=String(c==null?"":c); return /[",\n]/.test(c)?'"'+c.replace(/"/g,'""')+'"':c }).join(",");
+  }).join("\n");
+}
+function download(name,text,mime){
+  var b=new Blob([text],{type:mime||"text/plain;charset=utf-8"}),u=URL.createObjectURL(b);
+  var a=document.createElement("a");a.href=u;a.download=name;document.body.appendChild(a);a.click();
+  setTimeout(function(){URL.revokeObjectURL(u);a.remove()},1200);
+}
+
+/* ---------- load the index ---------- */
+function loadIndex(){
+  var bar=$("#progbar");
+  return fetch("/data/ofac-sdn-index.json").then(function(r){
+    if(!r.ok) throw new Error("HTTP "+r.status);
+    if(!r.body||!r.headers.get("content-length")) return r.json();
+    var total=parseInt(r.headers.get("content-length"),10), got=0;
+    var reader=r.body.getReader(), chunks=[];
+    return (function pump(){
+      return reader.read().then(function(res){
+        if(res.done){
+          var all=new Uint8Array(got),off=0;
+          chunks.forEach(function(c){all.set(c,off);off+=c.length});
+          return JSON.parse(new TextDecoder("utf-8").decode(all));
+        }
+        chunks.push(res.value); got+=res.value.length;
+        if(total&&bar) bar.style.width=Math.min(100,Math.round(got/total*100))+"%";
+        return pump();
+      });
+    })();
+  }).then(function(payload){
+    var info=buildIndex(payload);
+    var days=Math.floor((Date.now()-Date.parse(payload.published+"T00:00:00Z"))/86400000);
+    var stale=days>7;
+    var b=$("#listbanner");
+    b.className="banner "+(stale?"warn":"ok");
+    b.innerHTML='<span aria-hidden="true">'+(stale?"⚠️":"📋")+'</span><div>'+
+      '<b>OFAC SDN list published '+esc(payload.published)+'</b>'+(days>=0?' — '+days+' day'+(days===1?"":"s")+' ago':'')+'. '+
+      payload.counts.entries.toLocaleString("en-US")+' designated parties · '+payload.counts.totalNames.toLocaleString("en-US")+' names including '+
+      payload.counts.alternateNames.toLocaleString("en-US")+' alternate identities. '+
+      (stale?'<b>This copy is more than a week old.</b> OFAC designates on any business day — re-check anything material against ':'Verify any hit against ')+
+      '<a href="https://sanctionssearch.ofac.treas.gov/" rel="noopener">OFAC’s live search</a>.</div>';
+    $("#run").disabled=false;
+    return info;
+  }).catch(function(e){
+    $("#listbanner").className="banner warn";
+    $("#listbanner").innerHTML='<span aria-hidden="true">⚠️</span><div><b>Could not load the SDN index.</b> '+esc(e.message)+
+      ' Screening is unavailable until it loads — reload the page, or use <a href="https://sanctionssearch.ofac.treas.gov/" rel="noopener">OFAC’s official search</a> in the meantime.</div>';
+  });
+}
+
+/* ---------- wiring ---------- */
+document.addEventListener("DOMContentLoaded",function(){
+  loadIndex();
+  $("#threshold").addEventListener("input",function(){ $("#thval").textContent=this.value });
+  $("#tab-paste").addEventListener("click",function(){
+    $("#pane-paste").classList.remove("hidden"); $("#pane-file").classList.add("hidden");
+    this.className=""; $("#tab-file").className="ghost";
+  });
+  $("#tab-file").addEventListener("click",function(){
+    $("#pane-file").classList.remove("hidden"); $("#pane-paste").classList.add("hidden");
+    this.className=""; $("#tab-paste").className="ghost";
+  });
+  $("#btn-sample").addEventListener("click",function(){
+    $("#names").value=["Banco Nacional de Cuba","National Bank of Cuba","Acme Trading Ltd",
+      "AEROCARIBBEAN AIRLINES","Some Legitimate Vendor GmbH","Aero-Caribbean",
+      "Anglo Caribbean Co Ltd","Jane Q Customer"].join("\n");
+    $("#tab-paste").click();
+  });
+  $("#file").addEventListener("change",function(){
+    var f=this.files&&this.files[0]; if(!f)return;
+    var rd=new FileReader();
+    rd.onerror=function(){ msg("The browser could not read that file.") };
+    rd.onload=function(){
+      try{
+        var rows=parseCSV(String(rd.result||""));
+        if(rows.length<1) throw new Error("no rows found");
+        state.rows=rows;
+        var sel=$("#col"); sel.innerHTML="";
+        rows[0].forEach(function(hdr,i){
+          var o=document.createElement("option"); o.value=String(i);
+          o.textContent=(String(hdr).trim()||("column "+(i+1)));
+          sel.appendChild(o);
+        });
+        // default to the column whose header looks like a name
+        var guess=rows[0].findIndex(function(hdr){return /name|party|counterparty|entity|vendor|customer|supplier|beneficiar/i.test(String(hdr))});
+        sel.value=String(guess>-1?guess:0);
+        $("#colpick").classList.remove("hidden");
+        msg((rows.length-1).toLocaleString("en-US")+" data rows read locally. Confirm the name column, then screen.","info");
+      }catch(e){ msg("Could not parse that CSV. "+esc(e.message)) }
+    };
+    rd.readAsText(f);
+  });
+  $("#reset").addEventListener("click",function(){
+    $("#names").value=""; state.rows=null; state.results=null;
+    $("#colpick").classList.add("hidden"); $("#results").classList.add("hidden");
+    $("#exportrow").classList.add("hidden"); $("#results").innerHTML=""; msg("");
+  });
+  $("#run").addEventListener("click",function(){
+    if(!IDX){ msg("The SDN index has not finished loading."); return }
+    var list=[];
+    if(!$("#pane-file").classList.contains("hidden") && state.rows){
+      var ci=parseInt($("#col").value,10)||0;
+      list=state.rows.slice(1).map(function(r){return String(r[ci]==null?"":r[ci]).trim()}).filter(Boolean);
+    } else {
+      list=$("#names").value.split(/\r?\n/).map(function(s){return s.trim()}).filter(Boolean);
+    }
+    if(!list.length){ msg("Add at least one name to screen."); return }
+    if(list.length>25000){ msg("That is "+list.length.toLocaleString("en-US")+" names. Screening is capped at 25,000 per run so the page stays responsive — split the file."); return }
+    var th=parseInt($("#threshold").value,10);
+    var tv=$("#types").value, tf=(tv==="all")?null:tv.split(",");
+    var mh=parseInt($("#maxhits").value,10);
+    var seen=Object.create(null), uniq=[];
+    list.forEach(function(n){ var k=normNoSuffix(n); if(k&&!seen[k]){seen[k]=1;uniq.push(n)} });
+    var t0=Date.now();
+    var res=uniq.map(function(n){ return {query:n,hits:screenOne(n,th,tf,mh)} });
+    state.results=res;
+    state.meta={threshold:th,typeLabel:(tv==="all"?"":$("#types").selectedOptions[0].textContent)};
+    $("#results").innerHTML=render(res,state.meta);
+    $("#results").classList.remove("hidden");
+    $("#exportrow").classList.remove("hidden");
+    var dup=list.length-uniq.length;
+    msg(uniq.length.toLocaleString("en-US")+" unique name"+(uniq.length===1?"":"s")+" screened in "+(Date.now()-t0)+" ms"+(dup?(", "+dup+" duplicate"+(dup===1?"":"s")+" collapsed"):"")+".","info");
+    $("#results").scrollIntoView({behavior:"smooth",block:"start"});
+    try{ if(window.posthog&&window.posthog.capture) window.posthog.capture("ofac_screen_run",{}) }catch(e){}
+  });
+  $("#csv").addEventListener("click",function(){
+    if(!state.results)return;
+    download("ofac-screening-"+IDX.published+".csv",toCSV(state.results,state.meta),"text/csv;charset=utf-8");
+  });
+  $("#md").addEventListener("click",function(){
+    if(!state.results)return;
+    var hits=state.results.filter(function(r){return r.hits.length});
+    var L=["# OFAC SDN screening summary","",
+      "- Names screened: "+state.results.length,
+      "- Names with possible matches: "+hits.length,
+      "- Match threshold: "+state.meta.threshold,
+      "- OFAC SDN list published: "+IDX.published+" (index retrieved "+IDX.retrieved+")",
+      "- Names in index: "+IDX.counts.totalNames+" across "+IDX.counts.entries+" designated parties",""];
+    if(hits.length){
+      L.push("| Screened name | Matched OFAC name | Score | Basis | Type | Programme | OFAC UID |");
+      L.push("|---|---|---|---|---|---|---|");
+      hits.forEach(function(r){ r.hits.forEach(function(m){
+        L.push("| "+r.query+" | "+m.name+" | "+m.score+" | "+m.how+(m.kind==="alias"?" (alias)":"")+" | "+m.type+" | "+(m.program||"")+" | "+m.ent+" |");
+      })});
+    } else L.push("No name resembled an SDN entry at this threshold.");
+    L.push("");L.push("---");
+    L.push("Screening aid only — not a compliance determination and not legal advice. Scope: "+IDX.scope);
+    L.push("Verify every hit against https://sanctionssearch.ofac.treas.gov/ — generated by https://sanctionsai.dev/free/ofac-screening");
+    var md=L.join("\n"), btn=this;
+    var done=function(){btn.textContent="Copied";setTimeout(function(){btn.textContent="Copy summary"},2000)};
+    if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(md).then(done,function(){download("ofac-screening-summary.md",md,"text/markdown")});
+    else download("ofac-screening-summary.md",md,"text/markdown");
+  });
+});
+})();
+</script>
+</body>
+</html>

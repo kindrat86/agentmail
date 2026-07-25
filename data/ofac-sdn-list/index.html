@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OFAC SDN List in JSON &amp; CSV — 19,254 Entries, Updated 2026-07-23 | SanctionsAI</title>
+<meta name="description" content="Download the U.S. Treasury OFAC Specially Designated Nationals (SDN) list as clean JSON or CSV. 19,254 designated entries, 20,350 alternate names, parsed straight from OFAC's own export. Free, no signup, no API key.">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://sanctionsai.dev/data/ofac-sdn-list/">
+<meta property="og:title" content="OFAC SDN List in JSON &amp; CSV — 19,254 Entries, Updated 2026-07-23">
+<meta property="og:description" content="Download the U.S. Treasury OFAC Specially Designated Nationals (SDN) list as clean JSON or CSV. 19,254 designated entries, 20,350 alternate names, parsed straight from OFAC's own export. Free, no signup, no API key.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://sanctionsai.dev/data/ofac-sdn-list/">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Dataset", "@id": "https://sanctionsai.dev/data/ofac-sdn-list/#dataset", "name": "OFAC Specially Designated Nationals (SDN) List — machine-readable", "description": "The U.S. Treasury OFAC SDN list parsed into JSON and CSV: 19254 designated entries and 20350 alternate identities (39604 names total), each with its OFAC uid, entity type and sanctions programs. Published 2026-07-23 by OFAC.", "url": "https://sanctionsai.dev/data/ofac-sdn-list/", "license": "https://creativecommons.org/publicdomain/zero/1.0/", "isAccessibleForFree": true, "datePublished": "2026-07-23", "dateModified": "2026-07-25", "temporalCoverage": "2026-07-23", "version": "2026-07-23", "keywords": ["OFAC", "SDN list", "sanctions", "Specially Designated Nationals", "sanctions screening", "AML", "compliance", "blocked persons", "US Treasury", "sanctions data"], "measurementTechnique": "Direct parse of OFAC's published SDN.CSV and ALT.CSV exports", "isBasedOn": "https://sanctionslistservice.ofac.treas.gov/api/PublicationPreview/exports/SDN.CSV", "sameAs": "https://sanctionssearch.ofac.treas.gov/", "creator": {"@type": "GovernmentOrganization", "name": "U.S. Department of the Treasury, Office of Foreign Assets Control", "url": "https://ofac.treasury.gov/"}, "publisher": {"@id": "https://sanctionsai.dev/#organization"}, "includedInDataCatalog": {"@type": "DataCatalog", "name": "SanctionsAI Research Data", "url": "https://sanctionsai.dev/data/"}, "variableMeasured": [{"@type": "PropertyValue", "name": "uid", "description": "OFAC's own entity number (ent_num) for the designated party."}, {"@type": "PropertyValue", "name": "name", "description": "Primary designated name, verbatim from OFAC's SDN.CSV."}, {"@type": "PropertyValue", "name": "type", "description": "individual, entity, vessel or aircraft."}, {"@type": "PropertyValue", "name": "programs", "description": "OFAC sanctions program codes, e.g. RUSSIA-EO14024, SDGT."}, {"@type": "PropertyValue", "name": "alternateNames", "description": "AKAs joined from OFAC's ALT.CSV on the same uid."}], "distribution": [{"@type": "DataDownload", "encodingFormat": "application/json", "contentUrl": "https://sanctionsai.dev/data/ofac-sdn-list/ofac-sdn.json", "name": "OFAC Specially Designated Nationals (SDN) List — machine-readable — JSON", "contentSize": "3737630"}, {"@type": "DataDownload", "encodingFormat": "text/csv", "contentUrl": "https://sanctionsai.dev/data/ofac-sdn-list/ofac-sdn.csv", "name": "OFAC Specially Designated Nationals (SDN) List — machine-readable — CSV", "contentSize": "1665337"}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://sanctionsai.dev/"}, {"@type": "ListItem", "position": 2, "name": "Research Data", "item": "https://sanctionsai.dev/data/"}, {"@type": "ListItem", "position": 3, "name": "OFAC SDN List", "item": "https://sanctionsai.dev/data/ofac-sdn-list/"}]}</script>
+<style>
+:root{--bg:#fafbfc;--fg:#1a1a2e;--accent:#2563eb;--muted:#6b7280;--border:#e5e7eb;--card:#fff;--green:#059669}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--fg);line-height:1.7}
+.container{max-width:960px;margin:0 auto;padding:2rem 1.5rem}
+h1{font-size:2.1rem;font-weight:800;margin-bottom:.5rem;line-height:1.25}
+h2{font-size:1.4rem;font-weight:700;margin:2.25rem 0 .75rem}
+h3{font-size:1.1rem;font-weight:600;margin:1.5rem 0 .5rem}
+p{margin-bottom:.9rem}
+.lead{font-size:1.12rem;color:var(--muted);margin-bottom:1.25rem}
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin-bottom:1rem}
+table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:.92rem}
+th,td{padding:.6rem .9rem;text-align:left;border-bottom:1px solid var(--border);vertical-align:top}
+th{background:var(--bg);font-weight:600;color:var(--muted);font-size:.78rem;text-transform:uppercase;letter-spacing:.05em}
+td.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+code{background:#eef2f7;padding:.12rem .35rem;border-radius:4px;font-size:.88em}
+pre{background:#1e293b;color:#e2e8f0;padding:1rem;border-radius:8px;overflow-x:auto;font-size:.83rem;margin:.5rem 0 1rem}
+pre code{background:none;padding:0;color:inherit}
+.stats{display:flex;flex-wrap:wrap;gap:1rem;margin:1.5rem 0}
+.stat{flex:1;min-width:140px;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1rem}
+.stat .n{font-size:1.7rem;font-weight:800;color:var(--accent);font-variant-numeric:tabular-nums;line-height:1.1}
+.stat .l{font-size:.78rem;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin-top:.2rem}
+.dl{display:flex;flex-wrap:wrap;gap:.75rem;margin:1.25rem 0}
+.btn{display:inline-block;padding:.7rem 1.4rem;border-radius:8px;font-weight:600;text-decoration:none;font-size:.95rem}
+.btn-primary{background:var(--accent);color:#fff}
+.btn-outline{border:2px solid var(--border);color:var(--fg)}
+.note{border-radius:8px;padding:1rem 1.15rem;margin:1.25rem 0;font-size:.9rem}
+.note-warn{background:#fef3c7;border:1px solid #fcd34d}
+.note-info{background:#f0f7ff;border:1px solid #bfdbfe}
+.breadcrumb{font-size:.85rem;color:var(--muted);margin-bottom:1.25rem}
+.breadcrumb a{color:var(--muted);text-decoration:none}
+footer{margin-top:3rem;padding:1.5rem 0;border-top:1px solid var(--border);color:var(--muted);font-size:.85rem}
+a{color:var(--accent)}
+@media(max-width:640px){.container{padding:1rem}h1{font-size:1.55rem}}
+</style>
+</head>
+<body>
+<div class="container">
+<nav class="breadcrumb"><a href="/">Home</a> &rsaquo; <a href="/data/">Research Data</a> &rsaquo; OFAC SDN List</nav>
+
+<h1>OFAC SDN list, as JSON and CSV</h1>
+<p class="lead">The U.S. Treasury's Specially Designated Nationals list, parsed straight from
+OFAC's own export into two files you can actually load. No signup, no API key, no rate limit.</p>
+
+<div class="stats">
+<div class="stat"><div class="n">19,254</div><div class="l">Designated entries</div></div>
+<div class="stat"><div class="n">20,350</div><div class="l">Alternate names</div></div>
+<div class="stat"><div class="n">39,604</div><div class="l">Names total</div></div>
+<div class="stat"><div class="n">2026-07-23</div><div class="l">OFAC publication date</div></div>
+</div>
+
+<div class="dl">
+<a class="btn btn-primary" href="https://sanctionsai.dev/data/ofac-sdn-list/ofac-sdn.json" download>Download JSON &middot; 3.6 MB</a>
+<a class="btn btn-outline" href="https://sanctionsai.dev/data/ofac-sdn-list/ofac-sdn.csv" download>Download CSV &middot; 1.6 MB</a>
+<a class="btn btn-outline" href="https://sanctionsai.dev/data/ofac-sdn-list/metadata.json">metadata.json</a>
+</div>
+
+<p style="font-size:.88rem;color:var(--muted)">Published by OFAC on <strong>2026-07-23</strong>;
+retrieved and parsed on <strong>2026-07-25</strong>. The publication date is OFAC's own, read from
+the export URL &mdash; not our build date.</p>
+
+<h2>Why this exists</h2>
+<p>OFAC publishes the SDN list, but it publishes it as a headerless CSV with a separate
+alternate-names file, a bracketed multi-value program column, and <code>-0-</code> standing in for
+empty fields. Every team that needs it writes the same parser. This is that parser's output,
+rebuilt from source and republished so you don't have to.</p>
+<p>Names, types and program codes are OFAC's own strings, unmodified. The only transformations are
+splitting the bracketed program field into a list and joining alternate names onto their primary
+entry by <code>uid</code>.</p>
+
+<h2>Schema</h2>
+<table><thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+<tbody><tr><td><code>uid</code></td><td><code>integer</code></td><td>OFAC's own entity number (ent_num) for the designated party.</td></tr><tr><td><code>name</code></td><td><code>string</code></td><td>Primary designated name, verbatim from OFAC's SDN.CSV.</td></tr><tr><td><code>type</code></td><td><code>string</code></td><td>individual, entity, vessel or aircraft.</td></tr><tr><td><code>programs</code></td><td><code>array&lt;string&gt;</code></td><td>OFAC sanctions program codes, e.g. RUSSIA-EO14024, SDGT.</td></tr><tr><td><code>alternateNames</code></td><td><code>array&lt;string&gt;</code></td><td>AKAs joined from OFAC's ALT.CSV on the same uid.</td></tr></tbody></table>
+
+<h3>One record</h3>
+<pre><code>{
+ "uid": 36,
+ "name": "AEROCARIBBEAN AIRLINES",
+ "type": "entity",
+ "programs": ["CUBA"],
+ "alternateNames": ["AERO-CARIBBEAN"]
+}</code></pre>
+
+<h2>Load it</h2>
+<pre><code># Python
+import urllib.request, json
+url = "https://sanctionsai.dev/data/ofac-sdn-list/ofac-sdn.json"
+data = json.load(urllib.request.urlopen(url))
+print(data["published"], len(data["entries"]))</code></pre>
+<pre><code># Shell
+curl -s https://sanctionsai.dev/data/ofac-sdn-list/ofac-sdn.csv -o ofac-sdn.csv</code></pre>
+<pre><code>// JavaScript
+const res = await fetch("https://sanctionsai.dev/data/ofac-sdn-list/ofac-sdn.json");
+const { published, entries } = await res.json();</code></pre>
+
+<h2>What's in it</h2>
+<h3>By entity type</h3>
+<table><thead><tr><th>Type</th><th style="text-align:right">Entries</th></tr></thead>
+<tbody><tr><td>entity</td><td class="num">9,873</td></tr><tr><td>individual</td><td class="num">7,520</td></tr><tr><td>vessel</td><td class="num">1,517</td></tr><tr><td>aircraft</td><td class="num">344</td></tr></tbody></table>
+<h3>Largest sanctions programs</h3>
+<table><thead><tr><th>Program</th><th style="text-align:right">Entries</th></tr></thead>
+<tbody><tr><td><code>RUSSIA-EO14024</code></td><td class="num">6,353</td></tr><tr><td><code>SDGT</code></td><td class="num">3,249</td></tr><tr><td><code>IFSR</code></td><td class="num">1,540</td></tr><tr><td><code>SDNTK</code></td><td class="num">1,400</td></tr><tr><td><code>NPWMD</code></td><td class="num">1,174</td></tr><tr><td><code>IRAN-EO13902</code></td><td class="num">884</td></tr><tr><td><code>GLOMAG</code></td><td class="num">740</td></tr><tr><td><code>ILLICIT-DRUGS-EO14059</code></td><td class="num">704</td></tr><tr><td><code>IRAN</code></td><td class="num">674</td></tr><tr><td><code>UKRAINE-EO13662</code></td><td class="num">533</td></tr></tbody></table>
+
+<h2>Scope &mdash; read this before you rely on it</h2>
+<div class="note note-warn">
+<p style="margin:0 0 .6rem"><strong>OFAC SDN list primary names and alternate identities only. Does NOT include the OFAC Consolidated (non-SDN) lists, the Sectoral Sanctions Identifications list, EU/UK/UN or any other jurisdiction's list, and does NOT perform 50 Percent Rule ownership analysis.</strong></p>
+<p style="margin:0">This is an unofficial machine-readable mirror provided for engineering use. OFAC's own SDN search at https://sanctionssearch.ofac.treas.gov/ is the authoritative source and should be used for any compliance decision. Nothing here is legal or compliance advice.</p>
+</div>
+
+<h2>Licence and citation</h2>
+<p>CC0-1.0 (packaging). The underlying list is a U.S. Government work in the public domain (17 U.S.C. 105). See <a href="https://creativecommons.org/publicdomain/zero/1.0/" rel="license">CC0 1.0</a>.
+Source export: <a href="https://sanctionslistservice.ofac.treas.gov/api/PublicationPreview/exports/SDN.CSV">OFAC SDN.CSV</a>.
+Authoritative search: <a href="https://sanctionssearch.ofac.treas.gov/">sanctionssearch.ofac.treas.gov</a>.</p>
+<div class="note note-info">
+<p style="margin:0 0 .4rem"><strong>Cite as</strong></p>
+<p style="margin:0;font-size:.86rem">U.S. Department of the Treasury, Office of Foreign Assets Control.
+<em>Specially Designated Nationals and Blocked Persons List</em>, published 2026-07-23.
+Machine-readable edition, SanctionsAI, <a href="https://sanctionsai.dev/data/ofac-sdn-list/">https://sanctionsai.dev/data/ofac-sdn-list/</a>.</p>
+</div>
+
+<h2>Related</h2>
+<ul style="margin:0 0 1rem 1.25rem">
+<li><a href="/free/ofac-screening">Free browser screener</a> &mdash; paste a list of names, screen it against this data client-side. Nothing leaves your machine.</li>
+<li><a href="/docs">Screening API</a> &mdash; the hosted endpoint, if you want matching, fuzzy logic and wallet screening rather than raw files.</li>
+<li><a href="/data/">All research data</a></li>
+</ul>
+
+<footer>
+<p><strong>SanctionsAI</strong> &mdash; OFAC sanctions screening for AI agents</p>
+<p><a href="https://sanctionsai.dev">sanctionsai.dev</a> &middot; <a href="/data/">Research Data</a> &middot; <a href="/llms.txt">llms.txt</a></p>
+</footer>
+</div>
+</body>
+</html>

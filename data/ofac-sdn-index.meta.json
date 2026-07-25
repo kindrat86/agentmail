@@ -1,0 +1,83 @@
+{
+ "source": "U.S. Treasury OFAC — Specially Designated Nationals and Blocked Persons List (SDN)",
+ "sourceUrl": "https://sanctionslistservice.ofac.treas.gov/api/PublicationPreview/exports/SDN.CSV",
+ "altSourceUrl": "https://sanctionslistservice.ofac.treas.gov/api/PublicationPreview/exports/ALT.CSV",
+ "officialSearchUrl": "https://sanctionssearch.ofac.treas.gov/",
+ "published": "2026-07-23",
+ "retrieved": "2026-07-25",
+ "counts": {
+  "entries": 19254,
+  "alternateNames": 20350,
+  "totalNames": 39604
+ },
+ "scope": "OFAC SDN list primary names and alternate identities only. Does NOT include the OFAC Consolidated (non-SDN) lists, the Sectoral Sanctions Identifications list, EU/UK/UN or any other jurisdiction's list, and does NOT perform 50 Percent Rule ownership analysis.",
+ "topPrograms": [
+  [
+   "RUSSIA-EO14024",
+   6353
+  ],
+  [
+   "SDGT",
+   3249
+  ],
+  [
+   "IFSR",
+   1540
+  ],
+  [
+   "SDNTK",
+   1400
+  ],
+  [
+   "NPWMD",
+   1174
+  ],
+  [
+   "IRAN-EO13902",
+   884
+  ],
+  [
+   "GLOMAG",
+   740
+  ],
+  [
+   "ILLICIT-DRUGS-EO14059",
+   704
+  ],
+  [
+   "IRAN",
+   674
+  ],
+  [
+   "UKRAINE-EO13662",
+   533
+  ],
+  [
+   "IRAN-EO13846",
+   470
+  ],
+  [
+   "TCO",
+   416
+  ],
+  [
+   "IRGC",
+   287
+  ],
+  [
+   "CYBER2",
+   260
+  ],
+  [
+   "IRAN-HR",
+   222
+  ]
+ ],
+ "typeCounts": {
+  "entity": 9873,
+  "individual": 7520,
+  "vessel": 1517,
+  "aircraft": 344
+ },
+ "indexBytes": 1847373
+}

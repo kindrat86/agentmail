@@ -3,9 +3,17 @@
   "title": "SanctionsAI Research Datasets",
   "home_page_url": "https://sanctionsai.dev/data/",
   "feed_url": "https://sanctionsai.dev/data/feed.json",
-  "description": "Free, downloadable industry datasets from SanctionsAI. CC BY 4.0.",
+  "description": "Free, downloadable datasets from SanctionsAI. Curated statistics CC BY 4.0; redistributed government data carries its own licence.",
   "icon": "https://sanctionsai.dev/favicon.ico",
   "items": [
+    {
+      "id": "https://sanctionsai.dev/data/ofac-sdn-list/",
+      "url": "https://sanctionsai.dev/data/ofac-sdn-list/",
+      "title": "OFAC Specially Designated Nationals (SDN) List — machine-readable",
+      "content_text": "The U.S. Treasury OFAC SDN list parsed into JSON and CSV: 19,254 designated entries and 20,350 alternate identities, each with its OFAC uid, entity type and sanctions programs. Public domain (17 U.S.C. 105); packaging CC0.",
+      "date_published": "2026-07-25T00:00:00Z",
+      "date_modified": "2026-07-25T00:00:00Z"
+    },
     {
       "id": "https://sanctionsai.dev/data/global-sanctions-statistics/",
       "url": "https://sanctionsai.dev/data/global-sanctions-statistics/",

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Free OFAC Sanctions Tools — No Signup, No API Key | SanctionsAI</title>
+<meta name="description" content="Free OFAC sanctions tools that run in your browser: bulk SDN name screening, and the full SDN list as downloadable JSON and CSV. No signup, no API key, nothing uploaded.">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://sanctionsai.dev/free">
+<meta property="og:title" content="Free OFAC Sanctions Tools — No Signup, No API Key">
+<meta property="og:description" content="Bulk OFAC SDN name screening in your browser, plus the full SDN list as JSON and CSV. Nothing is uploaded.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://sanctionsai.dev/free">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"CollectionPage","@id":"https://sanctionsai.dev/free#page","name":"Free OFAC Sanctions Tools","url":"https://sanctionsai.dev/free","description":"Free OFAC sanctions tools that run entirely in the browser, plus the SDN list as downloadable JSON and CSV.","isPartOf":{"@id":"https://sanctionsai.dev/#website"},"hasPart":[{"@type":"WebApplication","name":"Free OFAC SDN Screening Tool","url":"https://sanctionsai.dev/free/ofac-screening","applicationCategory":"BusinessApplication","operatingSystem":"Any (browser)","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}},{"@type":"Dataset","name":"OFAC Specially Designated Nationals (SDN) List — machine-readable","url":"https://sanctionsai.dev/data/ofac-sdn-list/"}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://sanctionsai.dev/"},{"@type":"ListItem","position":2,"name":"Free Tools","item":"https://sanctionsai.dev/free"}]}</script>
+<style>
+:root{--bg:#fafbfc;--fg:#1a1a2e;--accent:#2563eb;--muted:#6b7280;--border:#e5e7eb;--card:#fff}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--fg);line-height:1.7}
+.container{max-width:820px;margin:0 auto;padding:2rem 1.5rem}
+h1{font-size:2.05rem;font-weight:800;margin-bottom:.5rem;line-height:1.25}
+h2{font-size:1.3rem;font-weight:700;margin:2rem 0 .6rem}
+p{margin-bottom:.9rem}
+.lead{font-size:1.1rem;color:var(--muted);margin-bottom:1.5rem}
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.4rem;margin-bottom:1rem}
+.card h3{font-size:1.12rem;font-weight:700;margin-bottom:.35rem}
+.card h3 a{color:var(--accent);text-decoration:none}
+.card p{color:var(--muted);font-size:.94rem;margin-bottom:.6rem}
+.tag{display:inline-block;padding:.18rem .55rem;border-radius:4px;font-size:.74rem;font-weight:600;background:#dcfce7;color:#059669;margin-right:.4rem}
+.breadcrumb{font-size:.85rem;color:var(--muted);margin-bottom:1.25rem}
+.breadcrumb a{color:var(--muted);text-decoration:none}
+.note{background:#f0f7ff;border:1px solid #bfdbfe;border-radius:8px;padding:1rem 1.15rem;margin:1.25rem 0;font-size:.9rem}
+footer{margin-top:2.5rem;padding:1.5rem 0;border-top:1px solid var(--border);color:var(--muted);font-size:.85rem}
+a{color:var(--accent)}
+@media(max-width:640px){.container{padding:1rem}h1{font-size:1.55rem}}
+</style>
+</head>
+<body>
+<div class="container">
+<nav class="breadcrumb"><a href="/">Home</a> &rsaquo; Free Tools</nav>
+
+<h1>Free OFAC tools</h1>
+<p class="lead">Sanctions screening you can run without an account, an API key, or sending your
+counterparty list to anyone &mdash; including us.</p>
+
+<div class="card">
+<h3><a href="/free/ofac-screening">OFAC SDN screening &mdash; in your browser</a></h3>
+<p>Paste or upload a list of names and screen it against the full Specially Designated Nationals
+list. Matching runs client-side in your own browser, so the names you screen never leave your
+machine and are never logged.</p>
+<div><span class="tag">Free</span><span class="tag">No signup</span><span class="tag">Nothing uploaded</span></div>
+</div>
+
+<div class="card">
+<h3><a href="/data/ofac-sdn-list/">The SDN list as JSON and CSV</a></h3>
+<p>The same data as a plain download: 19,254 designated entries and 20,350 alternate identities,
+parsed straight from OFAC's own export. Use it in your own tooling.</p>
+<div><span class="tag">Public domain</span><span class="tag">JSON + CSV</span><span class="tag">Rebuilt daily</span></div>
+</div>
+
+<div class="card">
+<h3><a href="/tools/compliance-check">Compliance readiness check</a></h3>
+<p>A short self-assessment of your sanctions-screening posture, with the gaps ranked.</p>
+<div><span class="tag">Free</span></div>
+</div>
+
+<div class="note">
+<p style="margin:0"><strong>Scope.</strong> These tools cover the OFAC SDN list only &mdash; not the
+OFAC Consolidated (non-SDN) lists, not EU/UK/UN lists, and they do not perform 50 Percent Rule
+ownership analysis. OFAC's own
+<a href="https://sanctionssearch.ofac.treas.gov/">sanctions search</a> is authoritative for any
+compliance decision. Nothing here is legal or compliance advice.</p>
+</div>
+
+<h2>When you outgrow them</h2>
+<p>The free tools screen names against a list. If you need fuzzy matching, wallet-address
+screening, audit logging, or a call your agent can make before it pays a counterparty, that's the
+<a href="/docs">screening API</a> &mdash; and there's a free tier on it too.</p>
+
+<footer>
+<p><strong>SanctionsAI</strong> &mdash; OFAC sanctions screening for AI agents</p>
+<p><a href="https://sanctionsai.dev">sanctionsai.dev</a> &middot; <a href="/data/">Research Data</a> &middot; <a href="/docs">Docs</a> &middot; <a href="/llms.txt">llms.txt</a></p>
+</footer>
+</div>
+</body>
+</html>

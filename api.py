@@ -2834,7 +2834,26 @@ License: https://creativecommons.org/licenses/by/4.0/
                 if _os.path.isfile(_rp):
                     with open(_rp, "r", encoding="utf-8") as _fh:
                         return self._serve_text(_fh.read(), "text/html; charset=utf-8")
-        for _pfx in ("/vs/", "/faq/", "/learn/", "/alternatives-to/", "/penalties/", "/guides/", "/checklists/", "/cost-of/", "/best/", "/templates/", "/stats/"):
+        # Section hubs for the static pSEO prefixes. Without this /cost-of 404s
+        # while its three children are indexed — an orphaned cluster with no
+        # crawl path in and no hub to consolidate its internal links. Falls
+        # through when a directory has no index.html, so the keyed handlers
+        # below keep serving the hubs they already own.
+        for _pfx in ("/vs/", "/faq/", "/learn/", "/alternatives-to/", "/penalties/", "/guides/", "/checklists/", "/cost-of/", "/best/", "/templates/", "/stats/", "/free/"):
+            _hub = _pfx.rstrip("/")
+            if p.path in (_hub, _hub + "/"):
+                import os as _os
+                _here = _os.path.dirname(_os.path.abspath(__file__))
+                for _rp in (
+                    _os.path.join(_here, _hub.strip("/"), "index.html"),
+                    _os.path.join(_here, "..", _hub.strip("/"), "index.html"),
+                    _os.path.join("/home/agentmail/app", _hub.strip("/"), "index.html"),
+                ):
+                    _rp = _os.path.normpath(_rp)
+                    if _os.path.isfile(_rp):
+                        with open(_rp, "r", encoding="utf-8") as _fh:
+                            return self._serve_text(_fh.read(), "text/html; charset=utf-8")
+        for _pfx in ("/vs/", "/faq/", "/learn/", "/alternatives-to/", "/penalties/", "/guides/", "/checklists/", "/cost-of/", "/best/", "/templates/", "/stats/", "/free/"):
             if p.path.startswith(_pfx):
                 _slug = p.path[len(_pfx):].split("?")[0].split("/")[0]
                 if not _slug:
@@ -3021,14 +3040,38 @@ License: https://creativecommons.org/licenses/by/4.0/
             return self._serve_file_content("network/widget.html", "text/html")
         if p.path == "/network/feed.json" or p.path == "/network-feed":
             return self._serve_file_content("network/feed.json", "application/json")
+        # Free-tools hub. Normally already served by the section-hub loop above,
+        # which resolves relative to __file__; this is the cwd-relative fallback
+        # for the case where api.py runs from site-packages while the static
+        # dirs sit in the app root. Reached only if that loop finds no file.
+        if p.path in ("/free", "/free/"):
+            return self._serve_file_content("free/index.html", "text/html")
         # Research Data hub (Dataset Search)
         if p.path in ("/data", "/data/"):
             return self._serve_file_content("data/index.html", "text/html")
         if p.path == "/data/feed.json":
             return self._serve_file_content("data/feed.json", "application/json")
         if p.path.startswith("/data/"):
-            slug = p.path.rstrip("/") + "/index.html"
-            return self._serve_file_content("data/" + slug.split("data/")[1], "text/html")
+            # Directory-style paths get /index.html; a path that already names a
+            # file (data.csv, sdn.json) is served as-is. The old code appended
+            # /index.html unconditionally, so every dataset DOWNLOAD link on the
+            # hub resolved to .../data.csv/index.html and missed — the downloads
+            # were the entire point of the page.
+            _rel = p.path.split("/data/", 1)[1].split("?")[0]
+            if ".." in _rel:
+                return _json(self, 404, {"error": "not found"})
+            _ext = _rel.rsplit(".", 1)[-1].lower() if "." in _rel.rsplit("/", 1)[-1] else ""
+            if not _ext:
+                _rel = _rel.rstrip("/") + "/index.html"
+                _ext = "html"
+            _ctype = {
+                "html": "text/html",
+                "json": "application/json",
+                "csv": "text/csv",
+                "xml": "application/xml",
+                "txt": "text/plain",
+            }.get(_ext, "application/octet-stream")
+            return self._serve_file_content("data/" + _rel, _ctype)
         # Content guides
         if p.path in ("/guides/ofac-for-ai-agents", "/guides/ofac-for-ai-agents/"):
             return self._serve_file_content("public/guides/ofac-for-ai-agents/index.html", "text/html")
@@ -3310,14 +3353,31 @@ License: https://creativecommons.org/licenses/by/4.0/
         self.wfile.write(png_bytes)
 
     def _serve_file_content(self, filename: str, content_type: str = "application/octet-stream"):
-        """Serve a static file from the app directory (for sitemaps, assetlinks, etc.)."""
+        """Serve a static file from the app directory (for sitemaps, assetlinks, etc.).
+
+        A missing file returns a real 404. It used to return 200 with the body
+        "not found", which made every un-COPY'd path a soft-404: Google indexed
+        the whole /data/ hub as valid 200s carrying nine bytes of text. Search
+        Console cannot report a soft-404 it was told was a success, so the
+        breakage was invisible for as long as the files were missing.
+        """
         import os as _os
-        filepath = _os.path.join(_os.getcwd(), filename)
-        try:
-            with open(filepath, "rb") as f:
-                body = f.read()
-        except (OSError, FileNotFoundError):
-            return self._serve_text("not found", "text/plain")
+        # Resolve against the same candidate roots the static-prefix loop uses,
+        # not just cwd. api.py can run from site-packages while the static dirs
+        # sit in the app root, and the Dockerfile CMD's `cd` is the only reason
+        # a cwd-only lookup ever worked — see 6dba0fe, the same class of bug.
+        _here = _os.path.dirname(_os.path.abspath(__file__))
+        body = None
+        for _root in (_os.getcwd(), _here, _os.path.join(_here, ".."), "/home/agentmail/app"):
+            filepath = _os.path.normpath(_os.path.join(_root, filename))
+            try:
+                with open(filepath, "rb") as f:
+                    body = f.read()
+                break
+            except (OSError, FileNotFoundError):
+                continue
+        if body is None:
+            return _json(self, 404, {"error": "not found"})
         self.send_response(200)
         self.send_header("Content-Type", f"{content_type}; charset=utf-8")
         self.send_header("Content-Length", str(len(body)))
@@ -3584,7 +3644,9 @@ License: https://creativecommons.org/licenses/by/4.0/
             ("/partners/jv", "monthly", "0.6", "JV partner program — 50% recurring commission"),
             ("/dream100", "monthly", "0.5", "Dream 100 — target influencers and communities"),
             ("/widgets", "monthly", "0.8", "Free embeddable OFAC compliance badge and wallet screening widget"),
-            ("/badge/clean", "monthly", "0.7", "Free embeddable 'Verified by sanctionsai.dev' SVG badge — add OFAC compliance verification to your site"),
+            # /badge/clean is an embeddable SVG asset with three words of text,
+            # no title and no h1 — Google reports it as "unknown to Google" and
+            # it is not a page. Submitting it only spends crawl budget.
             ("/docs", "monthly", "0.6", "API documentation - SanctionsAI"),
             ("/for/fintech", "monthly", "0.7", "OFAC sanctions for fintech agents"),
             ("/for/crypto", "monthly", "0.7", "OFAC sanctions for crypto agents"),
@@ -3801,13 +3863,40 @@ License: https://creativecommons.org/licenses/by/4.0/
         ("/cost-of/chainalysis-pricing", "monthly", "0.7", "Chainalysis pricing breakdown"),
         ("/cost-of/refinitiv-worldcheck-pricing", "monthly", "0.7", "Refinitiv World-Check pricing"),
         ("/cost-of/complyadvantage-pricing", "monthly", "0.7", "ComplyAdvantage pricing breakdown"),
+        # Competitor-pricing cluster. This is the one query shape the site
+        # already ranks page-1 for ("world check cost/pricing/price" sit at
+        # positions 3-5) while everything aimed at the head terms sits past
+        # position 50. Covering the rest of the competitor set is the cheapest
+        # available traffic, not a new bet.
+        ("/cost-of", "weekly", "0.7", "What sanctions screening vendors actually cost"),
+        ("/cost-of/sumsub-pricing", "monthly", "0.7", "Sumsub pricing breakdown"),
+        ("/cost-of/elliptic-pricing", "monthly", "0.7", "Elliptic pricing breakdown"),
+        ("/cost-of/trm-labs-pricing", "monthly", "0.7", "TRM Labs pricing breakdown"),
+        ("/cost-of/dow-jones-rdc-pricing", "monthly", "0.7", "Dow Jones Risk & Compliance pricing"),
+        ("/cost-of/scorechain-pricing", "monthly", "0.6", "Scorechain pricing breakdown"),
+        ("/cost-of/ofac-screening-api-pricing", "monthly", "0.8", "What an OFAC screening API costs in 2026"),
+        # Section hubs that every page links to in the footer but that were
+        # never submitted. A hub absent from the sitemap is still crawlable,
+        # but it is the page that consolidates its whole cluster — the last
+        # URL that should be left out.
+        ("/blog", "weekly", "0.7", "OFAC compliance blog for AI agent builders"),
+        ("/learn", "weekly", "0.8", "Sanctions and AI-agent compliance glossary"),
+        ("/countries", "weekly", "0.7", "OFAC sanctions by country"),
+        ("/alternatives-to", "weekly", "0.7", "Alternatives to the major sanctions screening vendors"),
+        ("/best", "weekly", "0.7", "Best OFAC screening and AML compliance tools"),
+        ("/checklists", "weekly", "0.7", "OFAC and sanctions compliance checklists"),
+        ("/answers", "weekly", "0.7", "Direct answers to OFAC screening questions"),
+        ("/stats", "weekly", "0.6", "OFAC enforcement statistics"),
+        ("/contact", "monthly", "0.5", "Contact SanctionsAI"),
+        ("/agent", "weekly", "0.7", "SanctionsAI for autonomous agents — MCP, A2A, REST"),
         ("/faq/is-ofac-screening-required-for-crypto", "monthly", "0.6", "Is OFAC screening required for crypto?"),
         ("/faq/how-often-update-sdn-list", "monthly", "0.6", "How often is the OFAC SDN list updated?"),
         ("/faq/what-happens-if-you-violate-ofac", "monthly", "0.7", "What happens if you violate OFAC sanctions?"),
         ("/faq/how-to-screen-crypto-wallets-ofac", "monthly", "0.7", "How to screen crypto wallets against OFAC"),
         # Round 21: section-index pages (AEO — AI crawler entry points)
         ("/for", "weekly", "0.7", "OFAC sanctions screening by industry — SanctionsAI"),
-        ("/compare", "weekly", "0.7", "agentmail vs competitors — OFAC screening comparison"),
+        # /compare 301s to /vs — a sitemap must list the destination, not the
+        # redirect. The /vs hub below is that destination.
         ("/integrations", "weekly", "0.7", "Agentmail integrations — OFAC screening for agent frameworks"),
         ("/glossary", "weekly", "0.9", "OFAC and sanctions compliance glossary"),
         ("/tools", "weekly", "0.8", "Free OFAC screening tools — wallet, name, country, batch"),
@@ -9068,7 +9157,6 @@ compute();
         today = "2026-07-13"
         steps_html = "".join(f'<li><strong>Step {i+1}.</strong> {s}</li>' for i, s in enumerate(h["steps"]))
         body = f"""<p class="note">By <span class="author" rel="author">sanctionsai.dev team</span> &middot; <time datetime="{today}">{today}</time></p>
-<h2>{h["h1"]}</h2>
 <p>This guide walks through the exact steps to ensure OFAC compliance for your AI agents and applications. Every step uses real OFAC data and produces an audit-ready screening trail.</p>
 <ol>{steps_html}</ol>
 <h3>Example: screen a wallet</h3>
@@ -9079,7 +9167,10 @@ compute();
             ("Do I need an API key?", "No. The free tier allows 5 checks per day by IP address with no signup or API key."),
             ("What happens if I miss a sanctioned party?", "OFAC operates under strict liability. You are liable even if you did not know the party was sanctioned. Penalties start at $356,571 per violation."),
         ]
-        self._render_pseo(h["title"], h["h1"], body, faq, f"/how-to/{slug}")
+        self._render_pseo(
+            h["title"],
+            f'{h["h1"]}: {len(h["steps"])} steps, with a copy-ready API call and an audit-ready screening log. Free tier, no API key.',
+            body, faq, f"/how-to/{slug}", h1=h["h1"])
 
     def _cost_page(self, slug):
         """pSEO Round 14: Cost/penalty pages for bottom-funnel commercial intent."""
@@ -9147,14 +9238,49 @@ compute();
         ]
         self._render_pseo(t["title"], t["desc"], body, faq, f"/tools/{slug}")
 
-    def _render_pseo(self, title, desc, body_html, faqs, canonical_path):
+    def _render_pseo(self, title, desc, body_html, faqs, canonical_path, h1=None):
         """Shared renderer for pSEO pages with schema.
 
         Includes Person (E-E-A-T author), Organization publisher, hreflang
         (en-US default + self-referencing), and FAQ/Breadcrumb/Speakable schema.
+
+        Every page gets exactly one <h1>. When the caller does not supply one it
+        is derived from the title by dropping the trailing " — <suffix>" or
+        " | <suffix>" boilerplate, which is what those suffixes exist for: they
+        are SERP padding, not the heading of the document.
         """
+        import html as _html
         today = "2026-07-18"
+        modified = "2026-07-25"
         _page_url = _SITE + canonical_path
+
+        def _esc(s):
+            # Idempotent: unescape first so a value that already contains
+            # &amp; does not become &amp;amp; on the second pass.
+            return _html.escape(_html.unescape(str(s)), quote=True)
+
+        if not h1:
+            h1 = title
+            for _sep in (" — ", " | ", " – "):
+                if _sep in h1:
+                    h1 = h1.split(_sep)[0]
+                    break
+        h1 = h1.strip()
+
+        # Breadcrumb: Home > <section> > <page>. The section hub is a real URL
+        # for every prefix that reaches this renderer.
+        _seg = canonical_path.strip("/").split("/")
+        _SECTIONS = {
+            "countries": "Sanctioned Countries", "check": "Screening Results",
+            "by-country": "Sanctioned Entities by Country", "sanctions-lists": "Sanctions Lists",
+            "how-to": "How-To Guides", "cost": "Costs & Penalties", "tools": "Free Tools",
+        }
+        _crumbs = [{"@type": "ListItem", "position": 1, "name": "Home", "item": _SITE + "/"}]
+        if len(_seg) > 1 and _seg[0] in _SECTIONS:
+            _crumbs.append({"@type": "ListItem", "position": 2, "name": _SECTIONS[_seg[0]],
+                            "item": _SITE + "/" + _seg[0]})
+        _crumbs.append({"@type": "ListItem", "position": len(_crumbs) + 1, "name": h1,
+                        "item": _page_url})
         faq_schema = {"@context": "https://schema.org", "@type": "FAQPage",
                        "mainEntity": [{"@type": "Question", "name": q,
                                        "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in faqs]}
@@ -9177,56 +9303,77 @@ compute();
                 "Know Your Agent (KYA)",
                 "voluntary self-disclosure",
             ],
-            "alumniOf": "US Treasury OFAC compliance framework",
+            # No alumniOf and no LinkedIn sameAs: the persona is pseudonymous,
+            # and asserting a credential or a profile that cannot be verified is
+            # a fabricated trust signal, not an E-E-A-T one.
             "sameAs": [
                 "https://x.com/sipiteno",
                 "https://github.com/kindrat86",
-                "https://www.linkedin.com/in/data-nerd-sanctions",
             ],
         }
         schema = {"@context": "https://schema.org", "@graph": [
             {  # Organization publisher (needed so Person.worksFor resolves)
                 "@type": "Organization", "@id": _SITE + "/#organization",
-                "name": "agentmail", "alternateName": "sanctionsai.dev",
+                "name": "SanctionsAI", "alternateName": ["agentmail", "sanctionsai.dev"],
                 "url": _SITE + "/", "logo": {"@type": "ImageObject", "url": _SITE + "/og.png"},
                 "email": "hello@sanctionsai.dev",
                 "founder": {"@id": _SITE + "/#founder"},
                 "sameAs": ["https://x.com/sipiteno", "https://github.com/kindrat86/agentmail"],
             },
             _author_person,
-            {"@type": "Article", "headline": title, "description": desc,
+            {"@type": "Article", "headline": h1, "description": desc,
              "author": {"@id": _SITE + "/#founder"},
              "publisher": {"@id": _SITE + "/#organization"},
-             "datePublished": today, "dateModified": today,
+             "image": _SITE + "/og.png", "inLanguage": "en-US",
+             "datePublished": today, "dateModified": modified,
              "mainEntityOfPage": _page_url},
-            {"@type": "BreadcrumbList", "itemListElement": [
-                {"@type": "ListItem", "position": 1, "name": "Home", "item": _SITE + "/"},
-                {"@type": "ListItem", "position": 2, "name": title, "item": _page_url}]},
+            {"@type": "BreadcrumbList", "itemListElement": _crumbs},
             faq_schema,
             {"@type": "WebPage", "@id": _page_url + "#speakable", "url": _page_url,
              "speakable": {"@type": "SpeakableSpecification", "cssSelector": ["h1", "h2", ".note"]}},
         ]}
         faq_html = "".join(f'<details><summary>{q}</summary><p>{a}</p></details>' for q, a in faqs)
+        # Meta description: Google truncates around 160 chars, and these pages
+        # were shipping up to 264. Trim on a word boundary rather than mid-word.
+        _md = " ".join(str(desc).split())
+        if len(_md) > 158:
+            _md = _md[:158].rsplit(" ", 1)[0].rstrip(" ,;:—-") + "…"
         html = f"""<!DOCTYPE html>
 <html lang="en-US"><head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>{title}</title>
-<meta name="description" content="{desc}">
-<meta name="robots" content="index, follow, max-image-preview:large">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>{_esc(title)}</title>
+<meta name="description" content="{_esc(_md)}">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
 <meta name="indexnow" content="87aaa199acaf7d14c812e974ce115e32">
+<meta name="theme-color" content="#0a0a0a">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="canonical" href="{_page_url}">
 <link rel="alternate" hreflang="en-US" href="{_page_url}">
 <link rel="alternate" hreflang="en" href="{_page_url}">
 <link rel="alternate" hreflang="x-default" href="{_page_url}">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="SanctionsAI">
+<meta property="og:title" content="{_esc(title)}">
+<meta property="og:description" content="{_esc(_md)}">
+<meta property="og:url" content="{_page_url}">
+<meta property="og:image" content="{_SITE}/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{_esc(title)}">
+<meta name="twitter:description" content="{_esc(_md)}">
+<meta name="twitter:image" content="{_SITE}/og.png">
+<link rel="stylesheet" href="/ux.css">
 <script type="application/ld+json">{json.dumps(schema)}</script>
 </head>
-<body><main><article>{body_html}
+<body><main><article>
+<h1>{_esc(h1)}</h1>
+{body_html}
 <h2>Frequently asked questions</h2>
 <div class="faq">{faq_html}</div>
-<section><p><a href="{_SITE}">Try sanctionsai.dev free →</a></p></section>
+<section><p><a href="{_SITE}">Try SanctionsAI free →</a></p></section>
 </article></main>
 {_FOOTER}
+<script src="/ux.js" defer></script>
 </body></html>"""
         self._send_html(200, html)
 
@@ -10646,25 +10793,22 @@ footer a{color:var(--mut)}
 <body>
 <div class="wrap">
 <div class="hero">
-<div class="badge">LIMITED-TIME OFFER - EXPIRES IN:</div>
+<div class="badge">ONE-TIME KIT - NO SUBSCRIPTION</div>
 <h1>Screen 50 Wallets Before Your Agent Pays Them - $7</h1>
-<p class="sub">The OFAC Compliance Quick-Start Kit: copy-paste code, audit-ready PDF, and 50 screens to keep your agent legal.</p>
-</div>
-<div class="countdown" id="countdown-block">
-<div class="timer" id="timer">15:00</div>
-<div class="label">offer expires - one-time kit at this price</div>
+<p class="sub">The OFAC Compliance Quick-Start Kit: copy-paste code, an audit-ready report, and 50 screens to keep your agent legal.</p>
 </div>
 <div class="stack">
 <h3>What is in the Quick-Start Kit</h3>
-<div class="item"><span class="name">1. Copy-paste curl snippet (1 line)</span><span class="val">$19</span></div>
-<div class="item"><span class="name">2. 50 wallet screens (pre-loaded)</span><span class="val">$25</span></div>
-<div class="item"><span class="name">3. Audit-ready compliance PDF report</span><span class="val">$39</span></div>
-<div class="item"><span class="name">4. Agent integration guide (Python/JS/curl)</span><span class="val">$15</span></div>
-<div class="item"><span class="name">BONUS: OFAC screening deployment checklist</span><span class="val">$17</span></div>
-<div class="item"><span class="name">BONUS: Legal-fee guarantee onboarding</span><span class="val">$0</span></div>
-<div class="total"><span>Total value:</span><span class="old">$115</span></div>
-<div class="total" style="border:none;padding-top:4px"><span>Today - one-time:</span><span class="new">$7</span></div>
+<div class="item"><span class="name">1. Copy-paste curl snippet (1 line)</span><span class="val">included</span></div>
+<div class="item"><span class="name">2. 50 wallet screens (pre-loaded)</span><span class="val">included</span></div>
+<div class="item"><span class="name">3. Audit-ready compliance report</span><span class="val">included</span></div>
+<div class="item"><span class="name">4. Agent integration guide (Python/JS/curl)</span><span class="val">included</span></div>
+<div class="item"><span class="name">5. OFAC screening deployment checklist</span><span class="val">included</span></div>
+<div class="total"><span>One-time:</span><span class="new">$7</span></div>
 </div>
+<p class="secondary" style="text-align:center;margin:-10px 0 24px">The only number worth anchoring against is the one on the other side:
+a single OFAC violation starts at <strong>$356,000</strong>. We are not going to invent a
+retail price for a curl snippet.</p>
 <div class="guarantee">
 <div class="icon">GUARANTEE</div>
 <div class="text"><strong>60-Day Guarantee:</strong> If the kit does not save you at least one hour of compliance research, I will refund your $7. You keep everything.</div>
@@ -10673,27 +10817,17 @@ footer a{color:var(--mut)}
 <a href="mailto:hello@sanctionsai.dev?subject=OFAC%20Compliance%20Quick-Start%20Kit" class="btn">Email to get the Quick-Start Kit - $7</a>
 <p class="secondary">Checkout is not automated yet — email and we send payment details and the kit by hand. <a href="/">No thanks, I will risk the fine</a></p>
 </div>
-<div class="testimonial">
-<div class="attr">- Agent Framework Author, San Francisco</div>
-</div>
 <div class="faq">
 <h3>Quick answers</h3>
 <div class="q">Do I need to be technical?</div>
 <div class="a">You need to know what a curl command is. The integration guide shows Python and JavaScript versions too.</div>
 <div class="q">Is this different from the free tier?</div>
-<div class="a">Yes. The free tier gives you 5 checks per day. This kit gives 50 pre-loaded screens PLUS the compliance PDF, integration guide, and deployment checklist.</div>
+<div class="a">Yes. The free tier gives you 5 checks per day. This kit gives 50 pre-loaded screens PLUS the compliance report, integration guide, and deployment checklist.</div>
+<div class="q">Are there testimonials for this kit?</div>
+<div class="a">No. Nobody has bought it yet, so there is nothing honest to put here. When someone does and they are happy, their words go in this spot.</div>
 </div>
 </div>
 <footer><p>2026 agentmail - <a href="/">OFAC sanctions screening for AI agents</a></p></footer></div>
-<script>
-(function(){
-var m=15,s=0,el=document.getElementById('timer'),block=document.getElementById('countdown-block');
-function tick(){
-if(s===0){if(m===0){block.innerHTML='<p style="color:var(--danger);font-weight:700;font-size:1.1em">This offer has expired. <a href="/pricing" style="color:var(--accent)">See regular pricing</a></p>';return}m--;s=59}else{s--}
-el.textContent=m+':'+(s<10?'0':'')+s;setTimeout(tick,1000)}
-tick()
-})();
-</script>
 </body></html>"""
     handler._send_html(200, html)
 
