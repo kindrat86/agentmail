@@ -751,6 +751,13 @@ tbody tr:last-child td{border-bottom:0}
 .cta-box p{color:var(--fg-2);margin:0 auto 20px}
 .cta-box .btn{margin:6px}
 @media (max-width:520px){.cta-box .btn{display:flex;width:100%;margin:8px 0}}
+/* Button rows elsewhere sized to their own text, so a two-button CTA landed as
+   two different widths stacked off-centre (measured on /leaderboard). Stack
+   them full-width, but only when the container holds nothing BUT buttons —
+   that guard is what keeps the nav drawer and inline prose buttons out. */
+@media (max-width:560px){
+  :is(p,div):has(> .btn):not(:has(> :not(.btn):not(br):not(script))) > .btn{display:flex;width:100%;margin:6px 0}
+}
 
 /* ── forms ──────────────────────────────────────────────────────── */
 /* 16px minimum: anything smaller makes iOS Safari zoom the page on focus */
@@ -7273,7 +7280,7 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
             '<li><a href="/glossary/strict-liability">What is strict liability?</a></li>'
             '<li><a href="/penalties/ofac-violation-costs">OFAC violation costs for ' + name_lower + ' agents</a></li>'
             '<li><a href="/guides/setup-ofac-screening">How to set up OFAC screening</a></li>'
-            '<li><a href="/blog/how-to-screen-wallet-agent">How to screen a wallet before your agent pays</a></li>'
+            '<li><a href="/how-to/screen-crypto-wallet">How to screen a wallet before your agent pays</a></li>'
             '<li><a href="/vs/chainalysis">SanctionsAI vs Chainalysis <span style="color:var(--t3)">\\u2014 pricing and feature comparison</span></a></li>'
             '</ul>'
             '</div></section>'
@@ -9698,7 +9705,7 @@ curl "https://sanctionsai.dev/sanctions?wallet=<span style="color:#f59e0b">0x742
             '<h3>Related glossary terms</h3>'
             '<ul>'
             '<li><a href="/glossary/ofac-sdn-list">OFAC SDN list</a></li>'
-            '<li><a href="/glossary/specially-designated-nationals">Specially Designated Nationals</a></li>'
+            '<li><a href="/glossary/ofac-sdn-list">Specially Designated Nationals</a></li>'
             '<li><a href="/glossary/strict-liability">Strict liability</a></li>'
             '<li><a href="/glossary/blocked-person">Blocked person</a></li>'
             '<li><a href="/glossary/voluntary-self-disclosure">Voluntary Self-Disclosure</a></li>'
@@ -10418,7 +10425,7 @@ verdict.style.color=v_color;
 /* Exposure ceiling: rough estimate based on velocity */
 var daily_txns = v>=9?1000:v>=7?500:v>=5?100:v>=3?10:1;
 var exp_ceiling = daily_txns * 377700;
-if(exp_ceiling>=1e6){exp_text='Estimated per-day exposure ceiling: '+(exp_ceiling/1e6).toFixed(1)+'M ('+daily_txns+' violations × $377,700)';}
+if(exp_ceiling>=1e6){exp_text='Estimated per-day exposure ceiling: $'+(exp_ceiling/1e6).toFixed(1)+'M ('+daily_txns+' violations × $377,700)';}
 else{exp_text='Estimated per-day exposure ceiling: $'+exp_ceiling.toLocaleString()+' ('+daily_txns+' violation(s) × $377,700)';}
 exposure.textContent=exp_text;
 var factors = [
@@ -11255,18 +11262,18 @@ compute();
 <h2>OFAC-Sanctioned Entities by Country</h2>
 <p>Browse sanctioned individuals and entities by jurisdiction. Each country page lists the sanctions program, notable designees, and a copy-ready screening command.</p>
 <ul>
-<li><a href="/by-country/russia">Russia</a> — 4,000+ designations under EO 14024</li>
-<li><a href="/by-country/north-korea">North Korea (DPRK)</a> — comprehensive sanctions under NKSPEA</li>
-<li><a href="/by-country/iran">Iran</a> — comprehensive sanctions under ITSR</li>
-<li><a href="/by-country/syria">Syria</a> — Caesar Act + comprehensive sanctions</li>
-<li><a href="/by-country/cuba">Cuba</a> — CACR embargo (since 1963)</li>
-<li><a href="/by-country/venezuela">Venezuela</a> — EO 13884 comprehensive sectoral</li>
-<li><a href="/by-country/belarus">Belarus</a> — aligned with Russia sanctions</li>
-<li><a href="/by-country/myanmar">Myanmar (Burma)</a> — post-2021 coup targeted sanctions</li>
-<li><a href="/by-country/china">China (PRC)</a> — targeted Xinjiang / HK / military-civil fusion</li>
+<li><a href="/countries/russia">Russia</a> — 4,000+ designations under EO 14024</li>
+<li><a href="/countries/north-korea">North Korea (DPRK)</a> — comprehensive sanctions under NKSPEA</li>
+<li><a href="/countries/iran">Iran</a> — comprehensive sanctions under ITSR</li>
+<li><a href="/countries/syria">Syria</a> — Caesar Act + comprehensive sanctions</li>
+<li><a href="/countries/cuba">Cuba</a> — CACR embargo (since 1963)</li>
+<li><a href="/countries/venezuela">Venezuela</a> — EO 13884 comprehensive sectoral</li>
+<li><a href="/countries/belarus">Belarus</a> — aligned with Russia sanctions</li>
+<li><a href="/countries/myanmar">Myanmar (Burma)</a> — post-2021 coup targeted sanctions</li>
+<li><a href="/countries/china">China (PRC)</a> — targeted Xinjiang / HK / military-civil fusion</li>
 <li><a href="/by-country/ukraine-separatist">Ukraine-Russia Separatist Region</a> — DNR/LNR/Crimea</li>
-<li><a href="/by-country/lebanon-hezbollah">Lebanon (Hezbollah)</a> — SDGT designations</li>
-<li><a href="/by-country/pakistan">Pakistan</a> — Entity List + targeted designations</li>
+<li><a href="/countries/lebanon">Lebanon (Hezbollah)</a> — SDGT designations</li>
+<li><a href="/countries/pakistan">Pakistan</a> — Entity List + targeted designations</li>
 </ul>
 <h3>Screen counterparties in any country (free, no API key)</h3>
 <pre><code>curl "https://sanctionsai.dev/sanctions?country=RU"</code></pre>
