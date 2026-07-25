@@ -25,6 +25,10 @@ import re
 import unicodedata
 from collections import Counter, defaultdict
 
+import sys as _sys, os as _os
+_sys.path.insert(0, _os.path.dirname(_os.path.abspath(__file__)))
+from _meta import clip_desc, clip_title
+
 SITE = "https://sanctionsai.dev"
 PAGE_THRESHOLD = 100_000  # actions at or above this get a dedicated page
 
@@ -131,6 +135,9 @@ def slugify(s):
 
 
 def page(title, desc, canonical, body, ld=None, extra_head=""):
+    # Clip centrally: every caller went through here, and every caller had
+    # the same over-length problem. Enforced by scripts/check_meta_lengths.py.
+    title, desc = clip_title(title), clip_desc(desc)
     lds = "".join(
         '<script type="application/ld+json">%s</script>' % json.dumps(x, separators=(",", ":"))
         for x in (ld or [])
@@ -497,9 +504,11 @@ def build_action(r, rows, meta, out):
     same = [x for x in rows if x is not r and slugify(x["entity"])[:16] == slugify(r["entity"])[:16]]
 
     amt = usd(r["amountUSD"])
-    title = "%s OFAC Penalty — %s (%s)" % (r["entity"], amt, r["date"])
-    if len(title) > 95:
-        title = "%s OFAC Penalty — %s" % (r["entity"][:45], amt)
+    # Suffix-first: OFAC's published entity names run past 200 characters
+    # ("Alpha Pharmaceutical, Inc.; ICN Farmaceutica S.A. de C.V.; and …"),
+    # so clipping the whole string from the right threw away the penalty
+    # amount — the part someone searching this actually wants to see.
+    title = clip_title(r["entity"], "OFAC Penalty %s" % amt)
     desc = (
         "OFAC recorded a %s civil penalty against %s on %s. Exact figure, the Treasury enforcement "
         "release, and how it ranks among all %s published OFAC actions."
