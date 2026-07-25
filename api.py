@@ -5794,7 +5794,7 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
             '</div>'
             '<p class="note" style="text-align:center;margin-top:16px">All plans include OFAC/EU/UN/UK data, refreshed daily. Cancel anytime. Self-host option: <code>pip install sanctions-mcp</code></p>'
             '</div></section>'
-            '<section><div class="cta-box"><h2>Start screening in 30 seconds</h2><p>5 checks/day free. No API key required.</p><a href="/tools/wallet-checker" class="btn btn-primary">Free wallet checker</a></div></section>'
+            '<section><div class="cta-box"><h2>Start screening in 30 seconds</h2><p>50 checks/day free. No API key required.</p><a href="/tools/wallet-checker" class="btn btn-primary">Free wallet checker</a></div></section>'
         )
         ld = {
             "@context": "https://schema.org",
