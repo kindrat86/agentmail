@@ -2137,6 +2137,38 @@ def _capture(event: str, distinct_id: str = None, properties: dict = None):
     except Exception:
         pass
 
+def _capture_async(event: str, distinct_id: str = None, properties: dict = None):
+    """Fire-and-forget _capture. Same call, off the request's critical path.
+
+    _capture blocks for up to 3s on PostHog. That is fine inside a POST the
+    user is already waiting on, but not on a page render — instrumentation
+    must never be the reason a page is slow.
+    """
+    if not _POSTHOG_API_KEY:
+        return
+    import threading
+    threading.Thread(target=_capture, args=(event, distinct_id, properties),
+                     daemon=True).start()
+
+
+# DotCom Secrets Secret 28 (The Funnel Audit). Every stage emitted the same
+# event name with a `step` property, so the whole funnel is one PostHog funnel
+# insight rather than four unrelated events that have to be joined by hand.
+# Server-side on purpose: checkout and purchase happen off-browser, and the
+# steps that do happen in a browser are the ones ad blockers eat.
+_FUNNEL_STEPS = ("visit_pricing", "optin", "checkout_started",
+                 "checkout_abandoned", "purchased")
+
+
+def _funnel(step: str, distinct_id: str = None, **props):
+    """Record one step of the acquisition funnel."""
+    if step not in _FUNNEL_STEPS:
+        return
+    props["step"] = step
+    props["step_index"] = _FUNNEL_STEPS.index(step)
+    _capture_async("funnel_step", distinct_id, props)
+
+
 class Handler(BaseHTTPRequestHandler):
     # Fix HEAD requests: stdlib returns 501 by default, which breaks Googlebot,
     # social crawlers (Facebook/Twitter), and some search spiders. Mapping HEAD
@@ -2472,7 +2504,13 @@ Sitemap: https://sanctionsai.dev/updates-sitemap.xml
         if p.path == "/updates-sitemap.xml":
             return self._updates_page("/updates/sitemap.xml")
         if p.path == "/.well-known/assetlinks.json":
-            return self._serve_file_content(".well-known/assetlinks.json", "application/json")
+            # public/, not the repo-root copy. Root .well-known/ is not COPY'd,
+            # so that path resolves to nothing in the container — and the file
+            # there is the wrong one anyway: it declares OTHER portfolio sites'
+            # Android packages (com.gitdealflow.app, com.sipiteno.app) with
+            # empty sha256_cert_fingerprints, which is both non-functional and
+            # not this domain's business to publish.
+            return self._serve_file_content("public/.well-known/assetlinks.json", "application/json")
         if p.path == "/.well-known/security.txt":
             return self._serve_text("Contact: mailto:security@sanctionsai.dev\nExpires: 2027-07-19T00:00:00Z\nCanonical: https://sanctionsai.dev/.well-known/security.txt\n", "text/plain")
         if p.path == "/87aaa199.txt":
@@ -3225,7 +3263,9 @@ License: https://creativecommons.org/licenses/by/4.0/
         if p.path == "/pricing":
             # Stripe's cancel_url lands here. Abandoners are the warmest
             # non-buyers the funnel ever produces and nothing acknowledged them.
-            return self._pricing_page(cancelled=("cancelled" in parse_qs(p.query)))
+            _cancelled = "cancelled" in parse_qs(p.query)
+            _funnel("checkout_abandoned" if _cancelled else "visit_pricing")
+            return self._pricing_page(cancelled=_cancelled)
         # Walkthrough / masterclass (public) — Expert Secrets Ch 8
         if p.path == "/walkthrough":
             return self._walkthrough_page()
@@ -3249,10 +3289,14 @@ License: https://creativecommons.org/licenses/by/4.0/
             bump = qs.get("bump", [None])[0]
             try:
                 result = billing.create_checkout_session(plan, bump=bump)
+                _funnel("checkout_started", plan=plan, bump=bump or "")
                 self.send_response(302)
                 self.send_header("Location", result["url"])
                 self.end_headers()
             except Exception as e:
+                # A checkout that 500s is a lost sale that leaves no trace in
+                # the funnel; count it rather than only logging it.
+                _funnel("checkout_started", plan=plan, bump=bump or "", failed=str(e)[:120])
                 _json(self, 500, {"error": str(e)})
             return
         # Tripwire page ($7 one-time OFAC Compliance Quick-Start Kit)
@@ -3263,7 +3307,7 @@ License: https://creativecommons.org/licenses/by/4.0/
         if p.path == "/start" or p.path == "/squeeze":
             return self._squeeze_page()
         if p.path in ("/playbook", "/playbook/"):
-            return self._playbook_page()
+            return self._playbook_page(welcome=("welcome" in parse_qs(p.query)))
         if p.path in ("/protocol", "/protocol/"):
             return self._protocol_page()
         if p.path in ("/guarantee", "/guarantee/"):
@@ -3548,13 +3592,16 @@ License: https://creativecommons.org/licenses/by/4.0/
                 with open(fpath, 'rb') as f:
                     self.wfile.write(f.read())
                 return
-        # Network hub + widget + feed (cross-portfolio intelligence mesh)
+        # Network hub + widget + feed (cross-portfolio intelligence mesh).
+        # public/-prefixed: these files live at public/network/, and only public/
+        # is COPY'd into the image — a bare "network/..." resolves against no
+        # root that exists in the container.
         if p.path in ("/network", "/network/"):
-            return self._serve_file_content("network/index.html", "text/html")
+            return self._serve_file_content("public/network/index.html", "text/html")
         if p.path == "/network/widget.html" or p.path == "/network-widget":
-            return self._serve_file_content("network/widget.html", "text/html")
+            return self._serve_file_content("public/network/widget.html", "text/html")
         if p.path == "/network/feed.json" or p.path == "/network-feed":
-            return self._serve_file_content("network/feed.json", "application/json")
+            return self._serve_file_content("public/network/feed.json", "application/json")
         # Free-tools hub. Normally already served by the section-hub loop above,
         # which resolves relative to __file__; this is the cwd-relative fallback
         # for the case where api.py runs from site-packages while the static
@@ -3590,17 +3637,23 @@ License: https://creativecommons.org/licenses/by/4.0/
         # Content guides
         if p.path in ("/guides/ofac-for-ai-agents", "/guides/ofac-for-ai-agents/"):
             return self._serve_file_content("public/guides/ofac-for-ai-agents/index.html", "text/html")
-        # AI Answer Syndication pages
+        # AI Answer Syndication pages. public/-prefixed for the same reason as
+        # /network/ above — the files ship at public/answers/. /answers is in
+        # sitemap.xml and the sitewide footer, so this one was a 404 on an
+        # advertised URL.
         if p.path == "/answers/" or p.path == "/answers":
-            return self._serve_file_content("answers/index.html", "text/html")
+            return self._serve_file_content("public/answers/index.html", "text/html")
         if p.path == "/answers/feed.json":
-            return self._serve_file_content("answers/feed.json", "application/json")
+            return self._serve_file_content("public/answers/feed.json", "application/json")
         if p.path.startswith("/answers/") and len(p.path) > 9:
-            slug_path = p.path.rstrip("/") + "/index.html"
-            return self._serve_file_content("answers/" + slug_path.split("answers/")[1], "text/html")
+            _slug = p.path[len("/answers/"):].split("?")[0].strip("/")
+            if not _slug or ".." in _slug.split("/"):
+                return _json(self, 404, {"error": "not found"})
+            return self._serve_file_content(
+                "public/answers/%s/index.html" % _slug, "text/html")
         # NLWeb discovery manifest
         if p.path == "/.well-known/nlweb.json":
-            return self._serve_file_content(".well-known/nlweb.json", "application/json")
+            return self._serve_file_content("public/.well-known/nlweb.json", "application/json")
         # Related tools hub page (cross-portfolio widget)
         if p.path in ("/related-tools", "/related-tools/"):
             return self._serve_file_content("public/related-tools.html", "text/html")
@@ -3692,6 +3745,7 @@ License: https://creativecommons.org/licenses/by/4.0/
                 except Exception as e:
                     print(f"Email send failed for {email}: {e}", flush=True)
                 _capture("subscribed", email, {"source": source, "email_sent": sent})
+                _funnel("optin", email, source=source, email_sent=sent)
                 # A browser form POST (the footer box, and the content upgrade
                 # on every article page) used to land the reader on a blank
                 # page of raw JSON. That is the delivery step of the opt-in —
@@ -4936,7 +4990,7 @@ a{color:var(--teal);text-decoration:none;-webkit-tap-highlight-color:transparent
 nav{position:sticky;top:0;z-index:100;backdrop-filter:saturate(160%) blur(16px);-webkit-backdrop-filter:saturate(160%) blur(16px);background:rgba(10,10,10,.72);border-bottom:1px solid transparent;transition:border-color .3s,background .3s;padding-top:env(safe-area-inset-top)}
 nav.scrolled{border-color:var(--line);background:rgba(10,10,10,.86)}
 nav .bar{display:flex;align-items:center;justify-content:space-between;height:62px}
-.logo{display:flex;align-items:center;gap:9px;font-weight:700;font-size:1.02rem;color:#fff;letter-spacing:-.01em}
+.logo{display:flex;align-items:center;gap:9px;font-weight:700;font-size:1.02rem;color:#fff;letter-spacing:-.01em;min-height:44px}  /* the header logo was a 26px-tall tap target */
 .logo .mark{width:26px;height:26px;border-radius:7px;background:var(--tealg);display:grid;place-items:center;color:#04130e;font-weight:800;font-size:.9rem;box-shadow:0 4px 14px -4px rgba(0,212,170,.6)}
 nav .links{display:flex;align-items:center;gap:26px}
 nav .links a{color:var(--t2);font-size:.9rem;font-weight:500;transition:color .2s}
@@ -4969,6 +5023,8 @@ nav .burger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
 .statrow .s{background:var(--surf);border:1px solid var(--line);border-radius:12px;padding:9px 16px;font-size:.84rem;color:var(--t2);display:flex;align-items:center;gap:7px}
 .statrow .s b{color:var(--teal);font-weight:700;font-size:.95rem}
 .ctas{display:flex;flex-direction:column;gap:12px;align-items:center;margin-top:6px}
+/* the secondary hero links were 22px tall — under the 24px WCAG 2.2 floor */
+.ctas > a{min-height:44px;display:inline-flex;align-items:center;justify-content:center}
 .ctas .row{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
 .ctas .text-link{color:var(--t3);font-size:.86rem;text-decoration:underline;text-underline-offset:4px;text-decoration-color:var(--t4);transition:color .2s,text-decoration-color .2s}
 .ctas .text-link:hover{color:var(--teal);text-decoration-color:var(--teal)}
@@ -5327,8 +5383,8 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
     <a href="#try-free" class="text-link">No signup &middot; 5 checks/day free &middot; runs in 30 seconds</a>
   </div>
   <div class="codewin">
-    <div class="top"><span class="d"></span><span class="d"></span><span class="d"></span><span class="file">screen before payment &mdash; 92ms</span><button class="copy-btn" data-copy='curl "https://agentmail-api.fly.dev/sanctions?wallet=0x742d35Cc6634C0532925a3b844Bc9e7595f0bEbb"'>Copy</button></div>
-    <pre><span class="c-cmd">$</span> curl <span class="c-str">"https://agentmail-api.fly.dev/sanctions?wallet=0x742d35Cc6634C0532925a3b844Bc9e7595f0bEbb"</span>
+    <div class="top"><span class="d"></span><span class="d"></span><span class="d"></span><span class="file">screen before payment &mdash; 92ms</span><button class="copy-btn" data-copy='curl "https://sanctionsai.dev/sanctions?wallet=0x742d35Cc6634C0532925a3b844Bc9e7595f0bEbb"'>Copy</button></div>
+    <pre><span class="c-cmd">$</span> curl <span class="c-str">"https://sanctionsai.dev/sanctions?wallet=0x742d35Cc6634C0532925a3b844Bc9e7595f0bEbb"</span>
 {
   <span class="c-key">"clean"</span>: <span class="c-ok">true</span>,
   <span class="c-key">"action"</span>: <span class="c-str">"ALLOW"</span>,
@@ -5420,8 +5476,8 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
     <span class="s"><b>&lt;100 ms</b> per check</span>
   </div>
   <div class="codewin" style="max-width:640px">
-    <div class="top"><span class="d"></span><span class="d"></span><span class="d"></span><span class="file">real response &mdash; sanctioned wallet detected</span><button class="copy-btn" data-copy='curl "https://agentmail-api.fly.dev/sanctions?wallet=0x098B716B8Aaf21512996dC57EB0615e2383E2f96"'>Copy</button></div>
-    <pre><span class="c-cmd">$</span> curl <span class="c-str">"https://agentmail-api.fly.dev/sanctions?wallet=0x098B716B8Aaf21512996dC57EB0615e2383E2f96"</span>
+    <div class="top"><span class="d"></span><span class="d"></span><span class="d"></span><span class="file">real response &mdash; sanctioned wallet detected</span><button class="copy-btn" data-copy='curl "https://sanctionsai.dev/sanctions?wallet=0x098B716B8Aaf21512996dC57EB0615e2383E2f96"'>Copy</button></div>
+    <pre><span class="c-cmd">$</span> curl <span class="c-str">"https://sanctionsai.dev/sanctions?wallet=0x098B716B8Aaf21512996dC57EB0615e2383E2f96"</span>
 {
   <span class="c-key">"matches"</span>: [{ <span class="c-key">"list"</span>: <span class="c-str">"OFAC_SDN"</span>,
                  <span class="c-key">"match_type"</span>: <span class="c-str">"wallet_exact"</span>,
@@ -5709,7 +5765,7 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
 
   <div class="reveal" style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:28px">
     <a href="#try-free" class="btn btn-primary btn-lg">Screen your first agent payment</a>
-    <a href="#framework" class="btn btn-ghost">Re-read the 4-Gate Protocol</a>
+    <a href="/protocol" class="btn btn-ghost">Learn the 4-Gate Protocol &rarr;</a>
   </div>
 </div></section>
 
@@ -5744,7 +5800,7 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
       <div class="col"><h4>Product</h4><a href="/">Home</a><a href="/pricing">Pricing</a><a href="/docs">Docs</a><a href="/faq">FAQ</a><a href="/tools/wallet-checker">Wallet checker</a></div>
       <div class="col"><h4>By Industry</h4><a href="/for/fintech">Fintech</a><a href="/for/crypto">Crypto</a><a href="/for/dex">DEX</a><a href="/for/defi">DeFi</a><a href="/for/trading">Trading</a><a href="/for/payments">Payments</a><a href="/for/ecommerce">E-commerce</a></div>
       <div class="col"><h4>Compare</h4><a href="/vs/chainalysis">vs Chainalysis</a><a href="/vs/elliptic">vs Elliptic</a><a href="/vs/comply-advantage">vs ComplyAdvantage</a><a href="/compare/sumsub">vs SumSub</a></div>
-      <div class="col"><h4>Developers</h4><a href="https://github.com/kindrat86/agentmail">GitHub</a><a href="https://pypi.org/project/sanctions-mcp/">PyPI</a><a href="/blog/ofac-for-agents">Blog</a><a href="https://agentmail-api.fly.dev/health">API status</a></div>
+      <div class="col"><h4>Developers</h4><a href="https://github.com/kindrat86/agentmail">GitHub</a><a href="https://pypi.org/project/sanctions-mcp/">PyPI</a><a href="/blog/ofac-for-agents">Blog</a><a href="/health">API status</a></div>
     </div>
   </div>
   <div class="bottom"><span>agentmail &mdash; OFAC sanctions screening for AI agents &mdash; MIT licensed</span><span>Built for the agent economy</span></div>
@@ -5804,7 +5860,7 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
     var result=document.getElementById('free-result');
     var curl=document.getElementById('free-curl');
     btn.style.display='none';
-    curl.textContent='curl "https://agentmail-api.fly.dev/sanctions?wallet=0x742d35Cc6634C0532925a3b844Bc9e7595f0bEbb"';
+    curl.textContent='curl "https://sanctionsai.dev/sanctions?wallet=0x742d35Cc6634C0532925a3b844Bc9e7595f0bEbb"';
     result.style.display='block';
     result.scrollIntoView({behavior:'smooth',block:'center'});
     if(email&&email.indexOf('@')>0){
@@ -5930,7 +5986,7 @@ footer a{color:#555;font-size:0.82em;margin:0 10px}
 
 <pre># Before your agent sends an x402 payment:
 response = requests.post(
-    "https://agentmail-api.fly.dev/sanctions",
+    "https://sanctionsai.dev/sanctions",
     json={"wallet": counterparty_wallet}
 )
 if not response.json().get("clean"):
@@ -6012,7 +6068,7 @@ a{color:#00d4aa}
 <span class="num">STEP 1</span>
 <h2>Your agent calls WITHOUT payment</h2>
 <p class="note">A simple GET to the sanctions endpoint. No auth, no API key, no payment yet.</p>
-<pre>curl "https://agentmail-api.fly.dev/sanctions?wallet=0x098B716B8Aaf21512996dC57EB0615e2383E2f96"</pre>
+<pre>curl "https://sanctionsai.dev/sanctions?wallet=0x098B716B8Aaf21512996dC57EB0615e2383E2f96"</pre>
 </div>
 
 <div class="arrow">&#9660;</div>
@@ -6059,7 +6115,7 @@ const payment = await x402.pay({
 <h2>Agent retries with X-PAYMENT header</h2>
 <p class="note">Same endpoint, same wallet - but now with the payment proof in the header. The server verifies via the <code>x402.org/facilitator</code> and returns the result.</p>
 <pre>curl -H "X-PAYMENT: &lt;signed-payload&gt;" \
-  "https://agentmail-api.fly.dev/sanctions?wallet=0x098B716B8Aaf21512996dC57EB0615e2383E2f96"
+  "https://sanctionsai.dev/sanctions?wallet=0x098B716B8Aaf21512996dC57EB0615e2383E2f96"
 
 {
   "matches": [],
@@ -6123,7 +6179,7 @@ a{color:var(--teal);text-decoration:none;-webkit-tap-highlight-color:transparent
 nav{position:sticky;top:0;z-index:100;backdrop-filter:saturate(160%) blur(16px);-webkit-backdrop-filter:saturate(160%) blur(16px);background:rgba(10,10,10,.72);border-bottom:1px solid transparent;transition:border-color .3s,background .3s}
 nav.scrolled{border-color:var(--line);background:rgba(10,10,10,.86)}
 nav .bar{display:flex;align-items:center;justify-content:space-between;height:62px}
-.logo{display:flex;align-items:center;gap:9px;font-weight:700;font-size:1.02rem;color:#fff;letter-spacing:-.01em}
+.logo{display:flex;align-items:center;gap:9px;font-weight:700;font-size:1.02rem;color:#fff;letter-spacing:-.01em;min-height:44px}  /* the header logo was a 26px-tall tap target */
 .logo .mark{width:26px;height:26px;border-radius:7px;background:var(--tealg);display:grid;place-items:center;color:#04130e;font-weight:800;font-size:.9rem;box-shadow:0 4px 14px -4px rgba(0,212,170,.6)}
 nav .links{display:flex;align-items:center;gap:22px}
 nav .links a{color:var(--t2);font-size:.9rem;font-weight:500;transition:color .2s}
@@ -6278,6 +6334,10 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
 .ritual .rline.stop .rn{background:rgba(255,107,107,.12);border-color:rgba(255,107,107,.3);color:var(--red)}
 .ritual .rline b{color:#fff}
 .proof{display:grid;grid-template-columns:1fr;gap:16px;max-width:840px;margin:0 auto}
+/* A grid item's default min-width:auto is its content's min-content size, so
+   the unbreakable curl string inside each card widened the track to 379px in
+   a 337px column and pushed the page sideways. */
+.proof > *{min-width:0}
 @media(min-width:820px){.proof{grid-template-columns:1fr 1fr}}
 .proof .card{background:#0c0d0f;border:1px solid var(--line);border-radius:14px;padding:20px}
 .proof .card h4{font-size:.84rem;color:var(--t3);margin-bottom:12px;letter-spacing:.04em;text-transform:uppercase;font-weight:600}
@@ -6375,7 +6435,7 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
     <div class="step reveal"><div class="num">1</div><div class="c">
       <h3>You call, no payment</h3>
       <p>No API key. No auth header. Just the endpoint and the wallet you&rsquo;re about to pay.</p>
-      <pre>curl "https://agentmail-api.fly.dev/sanctions?wallet=0x098B..."</pre>
+      <pre>curl "https://sanctionsai.dev/sanctions?wallet=0x098B..."</pre>
     </div></div>
     <div class="step reveal"><div class="num">2</div><div class="c">
       <h3>You get 402: &ldquo;Pay $0.05 USDC&rdquo;</h3>
@@ -6391,7 +6451,7 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
       <h3>You retry with X-PAYMENT, you get the answer</h3>
       <p>Server verifies the payment and returns the sanctions result. <code style="color:var(--teal);background:rgba(0,212,170,.08);padding:2px 6px;border-radius:5px;font-size:.86em">clean: true</code> &rarr; proceed. <code style="color:var(--red);background:rgba(255,107,107,.08);padding:2px 6px;border-radius:5px;font-size:.86em">match</code> &rarr; stop.</p>
       <pre>curl -H "X-PAYMENT: &lt;signed-payload&gt;" \
-  "https://agentmail-api.fly.dev/sanctions?wallet=0x098B..."</pre>
+  "https://sanctionsai.dev/sanctions?wallet=0x098B..."</pre>
     </div></div>
   </div>
 </div></section>
@@ -6518,7 +6578,7 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
       <div class="col"><h4>Product</h4><a href="/">Home</a><a href="/pricing">Pricing</a><a href="/docs">Docs</a><a href="/faq">FAQ</a><a href="/tools/wallet-checker">Wallet checker</a></div>
       <div class="col"><h4>By Industry</h4><a href="/for/fintech">Fintech</a><a href="/for/crypto">Crypto</a><a href="/for/dex">DEX</a><a href="/for/defi">DeFi</a><a href="/for/trading">Trading</a><a href="/for/payments">Payments</a></div>
       <div class="col"><h4>Compare</h4><a href="/vs/chainalysis">vs Chainalysis</a><a href="/vs/elliptic">vs Elliptic</a><a href="/vs/comply-advantage">vs ComplyAdvantage</a><a href="/compare/sumsub">vs SumSub</a></div>
-      <div class="col"><h4>Developers</h4><a href="https://github.com/kindrat86/agentmail">GitHub</a><a href="https://pypi.org/project/sanctions-mcp/">PyPI</a><a href="/blog/ofac-for-agents">Blog</a><a href="https://agentmail-api.fly.dev/health">API status</a></div>
+      <div class="col"><h4>Developers</h4><a href="https://github.com/kindrat86/agentmail">GitHub</a><a href="https://pypi.org/project/sanctions-mcp/">PyPI</a><a href="/blog/ofac-for-agents">Blog</a><a href="/health">API status</a></div>
     </div>
   </div>
   <div class="bottom"><span>agentmail &mdash; OFAC sanctions screening for AI agents &mdash; MIT licensed</span><span>Built for the agent economy</span></div>
@@ -6598,6 +6658,7 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
             'Pay when it is moving money you would mind losing.</p>'
             '</section>'
             '<section><div class="prose" style="max-width:960px">'
+            + recover_html +
             '<p class="note" style="text-align:center">By <span class="author" rel="author">Maryan</span> · All plans screen the US Treasury OFAC SDN list, refreshed daily · <time datetime="2026-07-25">Updated July 25, 2026</time> · Self-host option: <code>pip install sanctions-mcp</code></p>'
             '<table style="text-align:center">'
             '<thead><tr><th></th><th><h3>Free</h3><p style="color:#00d4aa;font-size:1.5em;font-weight:800;margin:4px 0">$0</p></th>'
@@ -7860,7 +7921,7 @@ document.getElementById("wallet").addEventListener("keydown",function(e){if(e.ke
             '<p>Ready-to-use templates. Replace <code>[YOURID]</code> with your partner ID:</p>'
 
             '<h3>1. Twitter / X thread</h3>'
-            '<pre style="background:#0c0d0f;border:1px solid var(--line);border-radius:10px;padding:16px;font-size:.82rem;overflow-x:auto;color:#cfd3d8">1/ Your AI agent can send USDC at 3 AM now.\n\nx402, Coinbase AgentKit, OpenAI ACP — all let agents pay autonomously.\n\nBut none of them check if the recipient is on the OFAC sanctions list.\n\nThe fine for hitting a sanctioned wallet: $377,700 per violation.\n\n2/ I found a tool that fixes this in one curl call:\n\nsanctionsai.dev/?ref=[YOURID]\n\nScreen every counterparty before your agent pays. Under 100ms. Free tier.\n\n3/ How it works:\n- 947 OFAC-listed crypto wallets\n- 19,218 SDN names\n- 16 jurisdictions\n- Hourly sync\n\nOne HTTP call. No SDK lock-in.\n\n4/ MCP support too — native in Claude Code and Cursor.\n\npip install sanctions-mcp\n\nYour coding agent can screen wallets as a tool call.\n\n5/ If you are building payment agents, you need this before you ship:\n\nsanctionsai.dev/?ref=[YOURID]\n\nFree to start. $19/mo in production.</pre>'
+            '<pre style="background:#0c0d0f;border:1px solid var(--line);border-radius:10px;padding:16px;font-size:.82rem;overflow-x:auto;color:#cfd3d8">1/ Your AI agent can send USDC at 3 AM now.\n\nx402, Coinbase AgentKit, OpenAI ACP — all let agents pay autonomously.\n\nBut none of them check if the recipient is on the OFAC sanctions list.\n\nThe fine for hitting a sanctioned wallet: $377,700 per violation.\n\n2/ I found a tool that fixes this in one curl call:\n\nsanctionsai.dev/?ref=[YOURID]\n\nScreen every counterparty before your agent pays. Under 100ms. Free tier.\n\n3/ How it works:\n- 947 OFAC-listed crypto wallets\n- 19,218 SDN names\n- 16 jurisdictions\n- Daily sync\n\nOne HTTP call. No SDK lock-in.\n\n4/ MCP support too — native in Claude Code and Cursor.\n\npip install sanctions-mcp\n\nYour coding agent can screen wallets as a tool call.\n\n5/ If you are building payment agents, you need this before you ship:\n\nsanctionsai.dev/?ref=[YOURID]\n\nFree to start. $19/mo in production.</pre>'
 
             '<h3>2. Hacker News — Show HN</h3>'
             '<pre style="background:#0c0d0f;border:1px solid var(--line);border-radius:10px;padding:16px;font-size:.82rem;overflow-x:auto;color:#cfd3d8">Show HN: OFAC sanctions screening for AI payment agents ($0.05/check)\n\nI built a one-curl-call sanctions check for AI agents that send money.\n\nThe problem: x402, AP2, ACP, and Coinbase AgentKit all let agents pay autonomously — but none of them screen recipients against the OFAC SDN list. If an agent pays a sanctioned wallet, the operator is liable under strict liability ($377.7K/violation).\n\nThe fix: one HTTP call before the payment. 947 OFAC crypto wallets, 19K names, 16 jurisdictions. Under 100ms.\n\nhttps://sanctionsai.dev/?ref=[YOURID]\n\nMIT licensed, self-hostable, MCP + HTTP + CLI.</pre>'
@@ -8008,7 +8069,7 @@ Two embeddable widgets that let your users screen wallets against the OFAC SDN l
 <section><div class="prose" style="max-width:800px;margin:0 auto">
 
 <h2>1. OFAC Compliance Badge <code style="font-size:.8em;color:#00d4aa;background:#0d1a14;padding:2px 8px;border-radius:4px">SVG</code></h2>
-<p>A live SVG badge showing real-time OFAC screening stats: 947 sanctioned wallets, 19,218 names, hourly sync. Every embed links back to sanctionsai.dev — permanent backlink for your compliance page.</p>
+<p>A live SVG badge showing real-time OFAC screening stats: 947 sanctioned wallets, 19,218 names, daily sync. Every embed links back to sanctionsai.dev — permanent backlink for your compliance page.</p>
 
 <div style="background:#0a0a0a;border:1px solid #1a1a1a;border-radius:12px;padding:20px;text-align:center;margin:16px 0">
 <img src="/api/badge/ofac-screened.svg" alt="Protected by agentmail — OFAC Screening" style="max-width:100%">
@@ -8051,7 +8112,7 @@ Two embeddable widgets that let your users screen wallets against the OFAC SDN l
 <li>Screen any EVM, Bitcoin, or Tron wallet against 947 OFAC-sanctioned addresses</li>
 <li>Free — 5 checks/day per IP, no API key</li>
 <li>Under 100ms per check</li>
-<li>Data refreshed hourly from US Treasury SDN list</li>
+<li>Data refreshed daily from US Treasury SDN list</li>
 <li>MIT licensed — self-host for unlimited use</li>
 </ul>
 
@@ -8116,7 +8177,7 @@ async function screen(){
   if(!wallet){result.className='result error';result.textContent='Please enter a wallet address';return}
   result.className='result loading';result.textContent='Screening against 947 OFAC wallets...';
   try{
-    const r=await fetch('https://agentmail-api.fly.dev/sanctions?wallet='+encodeURIComponent(wallet));
+    const r=await fetch('https://sanctionsai.dev/sanctions?wallet='+encodeURIComponent(wallet));
     const d=await r.json();
     if(!r.ok){result.className='result error';result.textContent='Error: '+((d.error||d.message||'Unknown'))}
     else if(d.clean){result.className='result clean';result.innerHTML='<strong>✓ CLEAN</strong> — No OFAC match for this wallet.<br><small>Checked against '+d.checked_against.wallets+' wallets in '+d.latency_ms+'ms</small>'}
@@ -8648,7 +8709,7 @@ document.getElementById("squeeze-form").addEventListener("submit", function(e){
             "of your legal fees. Full scope, exclusions and claim process.",
             body, canonical="/guarantee")
 
-    def _playbook_page(self):
+    def _playbook_page(self, welcome: bool = False):
         """The lead magnet itself — the bait /start has been promising.
 
         Deliberately ungated. Brunson's rule is that the bait must be good
@@ -8738,8 +8799,18 @@ document.getElementById("squeeze-form").addEventListener("submit", function(e){
                 '<pre style="margin:0;background:#06090d;border:1px solid #1e2530;border-radius:10px;padding:14px 16px;'
                 'overflow-x:auto;font-size:.82rem;line-height:1.6"><code>' + self._esc(code) + '</code></pre></div>'
             )
+        # Arriving from an opt-in (the 303 out of /subscribe): confirm the
+        # delivery instead of showing the page as if nothing happened.
+        ack = (
+            '<div style="border:1px solid rgba(0,212,170,.35);border-radius:12px;padding:16px 20px;'
+            'margin:0 auto 22px;max-width:680px;background:#0d1a14;text-align:center">'
+            '<b style="color:#00d4aa">You are on the list.</b> '
+            '<span style="color:#a4abb3">The link to this page is in your inbox too, so you keep it. '
+            'The playbook itself starts right below &mdash; nothing is gated.</span></div>'
+        ) if welcome else ''
         html = (
             '<section style="border-top:none;text-align:center;padding-bottom:8px">'
+            + ack +
             '<h1 style="font-size:2.4em;margin-bottom:8px">The Agent Compliance Playbook</h1>'
             '<p class="lead" style="max-width:640px;margin:10px auto 0">Seven patterns for putting OFAC '
             'sanctions screening on an AI agent\'s payment path — and the two mistakes that quietly '
@@ -8848,7 +8919,7 @@ document.getElementById("squeeze-form").addEventListener("submit", function(e){
 <!-- Code Demo -->
 <div style="background:#000;border:1px solid #1e293b;border-radius:12px;padding:18px;overflow-x:auto;font-size:13.5px;color:#cfd2d8;margin-bottom:32px;text-align:left">
 <span style="color:#6b7280"># One curl call. 92ms. Your agent is protected.</span><br>
-curl "https://agentmail-api.fly.dev/sanctions?wallet=<span style="color:#f59e0b">0x742d35Cc6634C0532925a3b844Bc9e7595f0bEbb</span>"<br><br>
+curl "https://sanctionsai.dev/sanctions?wallet=<span style="color:#f59e0b">0x742d35Cc6634C0532925a3b844Bc9e7595f0bEbb</span>"<br><br>
 <span style="color:#6b7280"># agentmail returns:</span><br>
 { <span style="color:#00d4aa">"clean"</span>: true, <span style="color:#00d4aa">"action"</span>: <span style="color:#f59e0b">"ALLOW"</span>, <span style="color:#00d4aa">"checked_against"</span>: { <span style="color:#00d4aa">"wallets"</span>: 947, <span style="color:#00d4aa">"names"</span>: 19218 }, <span style="color:#00d4aa">"latency_ms"</span>: 92 }
 </div>
@@ -11450,6 +11521,7 @@ compute();
             etype = result.get("event_type", "")
             # Fire post-purchase onboarding email immediately after checkout
             if etype == "checkout.session.completed" and result.get("email"):
+                _funnel("purchased", result["email"], plan=result.get("plan", "dev"))
                 try:
                     _send_post_purchase_email(result["email"], result.get("plan", "dev"))
                 except Exception as e:
@@ -11622,7 +11694,7 @@ _SOAP_CONTENT.append("""
 <p style='margin:0 0 20px;font-size:14px;color:#999;line-height:1.6'>The agent did not know what OFAC was. It just saw "pay invoice #4021" and sent USDC. If that had been a real transaction, the deployer would be looking at a $377.7K fine.</p>
 <div style='background:#0d1a14;border:1px solid rgba(0,212,170,0.08);border-radius:10px;padding:16px;text-align:center;margin-bottom:20px'>
 <p style='margin:0 0 8px;font-size:13px;color:#00d4aa'>Screen every payment before it moves</p>
-<code style='display:inline-block;background:#0a0a0a;border:1px solid #1a1a1a;border-radius:4px;padding:6px 12px;font-family:\'SF Mono\',Consolas,monospace;font-size:11px;color:#34d399'>curl https://agentmail-api.fly.dev/sanctions?wallet=0x...</code>
+<code style='display:inline-block;background:#0a0a0a;border:1px solid #1a1a1a;border-radius:4px;padding:6px 12px;font-family:\'SF Mono\',Consolas,monospace;font-size:11px;color:#34d399'>curl https://sanctionsai.dev/sanctions?wallet=0x...</code>
 </div>
 """)
 
@@ -11671,7 +11743,7 @@ _SEINFELD_CONTENT = []
 _SEINFELD_CONTENT.append("""
 <span style='display:inline-block;background:rgba(0,212,170,0.1);color:#00d4aa;font-size:9px;font-weight:700;padding:3px 10px;border-radius:10px;margin-bottom:16px'>DAILY TIP</span>
 <h2 style='margin:0 0 12px;font-size:17px;font-weight:700;color:#fff;line-height:1.3'>How OFAC updates its SDN list</h2>
-<p style='margin:0 0 16px;font-size:13px;color:#999;line-height:1.6'>The OFAC SDN list is updated in real-time. New designations are added as Executive Orders are signed. agentmail syncs hourly - if the Treasury adds a wallet at 2:47 PM, we catch it at 3:00 PM.</p>
+<p style='margin:0 0 16px;font-size:13px;color:#999;line-height:1.6'>The OFAC SDN list is updated in real-time. New designations are added as Executive Orders are signed. agentmail refreshes the list daily - a wallet the Treasury designates today is in our screening set within 24 hours. You can see the exact age of the data any time in <code>/health</code> (<code>lists_fetched_at</code>).</p>
 <p style='margin:0 0 24px;font-size:13px;color:#999;line-height:1.6'>Pro tip: Use our <code style='background:#1a1a1a;padding:2px 6px;border-radius:3px;font-size:12px;color:#34d399'>/health</code> endpoint to see when data was last synced.</p>
 <p style='text-align:center'><a href='https://sanctionsai.dev' style='color:#00d4aa;text-decoration:none;font-size:12px'>sanctionsai.dev &rarr;</a></p>
 """)
@@ -11688,7 +11760,7 @@ for d in range(2, 31):
 <h2 style='margin:0 0 12px;font-size:17px;font-weight:700;color:#fff;line-height:1.3'>""" + _SEINFELD_SUBJECTS[d-1] + """</h2>
 <p style='margin:0 0 16px;font-size:13px;color:#999;line-height:1.6'>Make sure your agent pipeline always checks OFAC before sending money. agentmail runs in under 100ms - fast enough for any real-time payment flow.</p>
 <div style='background:#0d1a14;border:1px solid rgba(0,212,170,0.08);border-radius:10px;padding:14px;margin-bottom:16px;text-align:center'>
-<code style='font-family:\'SF Mono\',Consolas,monospace;font-size:11px;color:#34d399'>curl https://agentmail-api.fly.dev/sanctions?wallet=0x...</code>
+<code style='font-family:\'SF Mono\',Consolas,monospace;font-size:11px;color:#34d399'>curl https://sanctionsai.dev/sanctions?wallet=0x...</code>
 </div>
 <p style='text-align:center'><a href='https://sanctionsai.dev' style='color:#00d4aa;text-decoration:none;font-size:12px'>sanctionsai.dev &rarr;</a></p>
 """)
@@ -11820,7 +11892,7 @@ def _send_welcome_email(email: str) -> dict:
     html += '<table role="presentation" cellpadding="0" cellspacing="0" style="margin:0 0 18px"><tr><td style="border-radius:8px;background:#00d4aa"><a href="https://sanctionsai.dev/playbook" style="display:inline-block;padding:12px 28px;font-size:13px;font-weight:700;color:#0a0a0a;text-decoration:none;border-radius:8px">Read the Agent Compliance Playbook &rarr;</a></td></tr></table>'
     html += '<p style="margin:0 0 10px;font-size:13px;font-weight:600;color:#00d4aa">And your free tier is ready. No API key needed.</p>'
     html += '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#0a0a0a;border-radius:6px;border:1px solid #1a1a1a"><tr><td style="padding:14px 16px;font-family:\'SF Mono\',Consolas,monospace;font-size:12px;color:#34d399;line-height:1.6;word-break:break-all">'
-    html += 'curl <a href="https://agentmail-api.fly.dev/sanctions?wallet=0x098B716B8Aaf21512996dC57EB0615e2383E2f96" style="color:#34d399;text-decoration:none">https://agentmail-api.fly.dev/sanctions?wallet=0x098B716B8Aaf21512996dC57EB0615e2383E2f96</a>'
+    html += 'curl <a href="https://sanctionsai.dev/sanctions?wallet=0x098B716B8Aaf21512996dC57EB0615e2383E2f96" style="color:#34d399;text-decoration:none">https://sanctionsai.dev/sanctions?wallet=0x098B716B8Aaf21512996dC57EB0615e2383E2f96</a>'
     html += '</td></tr></table><p style="margin:6px 0 0;font-size:11px;color:#555">5 checks/day &middot; No signup &middot; Free forever</p>'
     html += '</td></tr></table>'
     html += '<h3 style="margin:0 0 16px;font-size:14px;font-weight:700;color:#fff">The 4 tools your agent needs</h3>'
@@ -11873,7 +11945,7 @@ def _send_post_purchase_email(email: str, plan: str = "dev") -> dict:
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#0d1a14;border-radius:10px;border:1px solid rgba(0,212,170,0.08);margin-bottom:24px"><tr><td style="padding:20px">
 <p style="margin:0 0 8px;font-size:13px;font-weight:600;color:#00d4aa">Step 1 — make your first paid check</p>
 <pre style="margin:0;background:#0a0a0a;border:1px solid #1a1a1a;border-radius:6px;padding:14px;font-size:12px;color:#34d399;overflow-x:auto">curl -H "Authorization: Bearer YOUR_KEY" \\
-  "https://agentmail-api.fly.dev/sanctions?wallet=0x742d35Cc..."</pre>
+  "https://sanctionsai.dev/sanctions?wallet=0x742d35Cc..."</pre>
 </td></tr></table>
 <p style="margin:0 0 12px;font-size:14px;color:#fff;font-weight:700">Next steps:</p>
 <p style="margin:0 0 8px;font-size:14px;color:#999">1. Add your API key to your agent's payment path</p>
