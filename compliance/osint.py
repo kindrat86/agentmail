@@ -223,6 +223,10 @@ class OsintComplianceProvider(ComplianceProvider):
                            "count": len(wallets)}, f)
             self._wallets = wallets
             self._source_tag = source_tag
+            # Was only set when loading FROM cache, so /health reported
+            # lists_fetched_at:null immediately after a successful fetch —
+            # monitoring read "never refreshed" at the exact moment it had.
+            self._lists_loaded_at = now
             return True
         except Exception as e:
             # Fallback: use stale cache if present, else embedded list.
