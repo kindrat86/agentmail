@@ -39,16 +39,18 @@ fi
 DATE=$(ls -1 data/sdn-deltas/*.xml 2>/dev/null | sed 's|.*/||;s|\.xml$||' | sort | tail -1)
 echo "new OFAC publication captured: $DATE"
 
-# Commit only this feature's paths. The working tree is shared with other
-# autonomous sessions and is itself what gets deployed, so `git add -A` here
-# would ship whatever half-finished edit happened to be sitting in the tree.
-git add updates data/sdn-deltas scripts/build_sdn_updates.py 2>/dev/null
-if git diff --cached --quiet; then
-  echo "builder reported new publication but produced no file changes — not deploying"
+# Commit ONLY this feature's paths, by pathspec rather than `git add` + `commit`.
+# Several autonomous sessions share this working tree and stage things in it; a
+# bare `git commit` commits whatever is in the index, so the staged form would
+# sweep up another session's half-finished work and ship it. A pathspec commit
+# ignores the index entirely and takes the working-tree state of these paths only.
+PATHS="updates data/sdn-deltas"
+if [ -z "$(git status --porcelain -- $PATHS)" ]; then
+  echo "builder reported a new publication but produced no file changes — not deploying"
   exit 0
 fi
 git -c user.email=sales@sipiteno.com -c user.name="SanctionsAI Bot" \
-    commit -q -m "data(updates): OFAC SDN publication $DATE" || {
+    commit -q -m "data(updates): OFAC SDN publication $DATE" -- $PATHS || {
       echo "commit failed — not deploying"; exit 1; }
 
 # fly.toml carries auto_stop_machines="suspend" + min_machines_running=1; a
@@ -58,10 +60,39 @@ if ! grep -q 'auto_stop_machines *= *"suspend"' fly.toml; then
   exit 1
 fi
 
-echo "deploying..."
-if ! flyctl deploy -a agentmail-api --now 2>&1 | tail -20; then
-  echo "deploy FAILED — commit $DATE is in git but not live"
+if [ -n "${SDN_UPDATES_NO_DEPLOY:-}" ]; then
+  echo "SDN_UPDATES_NO_DEPLOY set — captured and committed $DATE, skipping deploy"
+  exit 0
+fi
+
+# Deploy in two steps. A single `flyctl deploy` holds one long connection through
+# the whole remote build and is regularly killed part-way ("terminated signal
+# received"), leaving the release interrupted; splitting it means the only
+# long-running call is the build, and the release itself is seconds long.
+#
+# The build output goes to its own file rather than straight down the pipe: the
+# image reference has to be read back out of it, and grepping the shared append
+# log instead would happily match a stale reference from an earlier run.
+BUILD_LOG=$(mktemp -t sdn-build)
+echo "building image..."
+flyctl deploy -a agentmail-api --build-only --push >"$BUILD_LOG" 2>&1
+rc_build=$?
+tail -15 "$BUILD_LOG"
+IMAGE_REF=$(grep -oE 'registry\.fly\.io/agentmail-api:deployment-[A-Za-z0-9]+' "$BUILD_LOG" | tail -1)
+rm -f "$BUILD_LOG"
+if [ "$rc_build" != "0" ] || [ -z "$IMAGE_REF" ]; then
+  echo "build FAILED (exit $rc_build, image='$IMAGE_REF') — commit $DATE is in git but not live"
   exit 1
+fi
+
+echo "releasing $IMAGE_REF ..."
+flyctl deploy -a agentmail-api --image "$IMAGE_REF" 2>&1 | tail -15
+rc_rel=$?
+if [ "$rc_rel" != "0" ]; then
+  # A release can report failure and still be live, and concurrent sessions
+  # deploy this app constantly — the URL check below is the real verdict, so
+  # warn rather than bail here.
+  echo "WARNING: release reported exit $rc_rel; verifying by URL before deciding"
 fi
 
 # Tell IndexNow the new URLs exist. Best-effort by design: the ping is not what
