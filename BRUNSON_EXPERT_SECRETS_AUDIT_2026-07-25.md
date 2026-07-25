@@ -328,10 +328,20 @@ Verified against production on 2026-07-26 (Fly v394, image
 
 ## Note on concurrency
 
-Three other Claude sessions were editing `~/workspace/agentmail` throughout this audit. One was
+Several other Claude sessions were editing `~/workspace/agentmail` throughout this audit. One was
 running an overlapping honesty pass (it removed the `/tripwire` countdown and the orphaned
 testimonial while I was reading them) and swept my `api.py` edits into its own commit `6f345cc`;
-another was mid-flight on a Stripe order-bump gate in `billing.py` and canonical-URL fixes. The
-deploy below therefore carries their in-flight work as well as mine. Everything was compile-checked
-and render-checked before shipping, but the commit attribution in this repo does not cleanly reflect
-who wrote what.
+another was mid-flight on a Stripe order-bump gate in `billing.py`; a third published its own full
+trilogy audit (`BRUNSON_AUDIT_2026-07-25.md`, composite 59.2) and a DotCom Secrets one. The deploys
+therefore carry their in-flight work as well as mine. Everything was compile-checked and
+render-checked before shipping, and every fix was verified live afterwards.
+
+Two things this cost, worth knowing for next time:
+
+- **Commit attribution here does not reflect who wrote what.** My `api.py` work was swept into
+  other sessions' commits twice, including the whole of `/protocol`.
+- **A commit of mine was silently dropped.** `dd37283`, carrying the first version of this
+  document, stopped being an ancestor of `HEAD` when a concurrent session rewrote the branch.
+  Nothing reported it: `git log` on the path returned nothing and the file was simply absent.
+  Recovered from the dangling commit. When work "disappears" in this repo, check
+  `git merge-base --is-ancestor <commit> HEAD` before assuming it was never made.
