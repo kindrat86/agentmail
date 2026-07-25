@@ -32,6 +32,11 @@ actually matter.
 """
 import csv
 import json
+import os as _os
+import sys as _sys
+
+_sys.path.insert(0, _os.path.dirname(_os.path.abspath(__file__)))
+from _meta import DESC_TARGET, TITLE_MAX, clip, clip_desc
 import os
 import re
 import sys
@@ -159,12 +164,17 @@ def render_page(card):
             {"@type": "ListItem", "position": 3, "name": "OFAC SDN List", "item": BASE + "/"},
         ],
     }
-    title = "OFAC SDN List in JSON &amp; CSV — %s Entries, Updated %s" % (
-        "{:,}".format(c["entries"]), card["published"])
-    desc = ("Download the U.S. Treasury OFAC Specially Designated Nationals (SDN) list as "
-            "clean JSON or CSV. %s designated entries, %s alternate names, parsed straight "
-            "from OFAC's own export. Free, no signup, no API key."
-            % ("{:,}".format(c["entries"]), "{:,}".format(c["alternateNames"])))
+    # PAGE appends " | SanctionsAI" to the title, so the budget here is
+    # TITLE_MAX minus that suffix — the gate measures the rendered tag.
+    _SUFFIX = " | SanctionsAI"
+    title = clip("OFAC SDN List in JSON & CSV — %s Entries, Updated %s"
+                 % ("{:,}".format(c["entries"]), card["published"]),
+                 TITLE_MAX - len(_SUFFIX)).replace("&", "&amp;")
+    desc = clip_desc(
+        "Download the U.S. Treasury OFAC Specially Designated Nationals (SDN) "
+        "list as clean JSON or CSV. %s entries, %s alternate names, straight "
+        "from OFAC's own export. Free, no signup."
+        % ("{:,}".format(c["entries"]), "{:,}".format(c["alternateNames"])))
 
     prog_rows = "".join(
         "<tr><td><code>%s</code></td><td class=\"num\">%s</td></tr>" % (esc(p), "{:,}".format(n))
