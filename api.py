@@ -6514,8 +6514,9 @@ var ref=document.referrer||'';if(ref){var aiHosts=['chatgpt.com','chat.openai.co
 document.addEventListener('click',function(e){var a=e.target.closest&&e.target.closest('a[href],button.btn,.btn');if(!a)return;var href=a.getAttribute('href')||'';var txt=(a.textContent||'').trim().slice(0,40);var cls=a.classList||{};var tier=cls.contains('btn-primary')?'primary':(cls.contains('btn-ghost')?'secondary':'text');if(href.indexOf('/checkout/')>-1){p.capture('cta_checkout',{cta:txt,href:href,page:pg,tier:tier});}else if(href.indexOf('/tools/wallet-checker')>-1){p.capture('cta_run_check',{cta:txt,href:href,page:pg,tier:tier});}else if(href.indexOf('github.com/kindrat86')>-1){p.capture('cta_github',{cta:txt,href:href,page:pg});}},true);var f=document.getElementById('free-tier-capture');if(f){f.addEventListener('submit',function(){p.capture('cta_free_signup',{page:pg});});}});</script>
 </head>
 <body>
+<a href="#main" class="skip-link">Skip to content</a>
 <nav id="nav"><div class="wrap bar">
-  <a href="/" class="logo">Sanctions<span style="color:var(--teal)">AI</span></a>
+  <a href="/" class="logo" aria-label="SanctionsAI home">Sanctions<span style="color:var(--teal)">AI</span></a>
   <div class="links" id="navlinks">
     <a href="/">For Humans</a>
     <a href="https://github.com/kindrat86/agentmail">GitHub</a>

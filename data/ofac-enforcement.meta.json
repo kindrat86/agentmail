@@ -1,0 +1,21 @@
+{
+ "name": "OFAC Civil Penalties Database",
+ "description": "Every civil penalty, settlement and finding of violation published by the U.S. Department of the Treasury's Office of Foreign Assets Control (OFAC), consolidated from OFAC's per-year enforcement charts into a single machine-readable dataset.",
+ "source": "U.S. Department of the Treasury, Office of Foreign Assets Control - Civil Penalties and Enforcement Information",
+ "sourceUrl": "https://ofac.treasury.gov/civil-penalties-and-enforcement-information",
+ "retrieved": "2026-07-26",
+ "temporalCoverage": "2003/2026",
+ "counts": {
+  "actions": 1052,
+  "years": 24,
+  "totalPenaltiesUSD": 7930217004.64,
+  "withSourceDocument": 1052,
+  "withReleaseDetail": 186
+ },
+ "method": "Each row is transcribed verbatim from OFAC's own published penalty chart: date, entity name, aggregate count and USD total exactly as OFAC states them. Where a row links to an enforcement release, structured fields (apparent violation count, statutory maximum, base penalty, voluntary-self-disclosure status, egregiousness determination, conduct period) are extracted from the literal text of that release. No value is estimated, inferred or filled in; a field OFAC does not state is absent from the record.",
+ "scope": "OFAC civil enforcement only. Excludes criminal penalties (DOJ), and penalties imposed by FinCEN, the SEC, the CFTC or BIS, which are frequently reported alongside OFAC settlements but are separate actions under separate authorities.",
+ "license": "CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/). Underlying U.S. Government work is public domain, 17 U.S.C. 105.",
+ "citation": "SanctionsAI, \"OFAC Civil Penalties Database\", 2026, https://sanctionsai.dev/enforcement",
+ "publisher": "https://sanctionsai.dev",
+ "disclaimer": "Not legal or compliance advice. OFAC's own enforcement release is the authoritative record."
+}
