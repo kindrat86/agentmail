@@ -7680,7 +7680,20 @@ curl "https://agentmail-api.fly.dev/sanctions?wallet=<span style="color:#f59e0b"
         self._send_html(200, page)
 
     def _serve_ofac_csv(self):
-        csv_data = "Year,Company,Penalty Amount,Violation Type,Description,Source\\n2024,Kraken,$362,158,Sanctions violations,Apparent violations of sanctions against Iran,OFAC Enforcement Release 2024-11\\n2024,Binance,$968,618,Multiple sanctions programs,Transactions with sanctioned entities in multiple jurisdictions,OFAC Enforcement Release 2024-05\\n2023,Poloniex,$7,591,630,Multiple sanctions,Processing transactions for sanctioned jurisdictions,OFAC 2023-05-01\\n2023,Microsoft,$3,319,846,Cuba/Iran/Syria,Export of services to sanctioned jurisdictions,OFAC 2023-04-17\\n2022,Bittrex,$24,280,000,Multiple sanctions,Processing transactions for sanctioned jurisdictions,OFAC 2022-10-11\\n2021,BitPay,$507,375,Multiple sanctions,Processing transactions for sanctioned jurisdictions,OFAC 2021-02-18\\n2020,BitMEX,$100,000,000,Bank Secrecy Act/OFAC,Willful failure to implement AML program,DOJ/OFAC 2020-10-01\\n2019,Stanley Black & Decker,$1,869,144,Iran sanctions,Indirect export of goods to Iran,OFAC 2019-03-27\\n2018,Societe Generale,$53,966,916,Cuba/Iran/Sudan,Processing USD transactions for sanctioned entities,OFAC 2018-11-19\\n2017,ZTE Corporation,$119,000,000,Iran/North Korea,Export of telecom equipment to sanctioned entities,OFAC 2017-03-07\\nSource: U.S. Department of Treasury OFAC Enforcement Releases, 2017-2024. CC BY 4.0. Cite as: sanctionsai.dev, 'OFAC Enforcement Database', 2026.\\n"
+        # Read the dataset from disk so the served CSV and the repo file cannot drift.
+        # They already had: the embedded copy carried 10 enforcement actions while
+        # ofac-enforcement-2026.csv carried 14. The embedded copy was also written with
+        # literal "\\n" two-character sequences rather than newlines, so the whole
+        # response was a single physical line, and its penalty amounts were unquoted
+        # ($362,158 -> "$362","158"). Both are fixed in the file; serve the file.
+        import os as _os
+        _csv_path = _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), "ofac-enforcement-2026.csv")
+        try:
+            with open(_csv_path, "r", encoding="utf-8") as _f:
+                csv_data = _f.read()
+        except OSError:
+            self.send_error(404, "dataset unavailable")
+            return
         data = csv_data.encode('utf-8')
         self.send_response(200)
         self.send_header("Content-Type", "text/csv; charset=utf-8")
