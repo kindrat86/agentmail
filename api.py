@@ -9738,9 +9738,12 @@ compute();
 <li><strong>Usage metadata:</strong> request count, IP address (for rate limiting), and timestamps. We do not store request payloads beyond the screening subject.</li>
 <li><strong>Billing data:</strong> handled entirely by Stripe. We never see or store your credit card number.</li>
 </ul>
+<h2>Analytics</h2>
+<p>This website uses <a href="https://posthog.com/privacy" rel="noopener" target="_blank">PostHog</a> (EU-hosted, <code>eu.i.posthog.com</code>) as our processor for product analytics. It records page views and a small set of product events, and stores an identifier in your browser (a cookie and local storage). It is configured not to build a profile for anonymous visitors, and we do not use it to track you across other websites. Blocking <code>eu.i.posthog.com</code> disables it entirely without affecting the site or the API.</p>
 <h2>What we do NOT collect</h2>
 <ul>
-<li>We do not use tracking cookies or analytics pixels that follow you across sites.</li>
+<li>We run no advertising or retargeting pixels — no Meta, Reddit, LinkedIn, Google Ads or comparable ad-network trackers — and we do not build or share advertising audiences.</li>
+<li>We do not use cross-site tracking cookies. The only browser storage we set is the first-party PostHog identifier described above.</li>
 <li>We do not sell, rent, or share your data with third parties.</li>
 <li>We do not store the contents of your emails or SMS messages (those are handled by separate inbox services).</li>
 </ul>
