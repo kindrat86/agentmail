@@ -1,0 +1,210 @@
+%PDF-1.4
+%‚„œ”
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R 4 0 R 5 0 R 6 0 R] /Count 4 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 11 0 R /F2 12 0 R /F3 13 0 R >> >> /Contents 7 0 R >>
+endobj
+4 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 11 0 R /F2 12 0 R /F3 13 0 R >> >> /Contents 8 0 R >>
+endobj
+5 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 11 0 R /F2 12 0 R /F3 13 0 R >> >> /Contents 9 0 R >>
+endobj
+6 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 11 0 R /F2 12 0 R /F3 13 0 R >> >> /Contents 10 0 R >>
+endobj
+7 0 obj
+<< /Length 2765 >>
+stream
+BT /F1 16 Tf 72 720 Td (The Agent Compliance Playbook) Tj ET
+BT /F3 11 Tf 72 698 Td (7 patterns for adding OFAC sanctions screening to your AI agent's payment path) Tj ET
+BT /F3 11 Tf 72 684 Td () Tj ET
+BT /F2 13 Tf 72 670 Td (Pattern 1: Screen-Before-Sign) Tj ET
+BT /F3 11 Tf 72 652 Td (The single rule that prevents 100% of sanctioned-wallet payments.) Tj ET
+BT /F3 11 Tf 72 638 Td () Tj ET
+BT /F3 11 Tf 72 624 Td (The problem:) Tj ET
+BT /F3 11 Tf 72 610 Td (Your agent decides to pay, signs the tx, then screens. By then it is too late) Tj ET
+BT /F3 11 Tf 72 596 Td (? the tx is on-chain.) Tj ET
+BT /F3 11 Tf 72 582 Td () Tj ET
+BT /F3 11 Tf 72 568 Td (The pattern:) Tj ET
+BT /F3 11 Tf 72 554 Td (Call sanctions_check BEFORE the signing step, in the same code path that) Tj ET
+BT /F3 11 Tf 72 540 Td (authorises payment. Treat the screen as a hard gate, not a log line.) Tj ET
+BT /F3 11 Tf 72 526 Td () Tj ET
+BT /F3 11 Tf 72 512 Td (Example:) Tj ET
+BT /F3 9 Tf 80 498 Td (if not sanctions_check\(wallet=to_addr\).get\('clean'\):) Tj ET
+BT /F3 9 Tf 80 484 Td (    abort\('blocked: OFAC SDN match'\)) Tj ET
+BT /F3 9 Tf 80 470 Td (sign_tx\(to_addr, amount\)  # only reached if clean) Tj ET
+BT /F3 11 Tf 72 452 Td () Tj ET
+BT /F2 13 Tf 72 438 Td (Pattern 2: The 100ms Budget) Tj ET
+BT /F3 11 Tf 72 420 Td (Compliance that costs more than one network hop gets ripped out in week two.) Tj ET
+BT /F3 11 Tf 72 406 Td () Tj ET
+BT /F3 11 Tf 72 392 Td (The problem:) Tj ET
+BT /F3 11 Tf 72 378 Td (A 900ms screening call blocks the payment path, an engineer removes it, and) Tj ET
+BT /F3 11 Tf 72 364 Td (you are unscreened again.) Tj ET
+BT /F3 11 Tf 72 350 Td () Tj ET
+BT /F3 11 Tf 72 336 Td (The pattern:) Tj ET
+BT /F3 11 Tf 72 322 Td (Enforce a hard latency budget. agentmail returns in <100ms p95; fail closed) Tj ET
+BT /F3 11 Tf 72 308 Td (only if the call exceeds 500ms \(configurable\). Cache clean results for 60s to) Tj ET
+BT /F3 11 Tf 72 294 Td (coalesce bursts.) Tj ET
+BT /F3 11 Tf 72 280 Td () Tj ET
+BT /F3 11 Tf 72 266 Td (Example:) Tj ET
+BT /F3 9 Tf 80 252 Td (result = sanctions_check\(wallet=w, timeout=0.5\)) Tj ET
+BT /F3 9 Tf 80 238 Td (if result is None:          # timed out) Tj ET
+BT /F3 9 Tf 80 224 Td (    return 'review'          # do NOT auto-allow on timeout) Tj ET
+BT /F3 11 Tf 72 206 Td () Tj ET
+BT /F2 13 Tf 72 192 Td (Pattern 3: Risk-Score the Amount, Not Just the Wallet) Tj ET
+BT /F3 11 Tf 72 174 Td (A clean wallet moving $50k on day one is not the same as one moving $5.) Tj ET
+BT /F3 11 Tf 72 160 Td () Tj ET
+BT /F3 11 Tf 72 146 Td (The problem:) Tj ET
+BT /F3 11 Tf 72 132 Td (You screen the wallet, it is clean, you allow ? and miss that a clean wallet) Tj ET
+BT /F3 11 Tf 72 118 Td (is being used as a mule for a sanctioned actor.) Tj ET
+
+endstream
+endobj
+8 0 obj
+<< /Length 2762 >>
+stream
+BT /F3 11 Tf 72 720 Td () Tj ET
+BT /F3 11 Tf 72 706 Td (The pattern:) Tj ET
+BT /F3 11 Tf 72 692 Td (Layer risk_score on top of sanctions_check. It weighs amount anomalies, rail) Tj ET
+BT /F3 11 Tf 72 678 Td (\(x402/AP2/ACP\), wallet age, and category exposure into a 0-100 score with an) Tj ET
+BT /F3 11 Tf 72 664 Td (explicit allow/review/decline recommendation.) Tj ET
+BT /F3 11 Tf 72 650 Td () Tj ET
+BT /F3 11 Tf 72 636 Td (Example:) Tj ET
+BT /F3 9 Tf 80 622 Td (r = risk_score\(counterparty=w, amount=amt, rail='x402'\)) Tj ET
+BT /F3 9 Tf 80 608 Td (if r['recommendation'] == 'decline':) Tj ET
+BT /F3 9 Tf 80 594 Td (    return block_with_reason\(r['reasons']\)) Tj ET
+BT /F3 11 Tf 72 576 Td () Tj ET
+BT /F2 13 Tf 72 562 Td (Pattern 4: Know Your Agent \(KYA\)) Tj ET
+BT /F3 11 Tf 72 544 Td (The counterparty is another agent. Who vouches for it?) Tj ET
+BT /F3 11 Tf 72 530 Td () Tj ET
+BT /F3 11 Tf 72 516 Td (The problem:) Tj ET
+BT /F3 11 Tf 72 502 Td (Two agents transact and neither knows the other's operator. There is no KYC) Tj ET
+BT /F3 11 Tf 72 488 Td (analogue for agents.) Tj ET
+BT /F3 11 Tf 72 474 Td () Tj ET
+BT /F3 11 Tf 72 460 Td (The pattern:) Tj ET
+BT /F3 11 Tf 72 446 Td (Before trusting a counterparty agent, call kya_verify with its wallet age, on-) Tj ET
+BT /F3 11 Tf 72 432 Td (chain history, and domain. It returns a trust score and flags \(fresh wallet,) Tj ET
+BT /F3 11 Tf 72 418 Td (no history, sanctioned-adjacent\).) Tj ET
+BT /F3 11 Tf 72 404 Td () Tj ET
+BT /F3 11 Tf 72 390 Td (Example:) Tj ET
+BT /F3 9 Tf 80 376 Td (k = kya_verify\(agent_id=peer, wallet=peer_w,) Tj ET
+BT /F3 9 Tf 80 362 Td (               wallet_age_days=age, domain=peer_domain\)) Tj ET
+BT /F3 9 Tf 80 348 Td (if k['trust_score'] < 40:) Tj ET
+BT /F3 9 Tf 80 334 Td (    require_human_approval\(\)) Tj ET
+BT /F3 11 Tf 72 316 Td () Tj ET
+BT /F2 13 Tf 72 302 Td (Pattern 5: The Audit Trail Is the Product) Tj ET
+BT /F3 11 Tf 72 284 Td (Regulators do not ask 'did it work.' They ask 'prove it worked, for every tx,) Tj ET
+BT /F3 11 Tf 72 270 Td (for 5 years.') Tj ET
+BT /F3 11 Tf 72 256 Td () Tj ET
+BT /F3 11 Tf 72 242 Td (The problem:) Tj ET
+BT /F3 11 Tf 72 228 Td (You screened, but you have no timestamped, tamper-evident record. A regulator) Tj ET
+BT /F3 11 Tf 72 214 Td (asks for proof and you cannot produce it.) Tj ET
+BT /F3 11 Tf 72 200 Td () Tj ET
+BT /F3 11 Tf 72 186 Td (The pattern:) Tj ET
+BT /F3 11 Tf 72 172 Td (Log every screen: the wallet, the timestamp, the result, the list version.) Tj ET
+BT /F3 11 Tf 72 158 Td (agentmail's hosted tier writes a tamper-evident audit log you can export.) Tj ET
+BT /F3 11 Tf 72 144 Td (Self-hosters should append to a write-once store.) Tj ET
+BT /F3 11 Tf 72 130 Td () Tj ET
+BT /F3 11 Tf 72 116 Td (Example:) Tj ET
+
+endstream
+endobj
+9 0 obj
+<< /Length 2707 >>
+stream
+BT /F3 9 Tf 80 720 Td (# every screen becomes an append-only row) Tj ET
+BT /F3 9 Tf 80 706 Td (audit.append\(ts=now, wallet=w, result=r,) Tj ET
+BT /F3 9 Tf 80 692 Td (             list_version=sdn_version, hash=prev_hash\)) Tj ET
+BT /F3 11 Tf 72 674 Td () Tj ET
+BT /F2 13 Tf 72 660 Td (Pattern 6: Dispute-First, Not Litigate-First) Tj ET
+BT /F3 11 Tf 72 642 Td (When a payment goes wrong, a 7-day auto-escalation beats a 7-month legal) Tj ET
+BT /F3 11 Tf 72 628 Td (fight.) Tj ET
+BT /F3 11 Tf 72 614 Td () Tj ET
+BT /F3 11 Tf 72 600 Td (The problem:) Tj ET
+BT /F3 11 Tf 72 586 Td (A bad payment happens and you have no structured way to contest, freeze, or) Tj ET
+BT /F3 11 Tf 72 572 Td (recover. It becomes a lawsuit.) Tj ET
+BT /F3 11 Tf 72 558 Td () Tj ET
+BT /F3 11 Tf 72 544 Td (The pattern:) Tj ET
+BT /F3 11 Tf 72 530 Td (Call dispute_open the moment a paid transaction is flagged. It opens a) Tj ET
+BT /F3 11 Tf 72 516 Td (structured dispute with a 7-day auto-escalation timer and a full evidence) Tj ET
+BT /F3 11 Tf 72 502 Td (trail attached.) Tj ET
+BT /F3 11 Tf 72 488 Td () Tj ET
+BT /F3 11 Tf 72 474 Td (Example:) Tj ET
+BT /F3 9 Tf 80 460 Td (dispute_open\(transaction_id=txid,) Tj ET
+BT /F3 9 Tf 80 446 Td (             reason='post-payment SDN match'\)) Tj ET
+BT /F3 9 Tf 80 432 Td (# auto-escalates at day 7 if unresolved) Tj ET
+BT /F3 11 Tf 72 414 Td () Tj ET
+BT /F2 13 Tf 72 400 Td (Pattern 7: Fail Closed, Degrade Loudly) Tj ET
+BT /F3 11 Tf 72 382 Td (Silent failure is worse than no screening ? it gives you false confidence.) Tj ET
+BT /F3 11 Tf 72 368 Td () Tj ET
+BT /F3 11 Tf 72 354 Td (The problem:) Tj ET
+BT /F3 11 Tf 72 340 Td (The screening API goes down, your agent catches the exception and pays anyway,) Tj ET
+BT /F3 11 Tf 72 326 Td (and you do not find out until the fine.) Tj ET
+BT /F3 11 Tf 72 312 Td () Tj ET
+BT /F3 11 Tf 72 298 Td (The pattern:) Tj ET
+BT /F3 11 Tf 72 284 Td (On provider failure: \(a\) fail CLOSED for high-value txs, \(b\) fail OPEN only) Tj ET
+BT /F3 11 Tf 72 270 Td (with explicit operator policy, and \(c\) ALWAYS emit a 'degraded' signal so you) Tj ET
+BT /F3 11 Tf 72 256 Td (know screening is running on stale data. agentmail's /health and) Tj ET
+BT /F3 11 Tf 72 242 Td (/compliance/status report this.) Tj ET
+BT /F3 11 Tf 72 228 Td () Tj ET
+BT /F3 11 Tf 72 214 Td (Example:) Tj ET
+BT /F3 9 Tf 80 200 Td (status = compliance_status\(\)) Tj ET
+BT /F3 9 Tf 80 186 Td (if status.get\('degraded'\):) Tj ET
+BT /F3 9 Tf 80 172 Td (    page_oncall\('screening on stale cache'\)) Tj ET
+BT /F3 11 Tf 72 154 Td () Tj ET
+BT /F2 13 Tf 72 140 Td (Closing) Tj ET
+BT /F3 11 Tf 72 122 Td (These seven patterns are the difference between 'we have a compliance tool') Tj ET
+
+endstream
+endobj
+10 0 obj
+<< /Length 653 >>
+stream
+BT /F3 11 Tf 72 720 Td (and 'we can prove to OFAC that every payment our agent made was screened.') Tj ET
+BT /F3 11 Tf 72 706 Td (Pattern 1 alone ? Screen-Before-Sign ? would have prevented every agent-) Tj ET
+BT /F3 11 Tf 72 692 Td (payment sanctions violation on record.) Tj ET
+BT /F3 11 Tf 72 678 Td () Tj ET
+BT /F3 11 Tf 72 664 Td (If you want the version that is already wired up, pip install sanctions-mcp or) Tj ET
+BT /F3 11 Tf 72 650 Td (hit https://agentmail-api.fly.dev/sanctions?wallet=0x... right now.) Tj ET
+BT /F3 11 Tf 72 636 Td () Tj ET
+BT /F3 11 Tf 72 622 Td (? The agentmail team sanctionsai.dev) Tj ET
+BT /F3 11 Tf 72 608 Td () Tj ET
+
+endstream
+endobj
+11 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>
+endobj
+12 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>
+endobj
+13 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Courier >>
+endobj
+xref
+0 14
+0000000000 65535 f 
+0000000015 00000 n 
+0000000064 00000 n 
+0000000139 00000 n 
+0000000288 00000 n 
+0000000437 00000 n 
+0000000586 00000 n 
+0000000736 00000 n 
+0000003553 00000 n 
+0000006367 00000 n 
+0000009126 00000 n 
+0000009831 00000 n 
+0000009907 00000 n 
+0000009983 00000 n 
+trailer
+<< /Size 14 /Root 1 0 R >>
+startxref
+10052
+%%EOF
