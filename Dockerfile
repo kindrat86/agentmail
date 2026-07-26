@@ -25,6 +25,11 @@ COPY cost-of/ ./cost-of/
 COPY best/ ./best/
 # Embeddable statistics hub page
 COPY stats/ ./stats/
+# Red-flags & scenario pSEO pages (problem-first conversion content)
+COPY redflags/ ./redflags/
+COPY scenarios/ ./scenarios/
+# Scaled glossary pages (served via glossary static fall-through in api.py)
+COPY glossary/ ./glossary/
 # Interactive shareable tools (compliance-check, ai-spend-optimizer)
 COPY tools/ ./tools/
 # R17 UX system — shared design system across portfolio
