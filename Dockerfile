@@ -39,6 +39,7 @@ COPY ux.css ux.js ./
 # published CC BY dataset served by /ofac-enforcement-2026.csv (read from disk, not embedded)
 COPY ofac-enforcement-2026.csv ./
 # Public static assets (related-tools hub, network, answers, badge, verification files)
+# ALSO: agent-compliance-playbook.pdf (Dotcom Secrets lead magnet, 2026-07-26)
 COPY public/ ./public/
 
 # --- structured-data gate (~/.growth-engine/GUARDRAILS.md rule 3) ---
