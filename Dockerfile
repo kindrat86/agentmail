@@ -30,6 +30,8 @@ COPY redflags/ ./redflags/
 COPY scenarios/ ./scenarios/
 # Scaled glossary pages (served via glossary static fall-through in api.py)
 COPY glossary/ ./glossary/
+# Round 21 pSEO — OFAC sanctions programs index
+COPY programs/ ./programs/
 # Interactive shareable tools (compliance-check, ai-spend-optimizer)
 COPY tools/ ./tools/
 # R17 UX system — shared design system across portfolio

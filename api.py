@@ -37,6 +37,57 @@ _FREE_TIER_DAILY = int(os.environ.get("AGENTMAIL_FREE_TIER_DAILY", "5") or 5)
 _AUDIT_LOG = os.environ.get("AGENTMAIL_AUDIT_LOG", "")  # path to append-only JSONL
 _PUBLIC_URL = os.environ.get("AGENTMAIL_PUBLIC_URL", "https://agentmail-api.fly.dev")
 
+# ─── Analytics + (optional) ad pixels ─────────────────────────────────────────
+# Traffic Secrets Secret 9 (Paid Ads) + Secret 10 (measurement).
+# PostHog ALWAYS loads — it is the conversion-tracking backbone.
+# Ad pixels load ONLY when their env var is set, so shipping this code does not
+# activate any third-party tracking until the owner consciously sets an ID.
+# To turn a pixel on:  flyctl secrets set META_PIXEL_ID=1234567890
+_META_PIXEL_ID = os.environ.get("META_PIXEL_ID", "").strip()
+_LINKEDIN_INSIGHT_ID = os.environ.get("LINKEDIN_INSIGHT_ID", "").strip()
+_REDDIT_PIXEL_ID = os.environ.get("REDDIT_PIXEL_ID", "").strip()
+# The PostHog block is duplicated on the landing + agent pages; centralising it
+# here means every _page()-rendered route (pricing, hooks, dream100, faq, …)
+# finally gets tracked too. Until now those pages emitted zero analytics.
+_POSTHOG_KEY = "phc_lyZCgvTpicjLzAO3rY2GhxuX5WUc5jQjP8ZVwwJqauX"
+_ANALYTICS = (
+    '<!-- PostHog + ad pixels (env-gated) -->'
+    '<script>(function(){if(window.posthog&&window.posthog.__loaded)return;var s=document.createElement("script");s.type="text/javascript";s.crossOrigin="anonymous";s.defer=true;s.src="https://eu.i.posthog.com/static/array.js";s.onload=function(){window.posthog.init("' + _POSTHOG_KEY + '",{api_host:"https://eu.i.posthog.com",person_profiles:"identified_only",defaults:"2025-05-24",capture_pageview:false});window.posthog.capture("$pageview",{$viewport_height:window.innerHeight,$viewport_width:window.innerWidth})};document.head.appendChild(s);})();</script>'
+    '<script>document.addEventListener(\'DOMContentLoaded\',function(){var p=window.posthog;if(!p)return;var pg=location.pathname;p.capture(\'page_viewed\',{page:pg});'
+    'var ref=document.referrer||\'\';if(ref){var aiHosts=[\'chatgpt.com\',\'chat.openai.com\',\'perplexity.ai\',\'you.com\',\'poe.com\',\'gemini.google.com\',\'copilot.microsoft.com\',\'claude.ai\',\'bing.com/chat\',\'duckduckgo.com/chat\',\'phind.com\',\'kagi.com\',\'wrtn.ai\',\'deepseek.com\',\'grok.x.ai\',\'x.com/i/grok\'];for(var i=0;i<aiHosts.length;i++){if(ref.indexOf(aiHosts[i])>-1){p.capture(\'ai_referral_detected\',{ai_source:aiHosts[i],referrer:ref,landing_page:pg,timestamp:new Date().toISOString()});p.identify&&p.identify({ai_referred:true,ai_source:aiHosts[i]});break;}}var socialHosts=[\'reddit.com\',\'news.ycombinator.com\',\'twitter.com\',\'x.com\'];for(var j=0;j<socialHosts.length;j++){if(ref.indexOf(socialHosts[j])>-1){p.capture(\'social_referral_detected\',{social_source:socialHosts[j],referrer:ref,landing_page:pg});break;}}}'
+    'document.addEventListener(\'click\',function(e){var a=e.target.closest&&e.target.closest(\'a[href],button.btn,.btn\');if(!a)return;var href=a.getAttribute(\'href\')||\'\';var txt=(a.textContent||\'\').trim().slice(0,40);var cls=a.classList||{};var tier=cls.contains(\'btn-primary\')?\'primary\':(cls.contains(\'btn-ghost\')?\'secondary\':\'text\');if(href.indexOf(\'/checkout/\')>-1){p.capture(\'cta_checkout\',{cta:txt,href:href,page:pg,tier:tier});}else if(href.indexOf(\'/tools/wallet-checker\')>-1){p.capture(\'cta_run_check\',{cta:txt,href:href,page:pg,tier:tier});}else if(href.indexOf(\'github.com/kindrat86\')>-1){p.capture(\'cta_github\',{cta:txt,href:href,page:pg});}},true);var f=document.getElementById(\'free-tier-capture\');if(f){f.addEventListener(\'submit\',function(){p.capture(\'cta_free_signup\',{page:pg});});}});</script>'
+)
+if _META_PIXEL_ID:
+    _ANALYTICS += ('<!-- Meta Pixel --><script>!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version="2.0";n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,"script","https://connect.facebook.net/en_US/fbevents.js");fbq("init","' + _META_PIXEL_ID + '");fbq("track","PageView");</script>')
+if _LINKEDIN_INSIGHT_ID:
+    _ANALYTICS += ('<!-- LinkedIn Insight --><script type="text/javascript">_linkedin_partner_id="' + _LINKEDIN_INSIGHT_ID + '";window._linkedin_data_partner_ids=window._linkedin_data_partner_ids||[];window._linkedin_data_partner_ids.push(_linkedin_partner_id);(function(){var s=document.getElementsByTagName("script")[0];var b=document.createElement("script");b.type="text/javascript";b.async=true;b.src="https://snap.licdn.com/li.lms-analytics/insight.min.js";s.parentNode.insertBefore(b,s);})();</script>')
+if _REDDIT_PIXEL_ID:
+    _ANALYTICS += ('<!-- Reddit Pixel --><script>!function(w,d){if(!w.rdt){var p=w.rdt=function(){p.sendEvent?p.sendEvent.apply(p,arguments):p.callQueue.push(arguments)};p.callQueue=[];var t=d.createElement("script");t.src="https://www.redditstatic.com/ads/pixel.js",t.async=!0;var s=d.getElementsByTagName("script")[0];s.parentNode.insertBefore(t,s)}}(window,document);rdt("init","' + _REDDIT_PIXEL_ID + '");rdt("track","PageVisit");</script>')
+
+# Content-Security-Policy. Default is locked to PostHog + Stripe only. When an
+# ad-pixel env var is set, that pixel's domains are appended to script-src so
+# the (now opt-in) pixel is allowed to load. No pixel ID set → no CSP widening.
+_CSP_SCRIPT_EXTRA = ""
+_CSP_CONNECT_EXTRA = ""
+if _META_PIXEL_ID:
+    _CSP_SCRIPT_EXTRA += " https://connect.facebook.net"
+    _CSP_CONNECT_EXTRA += " https://connect.facebook.net"
+if _LINKEDIN_INSIGHT_ID:
+    _CSP_SCRIPT_EXTRA += " https://snap.licdn.com"
+    _CSP_CONNECT_EXTRA += " https://snap.licdn.com"
+if _REDDIT_PIXEL_ID:
+    _CSP_SCRIPT_EXTRA += " https://www.redditstatic.com"
+    _CSP_CONNECT_EXTRA += " https://www.redditstatic.com"
+_CSP = ("default-src 'self';"
+        " script-src 'self' 'unsafe-inline' https://eu.i.posthog.com https://js.stripe.com{extra_script};"
+        " style-src 'self' 'unsafe-inline';"
+        " img-src 'self' data: https:;"
+        " connect-src 'self' https://eu.i.posthog.com https://api.stripe.com{extra_connect};"
+        " frame-ancestors 'none';"
+        " frame-src https://js.stripe.com https://hooks.stripe.com;"
+        " object-src 'none'; base-uri 'self'; require-trusted-types-for 'script'"
+        ).format(extra_script=_CSP_SCRIPT_EXTRA, extra_connect=_CSP_CONNECT_EXTRA)
+
 # ─── Rate-limit + free-tier counters (in-memory, process-local) ─────────────
 _rl_window: dict[str, deque] = defaultdict(deque)   # identity -> [timestamps] within 1h
 _free_used: dict[str, deque] = defaultdict(deque)   # ip -> [timestamps] within 24h
@@ -488,7 +539,7 @@ footer p{color:#444;font-size:.8em}
 
 _NAV = '<nav><div class="logo">agent<span>mail</span></div><div class="links"><a href="/">Home</a><a href="/teardown">How It Works</a><a href="/dashboard">Dashboard</a><a href="/faq">FAQ</a><a href="/docs">Docs</a><a href="/tools/wallet-checker">Free Checker</a><a href="/blog/ofac-for-agents">Blog</a><a href="/pricing">Pricing</a><a href="/checkout/dev" class="btn btn-primary">Get API key</a></div></nav>'
 
-_FOOTER = '<footer><div class="links" style="display:flex;flex-wrap:wrap;gap:12px 28px;justify-content:center;max-width:900px;margin:0 auto 16px"><div style="min-width:140px"><strong style="color:#888;font-size:.75em;text-transform:uppercase;letter-spacing:.05em">Product</strong><br><a href="/">Home</a><br><a href="/teardown">How It Works</a><br><a href="/pricing">Pricing</a><br><a href="/docs">Docs</a><br><a href="/tools">Free Tools</a><br><a href="/llms.txt">llms.txt (AI docs)</a></div><div style="min-width:140px"><strong style="color:#888;font-size:.75em;text-transform:uppercase;letter-spacing:.05em"><a href="/for" style="color:#888;text-decoration:none">By Industry</a></strong><br><a href="/for/fintech">Fintech</a><br><a href="/for/crypto">Crypto</a><br><a href="/for/defi">DeFi</a><br><a href="/for/payments">Payments</a><br><a href="/for/ai-agents">AI Agents</a><br><a href="/for/developers">Developers</a></div><div style="min-width:140px"><strong style="color:#888;font-size:.75em;text-transform:uppercase;letter-spacing:.05em"><a href="/vs" style="color:#888;text-decoration:none">Compare</a></strong><br><a href="/vs/chainalysis">vs Chainalysis</a><br><a href="/vs/elliptic">vs Elliptic</a><br><a href="/vs/comply-advantage">vs ComplyAdvantage</a><br><a href="/compare/sumsub">vs SumSub</a><br><a href="/compare/world-check">vs World-Check</a></div><div style="min-width:140px"><strong style="color:#888;font-size:.75em;text-transform:uppercase;letter-spacing:.05em">Resources</strong><br><a href="/blog">Blog</a><br><a href="/guides">Guides</a><br><a href="/penalties">Penalties</a><br><a href="/how-to">How-To</a><br><a href="/glossary">Glossary</a><br><a href="/cost">Costs</a><br><a href="/integrations">Integrations</a><br><a href="/vs">Vs</a><br><a href="/stats">Stats</a><br><a href="/content-strategy">Content Strategy</a><br><a href="/partners/jv">JV Partners (50%)</a><br><a href="/hooks">Hooks Library</a><br><a href="/partners/swipe">Swipe File</a><br><a href="/dream100">Dream 100</a><br><a href="https://x.com/sipiteno" style="color:inherit">X / Twitter</a><br><a href="/agent">For Agents</a><br><a href="/leaderboard">Leaderboard</a><br><a href="/about">About</a><br><a href="/contact">Contact</a><br><a href="/privacy">Privacy</a><br><a href="/terms">Terms</a><br><a href="/countries">Countries</a><br><a href="/checklists">Checklists</a><br><a href="/answers">Answers</a><br><a href="/best">Best-Of</a><br><a href="/alternatives-to">Alternatives</a></div></div><section class="subscribe-footer" style="max-width:900px;margin:16px auto 0;padding:16px 0 0;border-top:1px solid #333;text-align:center"><p style="color:#ccc;font-size:.85rem;margin:0 0 8px">Get OFAC enforcement alerts and agent compliance tips. No spam.</p><form action="/subscribe" method="post" style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;max-width:400px;margin:0 auto"><input type="email" name="email" placeholder="your@email.com" required style="flex:1;min-width:180px;padding:8px 12px;border:1px solid #444;border-radius:6px;background:#111;color:#e0e0e0;font-size:.85rem"><button type="submit" style="padding:8px 16px;border:none;border-radius:6px;background:#00d4aa;color:#0a0a0a;font-weight:600;cursor:pointer;font-size:.85rem">Subscribe</button></form></section><p style="text-align:center;color:#666">agentmail - OFAC sanctions screening for AI agents · MIT licensed · Data from US Treasury &amp; vile/ofac-sdn-list</p></footer>'
+_FOOTER = '<footer><div class="links" style="display:flex;flex-wrap:wrap;gap:12px 28px;justify-content:center;max-width:900px;margin:0 auto 16px"><div style="min-width:140px"><strong style="color:#888;font-size:.75em;text-transform:uppercase;letter-spacing:.05em">Product</strong><br><a href="/">Home</a><br><a href="/teardown">How It Works</a><br><a href="/pricing">Pricing</a><br><a href="/docs">Docs</a><br><a href="/tools">Free Tools</a><br><a href="/llms.txt">llms.txt (AI docs)</a></div><div style="min-width:140px"><strong style="color:#888;font-size:.75em;text-transform:uppercase;letter-spacing:.05em"><a href="/for" style="color:#888;text-decoration:none">By Industry</a></strong><br><a href="/for/fintech">Fintech</a><br><a href="/for/crypto">Crypto</a><br><a href="/for/defi">DeFi</a><br><a href="/for/payments">Payments</a><br><a href="/for/ai-agents">AI Agents</a><br><a href="/for/developers">Developers</a></div><div style="min-width:140px"><strong style="color:#888;font-size:.75em;text-transform:uppercase;letter-spacing:.05em"><a href="/vs" style="color:#888;text-decoration:none">Compare</a></strong><br><a href="/vs/chainalysis">vs Chainalysis</a><br><a href="/vs/elliptic">vs Elliptic</a><br><a href="/vs/comply-advantage">vs ComplyAdvantage</a><br><a href="/compare/sumsub">vs SumSub</a><br><a href="/compare/world-check">vs World-Check</a></div><div style="min-width:140px"><strong style="color:#888;font-size:.75em;text-transform:uppercase;letter-spacing:.05em">Resources</strong><br><a href="/blog">Blog</a><br><a href="/guides">Guides</a><br><a href="/penalties">Penalties</a><br><a href="/how-to">How-To</a><br><a href="/glossary">Glossary</a><br><a href="/cost">Costs</a><br><a href="/integrations">Integrations</a><br><a href="/vs">Vs</a><br><a href="/stats">Stats</a><br><a href="/content-strategy">Content Strategy</a><br><a href="/partners/jv">JV Partners (50%)</a><br><a href="/refer">Refer & Earn</a><br><a href="/hooks">Hooks Library</a><br><a href="/partners/swipe">Swipe File</a><br><a href="/calendar">Content Calendar</a><br><a href="/dream100">Dream 100</a><br><a href="https://x.com/sipiteno" style="color:inherit">X / Twitter</a><br><a href="/agent">For Agents</a><br><a href="/leaderboard">Leaderboard</a><br><a href="/about">About</a><br><a href="/contact">Contact</a><br><a href="/privacy">Privacy</a><br><a href="/terms">Terms</a><br><a href="/countries">Countries</a><br><a href="/checklists">Checklists</a><br><a href="/answers">Answers</a><br><a href="/best">Best-Of</a><br><a href="/alternatives-to">Alternatives</a></div></div><section class="subscribe-footer" style="max-width:900px;margin:16px auto 0;padding:16px 0 0;border-top:1px solid #333;text-align:center"><p style="color:#ccc;font-size:.85rem;margin:0 0 8px">Get OFAC enforcement alerts and agent compliance tips. No spam.</p><form action="/subscribe" method="post" style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;max-width:400px;margin:0 auto"><input type="email" name="email" placeholder="your@email.com" required style="flex:1;min-width:180px;padding:8px 12px;border:1px solid #444;border-radius:6px;background:#111;color:#e0e0e0;font-size:.85rem"><button type="submit" style="padding:8px 16px;border:none;border-radius:6px;background:#00d4aa;color:#0a0a0a;font-weight:600;cursor:pointer;font-size:.85rem">Subscribe</button></form></section><p style="text-align:center;color:#666">agentmail - OFAC sanctions screening for AI agents · MIT licensed · Data from US Treasury &amp; vile/ofac-sdn-list</p></footer>'
 
 _VERTICALS = {
     "fintech": {
@@ -2767,6 +2818,14 @@ License: https://creativecommons.org/licenses/by/4.0/
         if p.path.startswith("/keys/"):
             session_id = p.path.split("/keys/", 1)[1]
             return self._key_success_page(session_id)
+        # Order-bump interstitial (Dotcom Secrets Ch 14) — MUST be matched
+        # before the /checkout/ prefix route below, otherwise the prefix
+        # handler tries to create a Stripe session for plan "dev/bump" and 500s.
+        if p.path == "/checkout/dev/bump":
+            return _order_bump_page(self)
+        # Ascend / upsell page (Dotcom Secrets Ch 15) — Dev -> Pro
+        if p.path == "/upgrade":
+            return _upsell_page(self)
         # Checkout redirects from pricing page (/checkout/dev, /checkout/team)
         if p.path.startswith("/checkout/"):
             plan = p.path.split("/checkout/", 1)[1].split("?")[0]
@@ -2787,12 +2846,6 @@ License: https://creativecommons.org/licenses/by/4.0/
         if p.path == "/tripwire":
             _tripwire_page(self)
             return
-        # Order-bump interstitial (Dotcom Secrets Ch 14) — one click before Stripe
-        if p.path == "/checkout/dev/bump":
-            return _order_bump_page(self)
-        # Ascend / upsell page (Dotcom Secrets Ch 15) — Dev -> Pro
-        if p.path == "/upgrade":
-            return _upsell_page(self)
         # Squeeze / email capture page (Brunson: critical for funnel)
         if p.path == "/start" or p.path == "/squeeze":
             return self._squeeze_page()
@@ -2860,7 +2913,7 @@ License: https://creativecommons.org/licenses/by/4.0/
                 if _os.path.isfile(_rp):
                     with open(_rp, "r", encoding="utf-8") as _fh:
                         return self._serve_text(_fh.read(), "text/html; charset=utf-8")
-        for _pfx in ("/vs/", "/faq/", "/learn/", "/alternatives-to/", "/penalties/", "/guides/", "/checklists/", "/cost-of/", "/best/", "/templates/", "/stats/", "/redflags/", "/scenarios/"):
+        for _pfx in ("/vs/", "/faq/", "/learn/", "/alternatives-to/", "/penalties/", "/guides/", "/checklists/", "/cost-of/", "/best/", "/templates/", "/stats/", "/redflags/", "/scenarios/", "/programs/"):
             if p.path.startswith(_pfx):
                 _slug = p.path[len(_pfx):].split("?")[0].split("/")[0]
                 if not _slug:
@@ -2923,6 +2976,8 @@ License: https://creativecommons.org/licenses/by/4.0/
             return self._serve_file_content("public/redflags/index.html", "text/html")
         if p.path in ("/scenarios", "/scenarios/"):
             return self._serve_file_content("public/scenarios/index.html", "text/html")
+        if p.path in ("/programs", "/programs/"):
+            return self._serve_file_content("public/programs/index.html", "text/html")
         if p.path == "/for":
             return self._for_index_page()
         if p.path == "/glossary":
@@ -2961,6 +3016,11 @@ License: https://creativecommons.org/licenses/by/4.0/
             return self._hooks_page()
         if p.path == "/partners/swipe" or p.path == "/swipe":
             return self._swipe_page()
+        # Traffic Secrets: content calendar (Secret 8/16) + referral loop (Secret 20)
+        if p.path == "/calendar":
+            return self._calendar_page()
+        if p.path == "/refer" or p.path == "/referral":
+            return self._refer_page()
         # Widgets — embeddable OFAC compliance badge + wallet screening widget
         if p.path == "/widgets":
             return self._widgets_gallery_page()
@@ -3325,7 +3385,7 @@ License: https://creativecommons.org/licenses/by/4.0/
         else:
             self.send_header("Content-Length", str(len(body)))
         self.send_header("X-Content-Type-Options", "nosniff")
-        self.send_header("Content-Security-Policy", "default-src 'self'; script-src 'self' 'unsafe-inline' https://eu.i.posthog.com https://js.stripe.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self' https://eu.i.posthog.com https://api.stripe.com; frame-ancestors 'none'; frame-src https://js.stripe.com https://hooks.stripe.com; object-src 'none'; base-uri 'self'; require-trusted-types-for 'script'")
+        self.send_header("Content-Security-Policy", _CSP)
         self.send_header("Permissions-Policy", "camera=(), microphone=(), geolocation=(), payment=(), usb=(), browsing-topics=(), interest-cohort=()")
         self.send_header("X-Frame-Options", "SAMEORIGIN")
         self.send_header("Referrer-Policy", "strict-origin-when-cross-origin")
@@ -3525,6 +3585,9 @@ License: https://creativecommons.org/licenses/by/4.0/
             "/docs": "2026-07-24",
             "/dream100": "2026-07-26",
             "/hooks": "2026-07-26",
+            "/partners/swipe": "2026-07-26",
+            "/calendar": "2026-07-26",
+            "/refer": "2026-07-26",
             "/faq": "2026-07-02",
             "/faq/how-often-ofac-list-updated": "2026-07-18",
             "/faq/how-often-update-sdn-list": "2026-07-18",
@@ -3671,6 +3734,8 @@ License: https://creativecommons.org/licenses/by/4.0/
             ("/partners/jv", "monthly", "0.6", "JV partner program — 50% recurring commission"),
             ("/hooks", "monthly", "0.6", "Marketing hooks library — the 10 hooks that fill the agentmail funnel"),
             ("/partners/swipe", "monthly", "0.6", "Affiliate swipe file — ready-to-post copy for every channel"),
+            ("/calendar", "weekly", "0.6", "Public content calendar — the publishing cadence, mapped to hooks"),
+            ("/refer", "monthly", "0.7", "Referral program — 50% recurring commission for 12 months per dev referred"),
             ("/dream100", "monthly", "0.5", "Dream 100 — target influencers and communities"),
             ("/widgets", "monthly", "0.8", "Free embeddable OFAC compliance badge and wallet screening widget"),
             ("/badge/clean", "monthly", "0.7", "Free embeddable 'Verified by sanctionsai.dev' SVG badge — add OFAC compliance verification to your site"),
@@ -3961,6 +4026,28 @@ License: https://creativecommons.org/licenses/by/4.0/
         ("/glossary/blocked-person", "monthly", "0.6", "Blocked person"),
         ("/glossary/embargoed-jurisdiction", "monthly", "0.6", "Embargoed jurisdiction"),
         ("/glossary/ofac-50-percent-rule", "monthly", "0.6", "OFAC 50 Percent Rule"),
+        # Round 21 pSEO: OFAC sanctions programs index + 20 program pages
+        ("/programs", "monthly", "0.8", "OFAC sanctions programs — complete catalogue"),
+        ("/programs/sdgt", "monthly", "0.7", "SDGT — Specially Designated Global Terrorists program"),
+        ("/programs/russia-eo14024", "monthly", "0.7", "Russia EO 14024 sanctions program"),
+        ("/programs/iran", "monthly", "0.7", "Iran sanctions program"),
+        ("/programs/north-korea", "monthly", "0.7", "North Korea (DPRK) sanctions program"),
+        ("/programs/cuba", "monthly", "0.7", "Cuba sanctions program"),
+        ("/programs/syria", "monthly", "0.7", "Syria sanctions program"),
+        ("/programs/venezuela", "monthly", "0.7", "Venezuela sanctions program"),
+        ("/programs/belarus", "monthly", "0.7", "Belarus sanctions program"),
+        ("/programs/myanmar", "monthly", "0.7", "Myanmar (Burma) sanctions program"),
+        ("/programs/china-xinjiang-hongkong", "monthly", "0.7", "China Xinjiang & Hong Kong sanctions"),
+        ("/programs/ukraine-separatist", "monthly", "0.7", "Ukraine-Russia separatist region sanctions"),
+        ("/programs/hezbollah", "monthly", "0.7", "Hezbollah sanctions program"),
+        ("/programs/countering-americas-adversaries", "monthly", "0.7", "CAATSA program"),
+        ("/programs/global-magnitsky", "monthly", "0.7", "Global Magnitsky human rights & corruption"),
+        ("/programs/narcotics-trafficking", "monthly", "0.7", "Drug Kingpin & narcotics sanctions"),
+        ("/programs/non-proliferation", "monthly", "0.7", "WMD non-proliferation sanctions"),
+        ("/programs/rough-diamonds", "monthly", "0.7", "Rough diamonds — Kimberley Process"),
+        ("/programs/transnational-criminal-orgs", "monthly", "0.7", "Transnational criminal organizations"),
+        ("/programs/cyber-related", "monthly", "0.7", "Cyber-related sanctions"),
+        ("/programs/foreign-interference", "monthly", "0.7", "Foreign interference in US elections"),
     ]
         import datetime
         today = datetime.date.today().isoformat()
@@ -5088,6 +5175,69 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
   </div>
 </div></section>
 
+<!-- ===== BRUNSON Ch 6/7: VSL / THE CASE FOR SCREENING =====
+     A text "video sales letter": the one big idea, the 3 false beliefs
+     pre-handled (Vehicle / Internal / External), then the stack anchor and a
+     risk-reversal. This is the section that does the persuading the feature
+     table cannot. Sits right before the FAQ so the strongest close precedes
+     the objection-handling. -->
+<section class="sec" id="why" style="padding-top:64px"><div class="wrap">
+  <div class="sec-head reveal">
+    <span class="eyebrow"><span class="dot"></span> The case for screening</span>
+    <h2>One idea changes everything: <span style="color:var(--teal)">screen before you sign</span>.</h2>
+    <p class="sub" style="color:var(--t2);max-width:760px;margin:12px auto 0;font-size:1.05rem">
+      Every agent-payment sanctions violation on record would have been prevented by a
+      single check placed before the transaction was signed. That is the whole product.
+    </p>
+  </div>
+
+  <div class="reveal" style="background:var(--card);border:1px solid var(--line2);border-radius:18px;padding:30px 32px;margin-top:36px;max-width:820px;margin-left:auto;margin-right:auto">
+    <p style="color:var(--t2);font-size:1.08rem;line-height:1.7;margin:0 0 18px">
+      In <b style="color:#fff">Test #47</b> the agent sent USDC to a wallet on the OFAC SDN list.
+      The tx confirmed in 12 seconds. The liability attached the moment it did &mdash; up to
+      <b style="color:#ff6b6b">$377,700 per violation</b>, strictly enforced, regardless of intent.
+      The fix was not a bigger compliance team. It was a single HTTP call placed before the signing
+      step, returning <code style="color:var(--teal)">ALLOW</code> or <code style="color:#ff6b6b">BLOCK</code>
+      in under 100 milliseconds.
+    </p>
+    <p style="color:var(--t2);font-size:1.08rem;line-height:1.7;margin:0">
+      That call is what agentmail is. Nothing more, nothing less &mdash; and that is the point.
+    </p>
+  </div>
+
+  <div style="max-width:820px;margin:40px auto 0">
+    <h3 class="reveal" style="color:#fff;font-size:1.15rem;margin:0 0 8px;text-align:center">Three things you might be telling yourself &mdash; and why they are wrong</h3>
+
+    <div class="reveal" style="background:var(--card);border:1px solid var(--line2);border-radius:14px;padding:22px 24px;margin-top:18px">
+      <p style="margin:0 0 6px;color:#ff6b6b;font-weight:700;font-size:.95rem">FALSE BELIEF 1 &mdash; &ldquo;My payment provider already handles OFAC.&rdquo;</p>
+      <p style="margin:0;color:var(--t2);font-size:.98rem;line-height:1.6">They do not. x402, AP2, ACP, and Coinbase AgentKit <b style="color:#fff">move</b> money &mdash; none of them <b style="color:#fff">screen</b> the recipient against the SDN list. Their terms say so explicitly. Screening is a separate layer, and it is legally yours.</p>
+    </div>
+
+    <div class="reveal" style="background:var(--card);border:1px solid var(--line2);border-radius:14px;padding:22px 24px;margin-top:14px">
+      <p style="margin:0 0 6px;color:#ff6b6b;font-weight:700;font-size:.95rem">FALSE BELIEF 2 &mdash; &ldquo;Compliance is too hard for me to wire in.&rdquo;</p>
+      <p style="margin:0;color:var(--t2);font-size:.98rem;line-height:1.6">It is one curl line. <code style="color:var(--teal)">sanctions_check</code> before you sign the tx. If you can call your payment API, you can call this &mdash; it is the same shape, returns in under 100ms, and there is a copy-paste snippet for Python, JS, and curl.</p>
+    </div>
+
+    <div class="reveal" style="background:var(--card);border:1px solid var(--line2);border-radius:14px;padding:22px 24px;margin-top:14px">
+      <p style="margin:0 0 6px;color:#ff6b6b;font-weight:700;font-size:.95rem">FALSE BELIEF 3 &mdash; &ldquo;I will add it later, when it matters.&rdquo;</p>
+      <p style="margin:0;color:var(--t2);font-size:.98rem;line-height:1.6">OFAC enforcement is <b style="color:#fff">strict liability</b> &mdash; intent does not matter, timing does not matter, &ldquo;I was going to add it&rdquo; does not matter. The first violation is the one that lands. Later is the most expensive word in compliance.</p>
+    </div>
+  </div>
+
+  <!-- Stack anchor + risk reversal (re-states the offer the value-stack
+       section above built, then removes the risk) -->
+  <div class="reveal" style="max-width:820px;margin:40px auto 0;text-align:center">
+    <p style="color:var(--t2);font-size:1.05rem;line-height:1.6;margin:0 0 6px">So here is the offer.</p>
+    <p style="color:#fff;font-size:1.2rem;font-weight:700;margin:0 0 4px">947 wallets. 19,218 names. 16 jurisdictions. Four tools. One 100ms call.</p>
+    <p style="color:var(--t4);font-size:1.05rem;margin:0 0 20px"><s>$1,096/mo</s> &nbsp; <span style="color:var(--teal);font-weight:800;font-size:1.6rem">$19/mo</span></p>
+    <a href="/checkout/dev/bump" class="btn btn-primary btn-lg">Get your API key &rarr;</a>
+    <p style="color:var(--t3);font-size:.85rem;margin:16px 0 0;line-height:1.55">
+      <b style="color:#fff">If we miss a sanctioned wallet, we cover the first $10,000 of your legal fees.</b><br>
+      First 50 devs locked in at $19/mo forever. Cancel anytime. No credit card to start free.
+    </p>
+  </div>
+</div></section>
+
 <!-- FAQ -->
 <section class="sec" style="padding-top:0"><div class="wrap">
   <div class="sec-head reveal"><span class="eyebrow"><span class="dot"></span> FAQ</span><h2>Agent questions, answered</h2></div>
@@ -5951,8 +6101,21 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
             '</tbody></table>'
             '<div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:24px">'
             '<a href="/tools/wallet-checker" class="btn btn-ghost">Try free</a>'
-            '<a href="/checkout/dev" class="btn btn-primary">Get Dev - $19/mo</a>'
+            '<a href="/checkout/dev/bump" class="btn btn-primary">Get Dev - $19/mo</a>'
             '<a href="/checkout/team" class="btn btn-ghost">Get Pro - $99/mo</a>'
+            '</div>'
+            # ── Risk reversal (Dotcom Secrets Ch 6 "Offer" — remove the risk) ──
+            # The feature table above tells you WHAT you get. This block tells
+            # you what happens if it goes wrong — the single biggest lever on a
+            # paid offer. Without it the buyer carries 100% of the risk.
+            '<div style="max-width:680px;margin:36px auto 0;padding:26px 28px;background:rgba(0,212,170,.05);border:1px solid rgba(0,212,170,.25);border-radius:16px;text-align:center">'
+            '<p style="margin:0 0 6px;font-size:.7rem;font-weight:700;color:#00d4aa;letter-spacing:1.2px;text-transform:uppercase">The agentmail guarantee</p>'
+            '<p style="margin:0 0 14px;color:#fff;font-size:1.15rem;font-weight:700;line-height:1.4">If we miss a sanctioned wallet, we cover the first <span style="color:#00d4aa">$10,000</span> of your legal fees.</p>'
+            '<div style="display:flex;gap:24px;justify-content:center;flex-wrap:wrap;color:#999;font-size:.9rem;line-height:1.6">'
+            '<span><b style="color:#fff">Cancel anytime</b> &mdash; no contract</span>'
+            '<span><b style="color:#fff">First 50 devs</b> locked in at $19/mo forever</span>'
+            '<span><b style="color:#fff">MIT licensed</b> &mdash; self-host free, forever</span>'
+            '</div>'
             '</div>'
             '<p class="note" style="text-align:center;margin-top:16px">All plans include OFAC/EU/UN/UK data, refreshed daily. Cancel anytime. Self-host option: <code>pip install sanctions-mcp</code></p>'
             '</div></section>'
@@ -6059,6 +6222,7 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
             '<meta name="twitter:description" content="' + d + '">',
             '<meta name="twitter:image" content="' + _SITE + '/og.png">',
             '<style>', _DARK_CSS, '</style>',
+            _ANALYTICS,
         ]
         if extra_head:
             parts.append(extra_head)
@@ -7508,6 +7672,148 @@ document.getElementById("wallet").addEventListener("keydown",function(e){if(e.ke
         return self._page("Swipe File — Ready-to-Post Affiliate Copy | agentmail",
                           "Copy-paste marketing copy for agentmail affiliates and partners: Show HN post, Reddit post, Twitter/X thread, LinkedIn DM, newsletter blurb, and cold email — each built on a tested hook.",
                           body, extra_head=self._ld(ld), canonical="/partners/swipe")
+
+    # ─── Traffic Secrets: content calendar + referral loop ────────────
+    # Secret 8 (Fill Organically): a public publishing calendar turns a
+    #   sporadic blog into a committed cadence. Publishing it makes the
+    #   cadence a public promise — the Funnel Hub (Secret 16) doing its job.
+    def _calendar_page(self):
+        """Traffic Secrets — a public content calendar (Secrets 8, 16)."""
+        planned = [
+            ("2026-07-30", "Blog", "How to add OFAC screening to a Coinbase AgentKit agent", "Writing", "Hook #3 — Doesn't your payment provider screen?"),
+            ("2026-08-02", "Video", "Screen a wallet in 60 seconds (live curl)", "Scripted", "Hook #2 — The one curl call"),
+            ("2026-08-06", "Blog", "Add sanctions screening to your Claude Code agent (MCP)", "Queued", "Hook #7 — Compliance that speaks agent"),
+            ("2026-08-09", "Launch", "Show HN — OFAC sanctions screening for AI payment agents", "Queued", "Hook #1 — The 3 AM fine"),
+            ("2026-08-13", "Video", "The test #47 story (founder origin)", "Queued", "Hook #5 — The test #47 story"),
+            ("2026-08-16", "Blog", "OFAC compliance for LangChain agents — one line", "Queued", "Hook #2 — The one curl call"),
+            ("2026-08-20", "Video", "Add the MCP server to Cursor in 90 seconds", "Queued", "Hook #7 — Compliance that speaks agent"),
+            ("2026-08-23", "Blog", "The 4-Gate Protocol: SCREEN, SCORE, STOP, STAMP", "Queued", "Hook #8 — The 4-Gate Protocol"),
+            ("2026-08-27", "Community", "r/LocalLLaMA origin-story post + AMA", "Queued", "Hook #5 — The test #47 story"),
+            ("2026-08-30", "Blog", "Why every x402 payment needs an OFAC check", "Queued", "Hook #3 — Doesn't your payment provider screen?"),
+        ]
+        published = [
+            ("2026-07-25", "Every x402 Payment Needs an OFAC Check", "https://sanctionsai.dev/blog/x402-compliance"),
+            ("2026-07-04", "Agent Compliance Checklist: 10 Things Before Your First Autonomous Payment", "https://sanctionsai.dev/blog/compliance-checklist"),
+            ("2026-07-01", "How to Screen a Wallet Before Your Agent Pays", "https://sanctionsai.dev/blog/wallet-screening"),
+            ("2026-06-29", "Know Your Agent: Why KYA Is the New KYC for AI Agents", "https://sanctionsai.dev/blog/know-your-agent"),
+            ("2026-06-20", "x402 Compliance: The Missing Sanctions Layer for Agent Payments", "https://sanctionsai.dev/blog/x402-compliance"),
+            ("2026-06-15", "OFAC for Agents: What Every Developer Must Know", "https://sanctionsai.dev/blog/ofac-for-agents"),
+        ]
+        status_color = {"Writing": "var(--teal2)", "Scripted": "var(--teal2)",
+                        "Queued": "var(--t2)", "Published": "var(--teal2)"}
+        planned_rows = "".join(
+            '<tr style="border-bottom:1px solid var(--line)">'
+            '<td style="padding:10px;color:var(--t2);white-space:nowrap">{date}</td>'
+            '<td style="padding:10px"><span style="display:inline-block;padding:2px 8px;border-radius:4px;background:var(--surf2);font-size:.72rem;font-weight:600;letter-spacing:.03em;text-transform:uppercase">{type}</span></td>'
+            '<td style="padding:10px"><strong>{title}</strong></td>'
+            '<td style="padding:10px;color:{sc}">{status}</td>'
+            '<td style="padding:10px;font-size:.84rem;color:var(--t2)">{hook}</td>'
+            '</tr>'.format(date=d, type=t, title=title, status=s, sc=status_color.get(s, "var(--t2)"), hook=hook)
+            for (d, t, title, s, hook) in planned
+        )
+        published_rows = "".join(
+            '<tr style="border-bottom:1px solid var(--line)">'
+            '<td style="padding:10px;color:var(--t2);white-space:nowrap">{date}</td>'
+            '<td style="padding:10px"><a href="{url}" style="color:var(--teal)">{title}</a></td>'
+            '</tr>'.format(date=d, title=title, url=url)
+            for (d, title, url) in published
+        )
+        body = (
+            '<section style="text-align:center;border-top:none">'
+            '<p class="note" style="letter-spacing:.05em;text-transform:uppercase">Content Calendar · Traffic Secrets</p>'
+            '<h1>The publishing cadence, in public</h1>'
+            '<p class="lead" style="max-width:640px;margin:0 auto 28px">A content calendar is a promise. This is ours — two posts a week, '
+            'built on the <a href="/hooks">10 hooks</a>, distributed to the <a href="/dream100">Dream 100</a>. '
+            'Watch the cadence hold (or break) in real time.</p></section>'
+
+            '<section><div class="prose">'
+            '<h2>Next 30 days</h2>'
+            '<div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:.88rem;min-width:640px">'
+            '<tr style="border-bottom:1px solid var(--line2)">'
+            '<th style="text-align:left;padding:10px;width:100px">Date</th>'
+            '<th style="text-align:left;padding:10px;width:90px">Type</th>'
+            '<th style="text-align:left;padding:10px">Title</th>'
+            '<th style="text-align:left;padding:10px;width:90px">Status</th>'
+            '<th style="text-align:left;padding:10px;width:200px">Built on hook</th>'
+            '</tr>' + planned_rows + '</table></div>'
+
+            '<h2 style="margin-top:36px">Recently published</h2>'
+            '<table style="width:100%;border-collapse:collapse;font-size:.88rem">'
+            '<tr style="border-bottom:1px solid var(--line2)">'
+            '<th style="text-align:left;padding:10px;width:120px">Date</th>'
+            '<th style="text-align:left;padding:10px">Title</th>'
+            '</tr>' + published_rows + '</table>'
+            '</div></section>'
+
+            '<section><div class="cta-box">'
+            '<h2>Never miss a post</h2>'
+            '<p>Each new piece goes out by email the day it ships. The 5-day Soap Opera series starts immediately.</p>'
+            '<form action="/subscribe" method="post" style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;max-width:420px;margin:12px auto 0">'
+            '<input type="email" name="email" placeholder="your@email.com" required style="flex:1;min-width:200px;padding:10px 14px;border:1px solid var(--line2);border-radius:8px;background:var(--bg2);color:var(--text);font-size:.9rem">'
+            '<button type="submit" class="btn btn-primary" style="border:none">Subscribe</button>'
+            '</form>'
+            '</div></section>'
+        )
+        ld = {"@context": "https://schema.org", "@type": "WebPage",
+              "name": "Content Calendar — agentmail", "description": "The public publishing calendar for agentmail: blog posts, videos, and launches, each mapped to a marketing hook.",
+              "url": _SITE + "/calendar"}
+        return self._page("Content Calendar — The Publishing Cadence | agentmail",
+                          "agentmail's public content calendar: upcoming blog posts, videos, and launches for OFAC sanctions screening for AI agents, each built on a tested marketing hook.",
+                          body, extra_head=self._ld(ld), canonical="/calendar")
+
+    # Secret 20 (Growth Hacks): the ?ref= affiliate loop already exists in the
+    # JV program but is invisible. Giving it a dedicated, shareable URL turns a
+    # hidden mechanic into a growth loop anyone can join in one click.
+    def _refer_page(self):
+        """Traffic Secrets — surface the referral/affiliate loop (Secret 20)."""
+        body = (
+            '<section style="text-align:center;border-top:none">'
+            '<p class="note" style="letter-spacing:.05em;text-transform:uppercase">Referral Loop · Traffic Secrets</p>'
+            '<h1>Refer a developer. Earn 50% for a year.</h1>'
+            '<p class="lead" style="max-width:640px;margin:0 auto 28px">Append <code>?ref=YOURID</code> to any sanctionsai.dev link. '
+            'When a developer you refer upgrades, you earn half their monthly payment — every month, for 12 months.</p>'
+            '<a href="mailto:hello@sanctionsai.dev?subject=Referral%20ID&body=Audience:%20%0AWhere%20I%27ll%20share:%20" class="btn btn-primary">Get your referral ID →</a>'
+            '&nbsp; <a href="/partners/swipe" class="btn btn-ghost">Grab the swipe copy</a></section>'
+
+            '<section><div class="prose">'
+            '<h2>How the loop works</h2>'
+            '<ol style="line-height:2.1">'
+            '<li><strong>You get an ID.</strong> Email us with where you\'ll share — a newsletter, a Discord, a Twitter account.</li>'
+            '<li><strong>You share a link.</strong> Pick any hook from the <a href="/hooks">hooks library</a>, grab the matching copy from the <a href="/partners/swipe">swipe file</a>, append <code>?ref=YOURID</code>.</li>'
+            '<li><strong>A dev clicks.</strong> The 60-day cookie sticks. They try the free tier — no signup, no card.</li>'
+            '<li><strong>They upgrade.</strong> Free → $19/mo Dev or $99/mo Pro. You get 50%, recurring, for 12 months.</li>'
+            '<li><strong>You get paid.</strong> Monthly via Stripe Connect. $50 minimum. Real-time dashboard.</li>'
+            '</ol>'
+
+            '<h2>The math</h2>'
+            '<table style="width:100%;border-collapse:collapse;font-size:.9rem">'
+            '<tr style="border-bottom:1px solid var(--line2)"><th style="text-align:left;padding:10px">Plan</th><th style="text-align:left;padding:10px">Price/mo</th><th style="text-align:left;padding:10px">Your 50% / mo</th><th style="text-align:left;padding:10px">12-month value</th></tr>'
+            '<tr style="border-bottom:1px solid var(--line)"><td style="padding:10px"><strong>Dev</strong></td><td style="padding:10px">$19</td><td style="padding:10px;color:var(--teal2)">$9.50</td><td style="padding:10px;color:var(--teal2)"><strong>$114</strong></td></tr>'
+            '<tr style="border-bottom:1px solid var(--line)"><td style="padding:10px"><strong>Pro</strong></td><td style="padding:10px">$99</td><td style="padding:10px;color:var(--teal2)">$49.50</td><td style="padding:10px;color:var(--teal2)"><strong>$594</strong></td></tr>'
+            '</table>'
+            '<p class="note">5 Pro referrals = $2,970/year. 10 Dev referrals = $1,140/year. Recurring, not one-time.</p>'
+
+            '<h2>Where the loop compounds</h2>'
+            '<div style="display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));margin:20px 0">'
+            '<div style="padding:18px;background:var(--surf);border:1px solid var(--line);border-radius:12px"><strong style="color:var(--teal2)">Dev newsletters</strong><br><span style="font-size:.86rem;color:var(--t2)">A single blurb to a fintech/AI list. Highest conversion.</span></div>'
+            '<div style="padding:18px;background:var(--surf);border:1px solid var(--line);border-radius:12px"><strong style="color:var(--teal2)">GitHub READMEs</strong><br><span style="font-size:.86rem;color:var(--t2)">Agent framework authors list us as the compliance layer.</span></div>'
+            '<div style="padding:18px;background:var(--surf);border:1px solid var(--line);border-radius:12px"><strong style="color:var(--teal2)">YouTube descriptions</strong><br><span style="font-size:.86rem;color:var(--t2)">"Build an agent that pays" tutorials link the curl.</span></div>'
+            '<div style="padding:18px;background:var(--surf);border:1px solid var(--line);border-radius:12px"><strong style="color:var(--teal2)">Discord / Reddit</strong><br><span style="font-size:.86rem;color:var(--t2)">Answer "how do I stay compliant?" with the link.</span></div>'
+            '</div>'
+            '</div></section>'
+
+            '<section><div class="cta-box">'
+            '<h2>One link. Twelve months of recurring.</h2>'
+            '<p>The swipe copy is written. The hooks are tested. You just need an ID.</p>'
+            '<a href="mailto:hello@sanctionsai.dev?subject=Referral%20ID" class="btn btn-primary">Get your referral ID →</a>'
+            '</div></section>'
+        )
+        ld = {"@context": "https://schema.org", "@type": "WebPage",
+              "name": "Refer a Developer — agentmail Affiliate Program", "description": "Refer developers to agentmail and earn 50% recurring commission for 12 months. Get a referral ID, swipe copy, and a 60-day cookie.",
+              "url": _SITE + "/refer"}
+        return self._page("Refer a Developer — 50% Recurring for 12 Months | agentmail",
+                          "Refer developers to agentmail OFAC sanctions screening and earn 50% recurring commission for 12 months per upgrade. Referral ID, swipe copy, 60-day cookie, monthly payouts.",
+                          body, extra_head=self._ld(ld), canonical="/refer")
 
     def _widgets_gallery_page(self):
         """Widget gallery — embeddable OFAC compliance badge + wallet screening widget."""
@@ -10611,22 +10917,177 @@ _SEINFELD_CONTENT.append("""
 <p style='text-align:center'><a href='https://sanctionsai.dev' style='color:#00d4aa;text-decoration:none;font-size:12px'>sanctionsai.dev &rarr;</a></p>
 """)
 
-# For the remaining 29, I will generate a generic template that gets used
-# We store 30 but they share the same format
+# ── Seinfeld bodies (Days 2-30) ──────────────────────────────────────
+# Dotcom Secrets Ch 8: the Seinfeld sequence only works if every email is
+# unique, episodic, and curiosity-driving. The previous implementation
+# shared ONE body across all 29 of these (only the <h2> differed), which
+# defeats the entire purpose — readers tune out a repeat template by day 3.
+# Each body below is hand-written to match its subject line. They are
+# compact (one idea + one CTA) because Seinfeld emails are meant to be
+# read in 30 seconds.
+import json as _json_seinfeld  # noqa: keep import ordering consistent w/ prior code
 
-import json
+def _seinfeld_body(tag, headline, paragraphs, code=None):
+    """Render a compact Seinfeld email body. `paragraphs` is a list of str."""
+    out = "<span style='display:inline-block;background:rgba(0,212,170,0.1);color:#00d4aa;font-size:9px;font-weight:700;padding:3px 10px;border-radius:10px;margin-bottom:16px'>" + tag + "</span>\n"
+    out += "<h2 style='margin:0 0 12px;font-size:17px;font-weight:700;color:#fff;line-height:1.3'>" + headline + "</h2>\n"
+    for p in paragraphs:
+        out += "<p style='margin:0 0 14px;font-size:13px;color:#999;line-height:1.6'>" + p + "</p>\n"
+    if code:
+        out += "<div style='background:#0d1a14;border:1px solid rgba(0,212,170,0.08);border-radius:10px;padding:14px;margin:0 0 16px;text-align:center'>"
+        out += "<code style='font-family:'SF Mono',Consolas,monospace;font-size:11px;color:#34d399'>" + code + "</code>"
+        out += "</div>\n"
+    out += "<p style='text-align:center'><a href='https://sanctionsai.dev' style='color:#00d4aa;text-decoration:none;font-size:12px'>sanctionsai.dev &rarr;</a></p>"
+    return out
 
-# Generate remaining 29 Seinfeld emails (compact)
-for d in range(2, 31):
-    _SEINFELD_CONTENT.append("""
-<span style='display:inline-block;background:rgba(0,212,170,0.1);color:#00d4aa;font-size:9px;font-weight:700;padding:3px 10px;border-radius:10px;margin-bottom:16px'>DAILY TIP</span>
-<h2 style='margin:0 0 12px;font-size:17px;font-weight:700;color:#fff;line-height:1.3'>""" + _SEINFELD_SUBJECTS[d-1] + """</h2>
-<p style='margin:0 0 16px;font-size:13px;color:#999;line-height:1.6'>Make sure your agent pipeline always checks OFAC before sending money. agentmail runs in under 100ms - fast enough for any real-time payment flow.</p>
-<div style='background:#0d1a14;border:1px solid rgba(0,212,170,0.08);border-radius:10px;padding:14px;margin-bottom:16px;text-align:center'>
-<code style='font-family:\'SF Mono\',Consolas,monospace;font-size:11px;color:#34d399'>curl https://agentmail-api.fly.dev/sanctions?wallet=0x...</code>
-</div>
-<p style='text-align:center'><a href='https://sanctionsai.dev' style='color:#00d4aa;text-decoration:none;font-size:12px'>sanctionsai.dev &rarr;</a></p>
-""")
+_SEINFELD_BODIES = [
+    # Day 2
+    _seinfeld_body("CASE STUDY", "Screening before the first payment",
+        ["A team shipped an x402 agent that paid invoices. Day one, first tx, the counterparty wallet was 11 days old with no history.",
+         "They had not wired in screening yet. The tx went through. It turned out clean &mdash; but they only found that out <em>after</em> paying, by checking manually. That is the exact moment a fine would have attached.",
+         "The fix is one line before the signing step. Screen first, then sign. Always in that order."],
+        code="curl https://agentmail-api.fly.dev/sanctions?wallet=0x..."),
+    # Day 3
+    _seinfeld_body("DEEP DIVE", "sanctions_check vs risk_score",
+        ["These two get conflated. They answer different questions.",
+         "<b style='color:#fff'>sanctions_check</b> answers: is this name or wallet on the SDN list? Binary. Cheap. Call it first.",
+         "<b style='color:#fff'>risk_score</b> answers: even if not listed, is this transaction suspicious? It weighs amount anomalies, rail, wallet age, category. It returns allow / review / decline.",
+         "Use both: screen the wallet, then score the transaction. The first blocks the obvious; the second catches the mule."]),
+    # Day 4
+    _seinfeld_body("SELF-HOST", "Why self-host? Three reasons.",
+        ["The hosted API is the fast path. But the MIT-licensed self-host is the free path, forever. Three reasons teams pick it:",
+         "1. <b style='color:#fff'>Data residency.</b> The SDN list never leaves your box.",
+         "2. <b style='color:#fff'>No rate limits.</b> Your own hardware, your own ceiling.",
+         "3. <b style='color:#fff'>Air-gapped agents.</b> For agents that must not call out."],
+        code="pip install sanctions-mcp"),
+    # Day 5
+    _seinfeld_body("MCP", "Add agentmail to Claude Code in 30 seconds",
+        ["If your agent lives in Claude Code, Cursor, or Windsurf, you do not need HTTP &mdash; you need MCP.",
+         "One config block and your agent can call sanctions_check, risk_score, kya_verify, and dispute_open as native tools. No fetch, no auth header juggling."],
+        code='"command":"python","args":["-m","agentmail.mcp_server"]'),
+    # Day 6
+    _seinfeld_body("CASE STUDY", "Catching a false positive",
+        ["A wallet matched a sanctioned name by token-subset. The operator panicked &mdash; looked like a real hit.",
+         "Every agentmail match carries a <b style='color:#fff'>confidence</b> score. This one was 0.4 (fuzzy name, no wallet match). The operator set their gate to block at 0.8 and review 0.4-0.8. The tx was held for a human, not auto-declined.",
+         "Tune the threshold to your risk appetite. The API gives you the signal; you set the policy."]),
+    # Day 7
+    _seinfeld_body("COMPLIANCE 101", "What is OFAC strict liability?",
+        ["Strict liability means: it does not matter whether you knew. It does not matter whether you intended to. If your agent pays a sanctioned party, you are liable.",
+         "There is no automation exemption. &lsquo;The agent did it&rsquo; is not a defense &mdash; deploying an unscreened agent is an <em>aggravating</em> factor in the penalty math.",
+         "This is why the check belongs in the code path, not on a to-do list."]),
+    # Day 8
+    _seinfeld_body("DEEP DIVE", "The dispute_open workflow",
+        ["A payment went through. After the fact, you realise the counterparty was bad. Now what?",
+         "<b style='color:#fff'>dispute_open</b> creates a structured dispute with a 7-day auto-escalation timer and an evidence trail attached. It converts &lsquo;a bad payment&rsquo; into a documented, contestable, recoverable event &mdash; the thing regulators and payment rails expect to see.",
+         "Dispute-first beats litigate-first, every time."]),
+    # Day 9
+    _seinfeld_body("HOW OFTEN", "How often should you screen counterparties?",
+        ["The safe answer: before every payment. &lsquo;I screened them last week&rsquo; is not a defense &mdash; designations happen daily.",
+         "The pragmatic answer: screen inline before the signing step (cheap, &lt;100ms), and re-screen any counterparty you have not paid in 24h. Cache clean results for 60s to coalesce bursts, no longer.",
+         "If you screen less than per-payment, document why. OFAC's framework expects a defensible cadence."]),
+    # Day 10
+    _seinfeld_body("BEHIND THE SCENES", "How we source OFAC data",
+        ["Two sources, both public, both free, both official.",
+         "Crypto addresses: the vile/ofac-sdn-list GitHub release &mdash; 947 multi-chain wallets (ETH, USDT, TRX, XBT) refreshed daily.",
+         "Names + entities: the US Treasury sdn.csv &mdash; 19,218 entries, refreshed as published.",
+         "Lists are cached locally with a 24h TTL. If upstream is down, we screen against the stale cache and report <code>degraded:true</code> so you <em>know</em>."]),
+    # Day 11
+    _seinfeld_body("QUICK TIP", "Using risk_score thresholds",
+        ["risk_score returns 0-100 and a recommendation. The defaults are not gospel.",
+         "High-trust rails (your own vendor list) might set allow/review/decline at 30/60/90. Cold wallets paying large amounts might tighten to 15/40/70.",
+         "Start with the API's recommendation for a week, look at the distribution of your real scores, then tune. The data tells you where the line is."]),
+    # Day 12
+    _seinfeld_body("ARCHITECTURE", "The anatomy of an agent payment pipeline",
+        ["A compliant agent payment has five steps, in order: (1) decide to pay, (2) screen the counterparty, (3) score the transaction, (4) sign, (5) log.",
+         "Most agent demos do 1, 4, 5. The two that keep you out of trouble &mdash; 2 and 3 &mdash; are the ones nobody shows in the highlight reel.",
+         "If your pipeline is missing a step, that is the gap agentmail fills."]),
+    # Day 13
+    _seinfeld_body("DESIGN NOTE", "Why we chose USDC over other payment rails",
+        ["For x402 per-call billing we use USDC on Base. Three reasons: stable value (a screen costs $0.05 today and $0.05 in a year), Base settlement (cheap, fast), and Coinbase ecosystem fit.",
+         "The hosted API keys ($19/$99) are for operators who prefer a subscription over per-call crypto. Same engine, different meter."]),
+    # Day 14
+    _seinfeld_body("CASE STUDY", "From free to Dev in one week",
+        ["Pattern we see: day 1, a dev hits the free tier from a curl. Day 3, they wire it into their agent. Day 5, they hit the 5/day ceiling. Day 7, they grab a Dev key.",
+         "The free tier is a real tier, not a trial &mdash; no time limit, no credit card. But 5 checks/day is for prototyping. The moment your agent pays for real, 10,000/month is the floor.",
+         "When you cross that line: <a href='https://sanctionsai.dev/checkout/dev/bump' style='color:#00d4aa'>/checkout/dev/bump</a>."]),
+    # Day 15
+    _seinfeld_body("COMPLIANCE 101", "SDN vs SSI vs FSE lists",
+        ["Three lists, often confused.",
+         "<b style='color:#fff'>SDN</b> (Specially Designated Nationals) &mdash; the main one. Individuals, entities, wallets. This is what agentmail screens.",
+         "<b style='color:#fff'>SSI</b> (Sectoral Sanctions) &mdash; Russia-sector energy/finance restrictions. Different rules.",
+         "<b style='color:#fff'>FSE</b> (Foreign Sanctions Evaders) &mdash; those who evade sanctions. Overlapping with SDN.",
+         "For agent payments, SDN is the load-bearing list. The others matter for entity-level KYC."]),
+    # Day 16
+    _seinfeld_body("DEEP DIVE", "Know Your Agent (KYA) scoring",
+        ["KYC is for humans. KYA is for the agent on the other side of your tx.",
+         "kya_verify takes the counterparty agent's wallet, its age, its on-chain history, and its domain. It returns a trust score and flags &mdash; fresh wallet, no history, sanctioned-adjacent.",
+         "Two agents transacting with no operator on either side knowing the other is the exact gap KYA closes."]),
+    # Day 17
+    _seinfeld_body("OUTLOOK", "The future of agent compliance regulation",
+        ["The rules are not changing &mdash; strict liability already covers agents. What is changing is enforcement appetite.",
+         "Regulators have signalled that &lsquo;an AI did it&rsquo; is not a defense and that unscreened autonomous payments will be treated as operating without controls. The first big agent-payment fine will set the precedent. Everyone unscreened at that moment becomes the test case.",
+         "Screening now is cheaper than screening later under scrutiny."]),
+    # Day 18
+    _seinfeld_body("QUICK TIP", "Automating sanctions checks",
+        ["Manual screening does not scale and does not audit. The move from &lsquo;we check sometimes&rsquo; to &lsquo;we check every time, with a log&rsquo; is the move from liability to defense.",
+         "Automate the call, automate the log, automate the alert on BLOCK. agentmail does the first two; a webhook on BLOCK (Dev+ audit log) does the third."]),
+    # Day 19
+    _seinfeld_body("PATTERN", "Building an agent that pays invoices safely",
+        ["An invoice-paying agent has one dangerous power: it moves money to a counterparty it was told to trust. Trust is the vulnerability.",
+         "Safe pattern: the agent extracts the payee wallet, calls sanctions_check + risk_score, and only signs if both return allow. The screen is a gate, not a log line. Put it in the same function that signs &mdash; not in a separate &lsquo;compliance&rsquo; step someone can skip."]),
+    # Day 20
+    _seinfeld_body("WHY", "Why every agent needs a compliance layer",
+        ["Your agent can read, write, call APIs, and now &mdash; spend. Every one of those except the last has guardrails the framework provides. Spending does not.",
+         "Stripe does not screen the recipient. Coinbase does not screen the recipient. The agent framework does not screen the recipient. That leaves you. The compliance layer is the one piece of agent infra that exists to protect <em>you</em>, not the user."]),
+    # Day 21
+    _seinfeld_body("CASE STUDY", "Enterprise compliance team setup",
+        ["An enterprise setup is not &lsquo;more screening.&rsquo; It is the same screening plus: role-based keys, an exportable audit log, custom risk rules per business unit, and a SLA.",
+         "That is the Pro tier ($99/mo) plus a conversation. If you have a compliance team that needs to <em>prove</em> the screening happened for every tx over 5 years, that is the shape of what they need."]),
+    # Day 22
+    _seinfeld_body("COMPLIANCE 101", "Screening vs monitoring",
+        ["They sound similar. They are different controls.",
+         "<b style='color:#fff'>Screening</b> &mdash; a point-in-time check before a tx. &lsquo;Is this wallet sanctioned right now?&rsquo;",
+         "<b style='color:#fff'>Monitoring</b> &mdash; ongoing watch of an existing counterparty. &lsquo;This wallet we already trust &mdash; did it just get designated?&rsquo;",
+         "agentmail does screening (before payment). For monitoring, re-screen counterparties on a schedule; a newly-designated wallet you keep paying is just as liable."]),
+    # Day 23
+    _seinfeld_body("DATA UPDATE", "New OFAC wallets added",
+        ["The SDN list moves. New designations land as executive actions are signed &mdash; sometimes several wallets in a day, sometimes none for a week.",
+         "agentmail syncs the crypto-address list daily and the names list as published. You do not need to do anything; the data behind your screens is the freshest available. Worth knowing the next time a headline drops about a new designation round."]),
+    # Day 24
+    _seinfeld_body("QUICK TIP", "Integrating with Stripe ACP",
+        ["Stripe's Agent Connect Protocol (ACP) moves the money. It does not screen the recipient &mdash; Stripe's terms put that on you.",
+         "Integration point: call sanctions_check in the same handler that accepts the ACP pay instruction, before you authorise. If clean, proceed; if not, return a structured decline. One curl, one gate, no Stripe-side changes."]),
+    # Day 25
+    _seinfeld_body("THE COST", "The cost of non-compliance: real examples",
+        ["Binance: $968M (2023). Kraken: ~$362M (2022). BitGo: $98K (2021) for &lsquo;apparent&rsquo; violations &mdash; note how small that one is. EtherDelta: $400K (2018) for a decentralised exchange run by one person.",
+         "The pattern: size of entity does not predict whether you get caught; presence of controls predicts severity. &lsquo;Apparent&rsquo; violations with no controls get maxed. The same violation <em>with</em> a documented screen-and-log program gets mitigated."]),
+    # Day 26
+    _seinfeld_body("BEHIND THE SCENES", "Our infrastructure stack",
+        ["A stdlib Python HTTP server on Fly.io (Frankfurt), a persistent volume for the audit log, hourly cron for the drip engine, and Resend for email.",
+         "Deliberately boring. A compliance API's job is to be up and correct, not novel. The moat is the data freshness + the audit trail, not the stack. The whole thing fits in 512MB and costs about $2/month to run."]),
+    # Day 27
+    _seinfeld_body("CASE STUDY", "Scaling from 50 to 10K checks",
+        ["A team started on the free tier (5/day). Within two weeks they were batching 50 checks at the end of each day &mdash; which means they were paying all day unscreened and catching up at night. That is screening theatre.",
+         "Real screening is inline. The moment you batch, you have a window where payments go out unverified. 10,000 checks/month on Dev is not about volume &mdash; it is about being able to screen <em>per payment</em> instead of per batch."]),
+    # Day 28
+    _seinfeld_body("COMPLIANCE 101", "Jurisdiction-based screening",
+        ["Beyond the SDN list, 16 jurisdictions are under comprehensive OFAC/UN/EU sanctions &mdash; full embargoes.",
+         "A counterparty wallet might be clean but the operator behind it might be in an embargoed region. agentmail's country check takes an ISO-2 code and flags embargoed jurisdictions. Use it alongside the wallet screen for counterparties you cannot fully identify."]),
+    # Day 29
+    _seinfeld_body("DEEP DIVE", "Custom risk rules",
+        ["Pro tier lets you define custom risk rules: &lsquo;decline any tx over $X to a wallet younger than Y days,&rsquo; &lsquo;review any payment to rail Z above amount W.&rsquo;",
+         "These layer on top of the base risk_score. The point is to encode <em>your</em> policy, not just the regulator's floor. A fintech's rules differ from a DEX's; both differ from a treasury agent's."]),
+    # Day 30
+    _seinfeld_body("THE LAST ONE", "Your agentmail journey - what's next",
+        ["You have seen the patterns, the tools, the cases. Here is the short version of what to do next:",
+         "1. If you have not wired it in yet &mdash; one curl before you sign. Today.",
+         "2. If you are on free and shipping for real &mdash; <a href='https://sanctionsai.dev/checkout/dev/bump' style='color:#00d4aa'>move to Dev</a> so you can screen per-payment.",
+         "3. If you are on Dev and scaling &mdash; <a href='https://sanctionsai.dev/upgrade' style='color:#00d4aa'>Pro</a> for 100k checks + SLA + custom rules.",
+         "4. Tell one other dev building payment agents. The first fine is coming; the fewer unscreened agents there are, the better for all of us.",
+         "Thanks for reading. &mdash; The agentmail team"]),
+]
+for _b in _SEINFELD_BODIES:
+    _SEINFELD_CONTENT.append(_b)
 
 # Seinfeld state file
 _SEINFELD_STATE_FILE = "seinfeld_state.json"
@@ -10818,7 +11279,8 @@ def _send_post_purchase_email(email: str, plan: str = "dev") -> dict:
 <p style="margin:0 0 12px;font-size:14px;color:#fff;font-weight:700">Next steps:</p>
 <p style="margin:0 0 8px;font-size:14px;color:#999">1. Add your API key to your agent's payment path</p>
 <p style="margin:0 0 8px;font-size:14px;color:#999">2. Watch your dashboard at <a href="https://sanctionsai.dev/dashboard" style="color:#00d4aa">sanctionsai.dev/dashboard</a></p>
-<p style="margin:0 0 24px;font-size:14px;color:#999">3. Join the <a href="https://sanctionsai.dev/partners/jv" style="color:#00d4aa">partner program</a> — 50% recurring for every dev you refer</p>
+<p style="margin:0 0 8px;font-size:14px;color:#999">3. When you outgrow 10,000 checks/month, <a href="https://sanctionsai.dev/upgrade" style="color:#00d4aa">upgrade to Pro ($99/mo)</a> for 100k checks + SLA + custom risk rules</p>
+<p style="margin:0 0 24px;font-size:14px;color:#999">4. Join the <a href="https://sanctionsai.dev/partners/jv" style="color:#00d4aa">partner program</a> — 50% recurring for every dev you refer</p>
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:linear-gradient(135deg,#0d1a14,#0a0a0a);border:1px solid rgba(0,212,170,0.12);border-radius:10px"><tr><td style="padding:20px;text-align:center">
 <p style="margin:0 0 6px;font-size:13px;color:#666">Need help wiring this into your stack?</p>
 <p style="margin:0;font-size:14px;color:#fff;font-weight:600">Reply to this email. I read every one — Maryan, founder.</p>
