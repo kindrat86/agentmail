@@ -4368,7 +4368,7 @@ The server exposes four tools (call by these exact names):
 <style>
 :root{
   --bg:#0a0a0a; --bg2:#0c0c0e;
-  --text:#e8eaed; --t2:#a4abb3; --t3:#767c84; --t4:#5c6168;
+  --text:#e8eaed; --t2:#a4abb3; --t3:#8a9199; --t4:#7a8088;
   --line:rgba(255,255,255,.07); --line2:rgba(255,255,255,.12);
   --surf:rgba(255,255,255,.025); --surf2:rgba(255,255,255,.045);
   --teal:#00d4aa; --teal2:#2deec0;
@@ -5620,7 +5620,7 @@ const payment = await x402.pay({
 <style>
 :root{
   --bg:#0a0a0a; --bg2:#0c0c0e;
-  --text:#e8eaed; --t2:#a4abb3; --t3:#767c84; --t4:#5c6168;
+  --text:#e8eaed; --t2:#a4abb3; --t3:#8a9199; --t4:#7a8088;
   --line:rgba(255,255,255,.07); --line2:rgba(255,255,255,.12);
   --surf:rgba(255,255,255,.025); --surf2:rgba(255,255,255,.045);
   --teal:#00d4aa; --teal2:#2deec0;
