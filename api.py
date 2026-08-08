@@ -4058,6 +4058,27 @@ License: https://creativecommons.org/licenses/by/4.0/
         ("/guides/sanctions-compliance-program", "monthly", "0.6", "How to build a sanctions compliance program"),
         ("/learn/sanctions-risk-assessment", "monthly", "0.6", "How to Conduct a Sanctions Risk Assessment"),
         ("/penalties/kraken", "monthly", "0.6", "Kraken OFAC penalty case study"),
+        # Round 22 pSEO: agent-path comparisons, screening costs, agent compliance
+        ("/vs/sumsub", "monthly", "0.7", "SanctionsAI vs Sumsub"),
+        ("/vs/notabene", "monthly", "0.7", "SanctionsAI vs Notabene"),
+        ("/vs/amlbot", "monthly", "0.7", "SanctionsAI vs AMLBot"),
+        ("/cost-of/trm-labs-pricing", "monthly", "0.7", "How much does TRM Labs cost?"),
+        ("/cost-of/elliptic-pricing", "monthly", "0.7", "How much does Elliptic cost?"),
+        ("/cost-of/sumsub-pricing", "monthly", "0.7", "How much does Sumsub cost?"),
+        ("/cost-of/notabene-pricing", "monthly", "0.7", "How much does Notabene cost?"),
+        ("/best/best-crypto-sanctions-tools", "monthly", "0.7", "Best crypto sanctions tools 2026"),
+        ("/faq/does-ofac-apply-to-crypto", "monthly", "0.7", "Does OFAC apply to crypto?"),
+        ("/faq/how-much-does-sanctions-screening-cost", "monthly", "0.7", "How much does sanctions screening cost?"),
+        ("/faq/can-i-self-host-sanctions-screening", "monthly", "0.7", "Can I self-host sanctions screening?"),
+        ("/learn/bitcoin-sanctions-risk", "monthly", "0.6", "Bitcoin sanctions risk"),
+        ("/learn/kyc-vs-sanctions-screening", "monthly", "0.6", "KYC vs sanctions screening"),
+        ("/learn/stablecoin-sanctions-compliance", "monthly", "0.6", "Stablecoin sanctions compliance"),
+        ("/scenarios/sanctioned-counterparty-in-payment-workflow", "weekly", "0.7", "Sanctioned counterparty in a payment workflow"),
+        ("/scenarios/ofac-audit-request-response", "weekly", "0.7", "Responding to an OFAC audit request"),
+        ("/checklists/x402-payment-compliance-checklist", "monthly", "0.7", "x402 payment compliance checklist"),
+        ("/checklists/agent-payment-screening-checklist", "monthly", "0.7", "Agent payment screening checklist"),
+        ("/templates/sanctions-screening-policy-template", "monthly", "0.7", "Sanctions screening policy template"),
+        ("/templates/ofac-compliance-program-template", "monthly", "0.7", "OFAC compliance program template"),
     ]
         import datetime
         today = datetime.date.today().isoformat()
