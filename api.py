@@ -1899,7 +1899,6 @@ class Handler(BaseHTTPRequestHandler):
             "/sanctions-screening-best-practices": "/learn/sanctions-screening-best-practices",
             "/ofac-compliance-guide": "/learn/ofac-compliance-guide",
             "/crypto-sanctions-risk": "/learn/crypto-sanctions-risk",
-            "/compare": "/vs/chainalysis",
             "/compare/chainalysis": "/vs/chainalysis",
             "/compare/elliptic": "/vs/elliptic",
             "/compare/complyadvantage": "/vs/comply-advantage",
@@ -3156,7 +3155,7 @@ License: https://creativecommons.org/licenses/by/4.0/
             '<a href="/" class="btn btn-primary">Go home &rarr;</a>'
             '&nbsp; <a href="/tools/wallet-checker" class="btn btn-ghost">Try the free wallet checker</a>'
             '</section>',
-            canonical="/",
+            canonical="",
             status=404,
         )
 
@@ -3539,10 +3538,7 @@ License: https://creativecommons.org/licenses/by/4.0/
             "/checklists/shipper-ofac-checklist": "2026-07-18",
             "/compare": "2026-07-18",
             "/compare/amlbot": "2026-07-06",
-            "/compare/chainalysis": "2026-07-02",
             "/compare/charmverse": "2026-06-29",
-            "/compare/complyadvantage": "2026-07-02",
-            "/compare/elliptic": "2026-07-02",
             "/compare/identitymind": "2026-07-06",
             "/compare/scorechain": "2026-07-06",
             "/compare/sumsub": "2026-07-02",
@@ -3717,6 +3713,14 @@ License: https://creativecommons.org/licenses/by/4.0/
             "/vs/swift-sanctions": "2026-07-18",
             "/vs/trm-labs": "2026-07-18",
             "/widgets": "2026-07-19",
+            "/agent": "2026-07-26",
+            "/contact": "2026-07-26",
+            "/faq/do-crypto-exchanges-need-ofac-screening": "2026-07-26",
+            "/faq/what-are-ofac-penalties": "2026-07-26",
+            "/guides/risk-assessment-guide": "2026-07-26",
+            "/guides/sanctions-compliance-program": "2026-07-26",
+            "/learn/sanctions-risk-assessment": "2026-07-26",
+            "/penalties/kraken": "2026-07-26",
         }
 
         pages = [
@@ -3753,9 +3757,6 @@ License: https://creativecommons.org/licenses/by/4.0/
             ("/for/gaming", "monthly", "0.7", "OFAC sanctions for gaming agents"),
             ("/for/nft", "monthly", "0.7", "OFAC sanctions for NFT marketplace agents"),
             ("/for/lending", "monthly", "0.7", "OFAC sanctions for lending agents"),
-            ("/compare/chainalysis", "monthly", "0.7", "agentmail vs Chainalysis - OFAC sanctions for agents"),
-            ("/compare/elliptic", "monthly", "0.7", "agentmail vs Elliptic - OFAC sanctions for agents"),
-            ("/compare/complyadvantage", "monthly", "0.7", "agentmail vs ComplyAdvantage - OFAC sanctions for agents"),
             ("/compare/sumsub", "monthly", "0.7", "agentmail vs SumSub - OFAC sanctions for agents"),
             ("/blog/ofac-for-agents", "monthly", "0.6", "Why AI agents need OFAC sanctions screening"),
             ("/blog/know-your-agent", "monthly", "0.6", "Know Your Agent (KYA) explained"),
@@ -4048,6 +4049,36 @@ License: https://creativecommons.org/licenses/by/4.0/
         ("/programs/transnational-criminal-orgs", "monthly", "0.7", "Transnational criminal organizations"),
         ("/programs/cyber-related", "monthly", "0.7", "Cyber-related sanctions"),
         ("/programs/foreign-interference", "monthly", "0.7", "Foreign interference in US elections"),
+        # Missing pages discovered by Google — added 2026-07-28
+        ("/agent", "monthly", "0.7", "x402 Compliance Check for AI Agents"),
+        ("/contact", "monthly", "0.5", "Contact sanctionsai.dev"),
+        ("/faq/do-crypto-exchanges-need-ofac-screening", "monthly", "0.6", "Do crypto exchanges need OFAC screening?"),
+        ("/faq/what-are-ofac-penalties", "monthly", "0.6", "What are the penalties for OFAC violations?"),
+        ("/guides/risk-assessment-guide", "monthly", "0.6", "OFAC risk assessment guide"),
+        ("/guides/sanctions-compliance-program", "monthly", "0.6", "How to build a sanctions compliance program"),
+        ("/learn/sanctions-risk-assessment", "monthly", "0.6", "How to Conduct a Sanctions Risk Assessment"),
+        ("/penalties/kraken", "monthly", "0.6", "Kraken OFAC penalty case study"),
+        # Round 22 pSEO: agent-path comparisons, screening costs, agent compliance
+        ("/vs/sumsub", "monthly", "0.7", "SanctionsAI vs Sumsub"),
+        ("/vs/notabene", "monthly", "0.7", "SanctionsAI vs Notabene"),
+        ("/vs/amlbot", "monthly", "0.7", "SanctionsAI vs AMLBot"),
+        ("/cost-of/trm-labs-pricing", "monthly", "0.7", "How much does TRM Labs cost?"),
+        ("/cost-of/elliptic-pricing", "monthly", "0.7", "How much does Elliptic cost?"),
+        ("/cost-of/sumsub-pricing", "monthly", "0.7", "How much does Sumsub cost?"),
+        ("/cost-of/notabene-pricing", "monthly", "0.7", "How much does Notabene cost?"),
+        ("/best/best-crypto-sanctions-tools", "monthly", "0.7", "Best crypto sanctions tools 2026"),
+        ("/faq/does-ofac-apply-to-crypto", "monthly", "0.7", "Does OFAC apply to crypto?"),
+        ("/faq/how-much-does-sanctions-screening-cost", "monthly", "0.7", "How much does sanctions screening cost?"),
+        ("/faq/can-i-self-host-sanctions-screening", "monthly", "0.7", "Can I self-host sanctions screening?"),
+        ("/learn/bitcoin-sanctions-risk", "monthly", "0.6", "Bitcoin sanctions risk"),
+        ("/learn/kyc-vs-sanctions-screening", "monthly", "0.6", "KYC vs sanctions screening"),
+        ("/learn/stablecoin-sanctions-compliance", "monthly", "0.6", "Stablecoin sanctions compliance"),
+        ("/scenarios/sanctioned-counterparty-in-payment-workflow", "weekly", "0.7", "Sanctioned counterparty in a payment workflow"),
+        ("/scenarios/ofac-audit-request-response", "weekly", "0.7", "Responding to an OFAC audit request"),
+        ("/checklists/x402-payment-compliance-checklist", "monthly", "0.7", "x402 payment compliance checklist"),
+        ("/checklists/agent-payment-screening-checklist", "monthly", "0.7", "Agent payment screening checklist"),
+        ("/templates/sanctions-screening-policy-template", "monthly", "0.7", "Sanctions screening policy template"),
+        ("/templates/ofac-compliance-program-template", "monthly", "0.7", "OFAC compliance program template"),
     ]
         import datetime
         today = datetime.date.today().isoformat()
@@ -4069,7 +4100,6 @@ License: https://creativecommons.org/licenses/by/4.0/
         xml = '<?xml version="1.0" encoding="UTF-8"?>\n'
         xml += '<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
         xml += f'  <sitemap>\n    <loc>https://sanctionsai.dev/sitemap.xml</loc>\n    <lastmod>{today}</lastmod>\n  </sitemap>\n'
-        xml += f'  <sitemap>\n    <loc>https://sanctionsai.dev/image-sitemap.xml</loc>\n    <lastmod>{today}</lastmod>\n  </sitemap>\n'
         xml += '</sitemapindex>\n'
         self._serve_text(xml, "application/xml")
 
@@ -4368,7 +4398,7 @@ The server exposes four tools (call by these exact names):
 <style>
 :root{
   --bg:#0a0a0a; --bg2:#0c0c0e;
-  --text:#e8eaed; --t2:#a4abb3; --t3:#767c84; --t4:#5c6168;
+  --text:#e8eaed; --t2:#a4abb3; --t3:#8a9199; --t4:#7a8088;
   --line:rgba(255,255,255,.07); --line2:rgba(255,255,255,.12);
   --surf:rgba(255,255,255,.025); --surf2:rgba(255,255,255,.045);
   --teal:#00d4aa; --teal2:#2deec0;
@@ -5620,7 +5650,7 @@ const payment = await x402.pay({
 <style>
 :root{
   --bg:#0a0a0a; --bg2:#0c0c0e;
-  --text:#e8eaed; --t2:#a4abb3; --t3:#767c84; --t4:#5c6168;
+  --text:#e8eaed; --t2:#a4abb3; --t3:#8a9199; --t4:#7a8088;
   --line:rgba(255,255,255,.07); --line2:rgba(255,255,255,.12);
   --surf:rgba(255,255,255,.025); --surf2:rgba(255,255,255,.045);
   --teal:#00d4aa; --teal2:#2deec0;
@@ -6191,7 +6221,7 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
 
     def _page(self, title, description, body, extra_head="", canonical="/", status=200):
         """Assemble a full dark-theme page: head(+OG/Twitter) + nav + body + footer."""
-        url = _SITE + canonical
+        url = _SITE + canonical if canonical else _SITE
         t = self._esc(title)
         d = self._esc(description)
         parts = [
@@ -6205,12 +6235,20 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
             '<meta name="viewport" content="width=device-width, initial-scale=1">',
             '<link rel="preconnect" href="https://eu.i.posthog.com">',
             '<link rel="dns-prefetch" href="https://eu.i.posthog.com">',
-            '<link rel="alternate" hreflang="en-US" href="' + url + '">',
-            '<link rel="alternate" hreflang="en" href="' + url + '">',
-            '<link rel="alternate" hreflang="x-default" href="' + url + '">',
+        ]
+        if canonical:
+            parts += [
+                '<link rel="alternate" hreflang="en-US" href="' + url + '">',
+                '<link rel="alternate" hreflang="en" href="' + url + '">',
+                '<link rel="alternate" hreflang="x-default" href="' + url + '">',
+            ]
+        parts += [
             '<title>' + t + '</title>',
             '<meta name="description" content="' + d + '">',
-            '<link rel="canonical" href="' + url + '">',
+        ]
+        if canonical:
+            parts.append('<link rel="canonical" href="' + url + '">')
+        parts += [
             '<meta property="og:title" content="' + t + '">',
             '<meta property="og:description" content="' + d + '">',
             '<meta property="og:type" content="website">',
@@ -6327,7 +6365,7 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
             '<li><a href="/penalties/ofac-violation-costs">OFAC violation costs for ' + name_lower + ' agents</a></li>'
             '<li><a href="/guides/setup-ofac-screening">How to set up OFAC screening</a></li>'
             '<li><a href="/blog/how-to-screen-wallet-agent">How to screen a wallet before your agent pays</a></li>'
-            '<li><a href="/compare/chainalysis">agentmail vs Chainalysis <span style="color:var(--t3)">\\u2014 pricing and feature comparison</span></a></li>'
+            '<li><a href="/vs/chainalysis">agentmail vs Chainalysis <span style="color:var(--t3)">\\u2014 pricing and feature comparison</span></a></li>'
             '</ul>'
             '</div></section>'
             '<section><div class="cta-box">'
@@ -6399,8 +6437,8 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
             '<section><div class="prose">'
             '<h3>Related comparisons</h3>'
             '<ul>'
-            '<li><a href="/compare/elliptic">agentmail vs Elliptic</a></li>'
-            '<li><a href="/compare/complyadvantage">agentmail vs ComplyAdvantage</a></li>'
+            '<li><a href="/vs/elliptic">agentmail vs Elliptic</a></li>'
+            '<li><a href="/vs/comply-advantage">agentmail vs ComplyAdvantage</a></li>'
             '<li><a href="/compare/sumsub">agentmail vs SumSub</a></li>'
             '<li><a href="/guides/choose-sanctions-api">How to choose a sanctions API</a></li>'
             '<li><a href="/for/developers">OFAC screening for developers</a></li>'
@@ -7030,7 +7068,7 @@ document.getElementById("wallet").addEventListener("keydown",function(e){if(e.ke
             '<h1>Agent Payment Sanctions Exposure Leaderboard</h1>'
             '<p class="lead" style="max-width:680px;margin:0 auto 28px">An independent ranking of AI agent payment platforms by their OFAC / sanctions compliance posture. Every cell is sourced from the platform&rsquo;s own public documentation. Last updated ' + today + '.</p>'
             '<a href="/tools/wallet-checker" class="btn btn-primary">Test a wallet now</a>'
-            '&nbsp; <a href="/compare/chainalysis" class="btn btn-ghost">See head-to-head comparisons</a>'
+            '&nbsp; <a href="/vs/chainalysis" class="btn btn-ghost">See head-to-head comparisons</a>'
             '</section>'
 
             '<section><div class="prose">'
@@ -7078,9 +7116,9 @@ document.getElementById("wallet").addEventListener("keydown",function(e){if(e.ke
             '<h2>Compare agentmail head-to-head</h2>'
             '<p>Want a deeper comparison than the leaderboard? These pages break down agentmail against the major enterprise sanctions providers feature-by-feature:</p>'
             '<ul>'
-            '<li><a href="/compare/chainalysis">agentmail vs Chainalysis</a></li>'
-            '<li><a href="/compare/elliptic">agentmail vs Elliptic</a></li>'
-            '<li><a href="/compare/complyadvantage">agentmail vs ComplyAdvantage</a></li>'
+            '<li><a href="/vs/chainalysis">agentmail vs Chainalysis</a></li>'
+            '<li><a href="/vs/elliptic">agentmail vs Elliptic</a></li>'
+            '<li><a href="/vs/comply-advantage">agentmail vs ComplyAdvantage</a></li>'
             '<li><a href="/compare/sumsub">agentmail vs Sumsub</a></li>'
             '<li><a href="/compare/world-check">agentmail vs World-Check</a></li>'
             '</ul>'
@@ -8961,7 +8999,7 @@ curl "https://agentmail-api.fly.dev/sanctions?wallet=<span style="color:#f59e0b"
         ]
         items = "".join(
             f'<div style="padding:18px 0;border-bottom:1px solid #1a1a1a">'
-            f'<h3><a href="/vs/{slug}" style="color:#fff;text-decoration:none">{title}</a></h3>'
+            f'<h3><a href="/compare/{slug}" style="color:#fff;text-decoration:none">{title}</a></h3>'
             f'</div>'
             for slug, title in slugs
         )
@@ -10344,8 +10382,8 @@ compute();
         path = "/" + page_key.replace("-", "/", 1) if "-" in page_key else "/" + page_key
         # Map known page_keys to their canonical paths
         path_map = {
-            "chainalysis": "/compare/chainalysis", "elliptic": "/compare/elliptic",
-            "complyadvantage": "/compare/complyadvantage", "world-check": "/compare/world-check",
+            "chainalysis": "/vs/chainalysis", "elliptic": "/vs/elliptic",
+            "complyadvantage": "/vs/comply-advantage", "world-check": "/compare/world-check",
             "for-defi": "/for/defi", "for-fintech": "/for/fintech", "for-ai-agents": "/for/ai-agents",
             "glossary-ofac": "/glossary/ofac", "glossary-sdn": "/glossary/sdn-list",
             "glossary-strict-liability": "/glossary/strict-liability",
@@ -11133,7 +11171,7 @@ def send_soap_operas():
                         f"Day {target_day} of 5"
                     )
                     try:
-                        _send_resend(email, _SOAP_SUBJECTS[idx], content)
+                        _send_resend(email, _SOAP_SUBJECTS[idx], content, gate="sanctionsai:soap")
                         new_state[email] = {"soap_day": target_day, "last_sent": now}
                         sent += 1
                     except Exception as e:
@@ -11175,7 +11213,7 @@ def _check_seinfeld(email, rec, new_state, old_state, now):
             f"Tip {target_day} of 30"
         )
         try:
-            _send_resend(email, _SEINFELD_SUBJECTS[idx], content)
+            _send_resend(email, _SEINFELD_SUBJECTS[idx], content, gate="sanctionsai:seinfeld")
             seinfeld_state[email] = {"seinfeld_day": target_day, "last_sent": now}
             print(f"Seinfeld sent to {email} day {target_day}", flush=True)
         except Exception as e:
@@ -11318,16 +11356,65 @@ def _send_winback_email(email: str) -> dict:
 <p style="margin:24px 0 0;font-size:13px;color:#666;line-height:1.6;text-align:center">Or self-host the MIT-licensed version for free at <a href="https://github.com/kindrat86/agentmail" style="color:#00d4aa">GitHub</a>. Whatever keeps your agent safe.</p>
 <p style="margin:16px 0 0;font-size:12px;color:#555;text-align:center">— Maryan, founder · <a href="https://sanctionsai.dev/unsubscribe?email={email}" style="color:#444">Unsubscribe</a></p>
 </td></tr></table></td></tr></table></body></html>'''
-    return _send_resend(email, subject, html)
+    return _send_resend(email, subject, html, gate="sanctionsai:winback")
 # ─── Email configuration ────────────────────────────────────────
 _RESEND_API_KEY=os.environ.get("RESEND_API_KEY", "")
 _EMAIL_FROM = os.environ.get("EMAIL_FROM", "agentmail <noreply@mail.sanctionsai.dev>")
 
 
-def _send_resend(to_email: str, subject: str, html_body: str) -> dict:
-    """Send email via Resend API with unsubscribe link injection."""
+_GATE_URL = os.environ.get("GATE_URL", "")
+_GATE_SECRET = os.environ.get("GATE_SECRET", "")
+
+
+def _gate_allows(to_email: str, sender: str) -> bool:
+    """Shared cross-system cap: at most ONE marketing email per address per day.
+
+    Several independent systems mail these same people (the Hermes drip engine,
+    the Node sequence sender, the pseo-site crons). Each only knows its own
+    state, so the cap has to live in one shared place — see the `send_gate`
+    collection behind email-engine's /api/gate.
+
+    MARKETING ONLY. Welcome, post-purchase and other transactional mail must
+    never pass `gate=` and is therefore never throttled.
+
+    Fails CLOSED when a gate is configured but unreachable: a skipped marketing
+    send is recoverable, a duplicate blast is not. If no gate is configured the
+    caller keeps its previous behaviour.
+    """
+    if not _GATE_URL or not _GATE_SECRET:
+        return True
+    import urllib.request
+    import urllib.error
+    payload = json.dumps({"email": to_email, "sender": sender}).encode("utf-8")
+    req = urllib.request.Request(
+        _GATE_URL,
+        data=payload,
+        # Explicit User-Agent for the same Cloudflare reason as _send_resend below.
+        headers={
+            "Authorization": f"Bearer {_GATE_SECRET}",
+            "Content-Type": "application/json",
+            "User-Agent": "agentmail-sanctionsai/1.0 (+curl-compatible)",
+        },
+        method="POST",
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=15) as resp:
+            return json.loads(resp.read()).get("allowed") is True
+    except Exception as e:
+        print(f"[gate] unreachable for {to_email} ({e}) — skipping send (fail-closed)")
+        return False
+
+
+def _send_resend(to_email: str, subject: str, html_body: str, gate: str = None) -> dict:
+    """Send email via Resend API with unsubscribe link injection.
+
+    Pass `gate="<sender-label>"` for MARKETING sends so they claim the shared
+    one-per-day slot first. Omit it for transactional mail.
+    """
     if not _RESEND_API_KEY.strip():
         return {"ok": False, "error": "RESEND_API_KEY not configured"}
+    if gate and not _gate_allows(to_email, gate):
+        return {"ok": False, "skipped": "daily_cap"}
     import urllib.request
     import urllib.error
     # Inject unsubscribe link into the email

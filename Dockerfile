@@ -21,6 +21,7 @@ COPY penalties/ ./penalties/
 COPY guides/ ./guides/
 # Round 19 Isenberg pSEO (checklists, cost-of, best — templates not generated for this site)
 COPY checklists/ ./checklists/
+COPY templates/ ./templates/
 COPY cost-of/ ./cost-of/
 COPY best/ ./best/
 # Embeddable statistics hub page
