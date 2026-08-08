@@ -423,6 +423,8 @@ _BLOG_SLUGS = frozenset((
     "sanctions-screening-for-marketplaces",
     "the-russia-sanctions-regime",
     "kyc-vs-aml-vs-sanctions",
+    "designated-vs-settled",
+    "the-russia-oligarch-sanctions",
     "travel-rule-vs-sanctions-screening",
     "secondary-sanctions-explained",
     "what-happens-after-a-block",
@@ -2206,6 +2208,19 @@ _BLOG_POSTS = {
         "html": "<p>KYC, AML, and sanctions screening are three different questions. Teams that conflate them build stacks with gaps.</p><h2>KYC - who are you?</h2><p>Identity verification at onboarding: documents, beneficial ownership, and the 50% rule.</p><h2>AML - is the behavior suspicious?</h2><p>Ongoing monitoring: transaction patterns, red flags, and escalation. Probabilistic, not deterministic.</p><h2>Sanctions - may we deal with you?</h2><p>The prohibition check: is the counterparty on the list? Deterministic, runs on every transaction.</p><h2>The stack</h2><p>KYC at onboarding, AML monitoring over time, and sanctions screening on every payment. The <a href=\"/learn/kyc-vs-sanctions-screening\">KYC vs screening</a> and <a href=\"/learn/aml-vs-sanctions-screening\">AML vs screening</a> pages cover the boundaries in depth.</p>""",
     },
 
+    "designated-vs-settled": {
+        "title": "Designated vs Settled: What's the Difference?",
+        "date": "2026-08-08",
+        "desc": "A designation blocks you; a settlement fines you. The distinction that explains why Binance is not on the SDN list despite paying $968M.",
+        "html": "<p>Binance paid $968M to OFAC and is not on the SDN list. Garantex paid nothing and is. The distinction is designation versus settlement.</p><h2>Designated</h2><p>A designation adds you to the SDN list: US persons may not transact with you, your assets are blocked. It is a status, not a fine.</p><h2>Settled</h2><p>A settlement resolves alleged violations with a payment and compliance commitments. The company remains operational and unblocked - it is a consequence, not a status.</p><h2>Why the difference matters</h2><p>Screening questions are binary: is this party on the list? A settled company may be safe to transact with; a designated one never is. The <a href=\"/check/binance\">Binance check page</a> is the worked example.</p><h2>The screening takeaway</h2><p>Screen the list, not the headlines. A settlement is news; a designation is a prohibition.</p>""",
+    },
+    "the-russia-oligarch-sanctions": {
+        "title": "The Russia Oligarch Sanctions, Explained",
+        "date": "2026-08-06",
+        "desc": "Putin, Lavrov, Abramovich, Deripaska - the designation cluster and the 50%-rule reach over their assets and entities.",
+        "html": "<p>Russia's oligarch sanctions are the most-searched designation cluster on the internet - and the 50% rule gives them extra reach.</p><h2>The designations</h2><p>Putin and Lavrov were designated February 25, 2022; Abramovich March 15, 2022; Deripaska back in April 2018. Each is blocked: no US person may transact with them, and their assets are frozen.</p><h2>The 50% reach</h2><p>Entities owned 50% or more by a designated oligarch are themselves blocked - even if never listed. A shell company owned by Abramovich is in scope. The <a href=\"/learn/beneficial-ownership-sanctions\">ownership explainer</a> covers the rule.</p><h2>The check pages</h2><p><a href=\"/check/putin\">Putin</a>, <a href=\"/check/lavrov\">Lavrov</a>, <a href=\"/check/abramovich\">Abramovich</a>, <a href=\"/check/deripaska\">Deripaska</a> - each with the designation record and the action required.</p><h2>The agent implication</h2><p>An agent paying an oligarch-linked entity commits a violation under the 50% rule even if the entity name is clean. Ownership screening is the layer that catches it.</p>""",
+    },
+
 }
 
 
@@ -3327,7 +3342,11 @@ License: https://creativecommons.org/licenses/by/4.0/
                 '{"question": "What is an incident response plan for sanctions?", "answer": "A sanctions incident response plan covers: detection (screening logs), containment (block further payments, hold funds), assessment (verify the match, evaluate exposure), reporting (blocking reports within 10 days, VSD where appropriate), and remediation (fix the control gap). The plan turns a match into a documented, bounded event. See https://sanctionsai.dev/templates/sanctions-incident-response-template."}\n'
                 '{"question": "Is Sberbank sanctioned?", "answer": "Yes. Sberbank, Russia\u2019s largest bank, was designated by OFAC in February 2022 under EO 14024, with correspondent-account and processing sanctions following. VTB, Promsvyazbank, and other Russian state banks are also designated. Payments routed through designated Russian banks are prohibited. See https://sanctionsai.dev/check/sberbank."}\n'
                 '{"question": "Are Russian banks sanctioned?", "answer": "The major Russian state banks are designated: Sberbank and VTB (February 2022, EO 14024), Promsvyazbank (February 2022), and Bank Rossiya (2014, EO 13661). US persons may not transact with them; payments routed through their addresses or accounts are prohibited. The Russia country page lists the full designation set. See https://sanctionsai.dev/faq/are-russian-banks-sanctioned."}\n'
-                '{"question": "What is the difference between KYC, AML, and sanctions screening?", "answer": "KYC verifies identity at onboarding (who are you?), AML monitors behavior over time (is the activity suspicious?), and sanctions screening checks the prohibition on every transaction (may we deal with you?). KYC is onboarding, AML is continuous monitoring, and screening is the deterministic per-payment gate - all three belong in the stack. See https://sanctionsai.dev/blog/kyc-vs-aml-vs-sanctions."}\n\n\n\n\n\n\n\n\n',
+                '{"question": "What is the difference between KYC, AML, and sanctions screening?", "answer": "KYC verifies identity at onboarding (who are you?), AML monitors behavior over time (is the activity suspicious?), and sanctions screening checks the prohibition on every transaction (may we deal with you?). KYC is onboarding, AML is continuous monitoring, and screening is the deterministic per-payment gate - all three belong in the stack. See https://sanctionsai.dev/blog/kyc-vs-aml-vs-sanctions."}\n'
+                '{"question": "Is Putin sanctioned?", "answer": "Yes. Vladimir Putin was designated by OFAC in February 2022 under EO 14024 following Russia\u2019s invasion of Ukraine. His assets in US jurisdiction are blocked, and US persons may not transact with him or entities he controls. Foreign Minister Lavrov was designated the same day. See https://sanctionsai.dev/check/putin."}\n'
+                '{"question": "Is Binance sanctioned?", "answer": "No - Binance is not designated on the OFAC SDN list. In June 2023 it reached a global resolution with US authorities, with OFAC\u2019s portion totaling $968M for apparent sanctions violations. The distinction: designation is a blocked status; settlement is a fine. Binance remains operational, but transacting with designated wallets or entities is still prohibited regardless of the platform. See https://sanctionsai.dev/check/binance."}\n'
+                '{"question": "Can sanctions be removed?", "answer": "Yes - OFAC has a delisting process. A designated party can petition for removal by demonstrating the basis for designation no longer applies (changed circumstances, mistaken identity, or conduct that has ended). Delisting petitions go through OFAC\u2019s review process and can take months to years. Until delisted, the party remains blocked. See https://sanctionsai.dev/faq/can-sanctions-be-removed."}\n'
+                '{"question": "Is Abramovich sanctioned?", "answer": "Yes. Roman Abramovich was designated by OFAC in March 2022 under EO 14024. His property and interests in property are blocked, and entities he owns 50% or more are treated as blocked under the 50-percent rule. See https://sanctionsai.dev/check/abramovich."}\n\n\n\n\n\n\n\n\n\n',
                 "application/x-ndjson")
         if p.path == "/manifest.webmanifest":
             return _json(self, 200, {
@@ -4811,6 +4830,20 @@ License: https://creativecommons.org/licenses/by/4.0/
         ("/blog/the-russia-sanctions-regime", "monthly", "0.7", "The Russia sanctions regime"),
         ("/blog/kyc-vs-aml-vs-sanctions", "monthly", "0.7", "KYC vs AML vs sanctions screening"),
         ("/faq/are-russian-banks-sanctioned", "monthly", "0.7", "Are Russian banks sanctioned?"),
+        # Round 37 pSEO: oligarch/government cluster, designated vs settled
+        ("/check/putin", "monthly", "0.7", "Is Putin sanctioned?"),
+        ("/check/lavrov", "monthly", "0.7", "Is Lavrov sanctioned?"),
+        ("/check/abramovich", "monthly", "0.7", "Is Abramovich sanctioned?"),
+        ("/check/deripaska", "monthly", "0.7", "Is Deripaska sanctioned?"),
+        ("/check/binance", "monthly", "0.7", "Is Binance sanctioned?"),
+        ("/blog/designated-vs-settled", "monthly", "0.7", "Designated vs settled: what's the difference?"),
+        ("/blog/the-russia-oligarch-sanctions", "monthly", "0.7", "The Russia oligarch sanctions, explained"),
+        ("/faq/can-sanctions-be-removed", "monthly", "0.7", "Can sanctions be removed?"),
+        ("/learn/what-is-a-settlement", "monthly", "0.6", "What is an OFAC settlement?"),
+        ("/learn/how-oligarch-sanctions-work", "monthly", "0.6", "How oligarch sanctions work"),
+        ("/scenarios/agent-pays-entity-owned-by-designated-person", "weekly", "0.7", "Agent pays an entity owned by a designated person"),
+        ("/templates/sanctions-delisting-petition-template", "monthly", "0.7", "Sanctions delisting petition template"),
+        ("/redflags/red-flags-in-stablecoin-payments", "monthly", "0.7", "Red flags in stablecoin payments"),
     ]
         import datetime
         today = datetime.date.today().isoformat()
@@ -10762,6 +10795,11 @@ compute();
             "vtb": {"name": "VTB Bank", "type": "Russian state bank", "country": "Russia; designated Feb 2022", "designated": "2022-02-24 (EO 14024)", "desc": "VTB Bank was designated by OFAC in February 2022 under EO 14024, including a full blocking designation for the state-owned bank.", "action": "US persons are prohibited from transacting with VTB. Its property and interests in property are blocked."},
             "promsvyazbank": {"name": "Promsvyazbank", "type": "Russian state defense bank", "country": "Russia; designated Feb 2022", "designated": "2022-02-24 (EO 14024)", "desc": "Promsvyazbank, the Russian state bank serving the defense sector, was designated by OFAC in February 2022 under EO 14024.", "action": "US persons are prohibited from transacting with Promsvyazbank. Its property and interests in property are blocked."},
             "rossiya": {"name": "Bank Rossiya", "type": "Russian bank", "country": "Russia; designated March 2014", "designated": "2014-03-20 (EO 13661)", "desc": "Bank Rossiya was designated in March 2014 under EO 13661 - among the first Russia designations following the Crimea annexation.", "action": "US persons are prohibited from transacting with Bank Rossiya. Its property and interests in property are blocked."},
+            "putin": {"name": "Vladimir Putin", "type": "Russian head of state", "country": "Russia; designated Feb 2022", "designated": "2022-02-25 (EO 14024)", "desc": "Vladimir Putin was designated by OFAC in February 2022 under EO 14024 following Russia's invasion of Ukraine. His assets in US jurisdiction are blocked.", "action": "US persons are prohibited from transacting with Putin. Any payments routed to him or his controlled entities are prohibited."},
+            "lavrov": {"name": "Sergey Lavrov", "type": "Russian foreign minister", "country": "Russia; designated Feb 2022", "designated": "2022-02-25 (EO 14024)", "desc": "Sergey Lavrov, Russia's foreign minister, was designated by OFAC in February 2022 under EO 14024.", "action": "US persons are prohibited from transacting with Lavrov. His assets in US jurisdiction are blocked."},
+            "abramovich": {"name": "Roman Abramovich", "type": "Russian oligarch", "country": "Russia; designated March 2022", "designated": "2022-03-15 (EO 14024)", "desc": "Roman Abramovich, the Russian oligarch, was designated by OFAC in March 2022 under EO 14024. His property and interests in property are blocked.", "action": "US persons are prohibited from transacting with Abramovich or entities he owns 50% or more."},
+            "deripaska": {"name": "Oleg Deripaska", "type": "Russian oligarch", "country": "Russia; designated April 2018", "designated": "2018-04-06 (EO 13662)", "desc": "Oleg Deripaska was designated by OFAC in April 2018 under EO 13662 (Ukraine-related). His property and interests in property are blocked.", "action": "US persons are prohibited from transacting with Deripaska or entities he owns 50% or more."},
+            "binance": {"name": "Binance", "type": "Cryptocurrency exchange", "country": "Global; NOT designated (settled 2023)", "designated": "Not designated - OFAC settlement June 2023", "desc": "Binance is NOT designated on the OFAC SDN list. In June 2023 it reached a global resolution with US authorities; OFAC's portion was $968M for apparent sanctions violations. The company remains operational but subject to the settlement's compliance requirements.", "action": "Binance itself is not blocked. However, transacting with wallets or entities that ARE designated remains prohibited - screen every counterparty regardless of the platform used."},
         }
         e = NAMES.get(slug)
         if not e:
