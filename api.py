@@ -415,6 +415,8 @@ _BLOG_SLUGS = frozenset((
     "how-to-respond-to-a-sanctions-match",
     "sanctions-evasion-patterns",
     "how-ofac-designations-work",
+    "what-the-ofac-enforcement-data-shows",
+    "sanctions-screening-myths",
     "travel-rule-vs-sanctions-screening",
     "secondary-sanctions-explained",
     "what-happens-after-a-block",
@@ -2142,6 +2144,19 @@ _BLOG_POSTS = {
         "html": "<p>A designation is how OFAC adds a person, entity, or address to the SDN list. Understanding the mechanics explains why screening must run against the live list.</p><h2>The authorities</h2><p>Designations flow from Executive Orders, statutes (like the Magnitsky Act), and UN Security Council resolutions. Each program has its own authority - EO 13224 for terrorism, EO 14024 for Russia, and so on.</p><h2>What a designation does</h2><p>The listed party becomes a blocked person: US persons may not transact with them, and their property is blocked. For crypto, the designation includes wallet addresses - which is why the wallet list grows.</p><h2>How the list grows</h2><p>Designations land between releases, at any time. The <a href=\"/faq/how-often-does-ofac-update-sanctions\">update-frequency FAQ</a> covers why hourly sync matters: a wallet designated this morning should be blocked this afternoon.</p><h2>The agent implication</h2><p>Your screen is only as good as list freshness. Designation mechanics are exactly why the screen must run against the live list, every payment.</p>""",
     },
 
+    "what-the-ofac-enforcement-data-shows": {
+        "title": "What the OFAC Enforcement Data Shows",
+        "date": "2026-08-08",
+        "desc": "A data-driven read of the OFAC enforcement record: settlement sizes, the screening gap, the crypto cases, and what the pattern means for agents.",
+        "html": "<p>The enforcement record is the best dataset on what screening gaps cost. Read across the cases, three patterns dominate.</p><h2>Pattern 1: Volume compounds</h2><p>Binance ($968M OFAC portion), Standard Chartered ($132M), Societe Generale ($53.9M) - each settlement scales with transaction volume. Thousands of small violations compound into hundreds of millions. An agent executing hundreds of payments is the same shape at machine speed.</p><h2>Pattern 2: The gap is always the same</h2><p>Kraken, Bittrex, Poloniex, Bitfinex, BitPay, Ripple, EtherDelta - every case traces to screening that did not run before settlement. Not exotic fraud: a missing pre-transaction check.</p><h2>Pattern 3: The assets change, the rule doesn't</h2><p>Mixers (Tornado Cash, Blender, Sinbad), exchanges (Garantex), DeFi (EtherDelta) - new rails, same obligation. The asset class does not change the prohibition.</p><h2>The agent implication</h2><p>The enforcement data is the argument for the screen: one call, sub-100 ms, before every payment. The <a href=\"/data/ofac-enforcement\">enforcement dataset</a> tracks the record.</p>""",
+    },
+    "sanctions-screening-myths": {
+        "title": "Sanctions Screening Myths, Debunked",
+        "date": "2026-08-05",
+        "desc": "The myths that get teams into trouble: 'it's just a list lookup', 'small payments don't matter', 'the rail handles it'. What the rules actually say.",
+        "html": "<p>Most sanctions exposure comes from believing one of these myths.</p><h2>Myth 1: Screening is a list lookup</h2><p>It is a decision path: exact wallet matching, fuzzy name matching, jurisdiction checks, and a logged result. The list is the input, not the product.</p><h2>Myth 2: Small payments don't matter</h2><p>Ripple's $700K settlement covered 1,773 transactions averaging under $80 each. Every payment is a separate violation.</p><h2>Myth 3: The rail handles compliance</h2><p>x402, AP2, ACP, and AgentKit move money - none of them screen. Issuer blocklists are backstops, not your program.</p><h2>Myth 4: My agent is outside US jurisdiction</h2><p>Primary and secondary sanctions reach beyond US borders - the <a href=\"/blog/secondary-sanctions-explained\">secondary-sanctions post</a> covers the reach.</p><h2>The debunk</h2><p>Screen before sign, fail closed, log everything. The rest is commentary.</p>""",
+    },
+
 }
 
 
@@ -3251,7 +3266,10 @@ License: https://creativecommons.org/licenses/by/4.0/
                 '{"question": "Can SanctionsAI be used for employment screening?", "answer": "Yes - name screening against the SDN list is a standard pre-employment and contractor-vetting check, alongside other required checks. SanctionsAI screens names against 19,218 SDN entries and 16 embargoed jurisdictions; employment screening should be run with appropriate consent and per applicable law. See https://sanctionsai.dev/faq/can-i-use-sanctionsai-for-hiring."}\n'
                 '{"question": "Is USDT (Tether) sanctioned?", "answer": "Tether (USDT) itself is not designated, but specific addresses and entities associated with sanctions evasion are on the SDN list - and the stablecoin rail does not change the obligation. A USDT transfer to a sanctioned wallet is prohibited like any other. The screen checks the destination wallet regardless of the token. See https://sanctionsai.dev/faq/is-usdt-sanctioned."}\n'
                 '{"question": "What is an SDGT designation?", "answer": "SDGT stands for Specially Designated Global Terrorist - a designation under Executive Order 13224 that applies to terrorists and terrorist organizations (e.g., Hamas, ISIL, al-Qaida). SDGT entities and their associated addresses are blocked; US persons may not transact with them. See https://sanctionsai.dev/faq/what-is-an-sdgt."}\n'
-                '{"question": "Is Garantex sanctioned?", "answer": "Yes. Garantex, a Russia-based cryptocurrency exchange, was designated by OFAC in April 2022 for operating in the Russia financial services sector and facilitating sanctions evasion. Its addresses are on the SDN list; routing payments through Garantex addresses is prohibited. See https://sanctionsai.dev/check/garantex."}\n\n\n\n\n',
+                '{"question": "Is Garantex sanctioned?", "answer": "Yes. Garantex, a Russia-based cryptocurrency exchange, was designated by OFAC in April 2022 for operating in the Russia financial services sector and facilitating sanctions evasion. Its addresses are on the SDN list; routing payments through Garantex addresses is prohibited. See https://sanctionsai.dev/check/garantex."}\n'
+                '{"question": "Is Bitcoin sanctioned?", "answer": "Bitcoin itself is not designated - OFAC designates addresses and entities, not assets. But specific Bitcoin addresses associated with sanctioned parties are on the SDN list, and a BTC payment to a sanctioned wallet is prohibited like any other transaction. The screen checks the destination address regardless of the asset. See https://sanctionsai.dev/faq/is-bitcoin-sanctioned."}\n'
+                '{"question": "What is the travel rule?", "answer": "The travel rule is the information-sharing obligation: VASPs must share beneficiary-owner and counterparty data for transfers above thresholds. It is distinct from sanctions screening (the prohibition check) - a payment can be fully travel-rule compliant and still hit a sanctioned wallet. Both layers belong in the stack. See https://sanctionsai.dev/faq/what-is-the-travel-rule."}\n'
+                '{"question": "Do refunds to sanctioned parties need screening?", "answer": "Yes. A refund is a payment - returning funds to a party that is now designated is a prohibited transaction. If the counterparty was designated after the original payment, re-screen before the refund; the screen runs on every payment in both directions. See https://sanctionsai.dev/scenarios/agent-processes-refund-to-sanctioned-party."}\n\n\n\n\n\n',
                 "application/x-ndjson")
         if p.path == "/manifest.webmanifest":
             return _json(self, 200, {
@@ -4682,6 +4700,20 @@ License: https://creativecommons.org/licenses/by/4.0/
         ("/learn/what-is-a-designation", "monthly", "0.6", "What is a sanctions designation?"),
         ("/scenarios/agent-pays-through-sanctioned-exchange", "weekly", "0.7", "Agent pays through a sanctioned exchange"),
         ("/redflags/red-flags-in-supply-chain-payments", "monthly", "0.7", "Red flags in supply chain payments"),
+        # Round 33 pSEO: entities, enforcement data, travel rule, refunds
+        ("/check/al-qaeda", "monthly", "0.7", "Is al-Qaida sanctioned?"),
+        ("/check/hezbollah", "monthly", "0.7", "Is Hezbollah sanctioned?"),
+        ("/check/taliban", "monthly", "0.7", "Is the Taliban sanctioned?"),
+        ("/blog/what-the-ofac-enforcement-data-shows", "monthly", "0.7", "What the OFAC enforcement data shows"),
+        ("/blog/sanctions-screening-myths", "monthly", "0.7", "Sanctions screening myths"),
+        ("/faq/is-bitcoin-sanctioned", "monthly", "0.7", "Is Bitcoin sanctioned?"),
+        ("/faq/what-is-the-travel-rule", "monthly", "0.7", "What is the travel rule?"),
+        ("/learn/what-is-an-ofac-compliance-program", "monthly", "0.6", "What is an OFAC compliance program?"),
+        ("/learn/what-are-financial-sanctions", "monthly", "0.6", "What are financial sanctions?"),
+        ("/scenarios/agent-screens-then-pays-after-designation", "weekly", "0.7", "Agent screens, then the counterparty is designated"),
+        ("/scenarios/agent-processes-refund-to-sanctioned-party", "weekly", "0.7", "Agent processes a refund to a sanctioned party"),
+        ("/redflags/red-flags-in-peer-to-peer-transactions", "monthly", "0.7", "Red flags in peer-to-peer transactions"),
+        ("/templates/ofac-compliance-training-template", "monthly", "0.7", "OFAC compliance training template"),
     ]
         import datetime
         today = datetime.date.today().isoformat()
@@ -10622,6 +10654,9 @@ compute();
             "garantex": {"name": "Garantex", "type": "Cryptocurrency exchange", "country": "Russia-based; designated April 2022", "designated": "2022-04-05", "desc": "Garantex is a Russia-based cryptocurrency exchange designated by OFAC in April 2022 for operating in the Russia financial services sector and facilitating sanctions evasion. Its addresses are on the SDN list.", "action": "US persons are prohibited from transacting with Garantex. An agent that routes a payment through Garantex addresses commits a violation."},
             "hamas": {"name": "Hamas", "type": "Designated terrorist organization", "country": "Palestine; SDGT designation", "designated": "2001-10-23 (SDGT; expanded measures 2023)", "desc": "Hamas is designated as a Specially Designated Global Terrorist (SDGT) entity under EO 13224. OFAC measures have targeted its financial networks, including crypto fundraising campaigns.", "action": "US persons are prohibited from transacting with Hamas or its associated entities and addresses. Donations and payments to Hamas-linked wallets are prohibited."},
             "isil": {"name": "ISIL (Islamic State)", "type": "Designated terrorist organization", "country": "Iraq/Syria; SDGT designation", "designated": "2004-10-15 (as AQI; ISIL from 2014)", "desc": "ISIL is designated as an SDGT entity under EO 13224 (initially as al-Qaida in Iraq, redesignated ISIL in 2014). OFAC measures target its financing, including crypto fundraising networks.", "action": "US persons are prohibited from transacting with ISIL and its associated entities and addresses. Any payments to ISIL-linked wallets are prohibited."},
+            "al-qaeda": {"name": "Al-Qaida", "type": "Designated terrorist organization", "country": "Global; SDGT designation", "designated": "1999-10-15 (UN listing; EO 13224 2001)", "desc": "Al-Qaida is designated as an SDGT entity under EO 13224 and listed on the UN Security Council sanctions list. Its financing networks, including crypto fundraising, are in scope.", "action": "US persons are prohibited from transacting with al-Qaida and its associated entities and addresses."},
+            "hezbollah": {"name": "Hezbollah", "type": "Designated terrorist organization", "country": "Lebanon; SDGT designation", "designated": "2001-10-31 (EO 13224); HFSR 2019", "desc": "Hezbollah is designated as an SDGT entity and comprehensively sanctioned under the Hezbollah Financial Sanctions Regulations (HFSR). Its financial networks, including Al-Qard al-Hassan, are in scope.", "action": "US persons are prohibited from transacting with Hezbollah and its associated entities and addresses."},
+            "taliban": {"name": "Taliban", "type": "Designated organization", "country": "Afghanistan; SDGT/OFAC designation", "designated": "2002-01-24 (EO 13224 redesignation)", "desc": "The Taliban is designated as an SDGT entity and remains under comprehensive sanctions related to Afghanistan. Its financial networks are in scope.", "action": "US persons are prohibited from transacting with the Taliban and its associated entities and addresses."},
         }
         e = NAMES.get(slug)
         if not e:
