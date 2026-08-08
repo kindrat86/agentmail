@@ -3,17 +3,17 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>What Is Wallet Screening?</title>
-<meta name="description" content="Wallet screening is checking a blockchain address against sanctions lists before money moves. How it works and why it matters.">
-<link rel="canonical" href="https://sanctionsai.dev/learn/what-is-wallet-screening">
-<meta property="og:title" content="What Is Wallet Screening?">
-<meta property="og:description" content="Wallet screening is checking a blockchain address against sanctions lists before money moves. How it works and why it matters.">
+<title>Scenario: A False Positive in Screening — What to Do</title>
+<meta name="description" content="Walk through a false positive: a name match that isn&#x27;t the sanctioned person. The triage that keeps recall without breaking flow.">
+<link rel="canonical" href="https://sanctionsai.dev/scenarios/false-positive-handling-scenario">
+<meta property="og:title" content="Scenario: A False Positive in Screening — What to Do">
+<meta property="og:description" content="Walk through a false positive: a name match that isn&#x27;t the sanctioned person. The triage that keeps recall without breaking flow.">
 <meta property="og:type" content="article">
-<meta property="og:url" content="https://sanctionsai.dev/learn/what-is-wallet-screening">
+<meta property="og:url" content="https://sanctionsai.dev/scenarios/false-positive-handling-scenario">
 <meta property="og:image" content="https://sanctionsai.dev/og.png">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="robots" content="index, follow, max-image-preview:large">
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "What Is Wallet Screening?", "description": "Wallet screening is checking a blockchain address against sanctions lists before money moves. How it works and why it matters.", "author": {"@type": "Organization", "name": "SanctionsAI", "url": "https://sanctionsai.dev"}, "publisher": {"@type": "Organization", "name": "SanctionsAI", "url": "https://sanctionsai.dev"}, "mainEntityOfPage": {"@type": "WebPage", "@id": "https://sanctionsai.dev/learn/what-is-wallet-screening"}, "datePublished": "2026-08-08", "dateModified": "2026-08-08"}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://sanctionsai.dev/"}, {"@type": "ListItem", "position": 2, "name": "SanctionsAI", "item": "https://sanctionsai.dev/learn/what-is-wallet-screening"}]}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Is wallet screening the same as name screening?", "acceptedAnswer": {"@type": "Answer", "text": "No — wallets are exact address matches; names use fuzzy matching."}}, {"@type": "Question", "name": "How fast is a wallet screen?", "acceptedAnswer": {"@type": "Answer", "text": "Under 100 ms."}}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "Scenario: A False Positive in Screening — What to Do", "description": "Walk through a false positive: a name match that isn't the sanctioned person. The triage that keeps recall without breaking flow.", "author": {"@type": "Organization", "name": "SanctionsAI", "url": "https://sanctionsai.dev"}, "publisher": {"@type": "Organization", "name": "SanctionsAI", "url": "https://sanctionsai.dev"}, "mainEntityOfPage": {"@type": "WebPage", "@id": "https://sanctionsai.dev/scenarios/false-positive-handling-scenario"}, "datePublished": "2026-08-08", "dateModified": "2026-08-08"}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://sanctionsai.dev/"}, {"@type": "ListItem", "position": 2, "name": "SanctionsAI", "item": "https://sanctionsai.dev/scenarios/false-positive-handling-scenario"}]}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "How long does a false-positive review take?", "acceptedAnswer": {"@type": "Answer", "text": "Minutes with identifier comparison — the queue is designed for speed."}}, {"@type": "Question", "name": "Can I reduce false positives?", "acceptedAnswer": {"@type": "Answer", "text": "Tighter matching thresholds reduce them at the cost of recall. The review workflow is the honest answer."}}]}</script>
 <style>
 
 body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;line-height:1.65;color:#0a0a0a;max-width:760px;margin:0 auto;padding:2rem 1.25rem}
@@ -52,22 +52,22 @@ footer{margin-top:3rem;padding-top:1.5rem;border-top:1px solid #e5e7eb;color:#6b
 </head>
 <body>
 <article>
-<h1>What Is Wallet Screening?</h1>
-<p class="lede">The wallet-screening mechanic, explained for builders.</p>
-<h2>Overview</h2>
-<p>Wallet screening is the check that runs before a transfer: is this destination address on a sanctions list? Exact match against the SDN list — deterministic, sub-100 ms, done.</p>
-<h2>How it works</h2>
-<ol><li>You call the API with the destination address</li><li>The engine matches against 947 OFAC-listed wallets (exact, no fuzzy on addresses)</li><li>Result: clean (proceed) or match (block/review)</li><li>Every check is logged for the audit trail</li></ol>
-<h2>Why it matters for agents</h2>
-<p>An agent signs transfers without a human looking. Wallet screening is the automated screen that runs every time — the <a href="/tools/wallet-checker">wallet checker</a> demonstrates it for free.</p>
-<h2>The limits</h2>
-<p>Wallet screening covers addresses on the list. Name screening and jurisdiction checks cover the rest — screening is one layer of a compliance program.</p>
+<h1>Scenario: False Positive in Screening</h1>
+<p class="lede">The false-positive scenario: triage, decide, log — without breaking the payment flow.</p>
+<h2>The setup</h2>
+<p>A customer named "Mohammed Ali" matches an SDN entry in fuzzy name screening. Your workflow flags the payment for review.</p>
+<h2>The triage</h2>
+<ol><li>Compare identifiers: date of birth, jurisdiction, aliases</li><li>Check the OFAC 50-percent rule — is the match entity-owned?</li><li>Decide: release (false positive) or escalate</li><li>Log the decision with the reasoning</li></ol>
+<h2>Why false positives are the design</h2>
+<p>Name screening errs toward recall — flag first, review second. A false positive costs minutes; a false negative costs $356,000.</p>
+<h2>The automation</h2>
+<p>Wallet screening has no false positives (exact match). Name screening does — which is why the review queue is part of the workflow.</p>
 
 <!-- mesh-round19 -->
 <section class="mesh-links" style="background:#f9fafb;padding:1.25rem;border-radius:.5rem;margin-top:2rem">
 <h3 style="margin-top:0">Related resources</h3>
 <ul style="list-style:none;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:.4rem 1rem;font-size:.95rem">
-<li><a href="/learn/crypto-sanctions-risk">Crypto sanctions risk</a></li><li><a href="/learn/kyc-vs-sanctions-screening">KYC vs sanctions screening</a></li><li><a href="/learn/what-is-the-sdn-list">What is the SDN list?</a></li><li><a href="/how-to/screen-crypto-wallet">How to screen a crypto wallet</a></li><li><a href="/glossary/fuzzy-matching">Fuzzy matching</a></li><li><a href="/learn/stablecoin-sanctions-compliance">Stablecoin sanctions compliance</a></li>
+<li><a href="/scenarios/sanctioned-counterparty-in-payment-workflow">Sanctioned counterparty scenario</a></li><li><a href="/scenarios/ai-agent-sanctions-violation">AI agent sanctions violation</a></li><li><a href="/how-to/avoid-ofac-violations">How to avoid OFAC violations</a></li><li><a href="/faq/what-happens-if-you-violate-ofac">What happens if you violate OFAC</a></li><li><a href="/penalties/voluntary-self-disclosure">Voluntary self-disclosure</a></li><li><a href="/glossary/fuzzy-matching">Fuzzy matching</a></li>
 </ul>
 </section>
 </article>

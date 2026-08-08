@@ -350,10 +350,13 @@ _INTEGRATION_KEYS = frozenset((
     "coinbase-agentkit",
     "claude-code",
     "crewai",
+    "cursor",
     "elizaos",
     "langchain",
     "openai-agents-sdk",
+    "sanctions-mcp",
     "vercel-ai-sdk",
+    "windsurf",
     "x402",
 ))
 _GLOSSARY_KEYS = frozenset((
@@ -1050,6 +1053,94 @@ const agent = createAgent({
     # Response flagged/clean + latency''',
         "price_paid": "$99/mo + $0.05/x402-check",
         "price_free": "Free: 5 x402 checks/day",
+    },
+    "sanctions-mcp": {
+        "name": "Sanctions MCP",
+        "emoji": "🧩",
+        "title": "OFAC Screening via MCP — Sanctions MCP Server",
+        "desc": "Add OFAC sanctions screening to any MCP-capable agent. One pip install, four native tools, under 100 ms per check.",
+        "og_title": "OFAC Screening MCP Server | SanctionsAI",
+        "og_desc": "pip install sanctions-mcp — sanctions_check, risk_score, kya_verify and dispute_open become native tools in Claude Code, Cursor, Windsurf, and any MCP agent.",
+        "h1": "OFAC Screening as an MCP Tool",
+        "problem": "Agents that pay need a screen before every transfer. The MCP server puts the screen inside the agent's own tool set — no HTTP plumbing, no SDK, just four native tools the agent already knows how to call.",
+        "steps": [
+            ("Install", "pip install -U sanctions-mcp", False),
+            ("Configure", "Add the MCP server to Claude Code, Cursor, or Windsurf", False),
+            ("Screen", "Call sanctions_check before any payment", False),
+            ("Score", "risk_score for amount and rail anomalies", False),
+            ("Audit", "Every check logged — export anytime", False),
+        ],
+        "code": '''{
+  "mcpServers": {
+    "sanctions": {
+      "command": "uvx",
+      "args": ["sanctions-mcp"],
+      "env": { "AGENTMAIL_API_KEY": "sk-..." }
+    }
+  }
+}''',
+        "price_paid": "From $19/mo (10,000 checks)",
+        "price_free": "Free tier: 5 checks/day, no API key",
+        "faq": [
+            ("Which agents can use the MCP server?", "Any MCP-capable agent — Claude Code, Cursor, Windsurf, and frameworks that speak MCP."),
+            ("Is the MCP server self-hostable?", "Yes — the core is MIT-licensed; run the server against your own deployment."),
+        ],
+    },
+    "cursor": {
+        "name": "Cursor",
+        "emoji": "⌘",
+        "title": "OFAC Screening for Cursor Agents",
+        "desc": "Screen wallets before Cursor agents move money. One MCP tool inside the editor.",
+        "og_title": "OFAC Screening for Cursor | SanctionsAI",
+        "og_desc": "Add sanctions_check to Cursor's agent loop — the AI editor's agents can pay, and every payment should be screened first.",
+        "h1": "OFAC Screens Before Cursor Agents Pay",
+        "problem": "Cursor's agentic coding features can trigger payments and tool calls with real money. No native compliance layer exists — the operator is liable for what the agent signs.",
+        "steps": [
+            ("Install", "pip install -U sanctions-mcp", False),
+            ("Add to Cursor", "Register the MCP server in Cursor settings", False),
+            ("Screen", "Call sanctions_check before any payment step", False),
+            ("Audit", "Every screen logged — export to CSV anytime", False),
+        ],
+        "code": '''# Cursor MCP config (.cursor/mcp.json)
+{
+  "mcpServers": {
+    "sanctions": { "command": "uvx", "args": ["sanctions-mcp"] }
+  }
+}''',
+        "price_paid": "From $19/mo (10,000 checks)",
+        "price_free": "Free tier: 5 checks/day, no API key",
+        "faq": [
+            ("Does Cursor support MCP?", "Yes — Cursor ships native MCP support; the sanctions server registers like any other."),
+            ("Can Cursor agents self-screen?", "With the MCP server installed, sanctions_check is just another tool the agent can call."),
+        ],
+    },
+    "windsurf": {
+        "name": "Windsurf",
+        "emoji": "🌊",
+        "title": "OFAC Screening for Windsurf Agents",
+        "desc": "Add sanctions screening to Windsurf's agent flow — one MCP tool before any payment.",
+        "og_title": "OFAC Screening for Windsurf | SanctionsAI",
+        "og_desc": "sanctions_check as a native Windsurf tool — screen every wallet before your agent signs a transfer.",
+        "h1": "OFAC Screens Before Windsurf Agents Pay",
+        "problem": "Windsurf agents run autonomous multi-step tasks that can include payments. The operator carries OFAC liability for every signed transfer — the screen must live in the agent's own tool set.",
+        "steps": [
+            ("Install", "pip install -U sanctions-mcp", False),
+            ("Add to Windsurf", "Register the MCP server in Windsurf settings", False),
+            ("Screen", "Call sanctions_check before any payment step", False),
+            ("Audit", "Every screen logged — export to CSV anytime", False),
+        ],
+        "code": '''# Windsurf MCP config
+{
+  "mcpServers": {
+    "sanctions": { "command": "uvx", "args": ["sanctions-mcp"] }
+  }
+}''',
+        "price_paid": "From $19/mo (10,000 checks)",
+        "price_free": "Free tier: 5 checks/day, no API key",
+        "faq": [
+            ("Does Windsurf support MCP?", "Yes — Windsurf ships native MCP support."),
+            ("Is this the same server as Claude Code's?", "Yes — one sanctions-mcp server works across MCP-capable editors."),
+        ],
     },
     "autonome": {
         "name": "Autonome (Fleek)",
@@ -2912,7 +3003,7 @@ License: https://creativecommons.org/licenses/by/4.0/
                 if _os.path.isfile(_rp):
                     with open(_rp, "r", encoding="utf-8") as _fh:
                         return self._serve_text(_fh.read(), "text/html; charset=utf-8")
-        for _pfx in ("/vs/", "/faq/", "/learn/", "/alternatives-to/", "/penalties/", "/guides/", "/checklists/", "/cost-of/", "/best/", "/templates/", "/stats/", "/redflags/", "/scenarios/", "/programs/"):
+        for _pfx in ("/vs/", "/faq/", "/learn/", "/alternatives-to/", "/penalties/", "/guides/", "/checklists/", "/cost-of/", "/best/", "/templates/", "/stats/", "/redflags/", "/scenarios/", "/programs/", "/benchmarks/"):
             if p.path.startswith(_pfx):
                 _slug = p.path[len(_pfx):].split("?")[0].split("/")[0]
                 if not _slug:
@@ -4079,6 +4170,28 @@ License: https://creativecommons.org/licenses/by/4.0/
         ("/checklists/agent-payment-screening-checklist", "monthly", "0.7", "Agent payment screening checklist"),
         ("/templates/sanctions-screening-policy-template", "monthly", "0.7", "Sanctions screening policy template"),
         ("/templates/ofac-compliance-program-template", "monthly", "0.7", "OFAC compliance program template"),
+        # Round 23 pSEO: MCP/editor integrations, live benchmarks, agent compliance depth
+        ("/integrations/sanctions-mcp", "monthly", "0.7", "OFAC screening MCP server"),
+        ("/integrations/cursor", "monthly", "0.7", "OFAC screening for Cursor"),
+        ("/integrations/windsurf", "monthly", "0.7", "OFAC screening for Windsurf"),
+        ("/benchmarks/ofac-enforcement-statistics-2026", "weekly", "0.8", "OFAC enforcement statistics 2026"),
+        ("/benchmarks/sanctions-screening-api-benchmark-2026", "weekly", "0.8", "Sanctions screening API benchmark 2026"),
+        ("/vs/scorechain", "monthly", "0.7", "SanctionsAI vs Scorechain"),
+        ("/vs/identitymind", "monthly", "0.7", "SanctionsAI vs IdentityMind"),
+        ("/vs/ciphertrace", "monthly", "0.7", "SanctionsAI vs CipherTrace"),
+        ("/vs/blockdaemon", "monthly", "0.7", "SanctionsAI vs Blockdaemon"),
+        ("/vs/charmverse", "monthly", "0.7", "SanctionsAI vs CharmVerse"),
+        ("/faq/is-sanctions-screening-required-for-ai-agents", "monthly", "0.7", "Is sanctions screening required for AI agents?"),
+        ("/faq/how-accurate-is-sanctions-screening", "monthly", "0.7", "How accurate is sanctions screening?"),
+        ("/faq/what-chains-are-covered", "monthly", "0.7", "Which chains does SanctionsAI cover?"),
+        ("/learn/what-is-wallet-screening", "monthly", "0.6", "What is wallet screening?"),
+        ("/learn/aml-vs-sanctions-screening", "monthly", "0.6", "AML vs sanctions screening"),
+        ("/scenarios/false-positive-handling-scenario", "weekly", "0.7", "False positive in screening — what to do"),
+        ("/scenarios/agent-pays-sanctioned-name", "weekly", "0.7", "Agent pays a sanctioned name (not a wallet)"),
+        ("/checklists/agent-deployment-compliance-checklist", "monthly", "0.7", "Agent deployment compliance checklist"),
+        ("/templates/voluntary-self-disclosure-letter-template", "monthly", "0.7", "Voluntary self-disclosure letter template"),
+        ("/templates/sanctions-risk-assessment-template", "monthly", "0.7", "Sanctions risk assessment template"),
+        ("/best/best-free-sanctions-screening-tools", "monthly", "0.7", "Best free sanctions screening tools"),
     ]
         import datetime
         today = datetime.date.today().isoformat()
