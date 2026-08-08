@@ -391,13 +391,17 @@ _BLOG_SLUGS = frozenset((
     "agent-compliance-checklist",
     "ai-agent-payment-compliance-2026",
     "crypto-exchange-sanctions-lessons",
+    "how-sanctions-screening-works",
     "how-to-screen-wallet-agent",
     "know-your-agent",
     "ofac-civil-penalties-explained",
     "ofac-for-agents",
+    "ofac-mixer-designations",
     "ofac-penalties-for-agents",
     "openai-agents-sdk-compliance",
+    "risk-scoring-for-agent-payments",
     "sanctions-screening-api-guide",
+    "self-hosting-sanctions-screening",
     "stablecoin-sanctions-2026",
     "travel-rule-vs-sanctions-screening",
     "x402-compliance",
@@ -1847,6 +1851,30 @@ _BLOG_POSTS = {
         "date": "2026-07-22",
         "desc": "The emerging compliance standard for agents that pay: screen before sign, fail closed, audit everything. The 4-gate pattern becoming the baseline.",
         "html": """<p>2026 is the year agent payments went from demo to deployment — and the compliance pattern is hardening into a standard. It has four gates.</p><h2>The four gates</h2><p><strong>1. SCREEN</strong> — every counterparty checked against the SDN list before the payment moves.<br><strong>2. SCORE</strong> — real-time risk scoring (amount anomalies, rail risk, category exposure).<br><strong>3. STOP</strong> — sanctioned wallets blocked automatically, no override path.<br><strong>4. STAMP</strong> — every approved payment gets a compliance receipt: audit-ready, regulator-ready.</p><h2>Why it is becoming standard</h2><p>The rails (x402, AP2, ACP, AgentKit) do not screen — their terms say so. The first enforcement against an agent operator will make the four-gate pattern the baseline every deployer copies. The 2026 SEI research report documents the exposure the gates close.</p><h2>The takeaway</h2><p>Compliance is no longer a separate project — it is a property of the payment path. Screen, score, stop, stamp: four gates, sub-100 ms, zero exceptions.</p>""",
+    },
+    "ofac-mixer-designations": {
+        "title": "Mixers, OFAC Designations, and the Agent That Won't Know",
+        "date": "2026-08-08",
+        "desc": "Tornado Cash, Blender, Sinbad — OFAC has designated crypto mixers since 2022. Why mixer addresses are on the wallet list, and what that means for agents.",
+        "html": """<p>OFAC started designating crypto mixers in 2022, and the actions are a direct precedent for agent compliance: interacting with a designated address — even through code — is prohibited.</p><h2>The record</h2><p><strong>Blender.io (May 2022):</strong> first mixer designation, linked to North Korean cyber operations.<br><strong>Tornado Cash (August 2022):</strong> designated addresses including smart contracts — establishing that contract-level interaction is in scope.<br><strong>Sinbad (November 2023):</strong> designated as a primary money-laundering concern supporting Lazarus Group.</p><h2>What this means for agents</h2><p>Mixer addresses are on the wallet list (the 947 includes them). An agent that routes a payment through or into a designated mixer address commits the same violation as a human. The screen catches it — if the screen runs before the payment.</p><h2>The pattern</h2><p>Every designation follows the same compliance shape: the address lands on the list, and the next transaction to it is prohibited. Screening the destination wallet before sign — every time — is the only control that scales to autonomous agents.</p>""",
+    },
+    "how-sanctions-screening-works": {
+        "title": "How Sanctions Screening Actually Works",
+        "date": "2026-08-06",
+        "desc": "The mechanics of sanctions screening: exact wallet matching, fuzzy name matching, jurisdiction checks, and the 100 ms decision path.",
+        "html": """<p>Screening sounds like a lookup. It is a decision path with three surfaces, each with different mechanics.</p><h2>Surface 1: Wallets (exact)</h2><p>An address is either on the list or not. Exact matching is deterministic — no ambiguity, no false positives. 947 OFAC-listed wallets, matched byte-for-byte.</p><h2>Surface 2: Names (fuzzy)</h2><p>19,218 SDN names, matched with fuzzy logic: transliteration, aliases, partial matches. This surface trades precision for recall — false positives are the design, and a review queue is the answer.</p><h2>Surface 3: Jurisdictions (comprehensive)</h2><p>16 comprehensively embargoed jurisdictions. The counterparty's geography is screened independently of wallet and name.</p><h2>The decision path</h2><p>One call, all three surfaces, under 100 ms: <code>sanctions_check</code> returns clean or match with the matched list entry and version. That result is the gate — and the audit log is the receipt.</p>""",
+    },
+    "self-hosting-sanctions-screening": {
+        "title": "Self-Hosting Sanctions Screening: When It Makes Sense",
+        "date": "2026-08-03",
+        "desc": "The MIT-licensed self-host option explained: when self-hosting screening is right, what it costs, and the list-freshness burden you take on.",
+        "html": """<p>Sanctions screening can run in your own infrastructure — the core is MIT-licensed. Self-hosting is right for some teams and a trap for others.</p><h2>When self-hosting makes sense</h2><p>You need data residency or air-gapped operation. You already run compliance infrastructure. You want full control of the list pipeline and logs.</p><h2>The cost nobody quotes</h2><p>The engine is free; the burden is the data: mirroring the SDN list, syncing hourly, handling designations between releases, and failing closed on sync failure. A stale self-hosted list is a compliance gap with your own name on it.</p><h2>The honest comparison</h2><p>Hosted: $19/mo, zero list maintenance, sub-100 ms, hourly sync handled. Self-hosted: free software, your team owns freshness and uptime. The <a href="/faq/can-i-self-host-sanctions-screening">self-host FAQ</a> covers the details.</p><h2>The decision</h2><p>Start hosted to validate; self-host when the requirements demand it — and budget for the data pipeline either way.</p>""",
+    },
+    "risk-scoring-for-agent-payments": {
+        "title": "Risk Scoring for Agent Payments: The Three Signals",
+        "date": "2026-07-30",
+        "desc": "Sanctions screening answers 'is this prohibited?' Risk scoring answers 'how risky is this?' The three signals that matter for agent payments.",
+        "html": """<p>Screening is binary: clean or match. Risk scoring is continuous: allow, review, or decline. For agent payments, three signals carry most of the information.</p><h2>Signal 1: Amount</h2><p>Anomaly detection against the counterparty's history and category baselines. A first-time $50,000 payment from a $5 agent reads differently than a routine micro-payment.</p><h2>Signal 2: Rail</h2><p>Some rails carry more exposure than others: irreversible transfers, high-latency settlement, cross-border paths. The rail is part of the risk, not just the plumbing.</p><h2>Signal 3: Category</h2><p>Counterparty category and jurisdiction exposure. A payment into a high-risk category or embargoed-adjacent geography scores higher regardless of the address.</p><h2>The combination</h2><p>risk_score combines the three into allow/review/decline with a numeric score — the layer above the sanctions gate. Screen first (binary), score second (continuous), then sign.</p>""",
     },
 }
 
@@ -4278,6 +4306,19 @@ License: https://creativecommons.org/licenses/by/4.0/
         ("/blog/ai-agent-payment-compliance-2026", "monthly", "0.7", "AI agent payment compliance 2026"),
         ("/scenarios/agent-pays-embargoed-jurisdiction", "weekly", "0.7", "Agent pays a counterparty in an embargoed jurisdiction"),
         ("/learn/what-is-an-embargoed-jurisdiction", "monthly", "0.6", "What is an embargoed jurisdiction?"),
+        # Round 26 pSEO: mixer designations, screening mechanics, regulator readiness
+        ("/blog/ofac-mixer-designations", "monthly", "0.7", "Mixers and OFAC designations"),
+        ("/blog/how-sanctions-screening-works", "monthly", "0.7", "How sanctions screening works"),
+        ("/blog/self-hosting-sanctions-screening", "monthly", "0.7", "Self-hosting sanctions screening"),
+        ("/blog/risk-scoring-for-agent-payments", "monthly", "0.7", "Risk scoring for agent payments"),
+        ("/learn/mixing-service-sanctions", "monthly", "0.6", "Mixing services and sanctions"),
+        ("/learn/sanctions-screening-methods", "monthly", "0.6", "Sanctions screening methods"),
+        ("/scenarios/agent-pays-mixer", "weekly", "0.7", "Agent pays a designated mixer address"),
+        ("/scenarios/ofac-inquiry-response", "weekly", "0.7", "Responding to an OFAC inquiry"),
+        ("/redflags/red-flags-in-agent-payments", "monthly", "0.7", "Red flags in agent payments"),
+        ("/faq/how-is-the-list-synced", "monthly", "0.7", "How is the sanctions list synced?"),
+        ("/faq/does-agentmail-store-screen-data", "monthly", "0.7", "Does agentmail store screen data?"),
+        ("/checklists/regulator-readiness-checklist", "monthly", "0.7", "Regulator-readiness checklist"),
     ]
         import datetime
         today = datetime.date.today().isoformat()
