@@ -419,6 +419,8 @@ _BLOG_SLUGS = frozenset((
     "sanctions-screening-myths",
     "sanctions-screening-for-daos",
     "what-is-a-vasp",
+    "can-crypto-be-frozen",
+    "sanctions-screening-for-marketplaces",
     "travel-rule-vs-sanctions-screening",
     "secondary-sanctions-explained",
     "what-happens-after-a-block",
@@ -2172,6 +2174,19 @@ _BLOG_POSTS = {
         "html": "<p>VASP - Virtual Asset Service Provider - is the FATF term for businesses that exchange, transfer, or custody virtual assets. The label decides which compliance obligations apply.</p><h2>The definition</h2><p>FATF defines VASPs as entities providing: exchange between virtual and fiat, exchange between virtual assets, transfers, and safekeeping/administration of virtual assets.</p><h2>Why it matters</h2><p>VASPs carry AML/CFT obligations: KYC, travel rule (VASP-to-VASP data sharing), sanctions screening, and reporting. Exchanges, custodians, and some brokerages are VASPs; pure software providers are not.</p><h2>VASP vs screening</h2><p>Screening is the per-transaction prohibition check - it applies to VASPs and to any payment path. The travel rule applies to VASP-to-VASP transfers. The <a href=\"/blog/travel-rule-vs-sanctions-screening\">travel rule post</a> covers the boundary.</p><h2>The agent angle</h2><p>An agent that moves virtual assets may itself be a VASP activity - the obligations follow the activity, not the label.</p>""",
     },
 
+    "can-crypto-be-frozen": {
+        "title": "Can Crypto Be Frozen?",
+        "date": "2026-08-08",
+        "desc": "Yes - through designation (the funds become blocked property), issuer controls, and exchange-level freezes. The mechanisms and what they mean for agents.",
+        "html": "<p>Can crypto be frozen? Yes - through three mechanisms, each with a different owner.</p><h2>1. Designation blocking</h2><p>When OFAC designates an address, funds at that address become blocked property. The owner may not transact them - and anyone holding them must report. This is the sanctions freeze, and it is why designated wallets are on the list.</p><h2>2. Issuer controls</h2><p>Stablecoin issuers (Circle, Tether) maintain blocklists and freeze capabilities. These are the issuer's tools - a backstop, not your compliance program.</p><h2>3. Exchange-level freezes</h2><p>Exchanges freeze accounts under court order, law-enforcement request, or their own compliance policy. The frozen funds sit until resolution.</p><h2>The agent implication</h2><p>A frozen wallet is still a designated party: screen it, block payments to it, and hold. The <a href=\"/scenarios/agent-holds-frozen-funds\">frozen-funds scenario</a> covers the workflow.</p>""",
+    },
+    "sanctions-screening-for-marketplaces": {
+        "title": "Sanctions Screening for Marketplaces",
+        "date": "2026-08-06",
+        "desc": "Marketplaces are payment hubs: buyers, sellers, and payouts all carry sanctions exposure. The BitPay precedent and the marketplace screening shape.",
+        "html": "<p>Marketplaces sit between buyers and sellers - every payout is a payment path. BitPay's $507K settlement was exactly this shape: merchant payments to users in sanctioned jurisdictions.</p><h2>The surfaces</h2><p>Seller onboarding (name + ownership), buyer jurisdiction, payout wallets, and refunds. Each is a counterparty surface the screen must cover.</p><h2>The control</h2><p>Screen at onboarding and on every payout; screen refunds; flag the marketplace red-flag set; fail closed. The <a href=\"/learn/sanctions-screening-for-marketplaces\">marketplace explainer</a> and the <a href=\"/scenarios/agent-processes-marketplace-payout\">payout scenario</a> cover the mechanics.</p><h2>Why it matters</h2><p>Marketplace volume compounds exposure - hundreds of payouts a day, each a potential violation. The screen is the only control that scales.</p>""",
+    },
+
 }
 
 
@@ -3287,7 +3302,10 @@ License: https://creativecommons.org/licenses/by/4.0/
                 '{"question": "Do refunds to sanctioned parties need screening?", "answer": "Yes. A refund is a payment - returning funds to a party that is now designated is a prohibited transaction. If the counterparty was designated after the original payment, re-screen before the refund; the screen runs on every payment in both directions. See https://sanctionsai.dev/scenarios/agent-processes-refund-to-sanctioned-party."}\n'
                 '{"question": "Does OFAC apply to DAOs?", "answer": "Yes - the prohibition follows the transaction, not the org chart. A DAO treasury that pays or receives from a sanctioned wallet has executed a prohibited transaction, and the operators and signers remain in scope. Decentralization does not dissolve liability. Screen treasury outflows, inflows, and counterparty wallets before every transaction. See https://sanctionsai.dev/faq/does-ofac-apply-to-daos."}\n'
                 '{"question": "What is a VASP?", "answer": "A Virtual Asset Service Provider (VASP) is any business that exchanges, transfers, or custodies virtual assets - the FATF definition. VASPs carry AML/CFT obligations: KYC, travel rule, sanctions screening, and reporting. Screening applies to every payment path; the travel rule applies to VASP-to-VASP transfers. An agent that moves virtual assets may itself be VASP activity. See https://sanctionsai.dev/faq/what-is-a-vasp."}\n'
-                '{"question": "What is the BIS Entity List?", "answer": "The Entity List is a Bureau of Industry and Security (BIS) export-control list restricting exports, re-exports, and transfers of items subject to the Export Administration Regulations (EAR) to listed entities - it is separate from OFAC sanctions. Screening an entity against both the OFAC SDN list and the BIS Entity List covers the export-control surface. See https://sanctionsai.dev/learn/what-is-an-entity-list."}\n\n\n\n\n\n\n',
+                '{"question": "What is the BIS Entity List?", "answer": "The Entity List is a Bureau of Industry and Security (BIS) export-control list restricting exports, re-exports, and transfers of items subject to the Export Administration Regulations (EAR) to listed entities - it is separate from OFAC sanctions. Screening an entity against both the OFAC SDN list and the BIS Entity List covers the export-control surface. See https://sanctionsai.dev/learn/what-is-an-entity-list."}\n'
+                '{"question": "Can crypto be frozen?", "answer": "Yes - through three mechanisms: designation blocking (funds at a designated address become blocked property), issuer controls (stablecoin blocklists), and exchange-level freezes. A frozen wallet is still a designated party - screen it, block payments to it, and hold. The freeze is the compliant state; unfreezing without authorization is a violation. See https://sanctionsai.dev/faq/can-crypto-be-frozen."}\n'
+                '{"question": "What is a crypto mixer?", "answer": "A crypto mixer (tumbler) pools and re-splits funds to obscure the origin - the same mechanism that made Tornado Cash, Blender.io, and Sinbad designated. Mixer addresses on the SDN list are blocked; routing payments through a designated mixer is prohibited. Mixer use is also a classic red flag in screening. See https://sanctionsai.dev/faq/what-is-a-mixer."}\n'
+                '{"question": "What is an incident response plan for sanctions?", "answer": "A sanctions incident response plan covers: detection (screening logs), containment (block further payments, hold funds), assessment (verify the match, evaluate exposure), reporting (blocking reports within 10 days, VSD where appropriate), and remediation (fix the control gap). The plan turns a match into a documented, bounded event. See https://sanctionsai.dev/templates/sanctions-incident-response-template."}\n\n\n\n\n\n\n\n',
                 "application/x-ndjson")
         if p.path == "/manifest.webmanifest":
             return _json(self, 200, {
@@ -4745,6 +4763,19 @@ License: https://creativecommons.org/licenses/by/4.0/
         ("/scenarios/travel-rule-flow-scenario", "weekly", "0.7", "Travel rule flow between VASPs"),
         ("/templates/sanctions-screening-log-template", "monthly", "0.7", "Sanctions screening log template"),
         ("/redflags/red-flags-in-dao-treasury-transactions", "monthly", "0.7", "Red flags in DAO treasury transactions"),
+        # Round 35 pSEO: freezing mechanics, marketplace persona, mixer mechanic
+        ("/check/pkk", "monthly", "0.7", "Is the PKK sanctioned?"),
+        ("/check/farc", "monthly", "0.7", "Is the FARC sanctioned?"),
+        ("/blog/can-crypto-be-frozen", "monthly", "0.7", "Can crypto be frozen?"),
+        ("/blog/sanctions-screening-for-marketplaces", "monthly", "0.7", "Sanctions screening for marketplaces"),
+        ("/faq/can-crypto-be-frozen", "monthly", "0.7", "Can crypto be frozen?"),
+        ("/faq/what-is-a-mixer", "monthly", "0.7", "What is a crypto mixer?"),
+        ("/learn/what-is-a-mixer", "monthly", "0.6", "What is a crypto mixer?"),
+        ("/learn/sanctions-screening-for-marketplaces", "monthly", "0.6", "Marketplace sanctions screening"),
+        ("/scenarios/agent-processes-marketplace-payout", "weekly", "0.7", "Agent processes a marketplace payout"),
+        ("/scenarios/agent-holds-frozen-funds", "weekly", "0.7", "Agent holds frozen funds"),
+        ("/templates/sanctions-incident-response-template", "monthly", "0.7", "Sanctions incident response template"),
+        ("/redflags/red-flags-in-marketplace-payments", "monthly", "0.7", "Red flags in marketplace payments"),
     ]
         import datetime
         today = datetime.date.today().isoformat()
@@ -10690,6 +10721,8 @@ compute();
             "taliban": {"name": "Taliban", "type": "Designated organization", "country": "Afghanistan; SDGT/OFAC designation", "designated": "2002-01-24 (EO 13224 redesignation)", "desc": "The Taliban is designated as an SDGT entity and remains under comprehensive sanctions related to Afghanistan. Its financial networks are in scope.", "action": "US persons are prohibited from transacting with the Taliban and its associated entities and addresses."},
             "boko-haram": {"name": "Boko Haram", "type": "Designated terrorist organization", "country": "Nigeria; SDGT designation", "designated": "2013-11-13 (EO 13224)", "desc": "Boko Haram is designated as an SDGT entity under EO 13224 for terrorism in West Africa. Its financing networks are in scope.", "action": "US persons are prohibited from transacting with Boko Haram and its associated entities and addresses."},
             "al-shabaab": {"name": "Al-Shabaab", "type": "Designated terrorist organization", "country": "Somalia; SDGT designation", "designated": "2008-03-18 (EO 13224)", "desc": "Al-Shabaab is designated as an SDGT entity under EO 13224; UN sanctions on Somalia target its financing and procurement. Its crypto fundraising networks have been sanctioned.", "action": "US persons are prohibited from transacting with Al-Shabaab and its associated entities and addresses."},
+            "pkk": {"name": "PKK (Kurdistan Workers' Party)", "type": "Designated terrorist organization", "country": "Turkey; SDGT designation", "designated": "1997-10-08 (EO 13224); 2002 (FTO)", "desc": "The PKK is designated as an SDGT entity under EO 13224. Its financing networks are in scope.", "action": "US persons are prohibited from transacting with the PKK and its associated entities and addresses."},
+            "farc": {"name": "FARC (Revolutionary Armed Forces of Colombia)", "type": "Designated organization", "country": "Colombia; SDGT designation", "designated": "1997-10-08 (EO 13224); 2002 (FTO)", "desc": "The FARC is designated as an SDGT entity under EO 13224. Its financing networks are in scope.", "action": "US persons are prohibited from transacting with the FARC and its associated entities and addresses."},
         }
         e = NAMES.get(slug)
         if not e:
