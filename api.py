@@ -404,7 +404,9 @@ _BLOG_SLUGS = frozenset((
     "self-hosting-sanctions-screening",
     "stablecoin-sanctions-2026",
     "the-ofac-50-percent-rule-explained",
+    "the-three-settlements-you-havent-heard-of",
     "travel-rule-vs-sanctions-screening",
+    "secondary-sanctions-explained",
     "what-happens-after-a-block",
     "x402-compliance",
     "x402-sanctions-architecture",
@@ -426,6 +428,9 @@ _PENALTY_KEYS = frozenset((
     "agent-liability",
     "binance",
     "bitfinex",
+    "bitgo",
+    "bitpay",
+    "etherdelta",
     "ofac-violation-costs",
     "penalty-mitigation",
     "ripple",
@@ -480,18 +485,22 @@ _SANCTIONS_LIST_KEYS = frozenset((
 
 # ─── Round 17 pSEO: sanctioned entities by country/jurisdiction ──────
 _BY_COUNTRY_KEYS = frozenset((
-    "russia",
-    "north-korea",
-    "iran",
-    "syria",
-    "cuba",
-    "venezuela",
+    "afghanistan",
     "belarus",
-    "myanmar",
     "china",
-    "ukraine-separatist",
+    "cuba",
+    "iran",
     "lebanon-hezbollah",
+    "libya",
+    "myanmar",
+    "north-korea",
     "pakistan",
+    "russia",
+    "somalia",
+    "syria",
+    "ukraine-separatist",
+    "venezuela",
+    "yemen",
 ))
 
 _DARK_CSS = """
@@ -1805,6 +1814,24 @@ _PENALTY_CONTENT = {
         "h1": "Standard Chartered OFAC Settlement: $132M",
         "html": "<p>In April 2019, Standard Chartered reached a $1.1B global resolution with US and UK authorities; OFAC's portion was $132M over apparent violations spanning multiple sanctions programs and years.</p><h2>What happened</h2><p>OFAC found Standard Chartered processed USD transactions through US clearing involving sanctioned countries and parties, including conduct that predated tightened controls. The settlement covered years of apparent violations at volume.</p><h2>The lesson for agents</h2><p>Volume compounds violations: thousands of transactions over years became hundreds of millions in settlements. An agent that pays without screening is the same compounding pattern at machine speed - the screen is the only control that scales.</p><p>Related: <a href=\"/penalties/binance\">Binance ($968M)</a> and <a href=\"/penalties/societe-generale\">Societe Generale ($53.9M)</a>.</p>",
     },
+    "etherdelta": {
+        "title": "EtherDelta OFAC Settlement ($450K): What It Means",
+        "desc": "EtherDelta's November 2022 $450K OFAC settlement - the first against a DeFi platform. What it means for protocols, agents, and screening.",
+        "h1": "EtherDelta OFAC Settlement: $450K",
+        "html": "<p>In November 2022, EtherDelta settled with OFAC for $450,000 - the first enforcement action against a DeFi platform. The precedent matters for every protocol and the agents that use them.</p><h2>What happened</h2><p>OFAC found EtherDelta failed to implement sanctions screening and processed transactions involving sanctioned users (including users in embargoed jurisdictions). The settlement established that DeFi platforms do not get an exemption from screening obligations.</p><h2>Why it matters</h2><p>EtherDelta predated the Tornado Cash designation and the OFAC 'smart contract' guidance. Together they form the enforcement posture on DeFi: the platform operator carries the obligation, and code does not waive it.</p><h2>The lesson for agents</h2><p>An agent calling a protocol is the operator's action. Screen the counterparty before the contract call - the same discipline the settlement enforced on the platform.</p>",
+    },
+    "bitgo": {
+        "title": "BitGo OFAC Settlement ($98K): What It Means",
+        "desc": "BitGo's October 2021 $98K OFAC settlement over apparent violations involving sanctioned jurisdictions - the custody-layer lessons.",
+        "h1": "BitGo OFAC Settlement: $98K",
+        "html": "<p>In October 2021, BitGo settled with OFAC for $98,125 over apparent violations involving users in comprehensively sanctioned jurisdictions (Iran, North Korea, Syria, Cuba, Crimea).</p><h2>What happened</h2><p>OFAC found BitGo's digital asset custody platform processed transactions for users in sanctioned regions. The relatively low settlement reflected the company's cooperation and the violation set.</p><h2>The lesson</h2><p>Even a small settlement is an enforcement action - the pattern is the same: screening that did not run before transactions settled. For agents, the custody layer is one more rail where the screen must run first.</p>",
+    },
+    "bitpay": {
+        "title": "BitPay OFAC Settlement ($507K): What It Means",
+        "desc": "BitPay's February 2021 $507K OFAC settlement over sanctioned-jurisdiction transactions - the merchant-payments lessons.",
+        "h1": "BitPay OFAC Settlement: $507K",
+        "html": "<p>In February 2021, BitPay settled with OFAC for $507,375 over apparent violations involving users in sanctioned jurisdictions (Crimea, Cuba, North Korea, Iran, Syria).</p><h2>What happened</h2><p>OFAC found BitPay's payment processing allowed users in comprehensively embargoed regions to transact. The settlement covered multiple years of apparent violations.</p><h2>The lesson for agents</h2><p>BitPay processed merchant payments - the same shape as an agent payment path. Geography screening is the layer that catches the jurisdiction surface even when wallets and names are clean.</p>",
+    },
 }
 
 _BLOG_POSTS = {
@@ -1944,6 +1971,18 @@ _BLOG_POSTS = {
         "date": "2026-07-30",
         "desc": "Sanctions screening answers 'is this prohibited?' Risk scoring answers 'how risky is this?' The three signals that matter for agent payments.",
         "html": """<p>Screening is binary: clean or match. Risk scoring is continuous: allow, review, or decline. For agent payments, three signals carry most of the information.</p><h2>Signal 1: Amount</h2><p>Anomaly detection against the counterparty's history and category baselines. A first-time $50,000 payment from a $5 agent reads differently than a routine micro-payment.</p><h2>Signal 2: Rail</h2><p>Some rails carry more exposure than others: irreversible transfers, high-latency settlement, cross-border paths. The rail is part of the risk, not just the plumbing.</p><h2>Signal 3: Category</h2><p>Counterparty category and jurisdiction exposure. A payment into a high-risk category or embargoed-adjacent geography scores higher regardless of the address.</p><h2>The combination</h2><p>risk_score combines the three into allow/review/decline with a numeric score — the layer above the sanctions gate. Screen first (binary), score second (continuous), then sign.</p>""",
+    },
+    "the-three-settlements-you-havent-heard-of": {
+        "title": "The Three Crypto OFAC Settlements You Haven't Heard Of",
+        "date": "2026-08-08",
+        "desc": "EtherDelta ($450K), BitGo ($98K), BitPay ($507K) - the enforcement actions that defined DeFi, custody, and merchant payments. What each one teaches.",
+        "html": "<p>Binance's $968M dominates the headlines, but the enforcement record that shaped crypto compliance is in the smaller cases. Three settlements defined the rules for DeFi, custody, and merchant payments.</p><h2>EtherDelta ($450K, 2022): DeFi is not exempt</h2><p>The first enforcement action against a DeFi platform. OFAC found EtherDelta failed to screen and processed transactions involving sanctioned users. The lesson: a protocol operator carries the obligation, and code does not waive it. <a href=\"/penalties/etherdelta\">Full case &rarr;</a></p><h2>BitGo ($98K, 2021): custody is a rail</h2><p>BitGo's custody platform processed transactions for users in sanctioned jurisdictions. The lesson: the custody layer is one more rail where the screen must run first. <a href=\"/penalties/bitgo\">Full case &rarr;</a></p><h2>BitPay ($507K, 2021): merchant payments, same shape</h2><p>BitPay processed merchant payments for users in embargoed regions. The lesson: a merchant payment path is the same shape as an agent payment path - geography screening catches what wallets and names miss. <a href=\"/penalties/bitpay\">Full case &rarr;</a></p><h2>The pattern</h2><p>Every settlement traces to screening that did not run before transactions settled. The amounts scale with volume - which is exactly why agents need the screen in the payment path, not after it.</p>""",
+    },
+    "secondary-sanctions-explained": {
+        "title": "Secondary Sanctions, Explained",
+        "date": "2026-08-06",
+        "desc": "Secondary sanctions reach beyond US jurisdiction: foreign persons can be sanctioned for significant transactions with designated parties. What agents need to know.",
+        "html": "<p>Primary sanctions prohibit US persons from transacting with designated parties. Secondary sanctions extend the reach: foreign persons can face designation for significant transactions with sanctioned parties - even with no US nexus.</p><h2>The distinction</h2><p>Primary: US persons, US-origin goods, USD transactions. Secondary: non-US persons who facilitate or materially support sanctioned activity - banking, trading, or clearing for designated parties.</p><h2>Why it matters for agents</h2><p>An agent operating outside the US is not automatically outside OFAC's reach. A payment agent that clears or facilitates for a sanctioned party can create secondary-sanctions exposure for its operator, regardless of jurisdiction.</p><h2>The posture</h2><p>Screen counterparties against the SDN list and the applicable international lists; document the controls; fail closed. The <a href=\"/learn/what-is-an-embargoed-jurisdiction\">embargoed-jurisdiction</a> explainer and the <a href=\"/sanctions-lists\">sanctions lists</a> index cover the surfaces.</p>""",
     },
     "the-ofac-50-percent-rule-explained": {
         "title": "The OFAC 50% Rule, Explained",
@@ -3056,7 +3095,9 @@ License: https://creativecommons.org/licenses/by/4.0/
                 '{"question": "How often does SanctionsAI update its sanctions data?", "answer": "The dataset syncs hourly from the official US Treasury SDN list - 947 wallets, 19,218 names, and 16 jurisdictions, refreshed every hour. Every screen result records the list version, so results are provable for audit. Freshness matters because OFAC designates new addresses between releases; a stale list is a compliance gap. See https://sanctionsai.dev/faq/how-is-the-list-synced."}\n'
                 '{"question": "Does SanctionsAI screen international sanctions lists?", "answer": "SanctionsAI screens the OFAC SDN list (US). International obligations are separate layers: the EU consolidated list, UK HMT/OFSI list, Australia DFAT list, Canada Global Affairs list, Japan MOFA measures, and Switzerland SECO list each apply to their own jurisdictions. Teams with multi-jurisdiction exposure typically screen OFAC first and add the applicable international lists. See https://sanctionsai.dev/sanctions-lists."}\n'
                 '{"question": "What are the largest OFAC settlements with crypto platforms?", "answer": "The documented record includes: Binance (June 2023, OFAC portion $968M of a $4.3B global resolution - the largest crypto OFAC settlement), Bitfinex (October 2021, $800K), Ripple (October 2023, $700K for 1,773 apparent violations), Kraken (November 2022, $362,158), and Bittrex (October 2022, $24.3M). On the banking side: Standard Chartered (April 2019, $132M OFAC portion) and Societe Generale (June 2022, $53.9M OFAC portion). Each case traces to counterparty or jurisdiction screening that did not run before settlement. See https://sanctionsai.dev/penalties."}\n'
-                '{"question": "How long does OFAC require records to be kept?", "answer": "OFAC regulations require that records of blocked transactions be retained for five years after the date of the transaction. The practical discipline for teams: log every screen with the list version, pair screen results to payments, and make the trail exportable - an inquiry is answered with exports. See https://sanctionsai.dev/guides/recordkeeping-requirements."}\n',
+                '{"question": "How long does OFAC require records to be kept?", "answer": "OFAC regulations require that records of blocked transactions be retained for five years after the date of the transaction. The practical discipline for teams: log every screen with the list version, pair screen results to payments, and make the trail exportable - an inquiry is answered with exports. See https://sanctionsai.dev/guides/recordkeeping-requirements."}\n'
+                '{"question": "What are secondary sanctions?", "answer": "Primary sanctions prohibit US persons from transacting with designated parties. Secondary sanctions extend the reach: foreign persons can face designation for significant transactions with sanctioned parties - even with no US nexus. For agents, this means an operator outside the US is not automatically outside OFAC\u2019s reach - screen counterparties against the SDN list and the applicable international lists, and document the controls. See https://sanctionsai.dev/faq/what-are-secondary-sanctions."}\n'
+                '{"question": "Does sanctions screening apply to NFTs?", "answer": "Yes - NFTs are property interests, and the asset class does not change the obligation. OFAC has designated virtual currency and NFT-adjacent addresses, and platforms processing NFT trades carry the same screening expectations as other crypto venues. For agents that trade NFTs, screen the counterparty and the collection/address before the trade. See https://sanctionsai.dev/faq/does-sanctions-screening-apply-to-nfts."}\n\n',
                 "application/x-ndjson")
         if p.path == "/manifest.webmanifest":
             return _json(self, 200, {
@@ -4430,6 +4471,19 @@ License: https://creativecommons.org/licenses/by/4.0/
         ("/guides/voluntary-self-disclosure", "monthly", "0.7", "OFAC voluntary self-disclosure guide"),
         ("/faq/how-often-does-ofac-update-sanctions", "monthly", "0.7", "How often does OFAC update sanctions?"),
         ("/learn/crypto-compliance-guide", "monthly", "0.6", "Crypto compliance guide"),
+        # Round 29 pSEO: settlement trio, country depth, secondary sanctions
+        ("/penalties/etherdelta", "monthly", "0.7", "EtherDelta OFAC settlement $450K"),
+        ("/penalties/bitgo", "monthly", "0.7", "BitGo OFAC settlement $98K"),
+        ("/penalties/bitpay", "monthly", "0.7", "BitPay OFAC settlement $507K"),
+        ("/by-country/yemen", "monthly", "0.6", "Yemen sanctions"),
+        ("/by-country/libya", "monthly", "0.6", "Libya sanctions"),
+        ("/by-country/somalia", "monthly", "0.6", "Somalia sanctions"),
+        ("/blog/the-three-settlements-you-havent-heard-of", "monthly", "0.7", "The three crypto settlements you haven't heard of"),
+        ("/blog/secondary-sanctions-explained", "monthly", "0.7", "Secondary sanctions, explained"),
+        ("/faq/what-are-secondary-sanctions", "monthly", "0.7", "What are secondary sanctions?"),
+        ("/faq/does-sanctions-screening-apply-to-nfts", "monthly", "0.7", "Does sanctions screening apply to NFTs?"),
+        ("/scenarios/agent-trades-sanctioned-nft", "weekly", "0.7", "Agent trades a sanctioned NFT"),
+        ("/checklists/blockchain-business-compliance-checklist", "monthly", "0.7", "Blockchain business compliance checklist"),
     ]
         import datetime
         today = datetime.date.today().isoformat()
@@ -10466,6 +10520,10 @@ compute();
             "ukraine-separatist": {"name": "Ukraine-Russia Separatist Region", "program": "EO 13660, EO 13661, EO 13662, Ukraine-/Russia-Related Sanctions Regulations", "entities": "Self-proclaimed DNR/LNR officials, Russian-backed separatist commanders, seized Crimean enterprises", "desc": "Designations cover the Russia-backed separatist regions of eastern Ukraine, Russia-occupied Crimea, and persons involved in undermining Ukraine's sovereignty. Expanded significantly after 2022.", "count": "~700 SDN designations"},
             "lebanon-hezbollah": {"name": "Lebanon (Hezbollah)", "program": "Hezbollah Financial Sanctions Regulations (HFSR), EO 13224, EO 13582, Hizballah International Financing Prevention Act", "entities": "Hezbollah, Hassan Nasrallah (deceased), affiliated financiers and money launderers, Al-Qard al-Hassan", "desc": "Hezbollah and its financial networks are comprehensively sanctioned as a Specially Designated Global Terrorist (SDGT) entity. Designations reach into Lebanese banking, trade, and diaspora networks.", "count": "~120 SDN designations"},
             "pakistan": {"name": "Pakistan", "program": "Entity List (BIS), targeted designations under EO 13224", "entities": "Khan Research Laboratories, proliferation-related entities, specific terrorism designations", "desc": "Pakistan faces limited targeted sanctions, primarily export-control (Entity List) designations related to nuclear and missile proliferation, and select terrorism designations. Not a comprehensive sanctions program.", "count": "~40 designations"},
+
+            "yemen": {"name": "Yemen", "program": "Yemen Sanctions Regulations, EO 13611, EO 14024 (Houthi designations)", "entities": "Houthi leadership (Abdul-Malik al-Houthi), Yemen-based facilitators, Iran-linked procurement networks", "desc": "Yemen faces targeted sanctions on the Houthi movement and its leaders, following the 2014 takeover and subsequent conflict. Designations target revenue generation, weapons procurement, and destabilizing activity.", "count": "~40 SDN designations"},
+            "libya": {"name": "Libya", "program": "Libya Sanctions Regulations (31 CFR 570), UNSC resolutions", "entities": "Qadhafi-era figures, GNA/GNS-linked entities, human traffickers, arms networks", "desc": "Libya faces UN-mandated and US autonomous sanctions targeting individuals and entities that threaten peace, security, or stability, plus weapons embargo obligations. Designations include former regime figures and trafficking networks.", "count": "~100 designations"},
+            "somalia": {"name": "Somalia", "program": "Somalia Sanctions Regulations (31 CFR 551), UNSC resolutions", "entities": "Al-Shabaab, associated financiers and procurement networks, arms embargo targets", "desc": "Somalia faces UN-mandated sanctions targeting Al-Shabaab and related entities, plus a long-standing arms embargo regime. Designations focus on terror financing and destabilizing actors.", "count": "~80 designations"},
         }
         c = COUNTRIES.get(slug)
         if not c:
