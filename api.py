@@ -425,6 +425,8 @@ _BLOG_SLUGS = frozenset((
     "kyc-vs-aml-vs-sanctions",
     "designated-vs-settled",
     "the-russia-oligarch-sanctions",
+    "the-wagner-group-sanctions",
+    "the-magnitsky-act-explained",
     "travel-rule-vs-sanctions-screening",
     "secondary-sanctions-explained",
     "what-happens-after-a-block",
@@ -1905,9 +1907,7 @@ _PENALTY_CONTENT = {
         "h1": "How to Mitigate OFAC Penalties for AI Agent Violations",
         "html": "<p>OFAC&#x27;s Enforcement Guidelines list several factors that can reduce penalty amounts. Here is how they apply to autonomous agent deployments.</p><h2>1. Voluntary Self-Disclosure</h2><p>Disclosing a violation within a reasonable time after discovery can reduce the base penalty by up to 50%. For agent violations, preserve all logs and screening records before filing.</p><h2>2. Documented Compliance Program</h2><p>Having a compliance program at the time of the violation is a mitigating factor. agentmail gives you documented, timestamped screening evidence that demonstrates a compliance program was in place.</p><h2>3. Cooperation</h2><p>Cooperating fully with OFAC during an investigation, providing all requested records promptly, and taking corrective action are all mitigating factors.</p><h2>4. Remedial Measures</h2><p>After discovering a violation, implementing new screening controls demonstrates good faith. Adding agentmail after a violation shows immediate corrective action.</p><h2>5. Non-willful conduct</h2><p>If the violation was truly inadvertent and the operator had reasonable controls in place, OFAC may issue a cautionary letter rather than a monetary penalty. Pre-transaction screening is the clearest evidence of reasonable controls.</p>",
     },
-    "binance": {
-        "title": "Binance OFAC Settlement ($968M): What It Means for Crypto Platforms",
-        "desc": "Binance's June 2023 global resolution included a $968M OFAC settlement - the largest in crypto history. The sanctions-screening lessons for exchanges and agents.",
+    "binance": {        "desc": "Binance's June 2023 global resolution included a $968M OFAC settlement - the largest in crypto history. The sanctions-screening lessons for exchanges and agents.",
         "h1": "Binance OFAC Settlement: $968M",
         "html": "<p>In June 2023, Binance reached a global resolution with US authorities totaling $4.3B. OFAC's portion was $968M - the largest OFAC settlement with a crypto platform to date.</p><h2>What happened</h2><p>OFAC found that Binance processed transactions involving sanctioned jurisdictions and parties without adequate controls. The resolution covered conduct including users in comprehensively embargoed regions transacting through the platform.</p><h2>The screening gap</h2><p>The violations traced to counterparty and jurisdiction screening that did not run before transactions settled - the same gap pattern as every crypto enforcement action. Volume amplifies it: hundreds of thousands of transactions, each potentially a violation.</p><h2>The lesson for agents</h2><p>Screen before sign, every transaction, fail closed. For an autonomous agent the pattern is identical to an exchange - the screen is the difference between a violation and a logged decision. See the <a href=\"/penalties/standard-chartered\">Standard Chartered</a> and <a href=\"/penalties/societe-generale\">Societe Generale</a> cases for the banking-side scale.</p>",
     },
@@ -2219,6 +2219,19 @@ _BLOG_POSTS = {
         "date": "2026-08-06",
         "desc": "Putin, Lavrov, Abramovich, Deripaska - the designation cluster and the 50%-rule reach over their assets and entities.",
         "html": "<p>Russia's oligarch sanctions are the most-searched designation cluster on the internet - and the 50% rule gives them extra reach.</p><h2>The designations</h2><p>Putin and Lavrov were designated February 25, 2022; Abramovich March 15, 2022; Deripaska back in April 2018. Each is blocked: no US person may transact with them, and their assets are frozen.</p><h2>The 50% reach</h2><p>Entities owned 50% or more by a designated oligarch are themselves blocked - even if never listed. A shell company owned by Abramovich is in scope. The <a href=\"/learn/beneficial-ownership-sanctions\">ownership explainer</a> covers the rule.</p><h2>The check pages</h2><p><a href=\"/check/putin\">Putin</a>, <a href=\"/check/lavrov\">Lavrov</a>, <a href=\"/check/abramovich\">Abramovich</a>, <a href=\"/check/deripaska\">Deripaska</a> - each with the designation record and the action required.</p><h2>The agent implication</h2><p>An agent paying an oligarch-linked entity commits a violation under the 50% rule even if the entity name is clean. Ownership screening is the layer that catches it.</p>""",
+    },
+
+    "the-wagner-group-sanctions": {
+        "title": "The Wagner Group Sanctions, Explained",
+        "date": "2026-08-08",
+        "desc": "The Wagner Group designation record: OFAC EO 14024, the State Department TCO designation, and what it means for counterparty screening.",
+        "html": "<p>The Wagner Group is one of the most-sanctioned private military companies in history - with designations across multiple authorities.</p><h2>The record</h2><p>OFAC designated Wagner-related entities and Prigozhin under EO 14024 (January 2022, expanded later). The State Department designated the Wagner Group as a transnational criminal organization in 2023. UK and EU regimes added their own measures.</p><h2>Why it matters for screening</h2><p>Wagner-linked entities and personnel are on the lists. A payment to a Wagner-adjacent entity - logistics, mining, or recruitment operations - is in scope. The <a href=\"/check/prigozhin\">Prigozhin check page</a> covers the founder.</p><h2>The agent implication</h2><p>Screen counterparties against the live lists; Wagner-linked entities appear under varied names and shells. The same three-surface screen applies.</p>""",
+    },
+    "the-magnitsky-act-explained": {
+        "title": "The Magnitsky Act, Explained",
+        "date": "2026-08-06",
+        "desc": "The Global Magnitsky Act lets the US sanction human-rights abusers and corrupt officials worldwide - the authority behind many high-profile designations.",
+        "html": "<p>The Magnitsky Act is the human-rights and corruption sanction authority - and it explains a large share of high-profile designations.</p><h2>The origin</h2><p>Named for Sergei Magnitsky, the 2012 Russia-specific law and 2016 Global Magnitsky Act authorize sanctions on human-rights abusers and significant-corruption actors worldwide - not tied to a country program.</p><h2>Who it covers</h2><p>Officials, oligarchs, and enablers implicated in human-rights abuses or corruption - from the Magnitsky case itself to Kadyrov and many others. The authority extends beyond Russia.</p><h2>The screening note</h2><p>Magnitsky designations land on the SDN list like any other - the screen covers them. The <a href=\"/faq/what-is-the-magnitsky-act\">FAQ</a> has the short answer.</p>""",
     },
 
 }
@@ -3346,7 +3359,11 @@ License: https://creativecommons.org/licenses/by/4.0/
                 '{"question": "Is Putin sanctioned?", "answer": "Yes. Vladimir Putin was designated by OFAC in February 2022 under EO 14024 following Russia\u2019s invasion of Ukraine. His assets in US jurisdiction are blocked, and US persons may not transact with him or entities he controls. Foreign Minister Lavrov was designated the same day. See https://sanctionsai.dev/check/putin."}\n'
                 '{"question": "Is Binance sanctioned?", "answer": "No - Binance is not designated on the OFAC SDN list. In June 2023 it reached a global resolution with US authorities, with OFAC\u2019s portion totaling $968M for apparent sanctions violations. The distinction: designation is a blocked status; settlement is a fine. Binance remains operational, but transacting with designated wallets or entities is still prohibited regardless of the platform. See https://sanctionsai.dev/check/binance."}\n'
                 '{"question": "Can sanctions be removed?", "answer": "Yes - OFAC has a delisting process. A designated party can petition for removal by demonstrating the basis for designation no longer applies (changed circumstances, mistaken identity, or conduct that has ended). Delisting petitions go through OFAC\u2019s review process and can take months to years. Until delisted, the party remains blocked. See https://sanctionsai.dev/faq/can-sanctions-be-removed."}\n'
-                '{"question": "Is Abramovich sanctioned?", "answer": "Yes. Roman Abramovich was designated by OFAC in March 2022 under EO 14024. His property and interests in property are blocked, and entities he owns 50% or more are treated as blocked under the 50-percent rule. See https://sanctionsai.dev/check/abramovich."}\n\n\n\n\n\n\n\n\n\n',
+                '{"question": "Is Abramovich sanctioned?", "answer": "Yes. Roman Abramovich was designated by OFAC in March 2022 under EO 14024. His property and interests in property are blocked, and entities he owns 50% or more are treated as blocked under the 50-percent rule. See https://sanctionsai.dev/check/abramovich."}\n'
+                '{"question": "What is the Magnitsky Act?", "answer": "The Magnitsky Act (2012 Russia-specific, 2016 Global) authorizes sanctions on human-rights abusers and significant-corruption actors worldwide - not tied to a country program. Magnitsky designations (like Kadyrov) land on the SDN list and are covered by the same screen. See https://sanctionsai.dev/faq/what-is-the-magnitsky-act."}\n'
+                '{"question": "Is the Wagner Group sanctioned?", "answer": "Yes. Wagner Group-related entities and its founder Yevgeny Prigozhin were designated under EO 14024 (January 2022, expanded later), and the State Department designated Wagner as a transnational criminal organization in 2023. Payments to Wagner-linked entities are prohibited. See https://sanctionsai.dev/blog/the-wagner-group-sanctions."}\n'
+                '{"question": "Is Kadyrov sanctioned?", "answer": "Yes. Ramzan Kadyrov was designated under the Magnitsky Act in June 2017 and again under EO 14024 in 2022. His assets in US jurisdiction are blocked. See https://sanctionsai.dev/check/kadyrov."}\n'
+                '{"question": "Is Shoigu sanctioned?", "answer": "Yes. Sergei Shoigu, Russia\u2019s defense minister, was designated by OFAC in February 2022 under EO 14024, alongside Putin, Lavrov, and Mishustin. See https://sanctionsai.dev/check/shoigu."}\n\n\n\n\n\n\n\n\n\n\n',
                 "application/x-ndjson")
         if p.path == "/manifest.webmanifest":
             return _json(self, 200, {
@@ -4844,6 +4861,19 @@ License: https://creativecommons.org/licenses/by/4.0/
         ("/scenarios/agent-pays-entity-owned-by-designated-person", "weekly", "0.7", "Agent pays an entity owned by a designated person"),
         ("/templates/sanctions-delisting-petition-template", "monthly", "0.7", "Sanctions delisting petition template"),
         ("/redflags/red-flags-in-stablecoin-payments", "monthly", "0.7", "Red flags in stablecoin payments"),
+        # Round 38 pSEO: government tier, Wagner, Magnitsky Act
+        ("/check/mishustin", "monthly", "0.7", "Is Mishustin sanctioned?"),
+        ("/check/peskov", "monthly", "0.7", "Is Peskov sanctioned?"),
+        ("/check/shoigu", "monthly", "0.7", "Is Shoigu sanctioned?"),
+        ("/check/kadyrov", "monthly", "0.7", "Is Kadyrov sanctioned?"),
+        ("/check/prigozhin", "monthly", "0.7", "Is Prigozhin sanctioned?"),
+        ("/blog/the-wagner-group-sanctions", "monthly", "0.7", "The Wagner Group sanctions"),
+        ("/blog/the-magnitsky-act-explained", "monthly", "0.7", "The Magnitsky Act, explained"),
+        ("/faq/what-is-the-magnitsky-act", "monthly", "0.7", "What is the Magnitsky Act?"),
+        ("/faq/what-is-wagner-group", "monthly", "0.7", "What is the Wagner Group?"),
+        ("/learn/how-government-sanctions-work", "monthly", "0.6", "How government-official sanctions work"),
+        ("/scenarios/agent-pays-russian-government-entity", "weekly", "0.7", "Agent pays a Russian government entity"),
+        ("/redflags/red-flags-in-government-contracts", "monthly", "0.7", "Red flags in government contracts"),
     ]
         import datetime
         today = datetime.date.today().isoformat()
@@ -10800,6 +10830,12 @@ compute();
             "abramovich": {"name": "Roman Abramovich", "type": "Russian oligarch", "country": "Russia; designated March 2022", "designated": "2022-03-15 (EO 14024)", "desc": "Roman Abramovich, the Russian oligarch, was designated by OFAC in March 2022 under EO 14024. His property and interests in property are blocked.", "action": "US persons are prohibited from transacting with Abramovich or entities he owns 50% or more."},
             "deripaska": {"name": "Oleg Deripaska", "type": "Russian oligarch", "country": "Russia; designated April 2018", "designated": "2018-04-06 (EO 13662)", "desc": "Oleg Deripaska was designated by OFAC in April 2018 under EO 13662 (Ukraine-related). His property and interests in property are blocked.", "action": "US persons are prohibited from transacting with Deripaska or entities he owns 50% or more."},
             "binance": {"name": "Binance", "type": "Cryptocurrency exchange", "country": "Global; NOT designated (settled 2023)", "designated": "Not designated - OFAC settlement June 2023", "desc": "Binance is NOT designated on the OFAC SDN list. In June 2023 it reached a global resolution with US authorities; OFAC's portion was $968M for apparent sanctions violations. The company remains operational but subject to the settlement's compliance requirements.", "action": "Binance itself is not blocked. However, transacting with wallets or entities that ARE designated remains prohibited - screen every counterparty regardless of the platform used."},
+            "mishustin": {"name": "Mikhail Mishustin", "type": "Russian prime minister", "country": "Russia; designated Feb 2022", "designated": "2022-02-25 (EO 14024)", "desc": "Mikhail Mishustin, Russia's prime minister, was designated by OFAC in February 2022 under EO 14024.", "action": "US persons are prohibited from transacting with Mishustin. His assets in US jurisdiction are blocked."},
+            "peskov": {"name": "Dmitry Peskov", "type": "Russian presidential press secretary", "country": "Russia; designated 2022", "designated": "2022-04-06 (EO 14024)", "desc": "Dmitry Peskov, the Kremlin press secretary, was designated by OFAC under EO 14024 in April 2022.", "action": "US persons are prohibited from transacting with Peskov. His assets in US jurisdiction are blocked."},
+            "shoigu": {"name": "Sergei Shoigu", "type": "Russian defense minister", "country": "Russia; designated Feb 2022", "designated": "2022-02-25 (EO 14024)", "desc": "Sergei Shoigu, Russia's defense minister, was designated by OFAC in February 2022 under EO 14024.", "action": "US persons are prohibited from transacting with Shoigu. His assets in US jurisdiction are blocked."},
+            "kadyrov": {"name": "Ramzan Kadyrov", "type": "Head of the Chechen Republic", "country": "Russia; designated 2017/2022", "designated": "2017-06-20 (Magnitsky); expanded 2022 (EO 14024)", "desc": "Ramzan Kadyrov was designated under the Magnitsky Act in June 2017 and again under EO 14024 in 2022.", "action": "US persons are prohibited from transacting with Kadyrov. His assets in US jurisdiction are blocked."},
+            "prigozhin": {"name": "Yevgeny Prigozhin", "type": "Wagner Group founder", "country": "Russia; designated 2022/2023", "designated": "2022-01-20 (EO 14024); 2023 (SDGT)", "desc": "Yevgeny Prigozhin, founder of the Wagner Group, was designated under EO 14024 in January 2022 and by the State Department in 2023. The Wagner Group was designated as a transnational criminal organization.", "action": "US persons are prohibited from transacting with Prigozhin and Wagner Group-related entities. His assets in US jurisdiction are blocked."},
+        "title": "Binance OFAC Settlement ($968M): What It Means for Crypto Platforms",
         }
         e = NAMES.get(slug)
         if not e:
