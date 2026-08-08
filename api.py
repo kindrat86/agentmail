@@ -346,14 +346,17 @@ _VERTICAL_KEYS = frozenset((
     "community-banks"
 ))
 _INTEGRATION_KEYS = frozenset((
+    "autogen",
     "autonome",
     "coinbase-agentkit",
     "claude-code",
     "crewai",
     "cursor",
     "elizaos",
+    "gemini-cli",
     "langchain",
     "openai-agents-sdk",
+    "pydantic-ai",
     "sanctions-mcp",
     "vercel-ai-sdk",
     "windsurf",
@@ -382,6 +385,7 @@ _COMPETITOR_KEYS = frozenset((
     "elliptic",
     "identitymind",
     "notabene",
+    "dow-jones-risk",
     "scorechain",
     "sumsub",
     "trm-labs",
@@ -394,7 +398,9 @@ _BLOG_SLUGS = frozenset((
     "how-sanctions-screening-works",
     "how-to-screen-wallet-agent",
     "know-your-agent",
+    "kyc-vs-kyb-vs-kya",
     "ofac-civil-penalties-explained",
+    "ofac-compliance-framework",
     "ofac-for-agents",
     "ofac-mixer-designations",
     "ofac-penalties-for-agents",
@@ -489,14 +495,18 @@ _BY_COUNTRY_KEYS = frozenset((
     "belarus",
     "china",
     "cuba",
+    "hong-kong",
+    "iraq",
     "iran",
     "lebanon-hezbollah",
     "libya",
     "myanmar",
+    "nicaragua",
     "north-korea",
     "pakistan",
     "russia",
     "somalia",
+    "sudan",
     "syria",
     "ukraine-separatist",
     "venezuela",
@@ -1175,6 +1185,76 @@ const agent = createAgent({
             ("Is this the same server as Claude Code's?", "Yes — one sanctions-mcp server works across MCP-capable editors."),
         ],
     },
+    "pydantic-ai": {
+        "name": "Pydantic AI",
+        "emoji": "🔧",
+        "title": "OFAC Screening for Pydantic AI Agents",
+        "desc": "Add OFAC sanctions screening to Pydantic AI agents. One tool in the dependency chain, screen before every payment.",
+        "og_title": "OFAC Screening for Pydantic AI | SanctionsAI",
+        "og_desc": "Wire sanctions_check into Pydantic AI agents as a regular tool - screen wallets and names before any payment function runs.",
+        "h1": "OFAC Screens Before Pydantic AI Agents Pay",
+        "problem": "Pydantic AI is the Python agent framework of choice for production systems. Agents that pay need a screen in the tool chain - the framework does not provide one.",
+        "steps": [
+            ("Install", "pip install -U sanctions-mcp", False),
+            ("Register tool", "Add sanctions_check to the agent's tool set", False),
+            ("Screen before pay", "Call it before any payment-capable tool", False),
+            ("Audit", "Every screen logged - export anytime", False),
+        ],
+        "code": "'''from pydantic_ai import Agent\nfrom sanctions_mcp import sanctions_check\n\nagent = Agent(\n    \"openai:gpt-4o\",\n    tools=[sanctions_check],\n)'''",
+        "price_paid": "From $19/mo (10,000 checks)",
+        "price_free": "Free tier: 5 checks/day, no API key",
+        "faq": [
+            ("Does Pydantic AI support custom tools?", "Yes - any Python callable can be registered as a tool."),
+            ("Is the MCP server compatible?", "Yes - the sanctions-mcp tools expose the same checks."),
+        ],
+    },
+    "autogen": {
+        "name": "AutoGen",
+        "emoji": "🤖",
+        "title": "OFAC Screening for Microsoft AutoGen Agents",
+        "desc": "Add OFAC sanctions screening to AutoGen agent teams. Screen before any agent in the team moves money.",
+        "og_title": "OFAC Screening for AutoGen | SanctionsAI",
+        "og_desc": "A sanctions gate for AutoGen teams: screen the counterparty before the executor agent signs a payment.",
+        "h1": "OFAC Screens Before AutoGen Teams Pay",
+        "problem": "AutoGen orchestrates multi-agent teams. The executor agent can sign payments while the planner never sees the counterparty - the screen must live in the tool layer.",
+        "steps": [
+            ("Install", "pip install -U sanctions-mcp", False),
+            ("Register tool", "Add sanctions_check to the executor's tools", False),
+            ("Make it a gate", "Payment tool requires a clean screen first", False),
+            ("Audit", "Every screen logged - export anytime", False),
+        ],
+        "code": "'''from autogen import ConversableAgent\nfrom sanctions_mcp import sanctions_check\n\nexecutor = ConversableAgent(\n    \"executor\",\n    tools=[sanctions_check],\n)'''",
+        "price_paid": "From $19/mo (10,000 checks)",
+        "price_free": "Free tier: 5 checks/day, no API key",
+        "faq": [
+            ("Which AutoGen version does this target?", "The pattern applies to both classic AutoGen and AgentChat-style teams."),
+            ("Can the gate block the payment tool?", "Yes - require a clean screen result before the payment tool is callable."),
+        ],
+    },
+    "gemini-cli": {
+        "name": "Gemini CLI",
+        "emoji": "✦",
+        "title": "OFAC Screening for Gemini CLI Agents",
+        "desc": "Add OFAC sanctions screening to Gemini CLI. One MCP tool, screen before the agent signs anything.",
+        "og_title": "OFAC Screening for Gemini CLI | SanctionsAI",
+        "og_desc": "Register the sanctions MCP server in Gemini CLI - the agent's terminal payments get a screen.",
+        "h1": "OFAC Screens Before Gemini CLI Agents Pay",
+        "problem": "Gemini CLI agents operate from the terminal and can trigger payments and tool calls. No native compliance layer - the operator is liable for what the agent signs.",
+        "steps": [
+            ("Install", "pip install -U sanctions-mcp", False),
+            ("Register MCP", "Add the server to Gemini CLI's MCP config", False),
+            ("Screen", "Call sanctions_check before any payment step", False),
+            ("Audit", "Every screen logged - export to CSV anytime", False),
+        ],
+        "code": "'''# Gemini CLI MCP config (gemini/mcp.json)\n{\n  \"mcpServers\": {\n    \"sanctions\": { \"command\": \"uvx\", \"args\": [\"sanctions-mcp\"] }\n  }\n}'''",
+        "price_paid": "From $19/mo (10,000 checks)",
+        "price_free": "Free tier: 5 checks/day, no API key",
+        "faq": [
+            ("Does Gemini CLI support MCP?", "Yes - Gemini CLI supports MCP servers in its config."),
+            ("Is this the same server as Claude Code's?", "Yes - one sanctions-mcp server works across MCP-capable CLIs."),
+        ],
+    },
+
     "autonome": {
         "name": "Autonome (Fleek)",
         "emoji": "🤖",
@@ -1581,6 +1661,25 @@ _COMPETITORS = {
         ],
         "when_to_pick": "Pick agentmail for the pre-payment sanctions screen in the agent path. Pick Notabene for travel-rule messaging between regulated VASPs. Most compliant stacks end up needing both — screening and travel rule are different obligations.",
     },
+    "dow-jones-risk": {
+        "name": "Dow Jones Risk & Compliance",
+        "desc": "agentmail vs Dow Jones Risk & Compliance: agentmail screens every payment in the agent path (MCP + HTTP + CLI) with a free tier and self-host option. Dow Jones Risk & Compliance is the enterprise name-screening data platform (World-Check lineage).",
+        "rows": [
+            ("Built for AI agents (MCP + HTTP + CLI)", True, False),
+            ("Free tier (5 checks/day)", True, False),
+            ("Developer pricing from $19/mo", True, False),
+            ("Open-source self-host", True, False),
+            ("Per-call x402 / USDC payments", True, False),
+            ("OFAC crypto wallet screening", True, False),
+            ("OFAC name + country screening", True, True),
+            ("Know-Your-Agent (KYA)", True, False),
+            ("Global PEP + adverse-media dataset", False, True),
+            ("Entity/beneficial-ownership data", False, True),
+            ("Enterprise contracts", "Basic", True),
+        ],
+        "when_to_pick": "Pick agentmail for the pre-payment sanctions screen in the agent path. Pick Dow Jones Risk & Compliance for enterprise-grade global name-screening datasets (PEP, adverse media, beneficial ownership). Screening and data enrichment are different layers - many teams run both.",
+    },
+
     "ciphertrace": {
         "name": "CipherTrace",
         "desc": "agentmail vs CipherTrace: agentmail is real-time, agent-native sanctions screening. CipherTrace is a legacy crypto compliance and forensic analytics platform owned by Visa.",
@@ -1996,6 +2095,19 @@ _BLOG_POSTS = {
         "desc": "The post-block workflow: record, review, report. What OFAC expects within 10 days, and how the audit trail turns a block into evidence.",
         "html": """<p>A blocked payment is the system working. What happens next determines whether the block becomes compliance — or a problem.</p><h2>Step 1: Record</h2><p>Every block is logged with the matched list entry, the list version, and the timestamp. This is the evidence — it must exist before anything else.</p><h2>Step 2: Review</h2><p>Confirm the match is a real hit, not a false positive. Identifier comparison, ownership checks, and the 50% rule all apply. Document the decision.</p><h2>Step 3: Report</h2><p>For real hits, OFAC expects a blocking report — typically within 10 days of the block. The <a href="/templates/blocked-transaction-notification-template">blocked-transaction template</a> has the structure.</p><h2>The asymmetry</h2><p>A block costs minutes. A release of a real hit costs $356,000 and starts at the base penalty. The block is not a failure — it is the product working.</p>""",
     },
+    "ofac-compliance-framework": {
+        "title": "OFAC's Compliance Framework: The Five Pillars",
+        "date": "2026-08-08",
+        "desc": "OFAC's Framework for Compliance Commitments: management commitment, risk assessment, internal controls, testing, and training. What each pillar means for agent deployments.",
+        "html": "<p>OFAC's Framework for Compliance Commitments describes the five pillars of a compliance program. For agent operators, each pillar has a specific technical shape.</p><h2>1. Management commitment</h2><p>Senior management buys in and designates a compliance owner. For an agent deployment: someone owns the payment path and its screening.</p><h2>2. Risk assessment</h2><p>Identify where the risk lives: products, counterparties, geographies, and - for agents - autonomy level. The <a href=\"/templates/sanctions-risk-assessment-template\">risk assessment template</a> turns it into a scored document.</p><h2>3. Internal controls</h2><p>Screen before sign, fail closed, no override path. This is the pillar with the most technical surface - and the one screening implements.</p><h2>4. Testing and auditing</h2><p>Verify the controls work: test with known sanctioned wallets, review the logs, run the <a href=\"/checklists/regulator-readiness-checklist\">regulator-readiness drill</a> quarterly.</p><h2>5. Training</h2><p>The people around the agent understand the program. For autonomous deployments, the training is partly encoded: the agent's own rules.</p><h2>Why it matters</h2><p>OFAC treats a documented program as a mitigating factor. The five pillars are also the answer an inquiry demands - see the <a href=\"/scenarios/ofac-inquiry-response\">inquiry scenario</a>.</p>""",
+    },
+    "kyc-vs-kyb-vs-kya": {
+        "title": "KYC vs KYB vs KYA: The Three K's of Verification",
+        "date": "2026-08-05",
+        "desc": "KYC verifies customers, KYB verifies businesses, KYA verifies agents. The three verification layers and where each runs in the stack.",
+        "html": "<p>Verification in the agent economy is three letters: KYC, KYB, and KYA. They answer different questions at different layers.</p><h2>KYC - Know Your Customer</h2><p>Identity verification at onboarding: who is this person? Document checks, identity scoring, ongoing monitoring.</p><h2>KYB - Know Your Business</h2><p>Business verification: who owns this company? Registration, beneficial ownership, and the 50% rule live here.</p><h2>KYA - Know Your Agent</h2><p>The agent-economy layer: should I trust this counterparty agent? Wallet age, linked domain, public key, declared country - scored by <code>kya_verify</code>.</p><h2>The stack</h2><p>KYC at onboarding, KYB for corporate counterparties, KYA before transacting with other agents - and sanctions screening on every payment underneath all three. The <a href=\"/learn/kyc-vs-sanctions-screening\">KYC vs screening</a> explainer covers the boundary.</p>""",
+    },
+
 }
 
 
@@ -3097,7 +3209,9 @@ License: https://creativecommons.org/licenses/by/4.0/
                 '{"question": "What are the largest OFAC settlements with crypto platforms?", "answer": "The documented record includes: Binance (June 2023, OFAC portion $968M of a $4.3B global resolution - the largest crypto OFAC settlement), Bitfinex (October 2021, $800K), Ripple (October 2023, $700K for 1,773 apparent violations), Kraken (November 2022, $362,158), and Bittrex (October 2022, $24.3M). On the banking side: Standard Chartered (April 2019, $132M OFAC portion) and Societe Generale (June 2022, $53.9M OFAC portion). Each case traces to counterparty or jurisdiction screening that did not run before settlement. See https://sanctionsai.dev/penalties."}\n'
                 '{"question": "How long does OFAC require records to be kept?", "answer": "OFAC regulations require that records of blocked transactions be retained for five years after the date of the transaction. The practical discipline for teams: log every screen with the list version, pair screen results to payments, and make the trail exportable - an inquiry is answered with exports. See https://sanctionsai.dev/guides/recordkeeping-requirements."}\n'
                 '{"question": "What are secondary sanctions?", "answer": "Primary sanctions prohibit US persons from transacting with designated parties. Secondary sanctions extend the reach: foreign persons can face designation for significant transactions with sanctioned parties - even with no US nexus. For agents, this means an operator outside the US is not automatically outside OFAC\u2019s reach - screen counterparties against the SDN list and the applicable international lists, and document the controls. See https://sanctionsai.dev/faq/what-are-secondary-sanctions."}\n'
-                '{"question": "Does sanctions screening apply to NFTs?", "answer": "Yes - NFTs are property interests, and the asset class does not change the obligation. OFAC has designated virtual currency and NFT-adjacent addresses, and platforms processing NFT trades carry the same screening expectations as other crypto venues. For agents that trade NFTs, screen the counterparty and the collection/address before the trade. See https://sanctionsai.dev/faq/does-sanctions-screening-apply-to-nfts."}\n\n',
+                '{"question": "Does sanctions screening apply to NFTs?", "answer": "Yes - NFTs are property interests, and the asset class does not change the obligation. OFAC has designated virtual currency and NFT-adjacent addresses, and platforms processing NFT trades carry the same screening expectations as other crypto venues. For agents that trade NFTs, screen the counterparty and the collection/address before the trade. See https://sanctionsai.dev/faq/does-sanctions-screening-apply-to-nfts."}\n'
+                '{"question": "What is the difference between sanctions screening and monitoring?", "answer": "Screening is the deterministic check before a transaction: is this counterparty on the list? Monitoring is the ongoing behavioral layer: does this account or activity pattern look suspicious over time? Screening runs on every payment (exact/fuzzy list matching); monitoring flags anomalies continuously. For agents, screening is the gate before sign - monitoring is the layer above it. See https://sanctionsai.dev/faq/screening-vs-monitoring."}\n'
+                '{"question": "Can I screen counterparties in bulk?", "answer": "Yes - the API accepts wallet, name, and country parameters and supports batch screening for onboarding lists and portfolio sweeps. The free tier covers 5 checks/day; paid tiers handle production volume. Bulk screening is the standard pattern for onboarding existing counterparty lists. See https://sanctionsai.dev/faq/can-i-screen-in-bulk."}\n\n\n',
                 "application/x-ndjson")
         if p.path == "/manifest.webmanifest":
             return _json(self, 200, {
@@ -4484,6 +4598,21 @@ License: https://creativecommons.org/licenses/by/4.0/
         ("/faq/does-sanctions-screening-apply-to-nfts", "monthly", "0.7", "Does sanctions screening apply to NFTs?"),
         ("/scenarios/agent-trades-sanctioned-nft", "weekly", "0.7", "Agent trades a sanctioned NFT"),
         ("/checklists/blockchain-business-compliance-checklist", "monthly", "0.7", "Blockchain business compliance checklist"),
+        # Round 30 pSEO: 2026 agent CLIs, country depth, compare twin, screening vs monitoring
+        ("/integrations/pydantic-ai", "monthly", "0.7", "OFAC screening for Pydantic AI"),
+        ("/integrations/autogen", "monthly", "0.7", "OFAC screening for AutoGen"),
+        ("/integrations/gemini-cli", "monthly", "0.7", "OFAC screening for Gemini CLI"),
+        ("/by-country/sudan", "monthly", "0.6", "Sudan sanctions"),
+        ("/by-country/nicaragua", "monthly", "0.6", "Nicaragua sanctions"),
+        ("/by-country/hong-kong", "monthly", "0.6", "Hong Kong sanctions"),
+        ("/by-country/iraq", "monthly", "0.6", "Iraq sanctions"),
+        ("/compare/dow-jones-risk", "monthly", "0.7", "agentmail vs Dow Jones Risk & Compliance"),
+        ("/blog/ofac-compliance-framework", "monthly", "0.7", "OFAC's five-pillar compliance framework"),
+        ("/blog/kyc-vs-kyb-vs-kya", "monthly", "0.7", "KYC vs KYB vs KYA"),
+        ("/faq/screening-vs-monitoring", "monthly", "0.7", "Sanctions screening vs monitoring"),
+        ("/faq/can-i-screen-in-bulk", "monthly", "0.7", "Can I screen in bulk?"),
+        ("/scenarios/agent-structures-payments-to-evade-screening", "weekly", "0.7", "Agent structures payments to evade screening"),
+        ("/redflags/red-flags-in-nft-trading", "monthly", "0.7", "Red flags in NFT trading"),
     ]
         import datetime
         today = datetime.date.today().isoformat()
@@ -10524,6 +10653,11 @@ compute();
             "yemen": {"name": "Yemen", "program": "Yemen Sanctions Regulations, EO 13611, EO 14024 (Houthi designations)", "entities": "Houthi leadership (Abdul-Malik al-Houthi), Yemen-based facilitators, Iran-linked procurement networks", "desc": "Yemen faces targeted sanctions on the Houthi movement and its leaders, following the 2014 takeover and subsequent conflict. Designations target revenue generation, weapons procurement, and destabilizing activity.", "count": "~40 SDN designations"},
             "libya": {"name": "Libya", "program": "Libya Sanctions Regulations (31 CFR 570), UNSC resolutions", "entities": "Qadhafi-era figures, GNA/GNS-linked entities, human traffickers, arms networks", "desc": "Libya faces UN-mandated and US autonomous sanctions targeting individuals and entities that threaten peace, security, or stability, plus weapons embargo obligations. Designations include former regime figures and trafficking networks.", "count": "~100 designations"},
             "somalia": {"name": "Somalia", "program": "Somalia Sanctions Regulations (31 CFR 551), UNSC resolutions", "entities": "Al-Shabaab, associated financiers and procurement networks, arms embargo targets", "desc": "Somalia faces UN-mandated sanctions targeting Al-Shabaab and related entities, plus a long-standing arms embargo regime. Designations focus on terror financing and destabilizing actors.", "count": "~80 designations"},
+            "sudan": {"name": "Sudan", "program": "Sudan Sanctions Regulations (31 CFR 538), EO 13067, EO 13761", "entities": "Sudanese Armed Forces-linked entities, RSF leadership, weapons procurement networks", "desc": "Sudan faces targeted sanctions on the armed forces and paramilitary (RSF) leadership following the 2023 conflict, plus long-standing Darfur-era measures. Designations target revenue streams and destabilizing actors.", "count": "~100 designations"},
+            "nicaragua": {"name": "Nicaragua", "program": "Nicaragua Sanctions Regulations (31 CFR 580), EO 13851, EO 14088", "entities": "Ortega regime officials, state media entities, gold and logistics firms linked to the regime", "desc": "Nicaragua faces targeted sanctions on the Ortega-Murillo regime and its financial networks. Designations target officials, state-owned entities, and regime revenue sources.", "count": "~100 designations"},
+            "hong-kong": {"name": "Hong Kong", "program": "Hong Kong-related sanctions (EO 13936), China military-industrial complex measures (EO 13959, 14032)", "entities": "Hong Kong officials designated under EO 13936, China-linked military-industrial companies", "desc": "Hong Kong-related sanctions target officials who suppressed autonomy and the broader China military-industrial complex (CMIC) program. Not a comprehensive embargo - targeted designations only.", "count": "~40 designations"},
+            "iraq": {"name": "Iraq", "program": "Iraq Sanctions Regulations (31 CFR 575), UNSC resolutions", "entities": "ISIL-related designations, terrorism financiers, militia-linked entities", "desc": "Iraq faces UN-mandated sanctions targeting ISIL and associated individuals and entities, plus terrorism-related designations. Not a comprehensive program - targeted measures only.", "count": "~100 designations"},
+
         }
         c = COUNTRIES.get(slug)
         if not c:
