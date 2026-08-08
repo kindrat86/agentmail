@@ -411,6 +411,8 @@ _BLOG_SLUGS = frozenset((
     "stablecoin-sanctions-2026",
     "the-ofac-50-percent-rule-explained",
     "the-three-settlements-you-havent-heard-of",
+    "blocked-vs-seized-assets",
+    "how-to-respond-to-a-sanctions-match",
     "travel-rule-vs-sanctions-screening",
     "secondary-sanctions-explained",
     "what-happens-after-a-block",
@@ -495,11 +497,14 @@ _BY_COUNTRY_KEYS = frozenset((
     "belarus",
     "china",
     "cuba",
+    "dr-congo",
+    "ethiopia",
     "hong-kong",
     "iraq",
     "iran",
     "lebanon-hezbollah",
     "libya",
+    "mali",
     "myanmar",
     "nicaragua",
     "north-korea",
@@ -511,6 +516,7 @@ _BY_COUNTRY_KEYS = frozenset((
     "ukraine-separatist",
     "venezuela",
     "yemen",
+    "zimbabwe",
 ))
 
 _DARK_CSS = """
@@ -2108,6 +2114,19 @@ _BLOG_POSTS = {
         "html": "<p>Verification in the agent economy is three letters: KYC, KYB, and KYA. They answer different questions at different layers.</p><h2>KYC - Know Your Customer</h2><p>Identity verification at onboarding: who is this person? Document checks, identity scoring, ongoing monitoring.</p><h2>KYB - Know Your Business</h2><p>Business verification: who owns this company? Registration, beneficial ownership, and the 50% rule live here.</p><h2>KYA - Know Your Agent</h2><p>The agent-economy layer: should I trust this counterparty agent? Wallet age, linked domain, public key, declared country - scored by <code>kya_verify</code>.</p><h2>The stack</h2><p>KYC at onboarding, KYB for corporate counterparties, KYA before transacting with other agents - and sanctions screening on every payment underneath all three. The <a href=\"/learn/kyc-vs-sanctions-screening\">KYC vs screening</a> explainer covers the boundary.</p>""",
     },
 
+    "blocked-vs-seized-assets": {
+        "title": "Blocked vs Seized Assets: What's the Difference?",
+        "date": "2026-08-08",
+        "desc": "Blocked assets are frozen pending OFAC action; seized assets are confiscated via forfeiture. The distinction that matters when your payment hits a block.",
+        "html": "<p>Blocked and seized sound interchangeable. They are different legal states with different consequences - and the difference matters when your payment path hits one.</p><h2>Blocked</h2><p>A blocked asset is frozen: you hold it, you do not transact it, and OFAC decides its fate. Your payment to a blocked party is held, not lost - and holding it is the compliant act.</p><h2>Seized</h2><p>A seized asset is confiscated through forfeiture - by the government, typically after a violation or criminal case. Seizure is the consequence; blocking is the state.</p><h2>The payment-path shape</h2><p>When screening blocks a payment, the funds stay blocked (held) pending review - that is the compliant posture. If the violation escalates to enforcement, forfeiture is where seized comes in. The <a href=\"/learn/what-is-a-blocked-transaction\">blocked-transaction explainer</a> covers the mechanics.</p><h2>Why it matters</h2><p>Confusing the two leads teams to unfreeze blocked funds (a violation) or treat held funds as lost (a bookkeeping error). Blocked is a state; seized is a consequence.</p>""",
+    },
+    "how-to-respond-to-a-sanctions-match": {
+        "title": "How to Respond to a Sanctions Match",
+        "date": "2026-08-06",
+        "desc": "The match-response workflow: verify, decide, document, report. What to do in the minutes after screening flags a counterparty.",
+        "html": "<p>A sanctions match is a decision point, not a panic. The workflow has four steps - and the first one is the most important.</p><h2>1. Verify the match</h2><p>Compare identifiers: name/wallet, jurisdiction, aliases, ownership. Exact wallet matches are deterministic; name matches need the false-positive triage. The <a href=\"/templates/designated-party-review-template\">review template</a> structures it.</p><h2>2. Decide</h2><p>Release (false positive, documented) or block (real hit). Never release a possible hit without review - the asymmetry is $356,000.</p><h2>3. Document</h2><p>Log the decision with the list version, the matched entry, and the reasoning. This is the evidence an inquiry demands.</p><h2>4. Report</h2><p>For real hits, report per your obligations - blocking reports typically within 10 days. The <a href=\"/templates/blocked-transaction-notification-template\">notification template</a> has the structure.</p><h2>The agent angle</h2><p>An agent should never decide a match alone: block, alert a human, and log. The <a href=\"/scenarios/ofac-inquiry-response\">inquiry scenario</a> shows why the trail matters.</p>""",
+    },
+
 }
 
 
@@ -3211,7 +3230,10 @@ License: https://creativecommons.org/licenses/by/4.0/
                 '{"question": "What are secondary sanctions?", "answer": "Primary sanctions prohibit US persons from transacting with designated parties. Secondary sanctions extend the reach: foreign persons can face designation for significant transactions with sanctioned parties - even with no US nexus. For agents, this means an operator outside the US is not automatically outside OFAC\u2019s reach - screen counterparties against the SDN list and the applicable international lists, and document the controls. See https://sanctionsai.dev/faq/what-are-secondary-sanctions."}\n'
                 '{"question": "Does sanctions screening apply to NFTs?", "answer": "Yes - NFTs are property interests, and the asset class does not change the obligation. OFAC has designated virtual currency and NFT-adjacent addresses, and platforms processing NFT trades carry the same screening expectations as other crypto venues. For agents that trade NFTs, screen the counterparty and the collection/address before the trade. See https://sanctionsai.dev/faq/does-sanctions-screening-apply-to-nfts."}\n'
                 '{"question": "What is the difference between sanctions screening and monitoring?", "answer": "Screening is the deterministic check before a transaction: is this counterparty on the list? Monitoring is the ongoing behavioral layer: does this account or activity pattern look suspicious over time? Screening runs on every payment (exact/fuzzy list matching); monitoring flags anomalies continuously. For agents, screening is the gate before sign - monitoring is the layer above it. See https://sanctionsai.dev/faq/screening-vs-monitoring."}\n'
-                '{"question": "Can I screen counterparties in bulk?", "answer": "Yes - the API accepts wallet, name, and country parameters and supports batch screening for onboarding lists and portfolio sweeps. The free tier covers 5 checks/day; paid tiers handle production volume. Bulk screening is the standard pattern for onboarding existing counterparty lists. See https://sanctionsai.dev/faq/can-i-screen-in-bulk."}\n\n\n',
+                '{"question": "Can I screen counterparties in bulk?", "answer": "Yes - the API accepts wallet, name, and country parameters and supports batch screening for onboarding lists and portfolio sweeps. The free tier covers 5 checks/day; paid tiers handle production volume. Bulk screening is the standard pattern for onboarding existing counterparty lists. See https://sanctionsai.dev/faq/can-i-screen-in-bulk."}\n'
+                '{"question": "Is Tornado Cash sanctioned?", "answer": "Yes. OFAC designated Tornado Cash in August 2022, including its smart contract addresses. Interacting with a designated Tornado Cash address - even through code - is prohibited. An agent that routes payments through or into a designated address commits a violation. Blender.io (May 2022) and Sinbad (November 2023) are also designated mixers. See https://sanctionsai.dev/check/tornado-cash."}\n'
+                '{"question": "What is the difference between blocked and seized assets?", "answer": "Blocked assets are frozen: you hold them and do not transact them while OFAC decides their fate - blocking is the compliant state. Seized assets are confiscated through forfeiture, typically after a violation or criminal case. When screening blocks a payment, the funds stay held pending review; seizure is the consequence of escalation. See https://sanctionsai.dev/faq/what-is-the-difference-between-blocked-and-seized."}\n'
+                '{"question": "Can SanctionsAI be used for employment screening?", "answer": "Yes - name screening against the SDN list is a standard pre-employment and contractor-vetting check, alongside other required checks. SanctionsAI screens names against 19,218 SDN entries and 16 embargoed jurisdictions; employment screening should be run with appropriate consent and per applicable law. See https://sanctionsai.dev/faq/can-i-use-sanctionsai-for-hiring."}\n\n\n\n',
                 "application/x-ndjson")
         if p.path == "/manifest.webmanifest":
             return _json(self, 200, {
@@ -4613,6 +4635,22 @@ License: https://creativecommons.org/licenses/by/4.0/
         ("/faq/can-i-screen-in-bulk", "monthly", "0.7", "Can I screen in bulk?"),
         ("/scenarios/agent-structures-payments-to-evade-screening", "weekly", "0.7", "Agent structures payments to evade screening"),
         ("/redflags/red-flags-in-nft-trading", "monthly", "0.7", "Red flags in NFT trading"),
+        # Round 31 pSEO: designated-entity check pages, country depth, employment
+        ("/check/tornado-cash", "monthly", "0.7", "Is Tornado Cash sanctioned?"),
+        ("/check/lazarus-group", "monthly", "0.7", "Is Lazarus Group sanctioned?"),
+        ("/check/blender-io", "monthly", "0.7", "Is Blender.io sanctioned?"),
+        ("/check/sinbad", "monthly", "0.7", "Is Sinbad sanctioned?"),
+        ("/by-country/dr-congo", "monthly", "0.6", "DR Congo sanctions"),
+        ("/by-country/ethiopia", "monthly", "0.6", "Ethiopia sanctions"),
+        ("/by-country/mali", "monthly", "0.6", "Mali sanctions"),
+        ("/by-country/zimbabwe", "monthly", "0.6", "Zimbabwe sanctions"),
+        ("/cost-of/dow-jones-risk-pricing", "monthly", "0.7", "How much does Dow Jones Risk & Compliance cost?"),
+        ("/blog/blocked-vs-seized-assets", "monthly", "0.7", "Blocked vs seized assets"),
+        ("/blog/how-to-respond-to-a-sanctions-match", "monthly", "0.7", "How to respond to a sanctions match"),
+        ("/faq/what-is-the-difference-between-blocked-and-seized", "monthly", "0.7", "Blocked vs seized: what's the difference?"),
+        ("/faq/can-i-use-sanctionsai-for-hiring", "monthly", "0.7", "Can I use SanctionsAI for hiring?"),
+        ("/scenarios/agent-employs-sanctioned-person", "weekly", "0.7", "Agent engages a sanctioned person"),
+        ("/redflags/red-flags-in-cross-border-payments", "monthly", "0.7", "Red flags in cross-border payments"),
     ]
         import datetime
         today = datetime.date.today().isoformat()
@@ -10546,6 +10584,10 @@ compute();
             "bitzlato": {"name": "Bitzlato", "type": "Cryptocurrency exchange", "country": "Russia / China-linked", "designated": "2023-01-18", "desc": "Bitzlato was designated by OFAC and the US Department of Justice in January 2023 for operating as a money transmitter for Russia-linked criminal actors, including Hydra Market.", "action": "US persons are prohibited from transacting with Bitzlato. Funds associated with Bitzlato are blocked and must be reported to OFAC."},
             "hydra-market": {"name": "Hydra Market", "type": "Darknet marketplace", "country": "Russia-linked", "designated": "2021-12-06", "desc": "Hydra Market was designated by OFAC in December 2021 as the world's largest darknet market, processing $5.2 billion in crypto transactions between 2016 and 2021 for illicit goods including narcotics.", "action": "All transactions with Hydra Market wallets are prohibited. The marketplace was seized by German authorities in April 2022."},
             "north-korea-reconnaissance-general-bureau": {"name": "Reconnaissance General Bureau (RGB)", "type": "DPRK intelligence agency", "country": "North Korea", "designated": "2010-08-30", "desc": "The RGB is North Korea's primary intelligence agency, designated by OFAC under multiple programs for weapons proliferation, cyber operations, and supporting DPRK cyber actors including Lazarus Group.", "action": "All US persons are prohibited from any dealings with the RGB and its associated entities under OFAC comprehensive sanctions on North Korea."},
+            "tornado-cash": {"name": "Tornado Cash", "type": "Cryptocurrency mixer (smart contracts)", "country": "Netherlands-based protocol; OFAC designation 2022", "designated": "2022-08-08", "desc": "Tornado Cash is a cryptocurrency mixer whose addresses (including smart contracts) were designated by OFAC in August 2022. The designation established that interacting with designated contracts - even through code - is prohibited.", "action": "US persons are prohibited from interacting with designated Tornado Cash addresses. An agent that routes payments through or into a designated address commits a violation."},
+            "lazarus-group": {"name": "Lazarus Group", "type": "DPRK state-sponsored cyber group", "country": "North Korea", "designated": "2019-09-13 (and prior related designations)", "desc": "Lazarus Group is North Korea's state-sponsored cyber operations group, designated by OFAC for large-scale cryptocurrency thefts, ransomware, and sanctions evasion. Its infrastructure and associated addresses are on sanctions lists.", "action": "US persons are prohibited from transacting with Lazarus Group and its associated addresses. Screen wallets linked to DPRK cyber activity before any payment."},
+            "blender-io": {"name": "Blender.io", "type": "Cryptocurrency mixer", "country": "First OFAC mixer designation", "designated": "2022-05-06", "desc": "Blender.io was the first cryptocurrency mixer designated by OFAC, in May 2022, for laundering funds for North Korean cyber actors including Lazarus Group.", "action": "US persons are prohibited from transacting with Blender.io. Mixer addresses associated with the designation are blocked."},
+            "sinbad": {"name": "Sinbad", "type": "Cryptocurrency mixer", "country": "Designated November 2023", "designated": "2023-11-29", "desc": "Sinbad was designated by OFAC in November 2023 as a primary money-laundering concern for laundering proceeds of Lazarus Group crypto thefts, including the Ronin Bridge hack.", "action": "US persons are prohibited from transacting with Sinbad. Its addresses are blocked and must be reported to OFAC."},
         }
         e = NAMES.get(slug)
         if not e:
@@ -10657,6 +10699,11 @@ compute();
             "nicaragua": {"name": "Nicaragua", "program": "Nicaragua Sanctions Regulations (31 CFR 580), EO 13851, EO 14088", "entities": "Ortega regime officials, state media entities, gold and logistics firms linked to the regime", "desc": "Nicaragua faces targeted sanctions on the Ortega-Murillo regime and its financial networks. Designations target officials, state-owned entities, and regime revenue sources.", "count": "~100 designations"},
             "hong-kong": {"name": "Hong Kong", "program": "Hong Kong-related sanctions (EO 13936), China military-industrial complex measures (EO 13959, 14032)", "entities": "Hong Kong officials designated under EO 13936, China-linked military-industrial companies", "desc": "Hong Kong-related sanctions target officials who suppressed autonomy and the broader China military-industrial complex (CMIC) program. Not a comprehensive embargo - targeted designations only.", "count": "~40 designations"},
             "iraq": {"name": "Iraq", "program": "Iraq Sanctions Regulations (31 CFR 575), UNSC resolutions", "entities": "ISIL-related designations, terrorism financiers, militia-linked entities", "desc": "Iraq faces UN-mandated sanctions targeting ISIL and associated individuals and entities, plus terrorism-related designations. Not a comprehensive program - targeted measures only.", "count": "~100 designations"},
+
+            "dr-congo": {"name": "Democratic Republic of the Congo", "program": "DRC Sanctions Regulations (31 CFR 583), UNSC resolutions, EO 13667", "entities": "Armed group leaders (M23/AFC-linked), conflict financiers, sanctions-committee designees", "desc": "The DRC faces UN-mandated and US sanctions targeting armed groups and conflict actors in the eastern provinces, plus financial facilitators. Not a comprehensive program - targeted measures only.", "count": "~40 designations"},
+            "ethiopia": {"name": "Ethiopia", "program": "EO 14046 (Ethiopia), UNSC 2622 regime", "entities": "Tigray conflict-era officials and armed-group leaders designated under the 2021 framework", "desc": "Ethiopia faced targeted sanctions authorized under EO 14046 (November 2021) addressing the Tigray conflict; the UNSC 2622 regime targets Eritrean armed actors. Not a comprehensive program.", "count": "~20 designations"},
+            "mali": {"name": "Mali", "program": "UNSC 2374 regime, Mali-related designations", "entities": "Sanctions-committee designees obstructing the peace process, armed-group leaders", "desc": "Mali faces UN-mandated sanctions under resolution 2374 targeting individuals and entities obstructing the peace process and stability. Not a comprehensive US program.", "count": "~20 designations"},
+            "zimbabwe": {"name": "Zimbabwe", "program": "Zimbabwe Sanctions Regulations (31 CFR 541), EO 13288, EO 13469", "entities": "Government officials and entities tied to human rights abuses and corruption", "desc": "Zimbabwe faces targeted sanctions on government officials and entities implicated in human rights abuses and corruption. The program is targeted, not comprehensive.", "count": "~50 designations"},
 
         }
         c = COUNTRIES.get(slug)
