@@ -388,14 +388,20 @@ _COMPETITOR_KEYS = frozenset((
     "world-check",
 ))
 _BLOG_SLUGS = frozenset((
+    "agent-compliance-checklist",
+    "ai-agent-payment-compliance-2026",
+    "crypto-exchange-sanctions-lessons",
+    "how-to-screen-wallet-agent",
     "know-your-agent",
+    "ofac-civil-penalties-explained",
     "ofac-for-agents",
     "ofac-penalties-for-agents",
     "openai-agents-sdk-compliance",
+    "sanctions-screening-api-guide",
+    "stablecoin-sanctions-2026",
+    "travel-rule-vs-sanctions-screening",
     "x402-compliance",
     "x402-sanctions-architecture",
-    "how-to-screen-wallet-agent",
-    "agent-compliance-checklist",
 ))
 
 # ─── Guide pages (compliance how-to guides) ──────────────────────────
@@ -1804,6 +1810,43 @@ _BLOG_POSTS = {
         "date": "2026-07-04",
         "desc": "A practical 7-step checklist for deploying AI agents that handle money without exposing yourself to OFAC liability.",
         "html": """<p>Before your AI agent signs its first real payment, go through this checklist. It takes 30 minutes and covers the minimum viable compliance program for autonomous agents moving money.</p><h2>1. Register your compliance contact</h2><p>Know who in your organization is responsible for sanctions compliance. For solo operators, it is you. For companies, designate a person. OFAC expects to find a compliance owner.</p><h2>2. Map your agents transaction types</h2><p>List every scenario where your agent can transfer value: direct payments to wallets, x402 micropayments, smart contract interactions that move tokens, and tipping or donation functions. Each needs a pre-payment screen.</p><h2>3. Add sanctions screening</h2><p>Choose your integration mode (HTTP, MCP, CLI) and wire sanctions screening into every transaction path from step 2. Test it with known sanctioned wallets to confirm blocking works.</p><pre><code>curl "https://sanctionsai.dev/sanctions?wallet=0x098B716B8Aaf21512996dC57EB0615e2383E2f96"</code></pre><h2>4. Implement audit logging</h2><p>Record every screen: timestamp, wallet/name/country checked, result, agent identity. The agentmail paid tier handles this automatically. Your audit trail is your first line of defense in any OFAC inquiry.</p><h2>5. Set up alerts</h2><p>Configure your agent to alert a human when a sanctions hit occurs. An agent that silently logs and continues is useless. If a match happens, a human needs to review it within a reasonable time window.</p><h2>6. Document your compliance program</h2><p>Write down what you built. OFACs Enforcement Guidelines explicitly consider documented compliance programs as a mitigating factor. A one-page summary of your agents screening procedure is enough.</p><h2>7. Review weekly</h2><p>The SDN list changes daily. Set a recurring reminder to review your screening logs and confirm blocking still works. Update agent permissions if needed.</p><p>Agentmail handles steps 3 and 4 automatically. Free tier: 5 checks/day, no API key. <a href="/pricing">See pricing for production use.</a></p>""",
+    },
+
+    "stablecoin-sanctions-2026": {
+        "title": "Stablecoin Sanctions in 2026: USDC, USDT, and the Enforcement Record",
+        "date": "2026-08-08",
+        "desc": "Stablecoins are the rails of agent payments — and OFAC enforcement has followed. The 2026 picture for USDC, USDT, issuers, and the agents that pay with them.",
+        "html": """<p>Stablecoins (USDC, USDT) are the default rails for autonomous payments — fast, cheap, and programmatic. The same properties that make them ideal for agents make them ideal for sanctions evasion, and enforcement has followed.</p><h2>The enforcement record</h2><p>OFAC has designated crypto addresses across EVM chains, Bitcoin, and Tron — 947 wallets in the SanctionsAI dataset, synced hourly. Stablecoin flows are not exempt: a USDC transfer to a sanctioned wallet is a prohibited transaction like any other, with civil penalties starting at $356,000 per violation.</p><h2>Issuer controls are not your compliance program</h2><p>Circle and Tether maintain blocklists and freeze capabilities. Those are the issuer's controls — not yours. If your agent pays a wallet that later gets designated, the liability runs to whoever deployed the agent. The blocklist is a backstop, not a screen.</p><h2>The pattern that holds</h2><p>Screen before sign, on every stablecoin payment, across every chain your agent touches. One call, under 100 ms: <code>sanctions_check</code> by wallet, name, or country. The free tier covers 5 checks/day with no key.</p><p>Compliance is the layer between your agent and the rail. That is the whole product.</p>""",
+    },
+    "sanctions-screening-api-guide": {
+        "title": "How to Choose a Sanctions Screening API",
+        "date": "2026-08-05",
+        "desc": "The honest buying guide for sanctions screening APIs: coverage, latency, the agent path, pricing, and the questions that separate tools from platforms.",
+        "html": """<p>Choosing a screening API looks like a table comparison. It is actually a workflow decision: who calls the API, when, and what happens with the result. Here is the framework.</p><h2>The five questions</h2><p><strong>1. Coverage.</strong> How many wallets, names, and jurisdictions? How fresh is the list? Hourly sync matters — designations land between releases.<br><strong>2. Latency.</strong> If an agent calls the screen before a payment, the screen must be faster than the payment path. Sub-100 ms is the bar.<br><strong>3. The agent path.</strong> HTTP, MCP, or CLI? Can an agent call it without a human?<br><strong>4. Pricing.</strong> Per-check, per-seat, or enterprise contract? Is there a free tier to validate the workflow?<br><strong>5. Audit.</strong> Is every result logged with the list version?</p><h2>The platform trap</h2><p>Enterprise platforms (Chainalysis, Elliptic, TRM) are built for investigations, not the payment path. KYC platforms (Sumsub, IdentityMind) are built for onboarding. Both are good at their jobs — and neither answers the per-payment question an agent asks.</p><h2>The honest answer</h2><p>Screen every payment in the agent path. SanctionsAI is built exactly for that: 947 wallets, 19,218 names, 16 jurisdictions, sub-100 ms, free tier, $19/mo in production, MIT-licensed self-host. But the framework above applies to any vendor you evaluate — the questions are the deliverable.</p>""",
+    },
+    "ofac-civil-penalties-explained": {
+        "title": "OFAC Civil Penalties, Explained: The $356,000 Math",
+        "date": "2026-08-01",
+        "desc": "The base civil penalty starts at $356,000 per violation. How the number works, what mitigates it, and why strict liability makes agents the riskiest surface.",
+        "html": """<p>Every OFAC discussion eventually hits the same number: $356,000. Here is what it actually means.</p><h2>The base penalty</h2><p>Civil penalties start at $356,000 per violation (the base rate; OFAC adjusts it). That is the starting point before aggravating factors push it up — and before mitigating factors pull it down. For agents executing many payments, the per-violation math compounds fast.</p><h2>What mitigates it</h2><p>OFAC's Enforcement Guidelines reward: voluntary self-disclosure (the biggest factor), a documented compliance program, and cooperation. An agent that screens before every payment and logs every result is the kind of program that turns a potential maximum penalty into a mitigated one.</p><h2>Strict liability</h2><p>The standard is strict: intent does not matter, timing does not matter. An agent that paid a sanctioned wallet at 3 AM is the operator's violation — "the agent didn't know" is not a defense.</p><h2>The asymmetry</h2><p>A year of screening at $19/mo is $228. One violation starts at $356,000. The asymmetry is the entire argument for the screen — and it is the whole product.</p>""",
+    },
+    "travel-rule-vs-sanctions-screening": {
+        "title": "Travel Rule vs Sanctions Screening: Two Obligations, One Stack",
+        "date": "2026-07-28",
+        "desc": "Travel rule shares counterparty data between VASPs; sanctions screening checks who you may deal with. They are different obligations — and both belong in the stack.",
+        "html": """<p>Teams integrating compliance often discover two overlapping-sounding requirements: travel rule and sanctions screening. They are different obligations that get conflated.</p><h2>The distinction</h2><p><strong>Travel rule</strong> is the information-sharing obligation: VASPs must share beneficiary-owner and counterparty data for transfers above thresholds. <strong>Sanctions screening</strong> is the prohibition check: may you deal with this party at all? One moves data between regulated firms; the other blocks prohibited transactions.</p><h2>What each covers</h2><p>Travel rule is VASP-to-VASP messaging (Notabene is the category leader). Screening is a per-transaction list check against the SDN list — 947 wallets, 19,218 names, 16 jurisdictions. A payment can be fully travel-rule compliant and still hit a sanctioned wallet.</p><h2>The stack</h2><p>Regulated VASPs typically need both: a travel-rule network for messaging, and a screening API on the payment path. They are complements, not substitutes — and for agents, the screen is the layer that runs before every payment.</p>""",
+    },
+    "crypto-exchange-sanctions-lessons": {
+        "title": "What Crypto Exchanges Teach Us About OFAC Settlements",
+        "date": "2026-07-25",
+        "desc": "Kraken paid $362,158, Bittrex $24.3M, Poloniex $7.6M. The documented OFAC settlements with crypto exchanges — and the screening gaps they share.",
+        "html": """<p>OFAC's enforcement record with crypto exchanges is the best public dataset on what screening gaps cost. Three settlements tell the story.</p><h2>The record</h2><p><strong>Kraken (2022):</strong> $362,158 for apparent violations involving users in embargoed jurisdictions — sanctions evasion through unblocked accounts.<br><strong>Bittrex (2022):</strong> $24.3M for processing transactions involving sanctioned jurisdictions without screening.<br><strong>Poloniex (2023):</strong> $7.6M for similar jurisdiction screening failures.</p><h2>The common thread</h2><p>Each settlement traces to the same gap: counterparty and jurisdiction screening that did not run before transactions settled. The amounts scale with volume — which is exactly why agents, executing hundreds of payments autonomously, are the highest-risk surface.</p><h2>The lesson for agents</h2><p>Exchanges paid millions to learn what a pre-transaction screen costs nothing to run. The pattern is the same: screen before sign, log every result, fail closed. The <a href="/data/ofac-enforcement">enforcement dataset</a> tracks the record.</p>""",
+    },
+    "ai-agent-payment-compliance-2026": {
+        "title": "AI Agent Payment Compliance in 2026: The Emerging Standard",
+        "date": "2026-07-22",
+        "desc": "The emerging compliance standard for agents that pay: screen before sign, fail closed, audit everything. The 4-gate pattern becoming the baseline.",
+        "html": """<p>2026 is the year agent payments went from demo to deployment — and the compliance pattern is hardening into a standard. It has four gates.</p><h2>The four gates</h2><p><strong>1. SCREEN</strong> — every counterparty checked against the SDN list before the payment moves.<br><strong>2. SCORE</strong> — real-time risk scoring (amount anomalies, rail risk, category exposure).<br><strong>3. STOP</strong> — sanctioned wallets blocked automatically, no override path.<br><strong>4. STAMP</strong> — every approved payment gets a compliance receipt: audit-ready, regulator-ready.</p><h2>Why it is becoming standard</h2><p>The rails (x402, AP2, ACP, AgentKit) do not screen — their terms say so. The first enforcement against an agent operator will make the four-gate pattern the baseline every deployer copies. The 2026 SEI research report documents the exposure the gates close.</p><h2>The takeaway</h2><p>Compliance is no longer a separate project — it is a property of the payment path. Screen, score, stop, stamp: four gates, sub-100 ms, zero exceptions.</p>""",
     },
 }
 
@@ -4226,6 +4269,15 @@ License: https://creativecommons.org/licenses/by/4.0/
         ("/checklists/sanctions-data-hygiene-checklist", "monthly", "0.7", "Sanctions data hygiene checklist"),
         ("/templates/blocked-transaction-notification-template", "monthly", "0.7", "Blocked transaction notification template"),
         ("/best/best-crypto-kyc-providers-2026", "monthly", "0.7", "Best crypto KYC providers 2026"),
+        # Round 25 pSEO: blog freshness (6 new posts), embargoed-jurisdiction depth
+        ("/blog/stablecoin-sanctions-2026", "monthly", "0.7", "Stablecoin sanctions in 2026"),
+        ("/blog/sanctions-screening-api-guide", "monthly", "0.7", "How to choose a sanctions screening API"),
+        ("/blog/ofac-civil-penalties-explained", "monthly", "0.7", "OFAC civil penalties explained"),
+        ("/blog/travel-rule-vs-sanctions-screening", "monthly", "0.7", "Travel rule vs sanctions screening"),
+        ("/blog/crypto-exchange-sanctions-lessons", "monthly", "0.7", "Crypto exchange OFAC settlement lessons"),
+        ("/blog/ai-agent-payment-compliance-2026", "monthly", "0.7", "AI agent payment compliance 2026"),
+        ("/scenarios/agent-pays-embargoed-jurisdiction", "weekly", "0.7", "Agent pays a counterparty in an embargoed jurisdiction"),
+        ("/learn/what-is-an-embargoed-jurisdiction", "monthly", "0.6", "What is an embargoed jurisdiction?"),
     ]
         import datetime
         today = datetime.date.today().isoformat()
