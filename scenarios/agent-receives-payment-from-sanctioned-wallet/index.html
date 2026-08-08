@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scenario: An Agent Receives a Payment From a Sanctioned Wallet</title>
+<meta name="description" content="The inbound scenario: a sanctioned wallet tries to pay your agent. Inbound screening, rejection, and the compliance posture.">
+<link rel="canonical" href="https://sanctionsai.dev/scenarios/agent-receives-payment-from-sanctioned-wallet">
+<meta property="og:title" content="Scenario: An Agent Receives a Payment From a Sanctioned Wallet">
+<meta property="og:description" content="The inbound scenario: a sanctioned wallet tries to pay your agent. Inbound screening, rejection, and the compliance posture.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://sanctionsai.dev/scenarios/agent-receives-payment-from-sanctioned-wallet">
+<meta property="og:image" content="https://sanctionsai.dev/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "Scenario: An Agent Receives a Payment From a Sanctioned Wallet", "description": "The inbound scenario: a sanctioned wallet tries to pay your agent. Inbound screening, rejection, and the compliance posture.", "author": {"@type": "Organization", "name": "SanctionsAI", "url": "https://sanctionsai.dev"}, "publisher": {"@type": "Organization", "name": "SanctionsAI", "url": "https://sanctionsai.dev"}, "mainEntityOfPage": {"@type": "WebPage", "@id": "https://sanctionsai.dev/scenarios/agent-receives-payment-from-sanctioned-wallet"}, "datePublished": "2026-08-08", "dateModified": "2026-08-08"}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://sanctionsai.dev/"}, {"@type": "ListItem", "position": 2, "name": "SanctionsAI", "item": "https://sanctionsai.dev/scenarios/agent-receives-payment-from-sanctioned-wallet"}]}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Is receiving from a sanctioned wallet a violation?", "acceptedAnswer": {"@type": "Answer", "text": "Interacting with a blocked person is prohibited in both directions - the receipt is the exposure."}}, {"@type": "Question", "name": "Do I need to screen inbound?", "acceptedAnswer": {"@type": "Answer", "text": "If your agent can receive funds, yes - inbound screening is part of the posture."}}]}</script>
+<style>
+
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;line-height:1.65;color:#0a0a0a;max-width:760px;margin:0 auto;padding:2rem 1.25rem}
+h1{font-size:2.1rem;line-height:1.2;margin:.3em 0}
+h2{font-size:1.45rem;margin-top:2rem;border-bottom:2px solid #e5e7eb;padding-bottom:.3rem}
+h3{font-size:1.15rem;margin-top:1.5rem}
+a{color:#0066cc;text-decoration:none}a:hover{text-decoration:underline}
+.lede{font-size:1.1rem;color:#374151;margin-bottom:1.5rem}
+table{border-collapse:collapse;width:100%;margin:1rem 0;font-size:.95rem}
+th,td{border:1px solid #e5e7eb;padding:.6rem .75rem;text-align:left}
+th{background:#f9fafb;font-weight:600}
+.callout{background:#f0f7ff;border-left:4px solid #0066cc;padding:1rem 1.25rem;margin:1.5rem 0;border-radius:0 .375rem .375rem 0}
+.callout.warn{background:#fef3c7;border-left-color:#d97706}
+.card-grid{display:grid;grid-template-columns:1fr;gap:1rem;margin:1.5rem 0}
+@media(min-width:560px){.card-grid{grid-template-columns:1fr 1fr}}
+.card{background:#f9fafb;border:1px solid #e5e7eb;border-radius:.5rem;padding:1.25rem}
+.card h3{margin-top:0;font-size:1.1rem}
+.card .tag{display:inline-block;background:#dbeafe;color:#1e40af;font-size:.75rem;padding:.15rem .5rem;border-radius:99px;margin-bottom:.5rem}
+.checklist{list-style:none;padding-left:0}
+.checklist li{padding:.4rem 0 .4rem 1.75rem;position:relative}
+.checklist li::before{content:"\2610";position:absolute;left:0;color:#0066cc;font-size:1.1rem}
+.template-section{background:#f9fafb;border:1px solid #e5e7eb;border-radius:.5rem;padding:1.25rem;margin:1rem 0}
+.template-section h3{margin-top:0}
+.price-tag{display:inline-block;background:#dcfce7;color:#166534;font-weight:700;padding:.25rem .75rem;border-radius:.375rem;font-size:1.1rem}
+.related-links{background:#f9fafb;padding:1rem 1.25rem;border-radius:.5rem;margin-top:2rem}
+.related-links ul{list-style:none;padding-left:0}.related-links li{padding:.25rem 0}
+.cta{background:linear-gradient(135deg,#0066cc,#004499);color:#fff;padding:2rem;border-radius:.75rem;margin-top:2rem;text-align:center}
+.cta h2{color:#fff;border:none}.cta .btn{display:inline-block;background:#fff;color:#0066cc;padding:.75rem 1.5rem;border-radius:.375rem;font-weight:600;margin-top:.5rem}
+footer{margin-top:3rem;padding-top:1.5rem;border-top:1px solid #e5e7eb;color:#6b7280;font-size:.9rem}
+
+</style>
+<!-- isenberg-round19 -->
+    
+    <script>!function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.crossOrigin="anonymous",p.async=!0,p.src=s.api_host.replace(".i.posthog.com","-assets.i.posthog.com")+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags getFeatureFlag getFeatureFlagPayload reloadFeatureFlags group updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures getActiveMatchingSurveys getSurveys".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=!0}(document,window.posthog||[]);posthog.init("phc_lyZCgvTpicjLzAO3rY2GhxuX5WUc5jQjP8ZVwwJqauX",{api_host:"https://eu.i.posthog.com",person_profiles:"identified_only"})</script>
+
+</head>
+<body>
+<article>
+<h1>Scenario: Agent Receives From a Sanctioned Wallet</h1>
+<p class="lede">The inbound payment scenario - screening works both directions.</p>
+<h2>The setup</h2>
+<p>A counterparty wallet - on the SDN list - attempts to pay your agent for a service. This is the inbound side: you are about to receive funds from a blocked person.</p>
+<h2>Why inbound matters</h2>
+<p>Receiving funds from a blocked person is also prohibited. 'It was inbound' is not a defense; the prohibition runs both directions.</p>
+<h2>The resolution</h2>
+<ol><li>Inbound wallet screen matches the sanctioned address</li><li>The payment is rejected/blocked</li><li>The attempt is logged with the list entry and version</li><li>You document the decision and report if required</li></ol>
+<h2>The takeaway</h2>
+<p>Screening is bidirectional: screen outbound destinations AND inbound senders. One call covers both.</p>
+
+<!-- mesh-round19 -->
+<section class="mesh-links" style="background:#f9fafb;padding:1.25rem;border-radius:.5rem;margin-top:2rem">
+<h3 style="margin-top:0">Related resources</h3>
+<ul style="list-style:none;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:.4rem 1rem;font-size:.95rem">
+<li><a href="/scenarios/sanctioned-counterparty-in-payment-workflow">Sanctioned counterparty scenario</a></li><li><a href="/learn/what-is-a-blocked-transaction">What is a blocked transaction?</a></li><li><a href="/glossary/blocked-person">Blocked person glossary</a></li><li><a href="/checklists/regulator-readiness-checklist">Regulator-readiness checklist</a></li><li><a href="/glossary/strict-liability">Strict liability glossary</a></li><li><a href="/blog/what-happens-after-a-block">What happens after a block</a></li>
+</ul>
+</section>
+</article>
+<section class="cta"><h2>Screen your agent's next payment</h2><p>Free OFAC sanctions screening — 5 checks/day, no signup.</p><a href="/tools/wallet-checker" class="btn">Check a wallet &rarr;</a></section>
+<footer><p>&copy; 2026 SanctionsAI. <a href="https://sanctionsai.dev/">sanctionsai.dev</a></p></footer>
+</body>
+</html>

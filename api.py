@@ -403,7 +403,9 @@ _BLOG_SLUGS = frozenset((
     "sanctions-screening-api-guide",
     "self-hosting-sanctions-screening",
     "stablecoin-sanctions-2026",
+    "the-ofac-50-percent-rule-explained",
     "travel-rule-vs-sanctions-screening",
+    "what-happens-after-a-block",
     "x402-compliance",
     "x402-sanctions-architecture",
 ))
@@ -455,14 +457,18 @@ _CHECK_NAME_KEYS = frozenset((
 
 # ─── Round 17 pSEO: per-sanctions-list explainer pages ───────────────
 _SANCTIONS_LIST_KEYS = frozenset((
-    "ofac",
-    "ofac-sdn",
-    "ofac-consolidated",
-    "eu-consolidated",
-    "un-consolidated",
+    "australia-dfat",
     "bis-entity-list",
-    "uk-hmt",
+    "canada-carsa",
+    "eu-consolidated",
+    "japan-mofa",
+    "ofac",
+    "ofac-consolidated",
     "ofac-non-sdn",
+    "ofac-sdn",
+    "swiss-seco",
+    "uk-hmt",
+    "un-consolidated",
 ))
 
 # ─── Round 17 pSEO: sanctioned entities by country/jurisdiction ──────
@@ -1876,6 +1882,18 @@ _BLOG_POSTS = {
         "desc": "Sanctions screening answers 'is this prohibited?' Risk scoring answers 'how risky is this?' The three signals that matter for agent payments.",
         "html": """<p>Screening is binary: clean or match. Risk scoring is continuous: allow, review, or decline. For agent payments, three signals carry most of the information.</p><h2>Signal 1: Amount</h2><p>Anomaly detection against the counterparty's history and category baselines. A first-time $50,000 payment from a $5 agent reads differently than a routine micro-payment.</p><h2>Signal 2: Rail</h2><p>Some rails carry more exposure than others: irreversible transfers, high-latency settlement, cross-border paths. The rail is part of the risk, not just the plumbing.</p><h2>Signal 3: Category</h2><p>Counterparty category and jurisdiction exposure. A payment into a high-risk category or embargoed-adjacent geography scores higher regardless of the address.</p><h2>The combination</h2><p>risk_score combines the three into allow/review/decline with a numeric score — the layer above the sanctions gate. Screen first (binary), score second (continuous), then sign.</p>""",
     },
+    "the-ofac-50-percent-rule-explained": {
+        "title": "The OFAC 50% Rule, Explained",
+        "date": "2026-08-08",
+        "desc": "An entity owned 50% or more by blocked persons is itself blocked — even if never listed. How the rule works, how it fails, and how to screen for it.",
+        "html": """<p>OFAC's 50-percent rule is the compliance detail that catches teams who screen names but not ownership.</p><h2>The rule</h2><p>An entity that is owned 50% or more, individually or in the aggregate, by one or more blocked persons is itself treated as blocked — even if the entity never appears on the SDN list.</p><h2>How it fails</h2><p>Name-only screening passes the shell company: no match on the entity's name. The blocked owner sits one level up in the ownership chain. The 50% aggregate test is the layer that catches it.</p><h2>What to screen</h2><p>For corporate counterparties: gather ownership data, screen each owner against the SDN list, apply the aggregate threshold. This is where sanctions screening meets KYB.</p><h2>The practical shape</h2><p>Wallet screening (947 addresses) covers the payment path; name screening (19,218 names) covers counterparties; ownership screening covers the 50% gap. Three layers, one compliance posture.</p>""",
+    },
+    "what-happens-after-a-block": {
+        "title": "What Happens After a Payment Is Blocked",
+        "date": "2026-08-07",
+        "desc": "The post-block workflow: record, review, report. What OFAC expects within 10 days, and how the audit trail turns a block into evidence.",
+        "html": """<p>A blocked payment is the system working. What happens next determines whether the block becomes compliance — or a problem.</p><h2>Step 1: Record</h2><p>Every block is logged with the matched list entry, the list version, and the timestamp. This is the evidence — it must exist before anything else.</p><h2>Step 2: Review</h2><p>Confirm the match is a real hit, not a false positive. Identifier comparison, ownership checks, and the 50% rule all apply. Document the decision.</p><h2>Step 3: Report</h2><p>For real hits, OFAC expects a blocking report — typically within 10 days of the block. The <a href="/templates/blocked-transaction-notification-template">blocked-transaction template</a> has the structure.</p><h2>The asymmetry</h2><p>A block costs minutes. A release of a real hit costs $356,000 and starts at the base penalty. The block is not a failure — it is the product working.</p>""",
+    },
 }
 
 
@@ -2967,7 +2985,13 @@ License: https://creativecommons.org/licenses/by/4.0/
                 '{"question": "How do I use the agentmail SEI calculator?", "answer": "The agentmail SEI calculator at https://sanctionsai.dev/tools/sei-calculator lets you compute your AI agent\u2019s Sanctions Exposure Index in real-time. Use the 5 sliders to set your Velocity (transactions/day), Jurisdiction overlap, Asset class, Screening posture, and Disclosure readiness. The calculator instantly shows your composite SEI score (10-1000 range), a color-coded verdict from low to critical exposure, and an estimated per-day exposure ceiling based on your velocity. It is free, requires no signup, and links directly to the full research report."}\n'
                 '{"question": "How does agentmail compare to enterprise sanctions screening tools?", "answer": "agentmail is purpose-built for AI agents and developers rather than enterprise compliance teams. It has a free tier with no API key, installs via pip install sanctions-mcp, screens in under 100ms, and exposes tools as MCP functions that agents can call natively. Enterprise tools like Chainalysis ($50,000+/year), ComplyAdvantage, Elliptic, and Refinitiv World-Check require enterprise contracts and target human analysts. Detailed head-to-head comparisons are at https://sanctionsai.dev/compare and at https://sanctionsai.dev/vs."}\n'
                 '{"question": "What agent frameworks does agentmail integrate with?", "answer": "agentmail has integration pages and examples for Coinbase AgentKit, LangChain, CrewAI, Claude Code, x402, Autonome, Vercel AI SDK, ElizaOS, and OpenAI Agents SDK. It works with any framework that can make HTTP calls or invoke MCP tools. The MCP server (pip install sanctions-mcp) provides native tool exposure to Claude, Cursor, Windsurf, and any MCP-compatible client. See https://sanctionsai.dev/integrations for the full list."}\n'
-                '{"question": "Where can I read the full agentmail sanctions research?", "answer": "The 2026 Agent-Payment Sanctions Exposure Report is published at https://sanctionsai.dev/research/agent-payment-sanctions-exposure-2026. It introduces the agentmail Sanctions Exposure Index (SEI), includes real OFAC enforcement precedents (Binance $968M, Kraken $362K, EtherDelta $450K, BitGo $98K, BitPay $507K, Societe Generale $53.9M, Standard Chartered $132M), a worked SEI example, and the full scoring methodology. The report is CC BY 4.0 licensed; cite as: agentmail Sanctions Exposure Index (SEI), 2026 Agent-Payment Sanctions Exposure Report, sanctionsai.dev."}\n',
+                '{"question": "Where can I read the full agentmail sanctions research?", "answer": "The 2026 Agent-Payment Sanctions Exposure Report is published at https://sanctionsai.dev/research/agent-payment-sanctions-exposure-2026. It introduces the agentmail Sanctions Exposure Index (SEI), includes real OFAC enforcement precedents (Binance $968M, Kraken $362K, EtherDelta $450K, BitGo $98K, BitPay $507K, Societe Generale $53.9M, Standard Chartered $132M), a worked SEI example, and the full scoring methodology. The report is CC BY 4.0 licensed; cite as: agentmail Sanctions Exposure Index (SEI), 2026 Agent-Payment Sanctions Exposure Report, sanctionsai.dev."}\n'
+                '{"question": "What is the OFAC 50-percent rule?", "answer": "Under OFAC\\u2019s 50-percent rule, an entity owned 50% or more, individually or in the aggregate, by one or more blocked persons is itself blocked - even if the entity never appears on the SDN list. Ownership screening (checking the owners of a corporate counterparty against the SDN list) is required to apply the rule. SanctionsAI\\u2019s name screening covers the 19,218 SDN names; entity ownership analysis is a separate KYB-style layer teams typically run before onboarding corporate counterparties. See https://sanctionsai.dev/learn/beneficial-ownership-sanctions."}\n'
+                '{"question": "Are mixer services sanctioned by OFAC?", "answer": "Yes. OFAC designated Blender.io in May 2022 (first mixer designation), Tornado Cash in August 2022 (including smart contract addresses), and Sinbad in November 2023. Interacting with a designated mixer address - even through code - is prohibited, and those addresses are part of the OFAC crypto wallet list that SanctionsAI screens against. See https://sanctionsai.dev/blog/ofac-mixer-designations."}\n'
+                '{"question": "What happens when a payment is blocked by sanctions screening?", "answer": "A blocked transaction is a payment stopped before settlement because the counterparty matched a sanctions list. The correct response is to block and log the result (with the list entry and version), review it, and if it is a real hit, report per OFAC obligations - blocking reports are typically due within 10 days. A block is the compliant outcome; paying despite the match is the violation. See https://sanctionsai.dev/learn/what-is-a-blocked-transaction."}\n'
+                '{"question": "What is an embargoed jurisdiction?", "answer": "An embargoed jurisdiction is a country or region under comprehensive OFAC sanctions, where nearly all transactions are prohibited. The SanctionsAI dataset tracks 16 such jurisdictions, screened independently of wallet and name. An agent that pays a counterparty in an embargoed jurisdiction commits a violation even if the wallet and name are clean. See https://sanctionsai.dev/learn/what-is-an-embargoed-jurisdiction."}\n'
+                '{"question": "How often does SanctionsAI update its sanctions data?", "answer": "The dataset syncs hourly from the official US Treasury SDN list - 947 wallets, 19,218 names, and 16 jurisdictions, refreshed every hour. Every screen result records the list version, so results are provable for audit. Freshness matters because OFAC designates new addresses between releases; a stale list is a compliance gap. See https://sanctionsai.dev/faq/how-is-the-list-synced."}\n'
+                '{"question": "Does SanctionsAI screen international sanctions lists?", "answer": "SanctionsAI screens the OFAC SDN list (US). International obligations are separate layers: the EU consolidated list, UK HMT/OFSI list, Australia DFAT list, Canada Global Affairs list, Japan MOFA measures, and Switzerland SECO list each apply to their own jurisdictions. Teams with multi-jurisdiction exposure typically screen OFAC first and add the applicable international lists. See https://sanctionsai.dev/sanctions-lists."}\n',
                 "application/x-ndjson")
         if p.path == "/manifest.webmanifest":
             return _json(self, 200, {
@@ -4319,6 +4343,18 @@ License: https://creativecommons.org/licenses/by/4.0/
         ("/faq/how-is-the-list-synced", "monthly", "0.7", "How is the sanctions list synced?"),
         ("/faq/does-agentmail-store-screen-data", "monthly", "0.7", "Does agentmail store screen data?"),
         ("/checklists/regulator-readiness-checklist", "monthly", "0.7", "Regulator-readiness checklist"),
+        # Round 27 pSEO: international lists, 50% rule, inbound payment scenario
+        ("/sanctions-lists/australia-dfat", "monthly", "0.6", "Australia DFAT sanctions list"),
+        ("/sanctions-lists/canada-carsa", "monthly", "0.6", "Canada sanctions list"),
+        ("/sanctions-lists/japan-mofa", "monthly", "0.6", "Japan sanctions list"),
+        ("/sanctions-lists/swiss-seco", "monthly", "0.6", "Switzerland SECO sanctions list"),
+        ("/blog/the-ofac-50-percent-rule-explained", "monthly", "0.7", "The OFAC 50% rule explained"),
+        ("/blog/what-happens-after-a-block", "monthly", "0.7", "What happens after a payment is blocked"),
+        ("/checklists/onboarding-screening-checklist", "monthly", "0.7", "Onboarding screening checklist"),
+        ("/faq/does-agentmail-screen-names", "monthly", "0.7", "Does agentmail screen names?"),
+        ("/faq/how-much-does-agentmail-cost", "monthly", "0.7", "How much does agentmail cost?"),
+        ("/scenarios/agent-receives-payment-from-sanctioned-wallet", "weekly", "0.7", "Agent receives a payment from a sanctioned wallet"),
+        ("/templates/designated-party-review-template", "monthly", "0.7", "Designated party review template"),
     ]
         import datetime
         today = datetime.date.today().isoformat()
@@ -10296,6 +10332,10 @@ compute();
             "un-consolidated": {"name": "UN Consolidated Sanctions List", "full": "United Nations Security Council Consolidated List", "jurisdiction": "Global (UN Member States)", "url": "https://www.un.org/securitycouncil/content/un-sc-consolidated-list", "desc": "The UN Security Council Consolidated List applies to all 193 UN member states by treaty obligation. Includes designations for terrorism (ISIL, Al-Qaida), DPRK, Iran, Libya, and other regimes.", "entries": "~700 designations", "updated": "As designated by Security Council resolutions", "scope": "All UN member states; binding under Chapter VII of the UN Charter."},
             "bis-entity-list": {"name": "BIS Entity List", "full": "Bureau of Industry and Security Entity List", "jurisdiction": "United States (export control)", "url": "https://www.bis.doc.gov/index.php/policy-guidance/lists-of-parties-of-concern/entity-list", "desc": "The BIS Entity List restricts export, re-export, and transfer of items subject to US Export Administration Regulations (EAR). Primarily targets dual-use technology transfers to Russia, China, and other restricted parties.", "entries": "~2,500 entities", "updated": "Frequently (often weekly)", "scope": "All exporters of US-origin items; license requirements vary per entity."},
             "uk-hmt": {"name": "UK HMT Sanctions List", "full": "HM Treasury Office of Financial Sanctions Implementation (OFSI)", "jurisdiction": "United Kingdom", "url": "https://www.gov.uk/government/publications/financial-sanctions-consolidated-list-of-targets", "desc": "The UK OFSI Consolidated List applies to all UK persons and entities, plus any conduct within UK territory. Post-Brexit, UK maintains its own Russia sanctions regime aligned with but distinct from EU and US.", "entries": "~9,000 entries", "updated": "Frequently", "scope": "All UK persons and entities; UK financial sector; extraterritorial reach for UK-origin goods and GBP transactions."},
+            "australia-dfat": {"name": "Australia DFAT Sanctions List", "full": "Australian Department of Foreign Affairs and Trade Consolidated List", "jurisdiction": "Australia", "url": "https://www.dfat.gov.au/international-relations/security/sanctions/consolidated-list", "desc": "Australia's consolidated sanctions list covers autonomous sanctions regimes (including Magnitsky-style designations), UN-mandated sanctions, and regime-specific measures. Administered by DFAT with enforcement by AUSTRAC and the Australian Federal Police.", "entries": "~1,000 entries (approximate; see official list)", "updated": "Regularly", "scope": "All Australian persons and entities; conduct within Australia; Australian-origin goods and AUD transactions."},
+            "canada-carsa": {"name": "Canada Sanctions List", "full": "Global Affairs Canada Consolidated Sanctions List (CARSA / SJFA / SEMA)", "jurisdiction": "Canada", "url": "https://www.international.gc.ca/world-monde/international_relations-relations_internationales/sanctions/index.aspx", "desc": "Canada maintains consolidated sanctions under the Special Economic Measures Act (SEMA), the Justice for Victims of Corrupt Foreign Officials Act (Magnitsky), and CARSA. Administered by Global Affairs Canada with RCMP and FINTRAC enforcement.", "entries": "~3,000 entries (approximate; see official list)", "updated": "Regularly", "scope": "All Canadian persons and entities; conduct within Canada; Canadian-origin goods and CAD transactions."},
+            "japan-mofa": {"name": "Japan Sanctions List", "full": "Japan Ministry of Foreign Affairs Sanctions Measures", "jurisdiction": "Japan", "url": "https://www.mofa.go.jp/policy/economy/sanction/index.html", "desc": "Japan implements UN Security Council sanctions and autonomous measures (including asset-freeze measures aligned with international partners on Russia, North Korea, and other regimes). Administered by MOFA with METI oversight of trade measures.", "entries": "Several hundred entries (approximate; see official list)", "updated": "As designated", "scope": "Japanese persons and entities; transactions routed through Japan; JPY settlement paths."},
+            "swiss-seco": {"name": "Switzerland SECO Sanctions List", "full": "Swiss State Secretariat for Economic Affairs (SECO) Sanctions List", "jurisdiction": "Switzerland", "url": "https://www.seco.admin.ch/seco/en/home/Aussenwirtschaftspolitik_Wirtschaftliche_Zusammenarbeit/Wirtschaftsbeziehungen/exportkontrollen-und-sanktionen/sanktionen-embargos.html", "desc": "Switzerland's SECO maintains the consolidated Swiss sanctions list, largely mirroring UN and EU sanctions regimes (including Russia measures). Enforced by the State Secretariat for Economic Affairs and FINMA-supervised institutions.", "entries": "~1,000 entries (approximate; see official list)", "updated": "As designated", "scope": "Swiss persons and entities; transactions routed through Switzerland; CHF settlement paths."},
         }
         L = LISTS.get(slug)
         if not L:
