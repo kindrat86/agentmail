@@ -417,13 +417,20 @@ _GUIDE_KEYS = frozenset((
     "build-compliance-program",
     "avoid-ofac-violations",
     "ofac-for-ai-agents",
+    "recordkeeping-requirements",
+    "voluntary-self-disclosure",
 ))
 
 # ─── Penalty pages (OFAC penalty & risk info) ───────────────────────
 _PENALTY_KEYS = frozenset((
     "agent-liability",
-    "penalty-mitigation",
+    "binance",
+    "bitfinex",
     "ofac-violation-costs",
+    "penalty-mitigation",
+    "ripple",
+    "societe-generale",
+    "standard-chartered",
     "voluntary-self-disclosure",
 ))
 
@@ -1714,6 +1721,32 @@ _GUIDE_CONTENT = {
             {"name": "Maintain an audit trail", "text": "Keep timestamped, exportable logs of every screen. agentmail paid plans include automatic audit logging for OFAC inquiries."},
         ],
     },
+    "recordkeeping-requirements": {
+        "title": "OFAC Recordkeeping Requirements for Sanctions Screening",
+        "desc": "The recordkeeping rules behind sanctions screening: what to keep, for how long, and the audit trail that answers an inquiry.",
+        "h1": "OFAC Recordkeeping Requirements",
+        "tldr": "OFAC expects records of blocked transactions and related correspondence to be retained for five years after the date of the transaction. Screening logs, payment records, and compliance program documentation are the evidence an inquiry demands - keep them, version them, and make them exportable.",
+        "html": "<p>Recordkeeping is the half of compliance that nobody markets and every inquiry demands. OFAC's regulations require that records of blocked transactions be retained for five years after the date of the transaction.</p><h2>What to keep</h2><p>Screening logs (every check, result, list version, timestamp), payment records paired with screen results, blocked-transaction records, and your compliance program documentation. For agents: the pairing of screen result to payment is the core artifact.</p><h2>For how long</h2><p>OFAC requires five-year retention for blocked-transaction records. Screening and program records should follow the same discipline - retention periods are documented in the regulations and your policies.</p><h2>Why it matters</h2><p>An OFAC inquiry is answered with exports, not archaeology. The <a href=\"/checklists/regulator-readiness-checklist\">regulator-readiness checklist</a> operationalizes this: quarterly drill, everything exportable.</p>",
+        "steps": [
+            {"name": "Log every screen", "text": "Timestamp, counterparty, result, list version for every check - the tamper-evident audit trail."},
+            {"name": "Pair screens to payments", "text": "Every approved payment links to its screen result; every block links to the decision record."},
+            {"name": "Retain five years", "text": "Blocked-transaction records: five years after the transaction date per OFAC regulations."},
+            {"name": "Make it exportable", "text": "An inquiry is answered with exports. Test the drill quarterly."},
+        ],
+    },
+    "voluntary-self-disclosure": {
+        "title": "OFAC Voluntary Self-Disclosure: A Practical Guide",
+        "desc": "How voluntary self-disclosure works: what to file, when, and how a VSD changes the penalty math for agent violations.",
+        "h1": "OFAC Voluntary Self-Disclosure Guide",
+        "tldr": "A Voluntary Self-Disclosure (VSD) is a formal submission describing an apparent violation you discovered and are reporting on your own initiative. It is the single biggest mitigating factor - a baseline penalty reduction of up to 50%. File promptly, preserve every record, and consult counsel.",
+        "html": "<p>A Voluntary Self-Disclosure is the most powerful mitigant in OFAC's penalty math - and the most commonly misunderstood.</p><h2>What a VSD is</h2><p>A formal submission to OFAC describing an apparent violation you discovered and are reporting voluntarily. It is a mitigating factor, not immunity: egregious cases can still draw penalties, but the reduction is significant - baseline reductions up to 50%.</p><h2>When to file</h2><p>Promptly after discovering the apparent violation. Delay erodes the voluntariness. Preserve every record first: agent logs, screening results, payment records, configuration.</p><h2>What to include</h2><p>The transaction details, all parties, root cause, remedial measures, and your compliance program. The <a href=\"/templates/voluntary-self-disclosure-letter-template\">letter template</a> has the structure.</p><h2>The agent-specific angle</h2><p>For agent violations, the screening log is the evidence: it shows whether a screen ran, against which list version, and what it returned. A documented screen that failed for a specific reason is far better than no records at all.</p>",
+        "steps": [
+            {"name": "Preserve records first", "text": "Agent logs, screening results, payment records, configuration - everything, before filing anything."},
+            {"name": "File promptly", "text": "Within a reasonable time after discovery; promptness is part of voluntariness."},
+            {"name": "Use the structure", "text": "The voluntary-self-disclosure letter template mirrors what OFAC expects."},
+            {"name": "Consult counsel", "text": "This guide is educational, not legal advice - a compliance attorney should review the filing."},
+        ],
+    },
 }
 
 # ─── Penalty pages content ────────────────────────────────────────
@@ -1741,6 +1774,36 @@ _PENALTY_CONTENT = {
         "desc": "OFAC&#x27;s Enforcement Guidelines outline specific mitigating factors. Here is how to position your agent compliance program to minimize penalties.",
         "h1": "How to Mitigate OFAC Penalties for AI Agent Violations",
         "html": "<p>OFAC&#x27;s Enforcement Guidelines list several factors that can reduce penalty amounts. Here is how they apply to autonomous agent deployments.</p><h2>1. Voluntary Self-Disclosure</h2><p>Disclosing a violation within a reasonable time after discovery can reduce the base penalty by up to 50%. For agent violations, preserve all logs and screening records before filing.</p><h2>2. Documented Compliance Program</h2><p>Having a compliance program at the time of the violation is a mitigating factor. agentmail gives you documented, timestamped screening evidence that demonstrates a compliance program was in place.</p><h2>3. Cooperation</h2><p>Cooperating fully with OFAC during an investigation, providing all requested records promptly, and taking corrective action are all mitigating factors.</p><h2>4. Remedial Measures</h2><p>After discovering a violation, implementing new screening controls demonstrates good faith. Adding agentmail after a violation shows immediate corrective action.</p><h2>5. Non-willful conduct</h2><p>If the violation was truly inadvertent and the operator had reasonable controls in place, OFAC may issue a cautionary letter rather than a monetary penalty. Pre-transaction screening is the clearest evidence of reasonable controls.</p>",
+    },
+    "binance": {
+        "title": "Binance OFAC Settlement ($968M): What It Means for Crypto Platforms",
+        "desc": "Binance's June 2023 global resolution included a $968M OFAC settlement - the largest in crypto history. The sanctions-screening lessons for exchanges and agents.",
+        "h1": "Binance OFAC Settlement: $968M",
+        "html": "<p>In June 2023, Binance reached a global resolution with US authorities totaling $4.3B. OFAC's portion was $968M - the largest OFAC settlement with a crypto platform to date.</p><h2>What happened</h2><p>OFAC found that Binance processed transactions involving sanctioned jurisdictions and parties without adequate controls. The resolution covered conduct including users in comprehensively embargoed regions transacting through the platform.</p><h2>The screening gap</h2><p>The violations traced to counterparty and jurisdiction screening that did not run before transactions settled - the same gap pattern as every crypto enforcement action. Volume amplifies it: hundreds of thousands of transactions, each potentially a violation.</p><h2>The lesson for agents</h2><p>Screen before sign, every transaction, fail closed. For an autonomous agent the pattern is identical to an exchange - the screen is the difference between a violation and a logged decision. See the <a href=\"/penalties/standard-chartered\">Standard Chartered</a> and <a href=\"/penalties/societe-generale\">Societe Generale</a> cases for the banking-side scale.</p>",
+    },
+    "bitfinex": {
+        "title": "Bitfinex OFAC Settlement ($800K): What It Means",
+        "desc": "Bitfinex's October 2021 $800K OFAC settlement over transactions involving sanctioned jurisdictions - the screening lessons.",
+        "h1": "Bitfinex OFAC Settlement: $800K",
+        "html": "<p>In October 2021, Bitfinex settled with OFAC for $800,000 over apparent violations involving users in comprehensively sanctioned jurisdictions.</p><h2>What happened</h2><p>OFAC found Bitfinex processed transactions for users in sanctioned regions without adequate screening controls. The settlement amount reflected the volume and the absence of aggravating factors beyond the conduct itself.</p><h2>The screening gap</h2><p>Jurisdiction screening was the missing layer: wallet-level and name-level checks can be clean while the counterparty's geography is prohibited. The 16-jurisdiction surface is screened independently.</p><h2>The lesson for agents</h2><p>Geography is a third screening surface. An agent's payment path must check wallets, names, AND jurisdictions before sign.</p>",
+    },
+    "ripple": {
+        "title": "Ripple OFAC Settlement ($700K): What It Means",
+        "desc": "Ripple's October 2023 $700K OFAC settlement over 1,773 apparent violations - the sanctions-screening lessons.",
+        "h1": "Ripple OFAC Settlement: $700K",
+        "html": "<p>In October 2023, Ripple settled with OFAC for $700,000 over apparent sanctions violations. OFAC found Ripple processed 1,773 transactions totaling roughly $137,000 for users in sanctioned jurisdictions.</p><h2>What happened</h2><p>The violations involved users in comprehensively embargoed regions transacting through Ripple's platform. OFAC noted the absence of a compliance program during the relevant period as an aggravating consideration, tempered by Ripple's cooperation and remediation.</p><h2>The lesson</h2><p>Small transaction values do not reduce the exposure - 1,773 transactions each constituted an apparent violation. For agents executing hundreds of micro-payments, the same math applies: each payment is a separate violation.</p>",
+    },
+    "societe-generale": {
+        "title": "Societe Generale OFAC Settlement ($53.9M): What It Means",
+        "desc": "Societe Generale's June 2022 $53.9M OFAC settlement (part of a $1.34B global resolution) - the banking-scale sanctions lessons.",
+        "h1": "Societe Generale OFAC Settlement: $53.9M",
+        "html": "<p>In June 2022, Societe Generale reached a $1.34B global resolution with US authorities; OFAC's portion was $53.9M over apparent violations of multiple sanctions programs.</p><h2>What happened</h2><p>OFAC found Societe Generale processed US dollar transactions through US correspondent banks involving sanctioned parties and jurisdictions over several years. The conduct predated the bank's later compliance build-out.</p><h2>The pattern</h2><p>The violations ran through the payments layer: USD clearing is the enforcement magnet. For agents, the same principle applies - the settlement rail (stablecoin, x402, bank) carries the compliance obligation, not just the counterparty relationship.</p><h2>The lesson</h2><p>Screen the payment path itself, not only the counterparty. Rail-level controls are part of the posture.</p>",
+    },
+    "standard-chartered": {
+        "title": "Standard Chartered OFAC Settlement ($132M): What It Means",
+        "desc": "Standard Chartered's April 2019 $132M OFAC settlement (part of a $1.1B resolution) - the largest banking sanctions lessons.",
+        "h1": "Standard Chartered OFAC Settlement: $132M",
+        "html": "<p>In April 2019, Standard Chartered reached a $1.1B global resolution with US and UK authorities; OFAC's portion was $132M over apparent violations spanning multiple sanctions programs and years.</p><h2>What happened</h2><p>OFAC found Standard Chartered processed USD transactions through US clearing involving sanctioned countries and parties, including conduct that predated tightened controls. The settlement covered years of apparent violations at volume.</p><h2>The lesson for agents</h2><p>Volume compounds violations: thousands of transactions over years became hundreds of millions in settlements. An agent that pays without screening is the same compounding pattern at machine speed - the screen is the only control that scales.</p><p>Related: <a href=\"/penalties/binance\">Binance ($968M)</a> and <a href=\"/penalties/societe-generale\">Societe Generale ($53.9M)</a>.</p>",
     },
 }
 
@@ -2991,7 +3054,9 @@ License: https://creativecommons.org/licenses/by/4.0/
                 '{"question": "What happens when a payment is blocked by sanctions screening?", "answer": "A blocked transaction is a payment stopped before settlement because the counterparty matched a sanctions list. The correct response is to block and log the result (with the list entry and version), review it, and if it is a real hit, report per OFAC obligations - blocking reports are typically due within 10 days. A block is the compliant outcome; paying despite the match is the violation. See https://sanctionsai.dev/learn/what-is-a-blocked-transaction."}\n'
                 '{"question": "What is an embargoed jurisdiction?", "answer": "An embargoed jurisdiction is a country or region under comprehensive OFAC sanctions, where nearly all transactions are prohibited. The SanctionsAI dataset tracks 16 such jurisdictions, screened independently of wallet and name. An agent that pays a counterparty in an embargoed jurisdiction commits a violation even if the wallet and name are clean. See https://sanctionsai.dev/learn/what-is-an-embargoed-jurisdiction."}\n'
                 '{"question": "How often does SanctionsAI update its sanctions data?", "answer": "The dataset syncs hourly from the official US Treasury SDN list - 947 wallets, 19,218 names, and 16 jurisdictions, refreshed every hour. Every screen result records the list version, so results are provable for audit. Freshness matters because OFAC designates new addresses between releases; a stale list is a compliance gap. See https://sanctionsai.dev/faq/how-is-the-list-synced."}\n'
-                '{"question": "Does SanctionsAI screen international sanctions lists?", "answer": "SanctionsAI screens the OFAC SDN list (US). International obligations are separate layers: the EU consolidated list, UK HMT/OFSI list, Australia DFAT list, Canada Global Affairs list, Japan MOFA measures, and Switzerland SECO list each apply to their own jurisdictions. Teams with multi-jurisdiction exposure typically screen OFAC first and add the applicable international lists. See https://sanctionsai.dev/sanctions-lists."}\n',
+                '{"question": "Does SanctionsAI screen international sanctions lists?", "answer": "SanctionsAI screens the OFAC SDN list (US). International obligations are separate layers: the EU consolidated list, UK HMT/OFSI list, Australia DFAT list, Canada Global Affairs list, Japan MOFA measures, and Switzerland SECO list each apply to their own jurisdictions. Teams with multi-jurisdiction exposure typically screen OFAC first and add the applicable international lists. See https://sanctionsai.dev/sanctions-lists."}\n'
+                '{"question": "What are the largest OFAC settlements with crypto platforms?", "answer": "The documented record includes: Binance (June 2023, OFAC portion $968M of a $4.3B global resolution - the largest crypto OFAC settlement), Bitfinex (October 2021, $800K), Ripple (October 2023, $700K for 1,773 apparent violations), Kraken (November 2022, $362,158), and Bittrex (October 2022, $24.3M). On the banking side: Standard Chartered (April 2019, $132M OFAC portion) and Societe Generale (June 2022, $53.9M OFAC portion). Each case traces to counterparty or jurisdiction screening that did not run before settlement. See https://sanctionsai.dev/penalties."}\n'
+                '{"question": "How long does OFAC require records to be kept?", "answer": "OFAC regulations require that records of blocked transactions be retained for five years after the date of the transaction. The practical discipline for teams: log every screen with the list version, pair screen results to payments, and make the trail exportable - an inquiry is answered with exports. See https://sanctionsai.dev/guides/recordkeeping-requirements."}\n',
                 "application/x-ndjson")
         if p.path == "/manifest.webmanifest":
             return _json(self, 200, {
@@ -4355,6 +4420,16 @@ License: https://creativecommons.org/licenses/by/4.0/
         ("/faq/how-much-does-agentmail-cost", "monthly", "0.7", "How much does agentmail cost?"),
         ("/scenarios/agent-receives-payment-from-sanctioned-wallet", "weekly", "0.7", "Agent receives a payment from a sanctioned wallet"),
         ("/templates/designated-party-review-template", "monthly", "0.7", "Designated party review template"),
+        # Round 28 pSEO: link-integrity gap-fill (penalties precedents, guides, FAQ)
+        ("/penalties/binance", "monthly", "0.7", "Binance OFAC settlement $968M"),
+        ("/penalties/bitfinex", "monthly", "0.7", "Bitfinex OFAC settlement $800K"),
+        ("/penalties/ripple", "monthly", "0.7", "Ripple OFAC settlement $700K"),
+        ("/penalties/societe-generale", "monthly", "0.7", "Societe Generale OFAC settlement $53.9M"),
+        ("/penalties/standard-chartered", "monthly", "0.7", "Standard Chartered OFAC settlement $132M"),
+        ("/guides/recordkeeping-requirements", "monthly", "0.7", "OFAC recordkeeping requirements"),
+        ("/guides/voluntary-self-disclosure", "monthly", "0.7", "OFAC voluntary self-disclosure guide"),
+        ("/faq/how-often-does-ofac-update-sanctions", "monthly", "0.7", "How often does OFAC update sanctions?"),
+        ("/learn/crypto-compliance-guide", "monthly", "0.6", "Crypto compliance guide"),
     ]
         import datetime
         today = datetime.date.today().isoformat()

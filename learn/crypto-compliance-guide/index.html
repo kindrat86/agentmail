@@ -3,21 +3,19 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Crypto Sanctions Compliance Guide [2026 Guide]</title>
-<meta name="description" content="Crypto Sanctions Compliance Guide. How cryptocurrency businesses can implement effective sanctions screening.">
+<title>Crypto Compliance Guide [2026]</title>
+<meta name="description" content="The crypto compliance stack: sanctions screening, KYC/AML onboarding, travel rule, and the audit trail - what a crypto business actually runs.">
 <link rel="canonical" href="https://sanctionsai.dev/learn/crypto-compliance-guide">
-<meta property="og:title" content="Crypto Sanctions Compliance Guide [2026 Guide]">
-<meta property="og:description" content="Crypto Sanctions Compliance Guide. How cryptocurrency businesses can implement effective sanctions screening.">
+<meta property="og:title" content="Crypto Compliance Guide [2026]">
+<meta property="og:description" content="The crypto compliance stack: sanctions screening, KYC/AML onboarding, travel rule, and the audit trail - what a crypto business actually runs.">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://sanctionsai.dev/learn/crypto-compliance-guide">
 <meta property="og:image" content="https://sanctionsai.dev/og.png">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="robots" content="index, follow, max-image-preview:large">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"Crypto Sanctions Compliance Guide [2026 Guide]","description":"Crypto Sanctions Compliance Guide. How cryptocurrency businesses can implement effective sanctions screening.","author":{"@type":"Organization","name":"SanctionsAI","url":"https://sanctionsai.dev"},"publisher":{"@type":"Organization","name":"SanctionsAI","url":"https://sanctionsai.dev"},"mainEntityOfPage":{"@type":"WebPage","@id":"https://sanctionsai.dev/learn/crypto-compliance-guide"},"datePublished":"2026-07-18","dateModified":"2026-07-18"}</script>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://sanctionsai.dev/"},{"@type":"ListItem","position":2,"name":"SanctionsAI","item":"https://sanctionsai.dev/learn/crypto-compliance-guide"}]}</script>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Is this relevant for OFAC screening API?","acceptedAnswer":{"@type":"Answer","text":"Yes. This guide is written specifically for teams working with OFAC screening API."}}, {"@type":"Question","name":"How long does it take to implement?","acceptedAnswer":{"@type":"Answer","text":"Most teams apply these concepts within their first day of using the platform."}}]}</script>
-
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "Crypto Compliance Guide [2026]", "description": "The crypto compliance stack: sanctions screening, KYC/AML onboarding, travel rule, and the audit trail - what a crypto business actually runs.", "author": {"@type": "Organization", "name": "SanctionsAI", "url": "https://sanctionsai.dev"}, "publisher": {"@type": "Organization", "name": "SanctionsAI", "url": "https://sanctionsai.dev"}, "mainEntityOfPage": {"@type": "WebPage", "@id": "https://sanctionsai.dev/learn/crypto-compliance-guide"}, "datePublished": "2026-08-08", "dateModified": "2026-08-08"}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://sanctionsai.dev/"}, {"@type": "ListItem", "position": 2, "name": "SanctionsAI", "item": "https://sanctionsai.dev/learn/crypto-compliance-guide"}]}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "What is the minimum?", "acceptedAnswer": {"@type": "Answer", "text": "Sanctions screening on every payment + audit logs. KYC/travel rule apply to regulated custodians."}}, {"@type": "Question", "name": "Is this legal advice?", "acceptedAnswer": {"@type": "Answer", "text": "No - a compliance program is built with counsel; this is the technical shape."}}]}</script>
 <style>
+
 body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;line-height:1.65;color:#0a0a0a;max-width:760px;margin:0 auto;padding:2rem 1.25rem}
 h1{font-size:2.1rem;line-height:1.2;margin:.3em 0}
 h2{font-size:1.45rem;margin-top:2rem;border-bottom:2px solid #e5e7eb;padding-bottom:.3rem}
@@ -29,39 +27,53 @@ th,td{border:1px solid #e5e7eb;padding:.6rem .75rem;text-align:left}
 th{background:#f9fafb;font-weight:600}
 .callout{background:#f0f7ff;border-left:4px solid #0066cc;padding:1rem 1.25rem;margin:1.5rem 0;border-radius:0 .375rem .375rem 0}
 .callout.warn{background:#fef3c7;border-left-color:#d97706}
+.card-grid{display:grid;grid-template-columns:1fr;gap:1rem;margin:1.5rem 0}
+@media(min-width:560px){.card-grid{grid-template-columns:1fr 1fr}}
+.card{background:#f9fafb;border:1px solid #e5e7eb;border-radius:.5rem;padding:1.25rem}
+.card h3{margin-top:0;font-size:1.1rem}
+.card .tag{display:inline-block;background:#dbeafe;color:#1e40af;font-size:.75rem;padding:.15rem .5rem;border-radius:99px;margin-bottom:.5rem}
+.checklist{list-style:none;padding-left:0}
+.checklist li{padding:.4rem 0 .4rem 1.75rem;position:relative}
+.checklist li::before{content:"\2610";position:absolute;left:0;color:#0066cc;font-size:1.1rem}
+.template-section{background:#f9fafb;border:1px solid #e5e7eb;border-radius:.5rem;padding:1.25rem;margin:1rem 0}
+.template-section h3{margin-top:0}
+.price-tag{display:inline-block;background:#dcfce7;color:#166534;font-weight:700;padding:.25rem .75rem;border-radius:.375rem;font-size:1.1rem}
 .related-links{background:#f9fafb;padding:1rem 1.25rem;border-radius:.5rem;margin-top:2rem}
 .related-links ul{list-style:none;padding-left:0}.related-links li{padding:.25rem 0}
 .cta{background:linear-gradient(135deg,#0066cc,#004499);color:#fff;padding:2rem;border-radius:.75rem;margin-top:2rem;text-align:center}
 .cta h2{color:#fff;border:none}.cta .btn{display:inline-block;background:#fff;color:#0066cc;padding:.75rem 1.5rem;border-radius:.375rem;font-weight:600;margin-top:.5rem}
 footer{margin-top:3rem;padding-top:1.5rem;border-top:1px solid #e5e7eb;color:#6b7280;font-size:.9rem}
+
 </style>
-<!-- isenberg-round18 -->
+<!-- isenberg-round19 -->
+    
     <script>!function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.crossOrigin="anonymous",p.async=!0,p.src=s.api_host.replace(".i.posthog.com","-assets.i.posthog.com")+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags getFeatureFlag getFeatureFlagPayload reloadFeatureFlags group updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures getActiveMatchingSurveys getSurveys".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=!0}(document,window.posthog||[]);posthog.init("phc_lyZCgvTpicjLzAO3rY2GhxuX5WUc5jQjP8ZVwwJqauX",{api_host:"https://eu.i.posthog.com",person_profiles:"identified_only"})</script>
+
 </head>
 <body>
 <article>
-<h1>Crypto Sanctions Compliance Guide</h1>
-<p class="lede">How cryptocurrency businesses can implement effective sanctions screening.</p>
-<h2>Why crypto compliance matters</h2>
-<p>OFAC has fined multiple crypto platforms millions for sanctions violations. Compliance is not optional.</p>
-<h2>Wallet screening</h2>
-<p>Screen all wallet addresses against the SDN list before allowing transactions. SanctionsAI provides a free API.</p>
-
-<h2>How SanctionsAI helps</h2>
-<p>Free OFAC sanctions screening API. The platform operationalizes the concepts above into a working OFAC screening API workflow.</p>
-<div class="callout"><strong>Next steps:</strong> Apply what you've learned with SanctionsAI.</div>
-
-
-
+<h1>Crypto Compliance Guide</h1>
+<p class="lede">The four-layer crypto compliance stack, explained for builders.</p>
+<h2>Overview</h2>
+<p>Crypto compliance is a stack, not a checkbox. The layers: sanctions screening (every transaction), KYC/AML (onboarding), travel rule (VASP-to-VASP data), and the audit trail that ties them together.</p>
+<h2>Layer 1: Sanctions screening</h2>
+<p>Screen every wallet, name, and jurisdiction before funds move - 947 wallets, 19,218 names, 16 jurisdictions. This is the deterministic layer that runs on every transaction.</p>
+<h2>Layer 2: KYC/AML</h2>
+<p>Identity verification at onboarding plus behavioral monitoring. KYC answers 'who are you'; screening answers 'may we deal with you'. Both, in order.</p>
+<h2>Layer 3: Travel rule</h2>
+<p>VASP-to-VASP counterparty data sharing above thresholds - the messaging layer (Notabene and peers). Complements, not replaces, screening.</p>
+<h2>Layer 4: Audit</h2>
+<p>Every decision logged with list versions and timestamps. An inquiry is answered with exports, not archaeology - the <a href="/guides/recordkeeping-requirements">recordkeeping guide</a> covers retention.</p>
 
 <!-- mesh-round19 -->
 <section class="mesh-links" style="background:#f9fafb;padding:1.25rem;border-radius:.5rem;margin-top:2rem">
 <h3 style="margin-top:0">Related resources</h3>
 <ul style="list-style:none;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:.4rem 1rem;font-size:.95rem">
-<li><a href="/learn/sanctions-risk-assessment">How to Conduct a Sanctions Risk Assessment [2026 Guide]</a></li><li><a href="/learn/sanctions-screening-best-practices">Sanctions Screening Best Practices — Complete Guide 2026</a></li><li><a href="/learn/ofac-compliance-guide">OFAC compliance guide for startups</a></li><li><a href="/vs/chainalysis">SanctionsAI vs Chainalysis: which is right for you?</a></li><li><a href="/penalties/bitpay-ofac-2021">BitPay OFAC Penalty (2021) — $507,375 [Case Study]</a></li><li><a href="/penalties/kraken">Kraken OFAC penalty</a></li>
+<li><a href="/learn/kyc-vs-sanctions-screening">KYC vs sanctions screening</a></li><li><a href="/blog/travel-rule-vs-sanctions-screening">Travel rule vs screening</a></li><li><a href="/guides/recordkeeping-requirements">Recordkeeping requirements</a></li><li><a href="/blog/crypto-exchange-sanctions-lessons">OFAC record: exchange settlements</a></li><li><a href="/learn/stablecoin-sanctions-compliance">Stablecoin sanctions compliance</a></li><li><a href="/checklists/regulator-readiness-checklist">Regulator-readiness checklist</a></li>
 </ul>
-</section></article>
-<section class="cta"><h2>Try SanctionsAI</h2><p>Free OFAC sanctions screening API.</p><a href="https://sanctionsai.dev/" class="btn">Get started &rarr;</a></section>
+</section>
+</article>
+<section class="cta"><h2>Screen your agent's next payment</h2><p>Free OFAC sanctions screening — 5 checks/day, no signup.</p><a href="/tools/wallet-checker" class="btn">Check a wallet &rarr;</a></section>
 <footer><p>&copy; 2026 SanctionsAI. <a href="https://sanctionsai.dev/">sanctionsai.dev</a></p></footer>
 </body>
 </html>
