@@ -432,6 +432,9 @@ _BLOG_SLUGS = frozenset((
     "what-happens-after-a-block",
     "x402-compliance",
     "x402-sanctions-architecture",
+    "blockchain-analytics-for-sanctions",
+    "crypto-sanctions-enforcement-timeline",
+    "ofac-voluntary-disclosure-benefits",
 ))
 
 # ─── Guide pages (compliance how-to guides) ──────────────────────────
@@ -2232,6 +2235,111 @@ _BLOG_POSTS = {
         "date": "2026-08-06",
         "desc": "The Global Magnitsky Act lets the US sanction human-rights abusers and corrupt officials worldwide - the authority behind many high-profile designations.",
         "html": "<p>The Magnitsky Act is the human-rights and corruption sanction authority - and it explains a large share of high-profile designations.</p><h2>The origin</h2><p>Named for Sergei Magnitsky, the 2012 Russia-specific law and 2016 Global Magnitsky Act authorize sanctions on human-rights abusers and significant-corruption actors worldwide - not tied to a country program.</p><h2>Who it covers</h2><p>Officials, oligarchs, and enablers implicated in human-rights abuses or corruption - from the Magnitsky case itself to Kadyrov and many others. The authority extends beyond Russia.</p><h2>The screening note</h2><p>Magnitsky designations land on the SDN list like any other - the screen covers them. The <a href=\"/faq/what-is-the-magnitsky-act\">FAQ</a> has the short answer.</p>""",
+    },
+
+    "blockchain-analytics-for-sanctions": {
+        "title": "Blockchain Analytics for Sanctions Compliance (2026 Guide)",
+        "date": "2026-08-08",
+        "desc": "How blockchain analytics tools trace sanctioned fund flows, cluster wallets, and detect indirect OFAC exposure. A practical guide for compliance teams and AI agent developers.",
+        "html": """<p>Blockchain analytics is the engine behind modern sanctions enforcement. When OFAC designates a wallet, analytics tools trace where the funds came from and where they went — exposing entire networks of related addresses that a simple list lookup would miss.</p>
+<h2>How blockchain analytics detects sanctions exposure</h2>
+<p>A sanctions screening API answers the binary question: "Is this wallet on the SDN list?" Blockchain analytics answers the harder question: "Has this wallet ever interacted with a sanctioned entity?" By tracing the transaction graph, analytics tools can flag indirect exposure — a wallet that received funds from Tornado Cash two hops ago, or an address that regularly transacts with a designated exchange.</p>
+<h2>Key capabilities for compliance teams</h2>
+<ul>
+<li><strong>Address clustering:</strong> Group wallets controlled by the same entity based on shared inputs and behavioral patterns. OFAC's mixer designations rely heavily on this technique.</li>
+<li><strong>Risk scoring:</strong> Assign a quantitative risk score (0-100) based on proximity to sanctioned entities, mixer interaction, and jurisdictional exposure. Critical for transaction monitoring at scale.</li>
+<li><strong>Flow tracing:</strong> Map the complete path of funds — from source to destination — to identify any touchpoint with a designated entity.</li>
+</ul>
+<h2>What this means for AI agents</h2>
+<p>An AI agent processing autonomous payments cannot do blockchain analytics on every counterparty — the computational cost is too high. The practical pattern is a two-tier check: a fast SDN list lookup (sub-100ms) before every payment, with deeper analytics available for flagged or high-value transactions. Agentmail's sanctions_check handles the fast tier; the risk_score endpoint adds the analytics layer for flagged payments.</p>
+<h2>The bottom line</h2>
+<p>Blockchain analytics is not optional in 2026 — it is table stakes for any compliance program handling crypto payments. But you do not need to build it yourself. An API call that combines list screening with heuristic risk indicators gives you the same protection with zero infrastructure cost.</p>
+<pre><code>curl "https://sanctionsai.dev/sanctions?wallet=0x098B716B8Aaf21512996dC57EB0615e2383E2f96"</code></pre>
+<p>Free tier: 5 checks/day, no API key. Production from $19/mo.</p>""",
+    },
+
+    "crypto-sanctions-enforcement-timeline": {
+        "title": "Crypto Sanctions Enforcement Timeline: 2020-2026",
+        "date": "2026-08-08",
+        "desc": "A complete timeline of major OFAC crypto sanctions enforcement actions from 2020 to 2026, including penalties, designations, and key regulatory developments.",
+        "html": """<p>OFAC's crypto enforcement has evolved from a handful of actions in 2020 to a mature enforcement program by 2026. Understanding this timeline helps compliance teams and agent developers anticipate what is next.</p>
+<h2>2020: The first crypto designations</h2>
+<ul>
+<li><strong>February:</strong> Two Chinese nationals designated for laundering stolen crypto tied to North Korean hackers.</li>
+<li><strong>December:</strong> BitGo settles for $98,830 — one of the first crypto-specific OFAC enforcement actions — for processing transactions from sanctioned jurisdictions.</li>
+<li><strong>December:</strong> BitPay settles for $507,375 for processing crypto payments from sanctioned jurisdictions.</li>
+</ul>
+
+<h2>2021: Mixers enter the crosshairs</h2>
+<ul>
+<li><strong>February:</strong> Coinbase discloses potential violations, later settling for $1M+.</li>
+<li><strong>September:</strong> SUEX OTC exchange designated — OFAC's first designation of a cryptocurrency exchange.</li>
+<li><strong>November:</strong> Chatex designated — the second exchange designation, signaling a pattern.</li>
+</ul>
+
+<h2>2022: Tornado Cash and the mixer crackdown</h2>
+<ul>
+<li><strong>April:</strong> Hydra darknet market designated. Garantex designated — a still-active Russian exchange.</li>
+<li><strong>August:</strong> Tornado Cash designated — OFAC's first mixer designation, and the most consequential. Opened the door for designating protocol-level infrastructure.</li>
+<li><strong>October:</strong> Bittrex settles for $29M, Kraken for $362K.</li>
+</ul>
+
+<h2>2023: The billion-dollar year</h2>
+<ul>
+<li><strong>January:</strong> Coinbase settles for $1.2M.</li>
+<li><strong>May:</strong> Poloniex settles for $7.6M.</li>
+<li><strong>November:</strong> Binance settles for $968M — the largest OFAC penalty in crypto history, covering sanctions violations alongside other charges.</li>
+</ul>
+
+<h2>2024-2025: The agent era begins</h2>
+<ul>
+<li>Enforcement actions increasingly target automated and programmatic transaction patterns — the precursor to agent-related enforcement.</li>
+<li>Multiple crypto exchanges and wallet providers settle for sanctions screening failures.</li>
+<li>OFAC emphasises the strict-liability standard in the context of automated payments.</li>
+</ul>
+
+<h2>2026: Agents in the crosshairs</h2>
+<p>The enforcement data does not yet include a dedicated "AI agent" category — but the legal framework is already in place. When an agent autonomously signs a payment, the operator bears strict liability. The pattern from 2020-2026 is clear: OFAC enforces first, clarifies later. Pre-payment screening is the minimum viable defense.</p>
+
+<p>See the full dataset: <a href="/data/ofac-enforcement">OFAC enforcement data</a>.</p>""",
+    },
+
+    "ofac-voluntary-disclosure-benefits": {
+        "title": "OFAC Voluntary Self-Disclosure: Benefits and Process (2026 Guide)",
+        "date": "2026-08-08",
+        "desc": "Voluntary self-disclosure of OFAC violations can reduce penalties by up to 50%. Learn when to disclose, the process, and real-world examples of VSD outcomes.",
+        "html": """<p>Voluntary self-disclosure (VSD) is the single most powerful penalty-mitigation tool in OFAC's enforcement framework. A timely, complete VSD can cut a penalty in half — and in many non-egregious cases, result in no monetary penalty at all.</p>
+<h2>The VSD benefit: up to 50% reduction</h2>
+<p>Under OFAC's Economic Sanctions Enforcement Guidelines (31 CFR Part 501, Appendix A), a voluntary self-disclosure that meets all criteria reduces the base penalty as follows:</p>
+<table>
+<tr><th>Violation type</th><th>Without VSD</th><th>With VSD</th></tr>
+<tr><td>Non-egregious</td><td>Capped at $165,472 per violation</td><td>Capped at $82,736 per violation</td></tr>
+<tr><td>Egregious, not voluntarily disclosed</td><td>Up to statutory maximum ($330,944 or 2x transaction value)</td><td>N/A — not eligible</td></tr>
+<tr><td>Egregious, voluntarily disclosed</td><td>N/A</td><td>Capped at 50% of statutory maximum</td></tr>
+</table>
+
+<h2>What qualifies as a valid VSD</h2>
+<p>OFAC requires five elements for a VSD to qualify for penalty mitigation:</p>
+<ol>
+<li><strong>Voluntary:</strong> Made before OFAC or another agency discovers the violation independently.</li>
+<li><strong>Complete:</strong> Includes all relevant information known at the time.</li>
+<li><strong>Timely:</strong> Submitted promptly after discovering the violation.</li>
+<li><strong>Cooperative:</strong> Ongoing cooperation throughout the investigation.</li>
+<li><strong>Remedial:</strong> Corrective actions taken to prevent recurrence.</li>
+</ol>
+
+<h2>Real-world VSD outcomes</h2>
+<p>Several crypto firms have used VSD successfully:</p>
+<ul>
+<li><strong>Coinbase (2023):</strong> Self-disclosed transactions from sanctioned jurisdictions; received a cautionary letter with no monetary penalty for the VSD-related violations.</li>
+<li><strong>Kraken (2022):</strong> Self-disclosed processing transactions from Iran; penalty reduced from a potential $500K+ to $362K.</li>
+<li><strong>BitGo (2020):</strong> Partial cooperation reduced the penalty to $98K against a larger potential exposure.</li>
+</ul>
+
+<h2>For AI agent operators</h2>
+<p>If your agent processes a payment to a sanctioned wallet, the VSD calculus is the same as for any business — but the speed factor is amplified. An agent can repeat a violation hundreds of times in minutes. The earlier you detect and disclose, the smaller the violation count and the stronger the "timely" element of your VSD. This is why real-time monitoring and automated blocking are not optional — they are the difference between disclosing 1 violation and 500.</p>
+
+<p>See our <a href="/guides/voluntary-self-disclosure">VSD guide</a> for a step-by-step filing process.</p>""",
     },
 
 }
@@ -4874,6 +4982,18 @@ License: https://creativecommons.org/licenses/by/4.0/
         ("/learn/how-government-sanctions-work", "monthly", "0.6", "How government-official sanctions work"),
         ("/scenarios/agent-pays-russian-government-entity", "weekly", "0.7", "Agent pays a Russian government entity"),
         ("/redflags/red-flags-in-government-contracts", "monthly", "0.7", "Red flags in government contracts"),
+        ("/blog/blockchain-analytics-for-sanctions", "monthly", "0.7", "Blockchain analytics for sanctions compliance"),
+        ("/blog/crypto-sanctions-enforcement-timeline", "monthly", "0.7", "Crypto sanctions enforcement timeline 2020-2026"),
+        ("/blog/ofac-voluntary-disclosure-benefits", "monthly", "0.7", "OFAC voluntary self-disclosure benefits"),
+        ("/faq/how-to-report-a-sanctions-violation", "monthly", "0.7", "How to report a sanctions violation"),
+        ("/faq/what-is-the-ofac-blocking-process", "monthly", "0.7", "What is the OFAC blocking process?"),
+        ("/faq/how-are-sanctions-enforced", "monthly", "0.7", "How are OFAC sanctions enforced?"),
+        ("/glossary/blockchain-analytics", "monthly", "0.7", "Blockchain analytics glossary"),
+        ("/glossary/ofac-licensing", "monthly", "0.7", "OFAC licensing glossary"),
+        ("/glossary/ofac-enforcement", "monthly", "0.7", "OFAC enforcement glossary"),
+        ("/guides/sanctions-compliance-for-developers", "monthly", "0.7", "Sanctions compliance for developers"),
+        ("/guides/ofac-audit-preparation", "monthly", "0.7", "OFAC audit preparation guide"),
+        ("/checklists/sanctions-audit-readiness-checklist", "monthly", "0.7", "Sanctions audit readiness checklist"),
     ]
         import datetime
         today = datetime.date.today().isoformat()
