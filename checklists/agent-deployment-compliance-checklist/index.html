@@ -3,17 +3,17 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>What Is Wallet Screening?</title>
-<meta name="description" content="Wallet screening is checking a blockchain address against sanctions lists before money moves. How it works and why it matters.">
-<link rel="canonical" href="https://sanctionsai.dev/learn/what-is-wallet-screening">
-<meta property="og:title" content="What Is Wallet Screening?">
-<meta property="og:description" content="Wallet screening is checking a blockchain address against sanctions lists before money moves. How it works and why it matters.">
+<title>Agent Deployment Compliance Checklist [2026 Checklist]</title>
+<meta name="description" content="The compliance checklist before any payment-capable agent ships: screening, fail-closed, audit, and review.">
+<link rel="canonical" href="https://sanctionsai.dev/checklists/agent-deployment-compliance-checklist">
+<meta property="og:title" content="Agent Deployment Compliance Checklist [2026 Checklist]">
+<meta property="og:description" content="The compliance checklist before any payment-capable agent ships: screening, fail-closed, audit, and review.">
 <meta property="og:type" content="article">
-<meta property="og:url" content="https://sanctionsai.dev/learn/what-is-wallet-screening">
+<meta property="og:url" content="https://sanctionsai.dev/checklists/agent-deployment-compliance-checklist">
 <meta property="og:image" content="https://sanctionsai.dev/og.png">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="robots" content="index, follow, max-image-preview:large">
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "What Is Wallet Screening?", "description": "Wallet screening is checking a blockchain address against sanctions lists before money moves. How it works and why it matters.", "author": {"@type": "Organization", "name": "SanctionsAI", "url": "https://sanctionsai.dev"}, "publisher": {"@type": "Organization", "name": "SanctionsAI", "url": "https://sanctionsai.dev"}, "mainEntityOfPage": {"@type": "WebPage", "@id": "https://sanctionsai.dev/learn/what-is-wallet-screening"}, "datePublished": "2026-08-08", "dateModified": "2026-08-08"}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://sanctionsai.dev/"}, {"@type": "ListItem", "position": 2, "name": "SanctionsAI", "item": "https://sanctionsai.dev/learn/what-is-wallet-screening"}]}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Is wallet screening the same as name screening?", "acceptedAnswer": {"@type": "Answer", "text": "No — wallets are exact address matches; names use fuzzy matching."}}, {"@type": "Question", "name": "How fast is a wallet screen?", "acceptedAnswer": {"@type": "Answer", "text": "Under 100 ms."}}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "Agent Deployment Compliance Checklist [2026 Checklist]", "description": "The compliance checklist before any payment-capable agent ships: screening, fail-closed, audit, and review.", "author": {"@type": "Organization", "name": "SanctionsAI", "url": "https://sanctionsai.dev"}, "publisher": {"@type": "Organization", "name": "SanctionsAI", "url": "https://sanctionsai.dev"}, "mainEntityOfPage": {"@type": "WebPage", "@id": "https://sanctionsai.dev/checklists/agent-deployment-compliance-checklist"}, "datePublished": "2026-08-08", "dateModified": "2026-08-08"}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://sanctionsai.dev/"}, {"@type": "ListItem", "position": 2, "name": "SanctionsAI", "item": "https://sanctionsai.dev/checklists/agent-deployment-compliance-checklist"}]}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "What is the minimum?", "acceptedAnswer": {"@type": "Answer", "text": "Wallet screen before signing, fail closed, log everything."}}, {"@type": "Question", "name": "Can SanctionsAI automate this?", "acceptedAnswer": {"@type": "Answer", "text": "Yes — the API, MCP server, and CLI implement the checklist in code."}}]}</script>
 <style>
 
 body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;line-height:1.65;color:#0a0a0a;max-width:760px;margin:0 auto;padding:2rem 1.25rem}
@@ -52,22 +52,24 @@ footer{margin-top:3rem;padding-top:1.5rem;border-top:1px solid #e5e7eb;color:#6b
 </head>
 <body>
 <article>
-<h1>What Is Wallet Screening?</h1>
-<p class="lede">The wallet-screening mechanic, explained for builders.</p>
-<h2>Overview</h2>
-<p>Wallet screening is the check that runs before a transfer: is this destination address on a sanctions list? Exact match against the SDN list — deterministic, sub-100 ms, done.</p>
-<h2>How it works</h2>
-<ol><li>You call the API with the destination address</li><li>The engine matches against 947 OFAC-listed wallets (exact, no fuzzy on addresses)</li><li>Result: clean (proceed) or match (block/review)</li><li>Every check is logged for the audit trail</li></ol>
-<h2>Why it matters for agents</h2>
-<p>An agent signs transfers without a human looking. Wallet screening is the automated screen that runs every time — the <a href="/tools/wallet-checker">wallet checker</a> demonstrates it for free.</p>
-<h2>The limits</h2>
-<p>Wallet screening covers addresses on the list. Name screening and jurisdiction checks cover the rest — screening is one layer of a compliance program.</p>
+<h1>Agent Deployment Compliance Checklist</h1>
+<p class="lede">The pre-production compliance checklist for every payment-capable agent.</p>
+<h2>How to use</h2>
+<div class="callout"><strong>How to use:</strong> complete before any agent with payment capability reaches production. Re-run on every agent change.</div>
+<h2>Screening</h2>
+<ul class="checklist"><li>Wallet screen on every destination before signing</li><li>Name screen on counterparty entities</li><li>Jurisdiction check on counterparty location</li><li>50-percent rule applied to corporate counterparties</li></ul>
+<h2>Control</h2>
+<ul class="checklist"><li>Screen result blocks the payment (fail closed)</li><li>No agent override path exists</li><li>Latency under 100 ms per check</li></ul>
+<h2>Audit</h2>
+<ul class="checklist"><li>Every decision logged: wallet, name, status, list version, time</li><li>Logs retained for the enforcement window</li><li>Weekly review of blocked/flagged results</li></ul>
+<h2>Why this exists</h2>
+<p>One missed wallet is a $356,000 starting point. This checklist is the difference between a policy and a pipeline.</p>
 
 <!-- mesh-round19 -->
 <section class="mesh-links" style="background:#f9fafb;padding:1.25rem;border-radius:.5rem;margin-top:2rem">
 <h3 style="margin-top:0">Related resources</h3>
 <ul style="list-style:none;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:.4rem 1rem;font-size:.95rem">
-<li><a href="/learn/crypto-sanctions-risk">Crypto sanctions risk</a></li><li><a href="/learn/kyc-vs-sanctions-screening">KYC vs sanctions screening</a></li><li><a href="/learn/what-is-the-sdn-list">What is the SDN list?</a></li><li><a href="/how-to/screen-crypto-wallet">How to screen a crypto wallet</a></li><li><a href="/glossary/fuzzy-matching">Fuzzy matching</a></li><li><a href="/learn/stablecoin-sanctions-compliance">Stablecoin sanctions compliance</a></li>
+<li><a href="/checklists/agent-payment-screening-checklist">Agent payment screening checklist</a></li><li><a href="/checklists/x402-payment-compliance-checklist">x402 payment compliance checklist</a></li><li><a href="/checklists/ofac-compliance-checklist">OFAC compliance checklist</a></li><li><a href="/blog/agent-compliance-checklist">Agent compliance checklist</a></li><li><a href="/how-to/screen-crypto-wallet">How to screen a crypto wallet</a></li><li><a href="/checklists/sanctions-risk-assessment-checklist">Sanctions risk assessment checklist</a></li>
 </ul>
 </section>
 </article>
