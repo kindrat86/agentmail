@@ -421,6 +421,8 @@ _BLOG_SLUGS = frozenset((
     "what-is-a-vasp",
     "can-crypto-be-frozen",
     "sanctions-screening-for-marketplaces",
+    "the-russia-sanctions-regime",
+    "kyc-vs-aml-vs-sanctions",
     "travel-rule-vs-sanctions-screening",
     "secondary-sanctions-explained",
     "what-happens-after-a-block",
@@ -503,10 +505,13 @@ _SANCTIONS_LIST_KEYS = frozenset((
 _BY_COUNTRY_KEYS = frozenset((
     "afghanistan",
     "belarus",
+    "burundi",
+    "central-african-republic",
     "china",
     "cuba",
     "dr-congo",
     "ethiopia",
+    "haiti",
     "hong-kong",
     "iraq",
     "iran",
@@ -519,6 +524,7 @@ _BY_COUNTRY_KEYS = frozenset((
     "pakistan",
     "russia",
     "somalia",
+    "south-sudan",
     "sudan",
     "syria",
     "ukraine-separatist",
@@ -2187,6 +2193,19 @@ _BLOG_POSTS = {
         "html": "<p>Marketplaces sit between buyers and sellers - every payout is a payment path. BitPay's $507K settlement was exactly this shape: merchant payments to users in sanctioned jurisdictions.</p><h2>The surfaces</h2><p>Seller onboarding (name + ownership), buyer jurisdiction, payout wallets, and refunds. Each is a counterparty surface the screen must cover.</p><h2>The control</h2><p>Screen at onboarding and on every payout; screen refunds; flag the marketplace red-flag set; fail closed. The <a href=\"/learn/sanctions-screening-for-marketplaces\">marketplace explainer</a> and the <a href=\"/scenarios/agent-processes-marketplace-payout\">payout scenario</a> cover the mechanics.</p><h2>Why it matters</h2><p>Marketplace volume compounds exposure - hundreds of payouts a day, each a potential violation. The screen is the only control that scales.</p>""",
     },
 
+    "the-russia-sanctions-regime": {
+        "title": "The Russia Sanctions Regime, Explained",
+        "date": "2026-08-08",
+        "desc": "The Russia sanctions regime: EO 14024, the bank designations, the sectoral measures, and what the largest sanctions program means for screening.",
+        "html": "<p>The Russia program is the largest sanctions regime in US history - and the one most likely to touch a payment path.</p><h2>The authority</h2><p>EO 14024 (April 2021) authorizes designations for Russia's harmful foreign activities. Post-February 2022, the program expanded massively: banks, oligarchs, defense firms, and sectoral measures.</p><h2>The bank cluster</h2><p>Sberbank and VTB were designated in February 2022 - among the largest banks in the world. Promsvyazbank (defense sector bank) followed. Bank Rossiya was designated back in 2014. Each is a check page on this site: <a href=\"/check/sberbank\">Sberbank</a>, <a href=\"/check/vtb\">VTB</a>, <a href=\"/check/promsvyazbank\">Promsvyazbank</a>, <a href=\"/check/rossiya\">Rossiya</a>.</p><h2>The screening shape</h2><p>Russia exposure is both entity-level (the designated banks and firms) and jurisdiction-level (the Crimea and separatist region measures). The <a href=\"/by-country/russia\">Russia country page</a> covers the full designation set.</p><h2>The agent implication</h2><p>A payment path that touches Russian banks, defense firms, or sanctioned entities is in scope. Screen counterparties and jurisdiction - the same three-surface screen.</p>""",
+    },
+    "kyc-vs-aml-vs-sanctions": {
+        "title": "KYC vs AML vs Sanctions Screening",
+        "date": "2026-08-05",
+        "desc": "The three compliance layers - identity (KYC), behavior (AML), prohibition (sanctions) - and how they fit together in one stack.",
+        "html": "<p>KYC, AML, and sanctions screening are three different questions. Teams that conflate them build stacks with gaps.</p><h2>KYC - who are you?</h2><p>Identity verification at onboarding: documents, beneficial ownership, and the 50% rule.</p><h2>AML - is the behavior suspicious?</h2><p>Ongoing monitoring: transaction patterns, red flags, and escalation. Probabilistic, not deterministic.</p><h2>Sanctions - may we deal with you?</h2><p>The prohibition check: is the counterparty on the list? Deterministic, runs on every transaction.</p><h2>The stack</h2><p>KYC at onboarding, AML monitoring over time, and sanctions screening on every payment. The <a href=\"/learn/kyc-vs-sanctions-screening\">KYC vs screening</a> and <a href=\"/learn/aml-vs-sanctions-screening\">AML vs screening</a> pages cover the boundaries in depth.</p>""",
+    },
+
 }
 
 
@@ -3305,7 +3324,10 @@ License: https://creativecommons.org/licenses/by/4.0/
                 '{"question": "What is the BIS Entity List?", "answer": "The Entity List is a Bureau of Industry and Security (BIS) export-control list restricting exports, re-exports, and transfers of items subject to the Export Administration Regulations (EAR) to listed entities - it is separate from OFAC sanctions. Screening an entity against both the OFAC SDN list and the BIS Entity List covers the export-control surface. See https://sanctionsai.dev/learn/what-is-an-entity-list."}\n'
                 '{"question": "Can crypto be frozen?", "answer": "Yes - through three mechanisms: designation blocking (funds at a designated address become blocked property), issuer controls (stablecoin blocklists), and exchange-level freezes. A frozen wallet is still a designated party - screen it, block payments to it, and hold. The freeze is the compliant state; unfreezing without authorization is a violation. See https://sanctionsai.dev/faq/can-crypto-be-frozen."}\n'
                 '{"question": "What is a crypto mixer?", "answer": "A crypto mixer (tumbler) pools and re-splits funds to obscure the origin - the same mechanism that made Tornado Cash, Blender.io, and Sinbad designated. Mixer addresses on the SDN list are blocked; routing payments through a designated mixer is prohibited. Mixer use is also a classic red flag in screening. See https://sanctionsai.dev/faq/what-is-a-mixer."}\n'
-                '{"question": "What is an incident response plan for sanctions?", "answer": "A sanctions incident response plan covers: detection (screening logs), containment (block further payments, hold funds), assessment (verify the match, evaluate exposure), reporting (blocking reports within 10 days, VSD where appropriate), and remediation (fix the control gap). The plan turns a match into a documented, bounded event. See https://sanctionsai.dev/templates/sanctions-incident-response-template."}\n\n\n\n\n\n\n\n',
+                '{"question": "What is an incident response plan for sanctions?", "answer": "A sanctions incident response plan covers: detection (screening logs), containment (block further payments, hold funds), assessment (verify the match, evaluate exposure), reporting (blocking reports within 10 days, VSD where appropriate), and remediation (fix the control gap). The plan turns a match into a documented, bounded event. See https://sanctionsai.dev/templates/sanctions-incident-response-template."}\n'
+                '{"question": "Is Sberbank sanctioned?", "answer": "Yes. Sberbank, Russia\u2019s largest bank, was designated by OFAC in February 2022 under EO 14024, with correspondent-account and processing sanctions following. VTB, Promsvyazbank, and other Russian state banks are also designated. Payments routed through designated Russian banks are prohibited. See https://sanctionsai.dev/check/sberbank."}\n'
+                '{"question": "Are Russian banks sanctioned?", "answer": "The major Russian state banks are designated: Sberbank and VTB (February 2022, EO 14024), Promsvyazbank (February 2022), and Bank Rossiya (2014, EO 13661). US persons may not transact with them; payments routed through their addresses or accounts are prohibited. The Russia country page lists the full designation set. See https://sanctionsai.dev/faq/are-russian-banks-sanctioned."}\n'
+                '{"question": "What is the difference between KYC, AML, and sanctions screening?", "answer": "KYC verifies identity at onboarding (who are you?), AML monitors behavior over time (is the activity suspicious?), and sanctions screening checks the prohibition on every transaction (may we deal with you?). KYC is onboarding, AML is continuous monitoring, and screening is the deterministic per-payment gate - all three belong in the stack. See https://sanctionsai.dev/blog/kyc-vs-aml-vs-sanctions."}\n\n\n\n\n\n\n\n\n',
                 "application/x-ndjson")
         if p.path == "/manifest.webmanifest":
             return _json(self, 200, {
@@ -4776,6 +4798,19 @@ License: https://creativecommons.org/licenses/by/4.0/
         ("/scenarios/agent-holds-frozen-funds", "weekly", "0.7", "Agent holds frozen funds"),
         ("/templates/sanctions-incident-response-template", "monthly", "0.7", "Sanctions incident response template"),
         ("/redflags/red-flags-in-marketplace-payments", "monthly", "0.7", "Red flags in marketplace payments"),
+        # Round 36 pSEO: Russia bank cluster, UN countries, vs/world-check
+        ("/check/sberbank", "monthly", "0.7", "Is Sberbank sanctioned?"),
+        ("/check/vtb", "monthly", "0.7", "Is VTB Bank sanctioned?"),
+        ("/check/promsvyazbank", "monthly", "0.7", "Is Promsvyazbank sanctioned?"),
+        ("/check/rossiya", "monthly", "0.7", "Is Bank Rossiya sanctioned?"),
+        ("/by-country/haiti", "monthly", "0.6", "Haiti sanctions"),
+        ("/by-country/burundi", "monthly", "0.6", "Burundi sanctions"),
+        ("/by-country/central-african-republic", "monthly", "0.6", "Central African Republic sanctions"),
+        ("/by-country/south-sudan", "monthly", "0.6", "South Sudan sanctions"),
+        ("/vs/world-check", "monthly", "0.7", "SanctionsAI vs World-Check"),
+        ("/blog/the-russia-sanctions-regime", "monthly", "0.7", "The Russia sanctions regime"),
+        ("/blog/kyc-vs-aml-vs-sanctions", "monthly", "0.7", "KYC vs AML vs sanctions screening"),
+        ("/faq/are-russian-banks-sanctioned", "monthly", "0.7", "Are Russian banks sanctioned?"),
     ]
         import datetime
         today = datetime.date.today().isoformat()
@@ -10723,6 +10758,10 @@ compute();
             "al-shabaab": {"name": "Al-Shabaab", "type": "Designated terrorist organization", "country": "Somalia; SDGT designation", "designated": "2008-03-18 (EO 13224)", "desc": "Al-Shabaab is designated as an SDGT entity under EO 13224; UN sanctions on Somalia target its financing and procurement. Its crypto fundraising networks have been sanctioned.", "action": "US persons are prohibited from transacting with Al-Shabaab and its associated entities and addresses."},
             "pkk": {"name": "PKK (Kurdistan Workers' Party)", "type": "Designated terrorist organization", "country": "Turkey; SDGT designation", "designated": "1997-10-08 (EO 13224); 2002 (FTO)", "desc": "The PKK is designated as an SDGT entity under EO 13224. Its financing networks are in scope.", "action": "US persons are prohibited from transacting with the PKK and its associated entities and addresses."},
             "farc": {"name": "FARC (Revolutionary Armed Forces of Colombia)", "type": "Designated organization", "country": "Colombia; SDGT designation", "designated": "1997-10-08 (EO 13224); 2002 (FTO)", "desc": "The FARC is designated as an SDGT entity under EO 13224. Its financing networks are in scope.", "action": "US persons are prohibited from transacting with the FARC and its associated entities and addresses."},
+            "sberbank": {"name": "Sberbank", "type": "Russian state bank", "country": "Russia; designated Feb 2022", "designated": "2022-02-24 (EO 14024)", "desc": "Sberbank, Russia's largest bank, was designated by OFAC in February 2022 under EO 14024, with correspondent-account and processing sanctions following in the March 2022 measures.", "action": "US persons are prohibited from transacting with Sberbank. Any payments routed through Sberbank or its addresses are prohibited."},
+            "vtb": {"name": "VTB Bank", "type": "Russian state bank", "country": "Russia; designated Feb 2022", "designated": "2022-02-24 (EO 14024)", "desc": "VTB Bank was designated by OFAC in February 2022 under EO 14024, including a full blocking designation for the state-owned bank.", "action": "US persons are prohibited from transacting with VTB. Its property and interests in property are blocked."},
+            "promsvyazbank": {"name": "Promsvyazbank", "type": "Russian state defense bank", "country": "Russia; designated Feb 2022", "designated": "2022-02-24 (EO 14024)", "desc": "Promsvyazbank, the Russian state bank serving the defense sector, was designated by OFAC in February 2022 under EO 14024.", "action": "US persons are prohibited from transacting with Promsvyazbank. Its property and interests in property are blocked."},
+            "rossiya": {"name": "Bank Rossiya", "type": "Russian bank", "country": "Russia; designated March 2014", "designated": "2014-03-20 (EO 13661)", "desc": "Bank Rossiya was designated in March 2014 under EO 13661 - among the first Russia designations following the Crimea annexation.", "action": "US persons are prohibited from transacting with Bank Rossiya. Its property and interests in property are blocked."},
         }
         e = NAMES.get(slug)
         if not e:
@@ -10839,6 +10878,11 @@ compute();
             "ethiopia": {"name": "Ethiopia", "program": "EO 14046 (Ethiopia), UNSC 2622 regime", "entities": "Tigray conflict-era officials and armed-group leaders designated under the 2021 framework", "desc": "Ethiopia faced targeted sanctions authorized under EO 14046 (November 2021) addressing the Tigray conflict; the UNSC 2622 regime targets Eritrean armed actors. Not a comprehensive program.", "count": "~20 designations"},
             "mali": {"name": "Mali", "program": "UNSC 2374 regime, Mali-related designations", "entities": "Sanctions-committee designees obstructing the peace process, armed-group leaders", "desc": "Mali faces UN-mandated sanctions under resolution 2374 targeting individuals and entities obstructing the peace process and stability. Not a comprehensive US program.", "count": "~20 designations"},
             "zimbabwe": {"name": "Zimbabwe", "program": "Zimbabwe Sanctions Regulations (31 CFR 541), EO 13288, EO 13469", "entities": "Government officials and entities tied to human rights abuses and corruption", "desc": "Zimbabwe faces targeted sanctions on government officials and entities implicated in human rights abuses and corruption. The program is targeted, not comprehensive.", "count": "~50 designations"},
+
+            "haiti": {"name": "Haiti", "program": "Haiti-related designations (EO 14092), UNSC 2653 regime", "entities": "Gang leaders and financiers designated for destabilizing activity", "desc": "Haiti faces targeted sanctions on gang leaders and financiers under EO 14092 and the UNSC 2653 regime, addressing the country's gang-driven instability. Not a comprehensive program.", "count": "~20 designations"},
+            "burundi": {"name": "Burundi", "program": "UNSC 2303 regime (arms embargo), targeted designations", "entities": "Sanctions-committee designees undermining the peace process", "desc": "Burundi faces UN-mandated measures including an arms embargo and targeted designations under resolution 2303. Not a comprehensive US program.", "count": "~10 designations"},
+            "central-african-republic": {"name": "Central African Republic", "program": "CAR-related designations, UNSC 2699 regime", "entities": "Armed-group leaders and conflict financiers", "desc": "The CAR faces UN-mandated sanctions targeting armed groups and conflict actors. Not a comprehensive US program - targeted measures only.", "count": "~30 designations"},
+            "south-sudan": {"name": "South Sudan", "program": "South Sudan-related designations (EO 13664), UNSC 2206 regime", "entities": "Officials and commanders obstructing peace", "desc": "South Sudan faces targeted sanctions on individuals and entities obstructing peace and stability, under EO 13664 and the UNSC 2206 regime. Not a comprehensive program.", "count": "~15 designations"},
 
         }
         c = COUNTRIES.get(slug)
