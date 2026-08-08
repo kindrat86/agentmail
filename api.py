@@ -417,6 +417,8 @@ _BLOG_SLUGS = frozenset((
     "how-ofac-designations-work",
     "what-the-ofac-enforcement-data-shows",
     "sanctions-screening-myths",
+    "sanctions-screening-for-daos",
+    "what-is-a-vasp",
     "travel-rule-vs-sanctions-screening",
     "secondary-sanctions-explained",
     "what-happens-after-a-block",
@@ -2157,6 +2159,19 @@ _BLOG_POSTS = {
         "html": "<p>Most sanctions exposure comes from believing one of these myths.</p><h2>Myth 1: Screening is a list lookup</h2><p>It is a decision path: exact wallet matching, fuzzy name matching, jurisdiction checks, and a logged result. The list is the input, not the product.</p><h2>Myth 2: Small payments don't matter</h2><p>Ripple's $700K settlement covered 1,773 transactions averaging under $80 each. Every payment is a separate violation.</p><h2>Myth 3: The rail handles compliance</h2><p>x402, AP2, ACP, and AgentKit move money - none of them screen. Issuer blocklists are backstops, not your program.</p><h2>Myth 4: My agent is outside US jurisdiction</h2><p>Primary and secondary sanctions reach beyond US borders - the <a href=\"/blog/secondary-sanctions-explained\">secondary-sanctions post</a> covers the reach.</p><h2>The debunk</h2><p>Screen before sign, fail closed, log everything. The rest is commentary.</p>""",
     },
 
+    "sanctions-screening-for-daos": {
+        "title": "Sanctions Screening for DAOs: The Compliance Reality",
+        "date": "2026-08-08",
+        "desc": "DAO treasuries are on-chain payment paths - and the operators behind them carry sanctions exposure. What DAOs actually need to screen.",
+        "html": "<p>DAO treasuries move money on-chain, often with an agent or automated signer. The enforcement posture is clear: the prohibition follows the transaction, not the org chart.</p><h2>The exposure</h2><p>A treasury that pays a sanctioned wallet - or receives from one - has executed a prohibited transaction. The EtherDelta precedent put DeFi shapes on notice; the DAO is the treasury-shaped version of the same surface.</p><h2>What to screen</h2><p>Treasury outflows (vendor payments, grants, contributor compensation), inflows (donations, mints), and counterparty wallets - the same three-surface screen as any payment path.</p><h2>The control</h2><p>Screen before every treasury transaction, fail closed, log everything. The <a href=\"/checklists/blockchain-business-compliance-checklist\">blockchain checklist</a> and the <a href=\"/scenarios/agent-pays-dao-treasury\">DAO treasury scenario</a> cover the mechanics.</p><h2>The honest note</h2><p>Decentralization does not dissolve liability - the operators and signers remain in scope. Screening is the layer that makes a treasury defensible.</p>""",
+    },
+    "what-is-a-vasp": {
+        "title": "What Is a VASP?",
+        "date": "2026-08-06",
+        "desc": "A Virtual Asset Service Provider (VASP) is any business that exchanges, transfers, or custodies virtual assets. The FATF definition and its compliance meaning.",
+        "html": "<p>VASP - Virtual Asset Service Provider - is the FATF term for businesses that exchange, transfer, or custody virtual assets. The label decides which compliance obligations apply.</p><h2>The definition</h2><p>FATF defines VASPs as entities providing: exchange between virtual and fiat, exchange between virtual assets, transfers, and safekeeping/administration of virtual assets.</p><h2>Why it matters</h2><p>VASPs carry AML/CFT obligations: KYC, travel rule (VASP-to-VASP data sharing), sanctions screening, and reporting. Exchanges, custodians, and some brokerages are VASPs; pure software providers are not.</p><h2>VASP vs screening</h2><p>Screening is the per-transaction prohibition check - it applies to VASPs and to any payment path. The travel rule applies to VASP-to-VASP transfers. The <a href=\"/blog/travel-rule-vs-sanctions-screening\">travel rule post</a> covers the boundary.</p><h2>The agent angle</h2><p>An agent that moves virtual assets may itself be a VASP activity - the obligations follow the activity, not the label.</p>""",
+    },
+
 }
 
 
@@ -3269,7 +3284,10 @@ License: https://creativecommons.org/licenses/by/4.0/
                 '{"question": "Is Garantex sanctioned?", "answer": "Yes. Garantex, a Russia-based cryptocurrency exchange, was designated by OFAC in April 2022 for operating in the Russia financial services sector and facilitating sanctions evasion. Its addresses are on the SDN list; routing payments through Garantex addresses is prohibited. See https://sanctionsai.dev/check/garantex."}\n'
                 '{"question": "Is Bitcoin sanctioned?", "answer": "Bitcoin itself is not designated - OFAC designates addresses and entities, not assets. But specific Bitcoin addresses associated with sanctioned parties are on the SDN list, and a BTC payment to a sanctioned wallet is prohibited like any other transaction. The screen checks the destination address regardless of the asset. See https://sanctionsai.dev/faq/is-bitcoin-sanctioned."}\n'
                 '{"question": "What is the travel rule?", "answer": "The travel rule is the information-sharing obligation: VASPs must share beneficiary-owner and counterparty data for transfers above thresholds. It is distinct from sanctions screening (the prohibition check) - a payment can be fully travel-rule compliant and still hit a sanctioned wallet. Both layers belong in the stack. See https://sanctionsai.dev/faq/what-is-the-travel-rule."}\n'
-                '{"question": "Do refunds to sanctioned parties need screening?", "answer": "Yes. A refund is a payment - returning funds to a party that is now designated is a prohibited transaction. If the counterparty was designated after the original payment, re-screen before the refund; the screen runs on every payment in both directions. See https://sanctionsai.dev/scenarios/agent-processes-refund-to-sanctioned-party."}\n\n\n\n\n\n',
+                '{"question": "Do refunds to sanctioned parties need screening?", "answer": "Yes. A refund is a payment - returning funds to a party that is now designated is a prohibited transaction. If the counterparty was designated after the original payment, re-screen before the refund; the screen runs on every payment in both directions. See https://sanctionsai.dev/scenarios/agent-processes-refund-to-sanctioned-party."}\n'
+                '{"question": "Does OFAC apply to DAOs?", "answer": "Yes - the prohibition follows the transaction, not the org chart. A DAO treasury that pays or receives from a sanctioned wallet has executed a prohibited transaction, and the operators and signers remain in scope. Decentralization does not dissolve liability. Screen treasury outflows, inflows, and counterparty wallets before every transaction. See https://sanctionsai.dev/faq/does-ofac-apply-to-daos."}\n'
+                '{"question": "What is a VASP?", "answer": "A Virtual Asset Service Provider (VASP) is any business that exchanges, transfers, or custodies virtual assets - the FATF definition. VASPs carry AML/CFT obligations: KYC, travel rule, sanctions screening, and reporting. Screening applies to every payment path; the travel rule applies to VASP-to-VASP transfers. An agent that moves virtual assets may itself be VASP activity. See https://sanctionsai.dev/faq/what-is-a-vasp."}\n'
+                '{"question": "What is the BIS Entity List?", "answer": "The Entity List is a Bureau of Industry and Security (BIS) export-control list restricting exports, re-exports, and transfers of items subject to the Export Administration Regulations (EAR) to listed entities - it is separate from OFAC sanctions. Screening an entity against both the OFAC SDN list and the BIS Entity List covers the export-control surface. See https://sanctionsai.dev/learn/what-is-an-entity-list."}\n\n\n\n\n\n\n',
                 "application/x-ndjson")
         if p.path == "/manifest.webmanifest":
             return _json(self, 200, {
@@ -4714,6 +4732,19 @@ License: https://creativecommons.org/licenses/by/4.0/
         ("/scenarios/agent-processes-refund-to-sanctioned-party", "weekly", "0.7", "Agent processes a refund to a sanctioned party"),
         ("/redflags/red-flags-in-peer-to-peer-transactions", "monthly", "0.7", "Red flags in peer-to-peer transactions"),
         ("/templates/ofac-compliance-training-template", "monthly", "0.7", "OFAC compliance training template"),
+        # Round 34 pSEO: DAO/VASP layer, entity checks, screening log
+        ("/check/boko-haram", "monthly", "0.7", "Is Boko Haram sanctioned?"),
+        ("/check/al-shabaab", "monthly", "0.7", "Is Al-Shabaab sanctioned?"),
+        ("/blog/sanctions-screening-for-daos", "monthly", "0.7", "Sanctions screening for DAOs"),
+        ("/blog/what-is-a-vasp", "monthly", "0.7", "What is a VASP?"),
+        ("/faq/does-ofac-apply-to-daos", "monthly", "0.7", "Does OFAC apply to DAOs?"),
+        ("/faq/what-is-a-vasp", "monthly", "0.7", "What is a VASP?"),
+        ("/learn/what-is-an-entity-list", "monthly", "0.6", "What is an entity list?"),
+        ("/learn/sanctions-screening-for-daos", "monthly", "0.6", "DAO sanctions screening"),
+        ("/scenarios/agent-pays-dao-treasury", "weekly", "0.7", "Agent pays a DAO treasury"),
+        ("/scenarios/travel-rule-flow-scenario", "weekly", "0.7", "Travel rule flow between VASPs"),
+        ("/templates/sanctions-screening-log-template", "monthly", "0.7", "Sanctions screening log template"),
+        ("/redflags/red-flags-in-dao-treasury-transactions", "monthly", "0.7", "Red flags in DAO treasury transactions"),
     ]
         import datetime
         today = datetime.date.today().isoformat()
@@ -10657,6 +10688,8 @@ compute();
             "al-qaeda": {"name": "Al-Qaida", "type": "Designated terrorist organization", "country": "Global; SDGT designation", "designated": "1999-10-15 (UN listing; EO 13224 2001)", "desc": "Al-Qaida is designated as an SDGT entity under EO 13224 and listed on the UN Security Council sanctions list. Its financing networks, including crypto fundraising, are in scope.", "action": "US persons are prohibited from transacting with al-Qaida and its associated entities and addresses."},
             "hezbollah": {"name": "Hezbollah", "type": "Designated terrorist organization", "country": "Lebanon; SDGT designation", "designated": "2001-10-31 (EO 13224); HFSR 2019", "desc": "Hezbollah is designated as an SDGT entity and comprehensively sanctioned under the Hezbollah Financial Sanctions Regulations (HFSR). Its financial networks, including Al-Qard al-Hassan, are in scope.", "action": "US persons are prohibited from transacting with Hezbollah and its associated entities and addresses."},
             "taliban": {"name": "Taliban", "type": "Designated organization", "country": "Afghanistan; SDGT/OFAC designation", "designated": "2002-01-24 (EO 13224 redesignation)", "desc": "The Taliban is designated as an SDGT entity and remains under comprehensive sanctions related to Afghanistan. Its financial networks are in scope.", "action": "US persons are prohibited from transacting with the Taliban and its associated entities and addresses."},
+            "boko-haram": {"name": "Boko Haram", "type": "Designated terrorist organization", "country": "Nigeria; SDGT designation", "designated": "2013-11-13 (EO 13224)", "desc": "Boko Haram is designated as an SDGT entity under EO 13224 for terrorism in West Africa. Its financing networks are in scope.", "action": "US persons are prohibited from transacting with Boko Haram and its associated entities and addresses."},
+            "al-shabaab": {"name": "Al-Shabaab", "type": "Designated terrorist organization", "country": "Somalia; SDGT designation", "designated": "2008-03-18 (EO 13224)", "desc": "Al-Shabaab is designated as an SDGT entity under EO 13224; UN sanctions on Somalia target its financing and procurement. Its crypto fundraising networks have been sanctioned.", "action": "US persons are prohibited from transacting with Al-Shabaab and its associated entities and addresses."},
         }
         e = NAMES.get(slug)
         if not e:
