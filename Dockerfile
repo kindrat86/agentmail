@@ -37,6 +37,11 @@ COPY programs/ ./programs/
 # Round 48 pSEO — sanctions evasion typologies and jurisdiction risk ratings
 COPY evasion/ ./evasion/
 COPY risk-ratings/ ./risk-ratings/
+# Round 49 pSEO — regulatory framework and compliance deadlines
+COPY regulations/ ./regulations/
+COPY deadlines/ ./deadlines/
+# how-to expansion pages (static fallthrough from _howto_page method)
+COPY how-to/ ./how-to/
 # Interactive shareable tools (compliance-check, ai-spend-optimizer)
 COPY tools/ ./tools/
 # R17 UX system — shared design system across portfolio

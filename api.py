@@ -3597,7 +3597,7 @@ License: https://creativecommons.org/licenses/by/4.0/
                 if _os.path.isfile(_rp):
                     with open(_rp, "r", encoding="utf-8") as _fh:
                         return self._serve_text(_fh.read(), "text/html; charset=utf-8")
-        for _pfx in ("/vs/", "/faq/", "/learn/", "/alternatives-to/", "/penalties/", "/guides/", "/checklists/", "/cost-of/", "/best/", "/templates/", "/stats/", "/redflags/", "/scenarios/", "/programs/", "/benchmarks/", "/evasion/", "/risk-ratings/"):
+        for _pfx in ("/vs/", "/faq/", "/learn/", "/alternatives-to/", "/penalties/", "/guides/", "/checklists/", "/cost-of/", "/best/", "/templates/", "/stats/", "/redflags/", "/scenarios/", "/programs/", "/benchmarks/", "/evasion/", "/risk-ratings/", "/regulations/", "/deadlines/"):
             if p.path.startswith(_pfx):
                 _slug = p.path[len(_pfx):].split("?")[0].split("/")[0]
                 if not _slug:
@@ -6507,6 +6507,45 @@ License: https://creativecommons.org/licenses/by/4.0/
         ("/best/best-sanctions-screening-for-insurance", "weekly", "0.9", "Best Sanctions Screening For Insurance"),
         ("/best/best-sanctions-screening-for-ecommerce", "weekly", "0.9", "Best Sanctions Screening For Ecommerce"),
         ("/best/best-sanctions-screening-for-startups", "weekly", "0.9", "Best Sanctions Screening For Startups"),
+        ("/how-to/screen-beneficial-owners", "monthly", "0.8", "Screen Beneficial Owners"),
+        ("/how-to/implement-travel-rule", "monthly", "0.8", "Implement Travel Rule"),
+        ("/how-to/file-sar-for-sanctions", "monthly", "0.8", "File Sar For Sanctions"),
+        ("/how-to/conduct-customer-due-diligence", "monthly", "0.8", "Conduct Customer Due Diligence"),
+        ("/how-to/build-transaction-monitoring-system", "monthly", "0.8", "Build Transaction Monitoring System"),
+        ("/how-to/respond-to-ofac-subpoena", "monthly", "0.8", "Respond To Ofac Subpoena"),
+        ("/how-to/conduct-risk-assessment", "monthly", "0.8", "Conduct Risk Assessment"),
+        ("/how-to/train-staff-on-sanctions", "monthly", "0.8", "Train Staff On Sanctions"),
+        ("/how-to/handle-false-positive-alerts", "monthly", "0.8", "Handle False Positive Alerts"),
+        ("/how-to/conduct-enhanced-due-diligence", "monthly", "0.8", "Conduct Enhanced Due Diligence"),
+        ("/how-to/block-and-reject-transactions", "monthly", "0.8", "Block And Reject Transactions"),
+        ("/how-to/screen-crypto-transactions", "monthly", "0.8", "Screen Crypto Transactions"),
+        ("/how-to/conduct-ongoing-monitoring", "monthly", "0.8", "Conduct Ongoing Monitoring"),
+        ("/how-to/prepare-for-ofac-examination", "monthly", "0.8", "Prepare For Ofac Examination"),
+        ("/how-to/report-ofac-violations", "monthly", "0.8", "Report Ofac Violations"),
+        ("/how-to/manage-correspondent-banking-risk", "monthly", "0.8", "Manage Correspondent Banking Risk"),
+        ("/how-to/document-compliance-program", "monthly", "0.8", "Document Compliance Program"),
+        ("/regulations/fatf-recommendation-15", "monthly", "0.8", "FATF Recommendation 15"),
+        ("/regulations/fincen-cdd-rule", "monthly", "0.8", "FinCEN CDD Rule"),
+        ("/regulations/fincen-travel-rule", "monthly", "0.8", "FinCEN Travel Rule"),
+        ("/regulations/ofac-itsr", "monthly", "0.8", "OFAC ITSR"),
+        ("/regulations/ofac-russia-eo14024", "monthly", "0.8", "OFAC Russia Eo14024"),
+        ("/regulations/ofac-north-korea-nkspea", "monthly", "0.8", "OFAC North Korea NKSPEA"),
+        ("/regulations/eu-sanctions-regulation", "monthly", "0.8", "EU Sanctions Regulation"),
+        ("/regulations/uk-ofsi-regime", "monthly", "0.8", "UK OFSI Regime"),
+        ("/regulations/ofac-reporting-requirements", "monthly", "0.8", "OFAC Reporting Requirements"),
+        ("/regulations/fincen-aml-requirements", "monthly", "0.8", "FinCEN AML Requirements"),
+        ("/regulations/ofac-general-licenses", "monthly", "0.8", "OFAC General Licenses"),
+        ("/regulations/corporate-transparency-act", "monthly", "0.8", "Corporate Transparency Act"),
+        ("/deadlines/ofac-blocking-report-deadline", "monthly", "0.8", "OFAC Blocking Report Deadline"),
+        ("/deadlines/sar-filing-deadline", "monthly", "0.8", "SAR Filing Deadline"),
+        ("/deadlines/voluntary-disclosure-timeline", "monthly", "0.8", "Voluntary Disclosure Timeline"),
+        ("/deadlines/annual-report-deadline", "monthly", "0.8", "Annual Report Deadline"),
+        ("/deadlines/ctr-filing-deadline", "monthly", "0.8", "CTR Filing Deadline"),
+        ("/deadlines/sdb-recordkeeping-deadline", "monthly", "0.8", "SDB Recordkeeping Deadline"),
+        ("/deadlines/sdn-list-update-frequency", "monthly", "0.8", "SDN List Update Frequency"),
+        ("/deadlines/rescreening-frequency", "monthly", "0.8", "Rescreening Frequency"),
+        ("/deadlines/license-application-timeline", "monthly", "0.8", "License Application Timeline"),
+        ("/deadlines/audit-trail-retention", "monthly", "0.8", "Audit Trail Retention"),
     ]
         import datetime
         today = datetime.date.today().isoformat()
@@ -12204,6 +12243,17 @@ compute();
         }
         h = HOWTO.get(slug)
         if not h:
+            # Fall through to static file (Round 49 expansion pages)
+            import os as _os
+            _here = _os.path.dirname(_os.path.abspath(__file__))
+            for _fp in (
+                _os.path.join(_here, "how-to", slug, "index.html"),
+                _os.path.join("/home/agentmail/app", "how-to", slug, "index.html"),
+            ):
+                _fp = _os.path.normpath(_fp)
+                if _os.path.isfile(_fp):
+                    with open(_fp, "r", encoding="utf-8") as _fh:
+                        return self._serve_text(_fh.read(), "text/html; charset=utf-8")
             return _json(self, 404, {"error": "not found"})
         today = "2026-07-13"
         steps_html = "".join(f'<li><strong>Step {i+1}.</strong> {s}</li>' for i, s in enumerate(h["steps"]))
