@@ -40,6 +40,9 @@ COPY risk-ratings/ ./risk-ratings/
 # Round 49 pSEO — regulatory framework and compliance deadlines
 COPY regulations/ ./regulations/
 COPY deadlines/ ./deadlines/
+# Round 50 pSEO — enforcement case studies, developer examples, red flags expansion
+COPY case-studies/ ./case-studies/
+COPY examples/ ./examples/
 # how-to expansion pages (static fallthrough from _howto_page method)
 COPY how-to/ ./how-to/
 # Interactive shareable tools (compliance-check, ai-spend-optimizer)
