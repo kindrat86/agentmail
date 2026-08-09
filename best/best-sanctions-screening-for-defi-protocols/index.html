@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Best sanctions screening for DeFi protocols | SanctionsAI</title>
+<meta name="description" content="Best OFAC sanctions screening approaches for DeFi protocols. Front-end screening, oracle-based compliance, and smart contract limitations.">
+<link rel="canonical" href="https://sanctionsai.dev/best/best-sanctions-screening-for-defi-protocols">
+<meta property="og:title" content="Best sanctions screening for DeFi protocols | SanctionsAI">
+<meta property="og:description" content="Best OFAC sanctions screening approaches for DeFi protocols. Front-end screening, oracle-based compliance, and smart contract limitations.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://sanctionsai.dev/best/best-sanctions-screening-for-defi-protocols">
+<meta property="og:image" content="https://sanctionsai.dev/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "Best sanctions screening for DeFi protocols", "description": "Best OFAC sanctions screening approaches for DeFi protocols. Front-end screening, oracle-based compliance, and smart contract limitations.", "author": {"@type": "Organization", "name": "SanctionsAI", "url": "https://sanctionsai.dev"}, "publisher": {"@type": "Organization", "name": "SanctionsAI", "url": "https://sanctionsai.dev"}, "mainEntityOfPage": {"@type": "WebPage", "@id": "https://sanctionsai.dev/best/best-sanctions-screening-for-defi-protocols"}, "datePublished": "2026-08-09", "dateModified": "2026-08-09"}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://sanctionsai.dev/"}, {"@type": "ListItem", "position": 2, "name": "Best Of", "item": "https://sanctionsai.dev/best"}, {"@type": "ListItem", "position": 3, "name": "Best sanctions screening for DeFi protocols", "item": "https://sanctionsai.dev/best/best-sanctions-screening-for-defi-protocols"}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Do DeFi protocols need sanctions screening?", "acceptedAnswer": {"@type": "Answer", "text": "OFAC sanctions apply to all US persons. DeFi protocol teams, DAO members, and front-end operators who are US persons have compliance obligations. Smart contracts themselves cannot be sanctioned but interacting with designated addresses can violate sanctions."}}, {"@type": "Question", "name": "Can DeFi smart contracts enforce sanctions screening?", "acceptedAnswer": {"@type": "Answer", "text": "Technically yes, via oracle-based blocking where the contract reads a sanctions oracle before executing. However, this adds gas costs and centralization risk. Most DeFi protocols use front-end screening instead."}}, {"@type": "Question", "name": "Was Tornado Cash sanctioned?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. OFAC designated Tornado Cash smart contract addresses in August 2022. The Fifth Circuit ruled in November 2024 that OFAC exceeded its authority for immutable contracts, but the legal landscape continues to evolve."}}, {"@type": "Question", "name": "What is the minimum DeFi compliance control?", "acceptedAnswer": {"@type": "Answer", "text": "Front-end wallet screening using a sanctions screening API. This blocks designated wallets from using the UI, demonstrating good-faith compliance. SanctionsAI provides a free wallet checker at /tools/wallet-checker."}}]}</script>
+
+<style>
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;line-height:1.65;color:#0a0a0a;max-width:760px;margin:0 auto;padding:2rem 1.25rem}
+h1{font-size:2.1rem;line-height:1.2;margin:.3em 0}
+h2{font-size:1.45rem;margin-top:2rem;border-bottom:2px solid #e5e7eb;padding-bottom:.3rem}
+h3{font-size:1.15rem;margin-top:1.5rem}
+a{color:#0066cc;text-decoration:none}a:hover{text-decoration:underline}
+.lede{font-size:1.1rem;color:#374151;margin-bottom:1.5rem}
+table{border-collapse:collapse;width:100%;margin:1rem 0;font-size:.95rem}
+th,td{border:1px solid #e5e7eb;padding:.6rem .75rem;text-align:left}
+th{background:#f9fafb;font-weight:600}
+.callout{background:#f0f7ff;border-left:4px solid #0066cc;padding:1rem 1.25rem;margin:1.5rem 0;border-radius:0 .375rem .375rem 0}
+.callout.warn{background:#fef3c7;border-left-color:#d97706}
+.callout.good{background:#ecfdf5;border-left-color:#059669}
+.cta{background:#0a0a0a;color:#fff;padding:2rem;border-radius:.5rem;text-align:center;margin:2rem 0}
+.cta h2{border:none;color:#fff}
+.cta a{display:inline-block;background:#00d4aa;color:#0a0a0a;padding:.6rem 1.5rem;border-radius:.375rem;font-weight:600;margin-top:.5rem}
+.faq-section dt{font-weight:600;margin-top:1.2rem;font-size:1.05rem}.faq-section dd{margin:.3rem 0 0 0;color:#374151}
+.byline{color:#6b7280;font-size:.85rem;margin-bottom:2rem}
+</style>
+</head>
+<body>
+<p class="byline">By SanctionsAI team · Updated 2026-08-09</p>
+<h1>Best sanctions screening for DeFi protocols</h1>
+<p class="lede">DeFi protocols face a unique compliance paradox: smart contracts are permissionless and cannot enforce KYC, but front-ends and governance DAOs have legal obligations. This guide covers the available approaches.</p>
+<h2>Screening approaches for DeFi</h2>
+<table><tr><th>Approach</th><th>How it works</th><th>Pros</th><th>Cons</th></tr>
+<tr><td>Front-end wallet screening</td><td>Block designated wallets at the UI level</td><td>Simple, immediate</td><td>Trivially bypassed (direct contract interaction)</td></tr>
+<tr><td>Oracle-based blocking</td><td>Smart contract reads sanctions oracle before execution</td><td>Enforced at protocol level</td><td>Gas cost; centralization risk in oracle</td></tr>
+<tr><td>Geofencing</td><td>Block users from sanctioned jurisdictions via IP</td><td>Reduces exposure</td><td>VPN bypass; over-blocking</td></tr>
+<tr><td>Post-hoc monitoring</td><td>Monitor for designated address interaction, report</td><td>Preserves composability</td><td>Does not prevent violation</td></tr></table>
+<h2>OFAC's position on DeFi</h2>
+<p>OFAC has not published DeFi-specific regulations but its sanctions apply to all US persons. The Tornado Cash designation (2022) demonstrated that OFAC considers smart contract interaction sanctions-relevant. The Fifth Circuit's 2024 ruling created uncertainty, but compliance teams should assume DeFi interaction with designated addresses carries risk.</p>
+<div class="callout"><strong>For DeFi protocol teams:</strong> The minimum compliance control is front-end wallet screening using an API like SanctionsAI. While bypassable, it demonstrates good-faith compliance effort. Oracle-based blocking provides stronger enforcement.</div>
+<div class="cta"><h2>Screen your agent's next payment</h2>
+<p style="color:#9ca3af;margin:.5rem 0">Check any wallet, name, or entity against OFAC, EU, UN sanctions lists in real time.</p>
+<a href="/tools/wallet-checker">Free wallet checker</a></div>
+<div class="faq-section"><h2>Frequently Asked Questions</h2><dl>
+<dt>Do DeFi protocols need sanctions screening?</dt><dd>OFAC sanctions apply to all US persons. DeFi protocol teams, DAO members, and front-end operators who are US persons have compliance obligations. Smart contracts themselves cannot be sanctioned but interacting with designated addresses can violate sanctions.</dd><dt>Can DeFi smart contracts enforce sanctions screening?</dt><dd>Technically yes, via oracle-based blocking where the contract reads a sanctions oracle before executing. However, this adds gas costs and centralization risk. Most DeFi protocols use front-end screening instead.</dd><dt>Was Tornado Cash sanctioned?</dt><dd>Yes. OFAC designated Tornado Cash smart contract addresses in August 2022. The Fifth Circuit ruled in November 2024 that OFAC exceeded its authority for immutable contracts, but the legal landscape continues to evolve.</dd><dt>What is the minimum DeFi compliance control?</dt><dd>Front-end wallet screening using a sanctions screening API. This blocks designated wallets from using the UI, demonstrating good-faith compliance. SanctionsAI provides a free wallet checker at /tools/wallet-checker.</dd>
+</dl></div>
+<p><a href="/best">← Back to Best Of</a> · <a href="/">SanctionsAI</a></p>
+</body></html>

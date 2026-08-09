@@ -34,6 +34,9 @@ COPY scenarios/ ./scenarios/
 COPY glossary/ ./glossary/
 # Round 21 pSEO — OFAC sanctions programs index
 COPY programs/ ./programs/
+# Round 48 pSEO — sanctions evasion typologies and jurisdiction risk ratings
+COPY evasion/ ./evasion/
+COPY risk-ratings/ ./risk-ratings/
 # Interactive shareable tools (compliance-check, ai-spend-optimizer)
 COPY tools/ ./tools/
 # R17 UX system — shared design system across portfolio

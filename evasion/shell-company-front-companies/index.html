@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shell company and front company sanctions evasion | SanctionsAI</title>
+<meta name="description" content="How sanctioned entities use shell companies, front companies, and beneficial ownership obfuscation to evade sanctions. OFAC's 50 Percent Rule and detection methods.">
+<link rel="canonical" href="https://sanctionsai.dev/evasion/shell-company-front-companies">
+<meta property="og:title" content="Shell company and front company sanctions evasion | SanctionsAI">
+<meta property="og:description" content="How sanctioned entities use shell companies, front companies, and beneficial ownership obfuscation to evade sanctions. OFAC's 50 Percent Rule and detection methods.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://sanctionsai.dev/evasion/shell-company-front-companies">
+<meta property="og:image" content="https://sanctionsai.dev/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "Shell company and front company sanctions evasion", "description": "How sanctioned entities use shell companies, front companies, and beneficial ownership obfuscation to evade sanctions. OFAC's 50 Percent Rule and detection methods.", "author": {"@type": "Organization", "name": "SanctionsAI", "url": "https://sanctionsai.dev"}, "publisher": {"@type": "Organization", "name": "SanctionsAI", "url": "https://sanctionsai.dev"}, "mainEntityOfPage": {"@type": "WebPage", "@id": "https://sanctionsai.dev/evasion/shell-company-front-companies"}, "datePublished": "2026-08-09", "dateModified": "2026-08-09"}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://sanctionsai.dev/"}, {"@type": "ListItem", "position": 2, "name": "Evasion", "item": "https://sanctionsai.dev/evasion"}, {"@type": "ListItem", "position": 3, "name": "Shell company and front company sanctions evasion", "item": "https://sanctionsai.dev/evasion/shell-company-front-companies"}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "What is OFAC's 50 Percent Rule?", "acceptedAnswer": {"@type": "Answer", "text": "Any entity that is 50% or more owned, directly or indirectly, by an SDN-listed person is itself considered designated, even if not separately named on the SDN list. One SDN at 50% plus another at 1% = 51% = blocked entity."}}, {"@type": "Question", "name": "How do I know if a company is owned by a sanctioned person?", "acceptedAnswer": {"@type": "Answer", "text": "Check the SDN list for company names, then investigate beneficial ownership through UBO registries, corporate filings, and commercial databases like Refinitiv World-Check or Dow Jones Risk Center."}}, {"@type": "Question", "name": "Does the 50 Percent Rule apply to EU and UK sanctions?", "acceptedAnswer": {"@type": "Answer", "text": "Yes, both EU and UK sanctions frameworks include analogous ownership-based blocking rules. The UK's OFSI applies a 50% rule similar to OFAC's."}}, {"@type": "Question", "name": "Can AI agents screen for beneficial ownership?", "acceptedAnswer": {"@type": "Answer", "text": "AI agents can screen company names against the SDN list automatically. Beneficial ownership screening requires access to UBO registries or commercial databases, which some APIs provide. agentmail screens entity names against OFAC, EU, and UN lists."}}]}</script>
+
+<style>
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;line-height:1.65;color:#0a0a0a;max-width:760px;margin:0 auto;padding:2rem 1.25rem}
+h1{font-size:2.1rem;line-height:1.2;margin:.3em 0}
+h2{font-size:1.45rem;margin-top:2rem;border-bottom:2px solid #e5e7eb;padding-bottom:.3rem}
+h3{font-size:1.15rem;margin-top:1.5rem}
+a{color:#0066cc;text-decoration:none}a:hover{text-decoration:underline}
+.lede{font-size:1.1rem;color:#374151;margin-bottom:1.5rem}
+table{border-collapse:collapse;width:100%;margin:1rem 0;font-size:.95rem}
+th,td{border:1px solid #e5e7eb;padding:.6rem .75rem;text-align:left}
+th{background:#f9fafb;font-weight:600}
+.callout{background:#f0f7ff;border-left:4px solid #0066cc;padding:1rem 1.25rem;margin:1.5rem 0;border-radius:0 .375rem .375rem 0}
+.callout.warn{background:#fef3c7;border-left-color:#d97706}
+.callout.good{background:#ecfdf5;border-left-color:#059669}
+.cta{background:#0a0a0a;color:#fff;padding:2rem;border-radius:.5rem;text-align:center;margin:2rem 0}
+.cta h2{border:none;color:#fff}
+.cta a{display:inline-block;background:#00d4aa;color:#0a0a0a;padding:.6rem 1.5rem;border-radius:.375rem;font-weight:600;margin-top:.5rem}
+.faq-section dt{font-weight:600;margin-top:1.2rem;font-size:1.05rem}.faq-section dd{margin:.3rem 0 0 0;color:#374151}
+.byline{color:#6b7280;font-size:.85rem;margin-bottom:2rem}
+</style>
+</head>
+<body>
+<p class="byline">By SanctionsAI team · Updated 2026-08-09</p>
+<h1>Shell company and front company sanctions evasion</h1><p class="lede">Shell companies and front companies are the oldest sanctions evasion tool. OFAC's 50 Percent Rule makes any entity owned 50% or more by a designated person itself designated, but proving ownership through layers of shell companies is the enforcement challenge.</p>
+<p><strong>TL;DR:</strong> Sanctioned individuals create layered corporate structures across multiple jurisdictions to obscure beneficial ownership. OFAC's 50 Percent Rule means any entity majority-owned by a designated person is also blocked, even if not separately listed. The challenge is identifying the ownership chain.</p>
+<h2>OFAC's 50 Percent Rule explained</h2><p>Under OFAC regulations, any entity that is 50% or more owned, directly or indirectly, by a designated person is itself considered designated, even if not separately listed on the SDN list. This means a shell company 51% owned by an SDN is blocked property, even if its name does not appear on any sanctions list.</p>
+<h2>Common shell company structures</h2><table><tr><th>Structure</th><th>How it works</th><th>Jurisdictions commonly used</th></tr>
+<tr><td>Nominee director</td><td>Designated person controls through a strawman director</td><td>BVI, Seychelles, Panama</td></tr>
+<tr><td>Trust and corporate service provider</td><td>Professional intermediary holds shares on behalf of designated person</td><td>Cyprus, UAE, Cayman Islands</td></tr>
+<tr><td>Layered holding companies</td><td>Multiple holding entities across jurisdictions to break ownership chain</td><td>Delaware, Luxembourg, Singapore</td></tr>
+<tr><td>Joint venture dilution</td><td>Designated person holds exactly 49% to fall below threshold</td><td>Various</td></tr></table>
+<h2>Case: Oleg Deripaska entities</h2><p>OFAC designated Oleg Deripaska in 2018 under the Russia sanctions program. Subsequent designations of his companies (EN+ Group, Rusal, ESE) demonstrated how OFAC extends the SDN list through the 50 Percent Rule. EN+ Group restructured its ownership to reduce Deripaska's stake below 50% to achieve delisting, showing the Rule works both ways.</p>
+<div class="callout"><strong>Compliance takeaway:</strong> Screening company names against the SDN list is not sufficient. You must also screen beneficial owners. The EU's Ultimate Beneficial Owner (UBO) registries and the US Corporate Transparency Act are designed to address this gap.</div>
+<div class="cta"><h2>Screen your agent's next payment</h2>
+<p style="color:#9ca3af;margin:.5rem 0">Check any wallet, name, or entity against OFAC, EU, UN sanctions lists in real time.</p>
+<a href="/tools/wallet-checker">Free wallet checker</a></div>
+<div class="faq-section"><h2>Frequently Asked Questions</h2><dl>
+<dt>What is OFAC's 50 Percent Rule?</dt><dd>Any entity that is 50% or more owned, directly or indirectly, by an SDN-listed person is itself considered designated, even if not separately named on the SDN list. One SDN at 50% plus another at 1% = 51% = blocked entity.</dd><dt>How do I know if a company is owned by a sanctioned person?</dt><dd>Check the SDN list for company names, then investigate beneficial ownership through UBO registries, corporate filings, and commercial databases like Refinitiv World-Check or Dow Jones Risk Center.</dd><dt>Does the 50 Percent Rule apply to EU and UK sanctions?</dt><dd>Yes, both EU and UK sanctions frameworks include analogous ownership-based blocking rules. The UK's OFSI applies a 50% rule similar to OFAC's.</dd><dt>Can AI agents screen for beneficial ownership?</dt><dd>AI agents can screen company names against the SDN list automatically. Beneficial ownership screening requires access to UBO registries or commercial databases, which some APIs provide. agentmail screens entity names against OFAC, EU, and UN lists.</dd>
+</dl></div>
+<p><a href="/evasion">← Back to evasion</a> · <a href="/">SanctionsAI</a></p>
+</body></html>
