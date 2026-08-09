@@ -3597,7 +3597,7 @@ License: https://creativecommons.org/licenses/by/4.0/
                 if _os.path.isfile(_rp):
                     with open(_rp, "r", encoding="utf-8") as _fh:
                         return self._serve_text(_fh.read(), "text/html; charset=utf-8")
-        for _pfx in ("/vs/", "/faq/", "/learn/", "/alternatives-to/", "/penalties/", "/guides/", "/checklists/", "/cost-of/", "/best/", "/templates/", "/stats/", "/redflags/", "/scenarios/", "/programs/", "/benchmarks/"):
+        for _pfx in ("/vs/", "/faq/", "/learn/", "/alternatives-to/", "/penalties/", "/guides/", "/checklists/", "/cost-of/", "/best/", "/templates/", "/stats/", "/redflags/", "/scenarios/", "/programs/", "/benchmarks/", "/evasion/", "/risk-ratings/"):
             if p.path.startswith(_pfx):
                 _slug = p.path[len(_pfx):].split("?")[0].split("/")[0]
                 if not _slug:
@@ -6470,6 +6470,43 @@ License: https://creativecommons.org/licenses/by/4.0/
         ("/glossary/ofac-web3-regulation-glossary-3", "monthly", "0.7", "Ofac Web3 Regulation Glossary 3"),
         ("/glossary/ofac-web3-regulation-glossary-4", "monthly", "0.7", "Ofac Web3 Regulation Glossary 4"),
         ("/glossary/ofac-web3-regulation-glossary-5", "monthly", "0.7", "Ofac Web3 Regulation Glossary 5"),
+        ("/evasion/cross-chain-bridge-evasion", "monthly", "0.8", "Cross Chain Bridge Evasion"),
+        ("/evasion/shell-company-front-companies", "monthly", "0.8", "Shell Company Front Companies"),
+        ("/evasion/trade-based-money-laundering", "monthly", "0.8", "Trade Based Money Laundering"),
+        ("/evasion/crypto-mixer-evasion", "monthly", "0.8", "Crypto Mixer Evasion"),
+        ("/evasion/ransomware-payment-evasion", "monthly", "0.8", "Ransomware Payment Evasion"),
+        ("/evasion/virtual-asset-service-provider-evasion", "monthly", "0.8", "Virtual Asset Service Provider Evasion"),
+        ("/evasion/diplomatic-pouch-courier-evasion", "monthly", "0.8", "Diplomatic Pouch Courier Evasion"),
+        ("/evasion/shipping-flag-hopping-evasion", "monthly", "0.8", "Shipping Flag Hopping Evasion"),
+        ("/evasion/digital-currency-stablecoin-evasion", "monthly", "0.8", "Digital Currency Stablecoin Evasion"),
+        ("/evasion/gift-card-prepaid-card-evasion", "monthly", "0.8", "Gift Card Prepaid Card Evasion"),
+        ("/evasion/nft-digital-asset-evasion", "monthly", "0.8", "Nft Digital Asset Evasion"),
+        ("/evasion/decentralized-exchange-evasion", "monthly", "0.8", "Decentralized Exchange Evasion"),
+        ("/risk-ratings/iran", "monthly", "0.8", "Iran Sanctions Risk Rating"),
+        ("/risk-ratings/north-korea", "monthly", "0.8", "North Korea Sanctions Risk Rating"),
+        ("/risk-ratings/syria", "monthly", "0.8", "Syria Sanctions Risk Rating"),
+        ("/risk-ratings/cuba", "monthly", "0.8", "Cuba Sanctions Risk Rating"),
+        ("/risk-ratings/russia", "monthly", "0.8", "Russia Sanctions Risk Rating"),
+        ("/risk-ratings/belarus", "monthly", "0.8", "Belarus Sanctions Risk Rating"),
+        ("/risk-ratings/venezuela", "monthly", "0.8", "Venezuela Sanctions Risk Rating"),
+        ("/risk-ratings/myanmar", "monthly", "0.8", "Myanmar Sanctions Risk Rating"),
+        ("/risk-ratings/china", "monthly", "0.8", "China Sanctions Risk Rating"),
+        ("/risk-ratings/turkey", "monthly", "0.8", "Turkey Sanctions Risk Rating"),
+        ("/risk-ratings/uae", "monthly", "0.8", "Uae Sanctions Risk Rating"),
+        ("/risk-ratings/pakistan", "monthly", "0.8", "Pakistan Sanctions Risk Rating"),
+        ("/risk-ratings/india", "monthly", "0.8", "India Sanctions Risk Rating"),
+        ("/risk-ratings/brazil", "monthly", "0.8", "Brazil Sanctions Risk Rating"),
+        ("/risk-ratings/singapore", "monthly", "0.8", "Singapore Sanctions Risk Rating"),
+        ("/best/best-ofac-screening-for-fintech", "weekly", "0.9", "Best OFAC Screening For Fintech"),
+        ("/best/best-sanctions-screening-for-crypto-exchanges", "weekly", "0.9", "Best Sanctions Screening For Crypto Exchanges"),
+        ("/best/best-sanctions-screening-for-defi-protocols", "weekly", "0.9", "Best Sanctions Screening For Defi Protocols"),
+        ("/best/best-sanctions-screening-for-marketplaces", "weekly", "0.9", "Best Sanctions Screening For Marketplaces"),
+        ("/best/best-sanctions-screening-for-psps", "weekly", "0.9", "Best Sanctions Screening For PSPs"),
+        ("/best/best-ofac-screening-for-ai-agents", "weekly", "0.9", "Best OFAC Screening For AI Agents"),
+        ("/best/best-sanctions-screening-for-banks", "weekly", "0.9", "Best Sanctions Screening For Banks"),
+        ("/best/best-sanctions-screening-for-insurance", "weekly", "0.9", "Best Sanctions Screening For Insurance"),
+        ("/best/best-sanctions-screening-for-ecommerce", "weekly", "0.9", "Best Sanctions Screening For Ecommerce"),
+        ("/best/best-sanctions-screening-for-startups", "weekly", "0.9", "Best Sanctions Screening For Startups"),
     ]
         import datetime
         today = datetime.date.today().isoformat()
