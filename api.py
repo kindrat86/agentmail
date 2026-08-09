@@ -3597,7 +3597,7 @@ License: https://creativecommons.org/licenses/by/4.0/
                 if _os.path.isfile(_rp):
                     with open(_rp, "r", encoding="utf-8") as _fh:
                         return self._serve_text(_fh.read(), "text/html; charset=utf-8")
-        for _pfx in ("/vs/", "/faq/", "/learn/", "/alternatives-to/", "/penalties/", "/guides/", "/checklists/", "/cost-of/", "/best/", "/templates/", "/stats/", "/redflags/", "/scenarios/", "/programs/", "/benchmarks/", "/evasion/", "/risk-ratings/", "/regulations/", "/deadlines/"):
+        for _pfx in ("/vs/", "/faq/", "/learn/", "/alternatives-to/", "/penalties/", "/guides/", "/checklists/", "/cost-of/", "/best/", "/templates/", "/stats/", "/redflags/", "/scenarios/", "/programs/", "/benchmarks/", "/evasion/", "/risk-ratings/", "/regulations/", "/deadlines/", "/case-studies/", "/examples/"):
             if p.path.startswith(_pfx):
                 _slug = p.path[len(_pfx):].split("?")[0].split("/")[0]
                 if not _slug:
@@ -6546,6 +6546,43 @@ License: https://creativecommons.org/licenses/by/4.0/
         ("/deadlines/rescreening-frequency", "monthly", "0.8", "Rescreening Frequency"),
         ("/deadlines/license-application-timeline", "monthly", "0.8", "License Application Timeline"),
         ("/deadlines/audit-trail-retention", "monthly", "0.8", "Audit Trail Retention"),
+        ("/case-studies/binance-ofac-settlement-2023", "monthly", "0.9", "Binance Ofac Settlement 2023"),
+        ("/case-studies/kraken-ofac-settlement-2022", "monthly", "0.9", "Kraken Ofac Settlement 2022"),
+        ("/case-studies/bitgo-ofac-settlement-2020", "monthly", "0.9", "Bitgo Ofac Settlement 2020"),
+        ("/case-studies/etherdelta-ofac-settlement-2018", "monthly", "0.9", "Etherdelta Ofac Settlement 2018"),
+        ("/case-studies/bitpay-ofac-settlement-2021", "monthly", "0.9", "Bitpay Ofac Settlement 2021"),
+        ("/case-studies/tornado-cash-designation-2022", "monthly", "0.9", "Tornado Cash Designation 2022"),
+        ("/case-studies/binance-settlement-timeline", "monthly", "0.9", "Binance Settlement Timeline"),
+        ("/case-studies/standard-chartered-ofac-case", "monthly", "0.9", "Standard Chartered Ofac Case"),
+        ("/case-studies/societe-generale-ofac-case", "monthly", "0.9", "Societe Generale Ofac Case"),
+        ("/case-studies/blender-io-designation-2022", "monthly", "0.9", "Blender Io Designation 2022"),
+        ("/case-studies/garantex-designation-2022", "monthly", "0.9", "Garantex Designation 2022"),
+        ("/case-studies/hydra-market-designation", "monthly", "0.9", "Hydra Market Designation"),
+        ("/examples/python-wallet-screening", "weekly", "0.8", "Python Wallet Screening"),
+        ("/examples/javascript-wallet-check", "weekly", "0.8", "Javascript Wallet Check"),
+        ("/examples/curl-sanctions-check", "weekly", "0.8", "Curl Sanctions Check"),
+        ("/examples/name-screening-python", "weekly", "0.8", "Name Screening Python"),
+        ("/examples/go-wallet-screening", "weekly", "0.8", "Go Wallet Screening"),
+        ("/examples/rust-wallet-screening", "weekly", "0.8", "Rust Wallet Screening"),
+        ("/examples/payment-gateway-integration", "weekly", "0.8", "Payment Gateway Integration"),
+        ("/examples/stripe-payment-screening", "weekly", "0.8", "Stripe Payment Screening"),
+        ("/examples/ethereum-transaction-screening", "weekly", "0.8", "Ethereum Transaction Screening"),
+        ("/examples/smart-contract-pre-check", "weekly", "0.8", "Smart Contract Pre Check"),
+        ("/examples/batch-screening-script", "weekly", "0.8", "Batch Screening Script"),
+        ("/examples/compliance-dashboard-setup", "weekly", "0.8", "Compliance Dashboard Setup"),
+        ("/examples/webhook-alert-setup", "weekly", "0.8", "Webhook Alert Setup"),
+        ("/redflags/trade-finance-red-flags", "monthly", "0.8", "Trade Finance Red Flags"),
+        ("/redflags/correspondent-banking-red-flags", "monthly", "0.8", "Correspondent Banking Red Flags"),
+        ("/redflags/wire-transfer-red-flags", "monthly", "0.8", "Wire Transfer Red Flags"),
+        ("/redflags/crypto-wallet-red-flags", "monthly", "0.8", "Crypto Wallet Red Flags"),
+        ("/redflags/ppe-sanctions-red-flags", "monthly", "0.8", "Ppe Sanctions Red Flags"),
+        ("/redflags/shipping-trade-red-flags", "monthly", "0.8", "Shipping Trade Red Flags"),
+        ("/redflags/insurance-sanctions-red-flags", "monthly", "0.8", "Insurance Sanctions Red Flags"),
+        ("/redflags/defi-protocol-red-flags", "monthly", "0.8", "Defi Protocol Red Flags"),
+        ("/redflags/payment-processor-red-flags", "monthly", "0.8", "Payment Processor Red Flags"),
+        ("/redflags/nft-marketplace-red-flags", "monthly", "0.8", "Nft Marketplace Red Flags"),
+        ("/redflags/vasp-onboarding-red-flags", "monthly", "0.8", "Vasp Onboarding Red Flags"),
+        ("/redflags/ai-agent-payment-red-flags", "monthly", "0.8", "Ai Agent Payment Red Flags"),
     ]
         import datetime
         today = datetime.date.today().isoformat()
