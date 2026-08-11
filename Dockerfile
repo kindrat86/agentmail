@@ -51,6 +51,9 @@ COPY tools/ ./tools/
 COPY ux.css ux.js ./
 # published CC BY dataset served by /ofac-enforcement-2026.csv (read from disk, not embedded)
 COPY ofac-enforcement-2026.csv ./
+# Research Data hub (/data/ + dataset pages with CSV/JSON downloads) —
+# was never copied, so the routes 404'd (previously soft-404'd) in production.
+COPY data/ ./data/
 # Public static assets (related-tools hub, network, answers, badge, verification files)
 # ALSO: agent-compliance-playbook.pdf (Dotcom Secrets lead magnet, 2026-07-26)
 COPY public/ ./public/
