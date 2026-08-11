@@ -3806,8 +3806,23 @@ License: https://creativecommons.org/licenses/by/4.0/
         if p.path == "/data/feed.json":
             return self._serve_file_content("data/feed.json", "application/json")
         if p.path.startswith("/data/"):
+            import os as _os
+            _rel = p.path.lstrip("/")
+            # Serve real dataset files (e.g. /data/<slug>/data.csv, data.json)
+            # directly — the Dataset JSON-LD advertises these as contentUrl.
+            if "/." not in p.path and ".." not in p.path and _os.path.isfile(_os.path.join(_os.getcwd(), _rel)):
+                _ext = _rel.rsplit(".", 1)[-1].lower() if "." in _rel else ""
+                _ct = {"csv": "text/csv", "json": "application/json",
+                       "html": "text/html", "txt": "text/plain"}.get(_ext)
+                if _ct:
+                    return self._serve_file_content(_rel, _ct)
             slug = p.path.rstrip("/") + "/index.html"
-            return self._serve_file_content("data/" + slug.split("data/")[1], "text/html")
+            _data_fname = "data/" + slug.split("data/")[1]
+            if _os.path.isfile(_os.path.join(_os.getcwd(), _data_fname)):
+                return self._serve_file_content(_data_fname, "text/html")
+            # Unknown /data/ path: fall through to the catch-all 404 page below.
+            # (Previously returned HTTP 200 with body "not found" — a soft-404
+            # indexation trap verified live 2026-08-11 on /data/ofac-wallets.csv.)
         # Content guides
         if p.path in ("/guides/ofac-for-ai-agents", "/guides/ofac-for-ai-agents/"):
             return self._serve_file_content("public/guides/ofac-for-ai-agents/index.html", "text/html")
@@ -4118,7 +4133,15 @@ License: https://creativecommons.org/licenses/by/4.0/
             with open(filepath, "rb") as f:
                 body = f.read()
         except (OSError, FileNotFoundError):
-            return self._serve_text("not found", "text/plain")
+            # Real 404, not a 200 "not found" (soft-404 indexation trap; fixed 2026-08-11).
+            body = b"not found"
+            self.send_response(404)
+            self.send_header("Content-Type", "text/plain; charset=utf-8")
+            self.send_header("Content-Length", str(len(body)))
+            self.send_header("X-Robots-Tag", "noindex")
+            self.end_headers()
+            self.wfile.write(body)
+            return
         self.send_response(200)
         self.send_header("Content-Type", f"{content_type}; charset=utf-8")
         self.send_header("Content-Length", str(len(body)))
@@ -12941,9 +12964,8 @@ compute();
         
         page = pages.get(page_key)
         if not page:
-            self._serve_text("Page not found", "text/plain")
-            self.send_response(404)
-            return
+            # Real 404 (was: 200 "Page not found" + a stray second status line).
+            return _json(self, 404, {"error": "not found"})
         
         # Build proper path from page_key for canonical
         path = "/" + page_key.replace("-", "/", 1) if "-" in page_key else "/" + page_key
