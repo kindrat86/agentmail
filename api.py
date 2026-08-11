@@ -9166,8 +9166,15 @@ python -m agentmail.cli sanctions --wallet 0x098B...</code></pre>
 </div>
 </div></section>
 <script>
+// SITE must be GLOBAL: checkWallet() below is declared at top level and is the
+// onclick target, so it cannot see anything scoped inside the IIFE. It used to
+// be declared with `var SITE` inside the IIFE, which made every click throw
+// "ReferenceError: SITE is not defined" (verified live in a browser 2026-08-11).
+// The throw lands after btn.disabled=true and before the fetch promise exists,
+// so no .catch()/.finally() ever runs: the spinner shows forever and the Check
+// button stays permanently disabled. curl cannot see this — the HTML is fine.
+var SITE="__SITE__";
 (function(){
-  var SITE="__SITE__";
   // Restore from URL hash on load
   var hash=window.location.hash;
   if(hash&&hash.startsWith("#addr=")){
@@ -12219,7 +12226,12 @@ compute();
 <div class="faq">{_faq_html}</div>
 <!-- Brunson Trust Bar — Dotcom Secrets Chapter 7 -->
 <section style="background:linear-gradient(135deg,#f0f9ff,#e8f5e9);border-radius:16px;padding:32px 24px;margin:40px 0;border:2px solid #0066cc30;text-align:center">
-  <h2 style="font-size:1.5rem;margin-bottom:16px;color:#1a1a1a">Trusted by Developers Screening Millions of Transactions</h2>
+  <!-- Headline states a DATASET fact, not a customer-trust claim. It previously read
+       "Trusted by Developers Screening Millions of Transactions" while zero API keys had
+       ever been issued (the paywall is not even enabled) — an unbacked claim on a
+       compliance product, where being caught overclaiming is disqualifying. The three
+       figures below are real and verifiable against /health, so they stay. -->
+  <h2 style="font-size:1.5rem;margin-bottom:16px;color:#1a1a1a">Screened Against the Full OFAC SDN List, Refreshed Daily</h2>
   <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:20px;margin-bottom:24px">
     <div style="min-width:100px"><div style="font-size:1.8rem;font-weight:800;color:#0066cc">947</div><div style="font-size:0.85rem;color:#666">Sanctioned Wallets</div></div>
     <div style="min-width:100px"><div style="font-size:1.8rem;font-weight:800;color:#0066cc">19K+</div><div style="font-size:0.85rem;color:#666">Names Screened</div></div>
