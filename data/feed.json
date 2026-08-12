@@ -7,6 +7,14 @@
   "icon": "https://sanctionsai.dev/favicon.ico",
   "items": [
     {
+      "id": "https://sanctionsai.dev/data/ofac-crypto-wallets/",
+      "url": "https://sanctionsai.dev/data/ofac-crypto-wallets/",
+      "title": "OFAC Sanctioned Crypto Wallet Addresses",
+      "content_text": "Every digital-currency address on the US Treasury OFAC SDN list — 977 listings, 961 unique addresses across 20 chains — with entity, OFAC program, and designation date. CSV + JSON downloads, CC BY 4.0.",
+      "date_published": "2026-08-12T00:00:00Z",
+      "date_modified": "2026-08-12T00:00:00Z"
+    },
+    {
       "id": "https://sanctionsai.dev/data/global-sanctions-statistics/",
       "url": "https://sanctionsai.dev/data/global-sanctions-statistics/",
       "title": "Global Sanctions & Compliance Statistics 2026",

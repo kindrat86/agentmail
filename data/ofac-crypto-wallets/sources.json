@@ -1,0 +1,42 @@
+{
+ "page": "https://sanctionsai.dev/data/ofac-crypto-wallets/",
+ "claims": [
+  {
+   "claim": "977 digital-currency address listings",
+   "source_url": "https://www.treasury.gov/ofac/downloads/sanctions/1.0/sdn_advanced.xml",
+   "method": "count of Feature elements with FeatureType 'Digital Currency Address - *' in SDN Advanced XML dated 2026-08-07"
+  },
+  {
+   "claim": "961 unique addresses",
+   "source_url": "https://www.treasury.gov/ofac/downloads/sanctions/1.0/sdn_advanced.xml",
+   "method": "distinct address strings (some addresses are listed under two chain labels, e.g. USDT on Tron)"
+  },
+  {
+   "claim": "20 chains",
+   "source_url": "https://www.treasury.gov/ofac/downloads/sanctions/1.0/sdn_advanced.xml",
+   "method": "distinct chain suffixes of the Digital Currency Address feature type"
+  },
+  {
+   "claim": "entity designation dates span 2010-2026",
+   "source_url": "https://www.treasury.gov/ofac/downloads/sanctions/1.0/sdn_advanced.xml",
+   "method": "earliest EntryEvent date per SDN entry. NOTE: this is the date the ENTITY was first designated, not the date the address was added to the list \u2014 OFAC's bulk files do not publish per-address add dates. E.g. the Central Bank of Iran entry dates to 2010; its Tron addresses were added much later."
+  },
+  {
+   "claim": "OFAC first attached digital-currency addresses to SDN designations in November 2018",
+   "source_url": "https://home.treasury.gov/news/press-releases/sm556",
+   "method": "Treasury press release, 2018-11-28: 'OFAC is publishing digital currency addresses ... first time' (two Iran-based ransomware facilitators)"
+  },
+  {
+   "claim": "per-chain counts in the summary table",
+   "source_url": "https://www.treasury.gov/ofac/downloads/sanctions/1.0/sdn_advanced.xml",
+   "method": "group-by chain over the same records; cross-checked against Treasury sdn.csv remarks field (same distribution) and the third-party vile/ofac-sdn-list release (961 unique addresses, identical)"
+  }
+ ],
+ "guardrail_5_2": {
+  "note": "Categorical distributions verified against two independent parses of the primary source: chain=XBT is 54% of listings in BOTH sdn_advanced.xml and the sdn.csv remarks field \u2014 a true property of the OFAC list (Bitcoin dominates designations), not a parser artifact.",
+  "no_constant_default_fields": true,
+  "missing_designation_date": 0,
+  "missing_programs": 0,
+  "missing_entity": 0
+ }
+}
