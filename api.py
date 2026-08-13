@@ -2583,6 +2583,7 @@ class Handler(BaseHTTPRequestHandler):
             "/sanctions-screening-best-practices": "/learn/sanctions-screening-best-practices",
             "/ofac-compliance-guide": "/learn/ofac-compliance-guide",
             "/crypto-sanctions-risk": "/learn/crypto-sanctions-risk",
+            "/enforcement": "/data/ofac-enforcement",
             "/compare/chainalysis": "/vs/chainalysis",
             "/compare/elliptic": "/vs/elliptic",
             "/compare/complyadvantage": "/vs/comply-advantage",

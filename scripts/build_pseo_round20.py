@@ -917,7 +917,7 @@ def build_scenarios_index() -> str:
           "Pre-transaction OFAC screening in under 100ms. Free tier: 5 checks/day.")}
     {_related([
         ("/redflags", "OFAC red flags"),
-        ("/enforcement", "OFAC enforcement actions"),
+        ("/data/ofac-enforcement", "OFAC enforcement actions"),
         ("/penalties/ofac-violation-costs", "OFAC violation costs"),
         ("/how-to/file-voluntary-disclosure", "File a voluntary self-disclosure"),
     ])}""")
