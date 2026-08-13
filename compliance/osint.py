@@ -44,6 +44,11 @@ _VILE_API_LATEST = "https://api.github.com/repos/vile/ofac-sdn-list/releases/lat
 _VILE_DIRECT_LATEST = "https://github.com/vile/ofac-sdn-list/releases/latest/download/sdn.json"
 # Treasury SDN CSV — authoritative names + countries.
 _TREASURY_SDN_CSV = "https://www.treasury.gov/ofac/downloads/sdn.csv"
+# Treasury ALT CSV — alternate names (aka/fka/transliterations) for SDN entries.
+# OFAC ships these in a SEPARATE file, keyed to sdn.csv by ent_num (column 0).
+# Screening only sdn.csv meant ~20k sanctioned aliases returned "clean": a
+# request for "PAVLOV, Andrey" came back clean while "PAVLOV, Andrei" matched.
+_TREASURY_ALT_CSV = "https://www.treasury.gov/ofac/downloads/alt.csv"
 
 _CACHE_DIR = os.path.expanduser("~/.agentmail/cache")
 _WALLET_CACHE = os.path.join(_CACHE_DIR, "ofac_wallets.json")
@@ -51,6 +56,10 @@ _WALLET_META = os.path.join(_CACHE_DIR, "ofac_wallets.meta.json")
 _NAME_CACHE = os.path.join(_CACHE_DIR, "ofac_names.json")
 _NAME_META = os.path.join(_CACHE_DIR, "ofac_names.meta.json")
 _TTL = 24 * 3600  # 24 hours
+# Bumped when the shape or coverage of the name cache changes. A cache written
+# by an older build is discarded even if still inside _TTL — otherwise the
+# alias fix would not take effect until the existing cache aged out.
+_NAME_SCHEMA = 2
 
 # ISO-3166-1 alpha-2 codes under comprehensive OFAC/UN/EU sanctions or
 # embargoed (Jun 2026). These trigger OFAC_COUNTRY matches.
@@ -157,6 +166,7 @@ class OsintComplianceProvider(ComplianceProvider):
         self._degraded_reason = ""
         self._wallets: dict[str, str] = {}   # address_lower -> type/label
         self._names: dict[str, str] = {}     # normalized name -> country
+        self._alias_keys: set[str] = set()   # subset of _names sourced from alt.csv
         self._name_tokens_index: list[tuple[list[str], str, str]] = []
         # tokens, country, original
         self._lists_loaded_at: float = 0.0
@@ -198,12 +208,16 @@ class OsintComplianceProvider(ComplianceProvider):
                 self._degraded = False
                 self._degraded_reason = ""
 
-    def _cache_fresh(self, meta_path: str) -> bool:
+    def _cache_fresh(self, meta_path: str, schema: int | None = None) -> bool:
         if not os.path.exists(meta_path):
             return False
         try:
             with open(meta_path) as f:
                 meta = json.load(f)
+            # A cache written before the alias fix is "fresh" by age but wrong
+            # by content, so treat a schema mismatch as stale and refetch.
+            if schema is not None and meta.get("schema") != schema:
+                return False
             return (time.time() - meta.get("fetched_at", 0)) < _TTL
         except (OSError, ValueError):
             return False
@@ -302,17 +316,20 @@ class OsintComplianceProvider(ComplianceProvider):
         raise RuntimeError("; ".join(errors))
 
     def _maybe_refresh_names(self, force: bool, now: float) -> bool:
-        if (not force) and self._cache_fresh(_NAME_META) and os.path.exists(_NAME_CACHE):
+        if (not force) and self._cache_fresh(_NAME_META, _NAME_SCHEMA) \
+                and os.path.exists(_NAME_CACHE):
             return self._load_name_cache()
         try:
-            names, source_tag = self._fetch_names()
+            names, alias_keys, source_tag = self._fetch_names()
             os.makedirs(_CACHE_DIR, exist_ok=True)
             with open(_NAME_CACHE, "w") as f:
-                json.dump(names, f)
+                json.dump({"schema": _NAME_SCHEMA, "names": names,
+                           "aliases": sorted(alias_keys)}, f)
             with open(_NAME_META, "w") as f:
                 json.dump({"fetched_at": now, "source": source_tag,
-                           "count": len(names)}, f)
-            self._build_name_index(names)
+                           "schema": _NAME_SCHEMA, "count": len(names),
+                           "alias_count": len(alias_keys)}, f)
+            self._build_name_index(names, alias_keys)
             return True
         except Exception as e:
             if os.path.exists(_NAME_CACHE):
@@ -326,8 +343,15 @@ class OsintComplianceProvider(ComplianceProvider):
     def _load_name_cache(self) -> bool:
         try:
             with open(_NAME_CACHE) as f:
-                names = json.load(f)
-            self._build_name_index(names)
+                blob = json.load(f)
+            # schema 1 was a bare {name: country} dict with no aliases; schema 2
+            # wraps it so alias provenance survives a restart.
+            if isinstance(blob, dict) and "names" in blob:
+                names = blob.get("names") or {}
+                alias_keys = set(blob.get("aliases") or ())
+            else:
+                names, alias_keys = blob, set()
+            self._build_name_index(names, alias_keys)
             with open(_NAME_META) as f:
                 meta = json.load(f)
             if not self._source_tag:
@@ -337,11 +361,18 @@ class OsintComplianceProvider(ComplianceProvider):
         except (OSError, ValueError):
             return False
 
-    def _fetch_names(self) -> tuple[dict[str, str], str]:
-        """Fetch + parse Treasury sdn.csv → {normalized_name: country}."""
+    def _fetch_names(self) -> tuple[dict[str, str], set[str], str]:
+        """Fetch + parse Treasury sdn.csv + alt.csv.
+
+        Returns (names, alias_keys, source_tag) where names maps a normalized
+        name -> country and alias_keys is the subset of those keys that came
+        from alt.csv, so a hit can tell the caller it matched an alternate
+        spelling rather than the primary designation.
+        """
         raw = _http_get(_TREASURY_SDN_CSV, timeout=90).decode("utf-8", "replace")
         reader = csv.reader(io.StringIO(raw))
         names: dict[str, str] = {}
+        ent_country: dict[str, str] = {}
         for row in reader:
             if len(row) < 4:
                 continue
@@ -349,15 +380,45 @@ class OsintComplianceProvider(ComplianceProvider):
             if not nm or nm.startswith("-"):
                 continue
             country = (row[3] or "").strip().lower()
+            ent = (row[0] or "").strip()
+            if ent:
+                ent_country[ent] = country
             key = _norm_name(nm)
             if key:
                 names[key] = country
         if not names:
             raise RuntimeError("treasury sdn.csv yielded no names")
-        return names, "treasury.ofac/sdn.csv"
 
-    def _build_name_index(self, names: dict[str, str]):
+        # Aliases are ADDITIVE and must never be able to break the primary
+        # screen: if alt.csv is unreachable we still return the sdn.csv names
+        # rather than falling all the way back to the tiny static list.
+        alias_keys: set[str] = set()
+        try:
+            raw_alt = _http_get(_TREASURY_ALT_CSV, timeout=90).decode("utf-8", "replace")
+            for row in csv.reader(io.StringIO(raw_alt)):
+                if len(row) < 4:
+                    continue
+                alt = (row[3] or "").strip()
+                if not alt or alt.startswith("-"):
+                    continue
+                key = _norm_name(alt)
+                # Never let an alias overwrite a primary designation's country.
+                if not key or key in names:
+                    continue
+                names[key] = ent_country.get((row[0] or "").strip(), "")
+                alias_keys.add(key)
+        except Exception as e:  # noqa: BLE001 - degraded, not fatal
+            self._degraded_reason = f"alt.csv (aliases) unavailable: {e}"
+
+        tag = "treasury.ofac/sdn.csv"
+        if alias_keys:
+            tag += f"+alt.csv({len(alias_keys)} aliases)"
+        return names, alias_keys, tag
+
+    def _build_name_index(self, names: dict[str, str],
+                          alias_keys: set[str] | None = None):
         self._names = names
+        self._alias_keys = set(alias_keys or ())
         self._name_tokens_index = [
             (_name_tokens(n), country, n)
             for n, country in names.items()
@@ -384,12 +445,18 @@ class OsintComplianceProvider(ComplianceProvider):
 
         # Name: normalized exact first (high precision).
         if nl and nl in self._names:
+            _is_alias = nl in self._alias_keys
+            _detail = f"country={self._names[nl] or 'unknown'}"
+            if _is_alias:
+                # Say so explicitly: a compliance caller filing this as evidence
+                # needs to know the hit came from an OFAC alternate spelling.
+                _detail = f"matched OFAC alternate name (alt.csv); {_detail}"
             matches.append({
                 "list": "OFAC_SDN",
                 "entity": name,
-                "match_type": "name_exact",
-                "confidence": 0.97,
-                "detail": f"country={self._names[nl] or 'unknown'}",
+                "match_type": "name_alias_exact" if _is_alias else "name_exact",
+                "confidence": 0.95 if _is_alias else 0.97,
+                "detail": _detail,
             })
         elif nl:
             # Token-subset: every significant query token appears in a
@@ -568,14 +635,19 @@ class OsintComplianceProvider(ComplianceProvider):
                              if d["status"] == "open")
             ws = self._wallets
             ns = self._names
+            als = self._alias_keys
         return {
             "provider": self.name,
             "ready": not self._degraded,
+            # Report primaries and aliases separately: names_tracked now
+            # includes alt.csv entries, so a bare total would look like the
+            # SDN list had doubled overnight.
             "detail": (self._degraded_reason
-                       or f"OFAC SDN: {len(ws)} wallets, {len(ns)} names; "
-                          f"source={self._source_tag or 'n/a'}"),
+                       or f"OFAC SDN: {len(ws)} wallets, {len(ns) - len(als)} names "
+                          f"+ {len(als)} aliases; source={self._source_tag or 'n/a'}"),
             "wallets_tracked": len(ws),
             "names_tracked": len(ns),
+            "aliases_tracked": len(als),
             "countries_flagged": len(_HIGH_RISK_COUNTRIES),
             "lists_fetched_at": self._lists_loaded_at or None,
             "cache_ttl_hours": _TTL // 3600,

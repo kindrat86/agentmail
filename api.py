@@ -199,17 +199,32 @@ def _check_rate(identity: str) -> tuple[bool, str]:
 
 
 def _check_free_tier(ip: str) -> tuple[bool, str]:
-    """Unauthenticated daily cap (by IP)."""
-    if not _REQUIRE_AUTH:
-        return True, ""
+    """Unauthenticated daily cap (by IP). Read-only gate.
+
+    Two bugs used to live here, and together they made the free tier
+    unlimited while still *reporting* a limit:
+
+    1. The `if not _REQUIRE_AUTH: return True` short-circuit. Anonymous
+       callers only exist when auth is NOT required, so the one code path
+       that could enforce the cap was the one path that never ran with it.
+       A caller saw `used: 64, limit: 5, remaining: 0` and full match data
+       in the same response. Enforcement now does not depend on that flag —
+       requiring an API key and capping anonymous use are separate concerns.
+
+    2. This function used to append to the same `_free_used` deque that
+       `_record_anon_check` appends to, so once both ran every request would
+       have been counted twice and the real cap would have been half the
+       advertised one. The gate is now read-only; `_record_anon_check`
+       remains the single writer, and it runs after this check.
+    """
+    cap = _FREE_TIER_DAILY if _FREE_TIER_DAILY > 0 else 5
     now = time.time()
     with _rl_lock:
         w = _free_used[ip]
         while w and now - w[0] > 86400:
             w.popleft()
-        if len(w) >= _FREE_TIER_DAILY:
+        if len(w) >= cap:
             return False, "free_tier_exhausted"
-        w.append(now)
     return True, ""
 
 
@@ -2406,12 +2421,13 @@ class Handler(BaseHTTPRequestHandler):
                     return False, "", "invalid_api_key"
                 return False, "", reason  # monthly_limit_exceeded
             return True, key, ""
-        # Anonymous path: only allowed if auth not required, within free-tier cap.
-        if _REQUIRE_AUTH:
-            ok, reason = _check_free_tier(ip)
-            if not ok:
-                return False, "", reason
-            return True, f"anon:{ip}", ""
+        # Anonymous path: always subject to the free-tier daily cap.
+        # This used to only check the cap when _REQUIRE_AUTH was set, which is
+        # exactly when anonymous callers do not exist — so the cap never
+        # applied and the paid tiers were optional.
+        ok, reason = _check_free_tier(ip)
+        if not ok:
+            return False, "", reason
         return True, f"anon:{ip}", ""
 
     def _dashboard_authorized(self) -> bool:
