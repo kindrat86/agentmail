@@ -6652,7 +6652,11 @@ License: https://creativecommons.org/licenses/by/4.0/
         today = datetime.date.today().isoformat()
         xml = '<?xml version="1.0" encoding="UTF-8"?>\n'
         xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+        _seen = set()
         for path, freq, priority, desc in pages:
+            if path in _seen:
+                continue
+            _seen.add(path)
             xml += f'  <url>\n'
             xml += f'    <loc>https://sanctionsai.dev{path}</loc>\n'
             xml += f'    <lastmod>{URL_LASTMOD.get(path, today)}</lastmod>\n'
