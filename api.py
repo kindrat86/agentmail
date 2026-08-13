@@ -2394,9 +2394,30 @@ class Handler(BaseHTTPRequestHandler):
         pass  # quiet
 
     def _client_ip(self):
-        # honour X-Forwarded-For when behind a proxy/load balancer (Fly/Railway)
-        xff = self.headers.get("X-Forwarded-For", "")
-        return xff.split(",")[0].strip() if xff else self.client_address[0]
+        """Caller IP for rate/quota bucketing — must not be client-controllable.
+
+        This used to return the FIRST X-Forwarded-For entry, which is the value
+        the *client* sent: Fly appends the real peer, so a request carrying
+        `X-Forwarded-For: 1.2.3.4` produced "1.2.3.4, <real>" and we bucketed on
+        the spoofed half. Rotating that header handed out a fresh free tier per
+        request, which made the daily cap unenforceable no matter what the gate
+        did — verified in production against an already-exhausted IP.
+
+        Order of trust:
+          1. Fly-Client-IP — set by Fly's proxy, overwritten on every request.
+          2. LAST X-Forwarded-For entry — the hop appended by our own proxy,
+             not anything the client prepended.
+          3. Socket peer, when running without a proxy (local/dev).
+        """
+        fly = (self.headers.get("Fly-Client-IP", "") or "").strip()
+        if fly:
+            return fly
+        xff = self.headers.get("X-Forwarded-For", "") or ""
+        if xff:
+            parts = [p.strip() for p in xff.split(",") if p.strip()]
+            if parts:
+                return parts[-1]
+        return self.client_address[0]
 
     def _authorize(self) -> tuple[bool, str, str]:
         """Return (ok, identity, error). identity = api-key or 'anon:<ip>'.
