@@ -18,6 +18,7 @@ import os
 import secrets
 import sqlite3
 import time
+import json
 import threading
 from pathlib import Path
 
@@ -256,13 +257,24 @@ def handle_webhook(payload: bytes, signature: str) -> dict:
     stripe.api_key = _STRIPE_SECRET
 
     try:
-        event = stripe.Webhook.construct_event(
+        # stripe-python moved exceptions out of the deprecated `stripe.error`
+        # namespace in v9+; support both locations.
+        try:
+            from stripe import SignatureVerificationError
+        except ImportError:  # pragma: no cover - legacy SDKs
+            from stripe.error import SignatureVerificationError
+        stripe.Webhook.construct_event(
             payload, signature, _STRIPE_WEBHOOK_SECRET
         )
-    except stripe.error.SignatureVerificationError:
+    except SignatureVerificationError:
         return {"handled": False, "error": "invalid_signature"}
     except Exception as e:
         return {"handled": False, "error": str(e)}
+
+    # stripe-python >= 9 constructs StripeObject trees, which have no .get()
+    # method. Handlers below are plain-dict code, so re-parse the payload
+    # (already signature-verified above) into plain dicts.
+    event = json.loads(payload)
 
     etype = event["type"]
 
@@ -279,9 +291,12 @@ def handle_webhook(payload: bytes, signature: str) -> dict:
 def _on_checkout_completed(session_obj: dict) -> dict:
     """Issue an API key when a checkout completes."""
     session_id = session_obj["id"]
-    plan = session_obj.get("metadata", {}).get("plan", "dev")
-    customer_id = session_obj.get("customer", "")
-    email = session_obj.get("customer_email", "") or session_obj.get("customer_details", {}).get("email", "")
+    meta = session_obj.get("metadata")
+    plan = meta.get("plan", "dev") if isinstance(meta, dict) else "dev"
+    customer_id = session_obj.get("customer") or ""
+    details = session_obj.get("customer_details")
+    email = (session_obj.get("customer_email") or ""
+             or (details.get("email", "") if isinstance(details, dict) else ""))
 
     # Look up subscription from pending session
     with _db() as c:

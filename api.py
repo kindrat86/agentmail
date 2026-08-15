@@ -1925,7 +1925,9 @@ _PENALTY_CONTENT = {
         "h1": "How to Mitigate OFAC Penalties for AI Agent Violations",
         "html": "<p>OFAC&#x27;s Enforcement Guidelines list several factors that can reduce penalty amounts. Here is how they apply to autonomous agent deployments.</p><h2>1. Voluntary Self-Disclosure</h2><p>Disclosing a violation within a reasonable time after discovery can reduce the base penalty by up to 50%. For agent violations, preserve all logs and screening records before filing.</p><h2>2. Documented Compliance Program</h2><p>Having a compliance program at the time of the violation is a mitigating factor. agentmail gives you documented, timestamped screening evidence that demonstrates a compliance program was in place.</p><h2>3. Cooperation</h2><p>Cooperating fully with OFAC during an investigation, providing all requested records promptly, and taking corrective action are all mitigating factors.</p><h2>4. Remedial Measures</h2><p>After discovering a violation, implementing new screening controls demonstrates good faith. Adding agentmail after a violation shows immediate corrective action.</p><h2>5. Non-willful conduct</h2><p>If the violation was truly inadvertent and the operator had reasonable controls in place, OFAC may issue a cautionary letter rather than a monetary penalty. Pre-transaction screening is the clearest evidence of reasonable controls.</p>",
     },
-    "binance": {        "desc": "Binance's June 2023 global resolution included a $968M OFAC settlement - the largest in crypto history. The sanctions-screening lessons for exchanges and agents.",
+    "binance": {
+        "title": "Binance OFAC Settlement ($968M): What It Means",
+        "desc": "Binance's June 2023 global resolution included a $968M OFAC settlement - the largest in crypto history. The sanctions-screening lessons for exchanges and agents.",
         "h1": "Binance OFAC Settlement: $968M",
         "html": "<p>In June 2023, Binance reached a global resolution with US authorities totaling $4.3B. OFAC's portion was $968M - the largest OFAC settlement with a crypto platform to date.</p><h2>What happened</h2><p>OFAC found that Binance processed transactions involving sanctioned jurisdictions and parties without adequate controls. The resolution covered conduct including users in comprehensively embargoed regions transacting through the platform.</p><h2>The screening gap</h2><p>The violations traced to counterparty and jurisdiction screening that did not run before transactions settled - the same gap pattern as every crypto enforcement action. Volume amplifies it: hundreds of thousands of transactions, each potentially a violation.</p><h2>The lesson for agents</h2><p>Screen before sign, every transaction, fail closed. For an autonomous agent the pattern is identical to an exchange - the screen is the difference between a violation and a logged decision. See the <a href=\"/penalties/standard-chartered\">Standard Chartered</a> and <a href=\"/penalties/societe-generale\">Societe Generale</a> cases for the banking-side scale.</p>",
     },
@@ -13215,9 +13217,19 @@ curl -H "X-API-Key: {key}" \\
                         _send_winback_email(email)
                     except Exception as e:
                         print(f"[webhook] win-back email failed: {e}", flush=True)
-            status = 200 if result.get("handled") else 400
+            # 200 for ANY signature-verified event, even deliberately ignored
+            # ones: Stripe treats non-2xx as delivery failure and retries for
+            # days (spamming "webhook failures" emails). Only signature errors
+            # and internal errors are non-2xx.
+            if result.get("error"):
+                status = 400
+            else:
+                status = 200
+            if etype or result.get("error"):
+                print(f"[webhook] {etype or 'error'}: {status} {result}", flush=True)
             _json(self, status, result)
         except Exception as e:
+            print(f"[webhook] ERROR: {e!r}", flush=True)
             _json(self, 500, {"error": str(e)})
 
 
