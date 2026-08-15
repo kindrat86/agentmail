@@ -6,6 +6,7 @@
 
 ## Критичні граблі
 - api.py = 836KB, всі manifests віддаються inline з нього — НІЯКОЇ хірургії api.py; статичний контент (glossary /learn/) — окремими файлами під served-префіксом
+- **Stripe webhook (fix 2026-08-15, v521):** stripe>=9 `construct_event` повертає StripeObject (без `.get()`) — handlers отримують plain dict через `json.loads(payload)` після верифікації підпису. Verified-but-ignored події = 200 (не 400), інакше Stripe ретраїть днями і спамить failure-емейли. `_stripe_webhook` тепер логить кожну подію.
 - Compliance-контент: тільки VETTED verbatim визначення + disclaimers; verbatim gate обовʼязковий, нічого не вигадувати
 - Dashboard фільтрує verify_* пінги; реальних відвідувачів історично ~0 — не інтерпретуй пінги як трафік
 - Owner-задача (не робити самому): ротація ключів sanctionsai
