@@ -6490,7 +6490,9 @@ License: https://creativecommons.org/licenses/by/4.0/
             _seen.add(path)
             xml += f'  <url>\n'
             xml += f'    <loc>https://sanctionsai.dev{path}</loc>\n'
-            xml += f'    <lastmod>{URL_LASTMOD.get(path, today)}</lastmod>\n'
+            _lm = URL_LASTMOD.get(path)
+            if _lm:
+                xml += f'    <lastmod>{_lm}</lastmod>\n'
             xml += f'    <changefreq>{freq}</changefreq>\n'
             xml += f'    <priority>{priority}</priority>\n'
             xml += f'  </url>\n'
