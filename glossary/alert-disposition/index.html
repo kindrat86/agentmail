@@ -43,27 +43,16 @@ ul.check{list-style:none;padding-left:0}ul.check li::before{content:"✓  ";colo
 <!-- isenberg-round40 -->
     <script>!function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.crossOrigin="anonymous",p.async=!0,p.src=s.api_host.replace(".i.posthog.com","-assets.i.posthog.com")+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags getFeatureFlag getFeatureFlagPayload reloadFeatureFlags group updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures getActiveMatchingSurveys getSurveys".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=!0}(document,window.posthog||[]);posthog.init("phc_lyZCgvTpicjLzAO3rY2GhxuX5WUc5jQjP8ZVwwJqauX",{api_host:"https://eu.i.posthog.com",person_profiles:"identified_only"})</script>
 </head>
-<body>
-<article>
-<header>
-<p class="lede">Alert Disposition</p>
-<h1>Alert Disposition</h1>
-</header>
-<p class="lede">Alert disposition is the process of reviewing a sanctions screening alert (a potential match flagged by screening software) and determining whether it is a true positive (the counterparty IS the SDN, requiring blocking and reporting) or a false positive (similar name but different entity, requiring dismissal with documentation).</p>
-<h2>The disposition workflow</h2><p>1. Screener reviews the alert details and compares against the SDN entry. 2. If the counterparty is definitely NOT the SDN, the alert is closed as a false positive with a note. 3. If uncertain, escalate for enhanced due diligence. 4. If confirmed as a match, block the transaction, file a blocked property report, and document everything.</p>
-<div class="cta"><a href="https://sanctionsai.dev/">Try SanctionsAI &rarr;</a></div>
-</article>
-<section class="mesh-links" style="background:#f9fafb;padding:1.25rem;border-radius:.5rem;margin-top:2rem">
-<h3 style="margin-top:0">Related resources</h3>
-<ul style="list-style:none;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:.4rem 1rem;font-size:.95rem">
-<li><a href="/tools/wallet-checker">Free OFAC wallet checker</a></li>
-<li><a href="/pricing">SanctionsAI pricing</a></li>
-<li><a href="/docs">API documentation</a></li>
-<li><a href="/faq">All FAQs</a></li>
-</ul>
-</section>
-<footer>
-<p>&copy; SanctionsAI &mdash; OFAC sanctions screening for AI agents. <a href="/">Home</a> &middot; <a href="/pricing">Pricing</a> &middot; <a href="/docs">Docs</a></p>
-</footer>
-</body>
+<body><article><h1>Alert Disposition</h1>
+<p class="lede">The process of reviewing and resolving sanctions screening alerts, determining whether a match is a true positive requiring action or a false positive to be dismissed.</p>
+<h2>TL;DR</h2>
+<p><strong>TL;DR:</strong> Alert disposition is the step where a screening alert is reviewed and resolved, either escalated as a true positive or dismissed as a false positive. A clear disposition trail is essential for audits.</p>
+<h2>What disposition means</h2>
+<p>A screening tool flags a counterparty when it resembles an SDN List entry. Disposition is the decision that follows: does the alert represent a real match or a lookalike? A true positive is escalated, the transaction stops, and reporting or blocking obligations kick in. A false positive is dismissed with a reason, and the transaction proceeds. Every alert must end in one of these two states.</p>
+<h2>Why the record matters</h2>
+<p>The disposition is the evidence that the alert was actually reviewed rather than ignored. Regulators want to see not just that alerts were generated, but that each was resolved with a documented reason and the name of the person who resolved it. An undifferentiated queue with no disposition history is a compliance gap, even if the screening tool itself was working.</p>
+<h2>Disposition in an agent workflow</h2>
+<p>Agents make this decision in software rather than by hand. The clean path is automatic: screening returns ALLOW and the payment proceeds. The flagged path stops the payment and routes to review, where a human or a policy decides disposition. The key is that the flagged path must never silently fall through to approval.</p>
+<h2>Bottom line</h2>
+<p>Alert disposition is where screening either protects the organization or fails it. sanctionsai.dev's SCREEN, SCORE, STOP, STAMP protocol encodes this: flag, stop, and record the outcome so the disposition trail exists before OFAC ever asks for it.</p><section class="mesh-links" style="background:#f9fafb;padding:1.25rem;border-radius:.5rem;margin-top:2rem"><h3 style="margin-top:0">Related resources</h3><ul style="list-style:none;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:.4rem 1rem;font-size:.95rem"><li><a href="/tools/wallet-checker">Free OFAC wallet checker</a></li><li><a href="/pricing">Pricing</a></li><li><a href="/docs">API docs</a></li><li><a href="/faq">All FAQs</a></li></ul></section></article><section class="cta"><h2>Screen your agent&rsquo;s next payment</h2><p>Free OFAC sanctions screening &mdash; 5 checks/day, no signup.</p><a href="/tools/wallet-checker" class="btn">Check a wallet &rarr;</a></section><footer><p>&copy; 2026 SanctionsAI. <a href="https://sanctionsai.dev/">sanctionsai.dev</a></p></footer></body>
 </html>

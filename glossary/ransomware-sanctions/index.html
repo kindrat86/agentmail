@@ -43,27 +43,16 @@ ul.check{list-style:none;padding-left:0}ul.check li::before{content:"✓  ";colo
 <!-- isenberg-round40 -->
     <script>!function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.crossOrigin="anonymous",p.async=!0,p.src=s.api_host.replace(".i.posthog.com","-assets.i.posthog.com")+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags getFeatureFlag getFeatureFlagPayload reloadFeatureFlags group updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures getActiveMatchingSurveys getSurveys".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=!0}(document,window.posthog||[]);posthog.init("phc_lyZCgvTpicjLzAO3rY2GhxuX5WUc5jQjP8ZVwwJqauX",{api_host:"https://eu.i.posthog.com",person_profiles:"identified_only"})</script>
 </head>
-<body>
-<article>
-<header>
-<p class="lede">Ransomware Sanctions</p>
-<h1>Ransomware Sanctions</h1>
-</header>
-<p class="lede">Ransomware sanctions are OFAC designations targeting ransomware operators, their facilitators, and the financial infrastructure that enables ransomware payments. Since 2020, OFAC has increasingly designated ransomware groups, their cryptocurrency wallets, and exchanges that process ransom payments.</p>
-<h2>Key ransomware designations</h2><p>Notable actions include the designation of Evil Corp (2019), the guidance on ransomware payments (2020 advisory), and designations of specific crypto addresses tied to ransomware campaigns. OFAC has stated that companies facilitating ransomware payments — including cybersecurity firms and insurers — may be subject to enforcement.</p>
-<div class="cta"><a href="https://sanctionsai.dev/">Try SanctionsAI &rarr;</a></div>
-</article>
-<section class="mesh-links" style="background:#f9fafb;padding:1.25rem;border-radius:.5rem;margin-top:2rem">
-<h3 style="margin-top:0">Related resources</h3>
-<ul style="list-style:none;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:.4rem 1rem;font-size:.95rem">
-<li><a href="/tools/wallet-checker">Free OFAC wallet checker</a></li>
-<li><a href="/pricing">SanctionsAI pricing</a></li>
-<li><a href="/docs">API documentation</a></li>
-<li><a href="/faq">All FAQs</a></li>
-</ul>
-</section>
-<footer>
-<p>&copy; SanctionsAI &mdash; OFAC sanctions screening for AI agents. <a href="/">Home</a> &middot; <a href="/pricing">Pricing</a> &middot; <a href="/docs">Docs</a></p>
-</footer>
-</body>
+<body><article><h1>Ransomware Sanctions</h1>
+<p class="lede">OFAC sanctions targeting ransomware operators, facilitators, and payment processors. Paying ransom to designated entities is prohibited, and so is facilitating such payments.</p>
+<h2>TL;DR</h2>
+<p><strong>TL;DR:</strong> OFAC has designated ransomware operators and facilitators on the SDN List, and paying ransom to a designated party is prohibited. OFAC has also cautioned that facilitating ransomware payments can itself create liability.</p>
+<h2>What OFAC has done</h2>
+<p>OFAC has used its designation authority to target ransomware actors, the exchanges and mixers they use, and the people who help move their payments. Once a party is on the SDN List, transacting with them is prohibited and their assets are blocked. OFAC has also published advisories warning that paying a ransom to a designated entity is itself a sanctions violation.</p>
+<h2>The facilitator problem</h2>
+<p>The risk extends beyond the direct payer. OFAC guidance states that parties who facilitate ransomware payments, such as intermediaries, exchanges, or service providers who enable the transfer, can face liability even if they did not originate the payment. Intent is not required, because sanctions liability is strict.</p>
+<h2>What screening changes</h2>
+<p>Before any payment, a screening check against the SDN List and OFAC-listed wallets can reveal whether the destination is designated. If it is, the payment stops rather than becoming a violation. Because ransom destinations are often wallets, screening must cover crypto addresses as well as names. sanctionsai.dev screens 947 OFAC-listed crypto wallets and 19,218 SDN names in under 100 ms, which lets an agent check a wallet before it ever sends funds.</p>
+<h2>Practical guidance</h2>
+<p>Screen the destination before paying, keep records of every check, and treat a flagged wallet as a hard stop rather than a prompt to try another route.</p><section class="mesh-links" style="background:#f9fafb;padding:1.25rem;border-radius:.5rem;margin-top:2rem"><h3 style="margin-top:0">Related resources</h3><ul style="list-style:none;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:.4rem 1rem;font-size:.95rem"><li><a href="/tools/wallet-checker">Free OFAC wallet checker</a></li><li><a href="/pricing">Pricing</a></li><li><a href="/docs">API docs</a></li><li><a href="/faq">All FAQs</a></li></ul></section></article><section class="cta"><h2>Screen your agent&rsquo;s next payment</h2><p>Free OFAC sanctions screening &mdash; 5 checks/day, no signup.</p><a href="/tools/wallet-checker" class="btn">Check a wallet &rarr;</a></section><footer><p>&copy; 2026 SanctionsAI. <a href="https://sanctionsai.dev/">sanctionsai.dev</a></p></footer></body>
 </html>

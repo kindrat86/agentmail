@@ -43,27 +43,16 @@ ul.check{list-style:none;padding-left:0}ul.check li::before{content:"✓  ";colo
 <!-- isenberg-round40 -->
     <script>!function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.crossOrigin="anonymous",p.async=!0,p.src=s.api_host.replace(".i.posthog.com","-assets.i.posthog.com")+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags getFeatureFlag getFeatureFlagPayload reloadFeatureFlags group updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures getActiveMatchingSurveys getSurveys".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=!0}(document,window.posthog||[]);posthog.init("phc_lyZCgvTpicjLzAO3rY2GhxuX5WUc5jQjP8ZVwwJqauX",{api_host:"https://eu.i.posthog.com",person_profiles:"identified_only"})</script>
 </head>
-<body>
-<article>
-<header>
-<p class="lede">OFAC Virtual Currency Guidance</p>
-<h1>OFAC Virtual Currency Guidance</h1>
-</header>
-<p class="lede">OFAC's virtual currency guidance is a series of published advisories and enforcement actions that clarify sanctions compliance obligations for the cryptocurrency industry. Key documents include the 2022 Virtual Currency Advisory and the 2023 DeFi Illicit Finance Risk Assessment.</p>
-<h2>Key takeaways from OFAC's guidance</h2><ul><li><strong>Same rules apply:</strong> Sanctions compliance obligations are the same for crypto as for traditional finance.</li><li><strong>Technology-neutral:</strong> The legal obligations do not change because the transaction uses a blockchain.</li><li><strong>Industry-wide responsibility:</strong> Exchanges, wallet providers, DeFi protocols, mixers, and individual users all have compliance obligations.</li></ul>
-<div class="cta"><a href="https://sanctionsai.dev/">Try SanctionsAI &rarr;</a></div>
-</article>
-<section class="mesh-links" style="background:#f9fafb;padding:1.25rem;border-radius:.5rem;margin-top:2rem">
-<h3 style="margin-top:0">Related resources</h3>
-<ul style="list-style:none;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:.4rem 1rem;font-size:.95rem">
-<li><a href="/tools/wallet-checker">Free OFAC wallet checker</a></li>
-<li><a href="/pricing">SanctionsAI pricing</a></li>
-<li><a href="/docs">API documentation</a></li>
-<li><a href="/faq">All FAQs</a></li>
-</ul>
-</section>
-<footer>
-<p>&copy; SanctionsAI &mdash; OFAC sanctions screening for AI agents. <a href="/">Home</a> &middot; <a href="/pricing">Pricing</a> &middot; <a href="/docs">Docs</a></p>
-</footer>
-</body>
+<body><article><h1>OFAC Virtual Currency Guidance</h1>
+<p class="lede">OFAC's published guidance on sanctions compliance obligations for the virtual currency industry, including cryptocurrency exchanges, wallet providers, and DeFi protocols.</p>
+<h2>TL;DR</h2>
+<p><strong>TL;DR:</strong> OFAC has published guidance stating that sanctions obligations apply to the virtual currency industry, including exchanges, wallet providers, and other participants. Digital assets do not change the underlying rules.</p>
+<h2>What the guidance says</h2>
+<p>OFAC's position is that the same sanctions obligations that apply to traditional finance apply to virtual currency. Exchanges, wallet providers, and others in the industry must screen for sanctioned parties, block listed assets, and report blocked property just as a bank would. The fact that value moves as a token or an address instead of a wire does not create an exemption.</p>
+<h2>Why crypto is a focus</h2>
+<p>Sanctioned parties have used digital assets to move value, and OFAC has designated crypto wallets and the services that support them. That makes wallet screening a practical necessity, not a theoretical concern. OFAC has also applied its 50 Percent Rule and designation authority to crypto actors, so exposure can spread through a network quickly.</p>
+<h2>What this means for agents</h2>
+<p>An AI agent that pays over crypto rails is a virtual currency participant in practice. It should screen the destination wallet against OFAC-listed addresses before sending, and it should refuse rather than retry when a wallet is flagged. sanctionsai.dev covers 947 OFAC-listed crypto wallets alongside 19,218 SDN names, with data synced hourly and a single HTTP call in under 100 ms, which makes wallet screening practical inside an agent's payment path.</p>
+<h2>Bottom line</h2>
+<p>The guidance is a reminder that moving money with software does not move the organization out of OFAC's reach. Screening before payment is the control that keeps the agent on the right side of it.</p><section class="mesh-links" style="background:#f9fafb;padding:1.25rem;border-radius:.5rem;margin-top:2rem"><h3 style="margin-top:0">Related resources</h3><ul style="list-style:none;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:.4rem 1rem;font-size:.95rem"><li><a href="/tools/wallet-checker">Free OFAC wallet checker</a></li><li><a href="/pricing">Pricing</a></li><li><a href="/docs">API docs</a></li><li><a href="/faq">All FAQs</a></li></ul></section></article><section class="cta"><h2>Screen your agent&rsquo;s next payment</h2><p>Free OFAC sanctions screening &mdash; 5 checks/day, no signup.</p><a href="/tools/wallet-checker" class="btn">Check a wallet &rarr;</a></section><footer><p>&copy; 2026 SanctionsAI. <a href="https://sanctionsai.dev/">sanctionsai.dev</a></p></footer></body>
 </html>

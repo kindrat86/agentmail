@@ -43,27 +43,19 @@ ul.check{list-style:none;padding-left:0}ul.check li::before{content:"✓  ";colo
 <!-- isenberg-round40 -->
     <script>!function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.crossOrigin="anonymous",p.async=!0,p.src=s.api_host.replace(".i.posthog.com","-assets.i.posthog.com")+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags getFeatureFlag getFeatureFlagPayload reloadFeatureFlags group updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures getActiveMatchingSurveys getSurveys".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=!0}(document,window.posthog||[]);posthog.init("phc_lyZCgvTpicjLzAO3rY2GhxuX5WUc5jQjP8ZVwwJqauX",{api_host:"https://eu.i.posthog.com",person_profiles:"identified_only"})</script>
 </head>
-<body>
-<article>
-<header>
-<p class="lede">How to document OFAC compliance</p>
-<h1>How to document OFAC compliance</h1>
-</header>
-<p class="lede">Documentation is the single most underappreciated element of sanctions compliance. OFAC's Enforcement Guidelines explicitly consider the existence of a documented compliance program as a mitigating factor — and the absence of documentation as an aggravating one.</p>
-<h2>What to document</h2><ul><li><strong>Compliance policy:</strong> A written policy statement approved by senior management, reviewed annually.</li><li><strong>Risk assessment:</strong> A current document identifying your organization's sanctions risks and controls.</li><li><strong>Screening procedures:</strong> Step-by-step operational procedures for how screening is performed.</li><li><strong>Screening logs:</strong> Timestamped records of every screening event and its outcome.</li><li><strong>Training records:</strong> Dates, attendees, and content of sanctions compliance training.</li><li><strong>Incident records:</strong> Documentation of any sanctions matches, false positives, or violations and how they were resolved.</li></ul>
-<div class="cta"><a href="https://sanctionsai.dev/">Try SanctionsAI &rarr;</a></div>
-</article>
-<section class="mesh-links" style="background:#f9fafb;padding:1.25rem;border-radius:.5rem;margin-top:2rem">
-<h3 style="margin-top:0">Related resources</h3>
-<ul style="list-style:none;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:.4rem 1rem;font-size:.95rem">
-<li><a href="/tools/wallet-checker">Free OFAC wallet checker</a></li>
-<li><a href="/pricing">SanctionsAI pricing</a></li>
-<li><a href="/docs">API documentation</a></li>
-<li><a href="/faq">All FAQs</a></li>
+<body><article><h1>How to document OFAC compliance</h1>
+<p class="lede">A written record turns every screening decision into a defensible compliance program that survives regulator and auditor review.</p>
+<h2>TL;DR</h2>
+<p><strong>TL;DR:</strong> Record every counterparty screen you run, the data source and timestamp, the result (ALLOW or BLOCK), and the action taken. If a review ever comes, your log is the difference between a cautionary letter and a penalty.</p>
+<h2>Why documentation matters</h2>
+<p>OFAC enforces sanctions under a strict liability standard, meaning intent is not required for a violation. Civil penalties start at $356,000 per violation. When an agent or a business screens before it pays, the only way to prove that screening happened is the record it leaves behind.</p>
+<h2>What to record</h2>
+<ul>
+<li>The counterparty identifier checked, such as a wallet address, name, or entity.</li>
+<li>The data sources consulted, including the SDN List of 19,218 names and 947 OFAC-listed crypto wallets.</li>
+<li>The timestamp of each check, so a decision can be placed in time.</li>
+<li>The result: ALLOW when clean, BLOCK when flagged, plus the action taken after the result.</li>
 </ul>
-</section>
-<footer>
-<p>&copy; SanctionsAI &mdash; OFAC sanctions screening for AI agents. <a href="/">Home</a> &middot; <a href="/pricing">Pricing</a> &middot; <a href="/docs">Docs</a></p>
-</footer>
-</body>
+<h2>Practical steps</h2>
+<p>Automate the record so it cannot be skipped. A screening API such as agentmail runs a check in one HTTP call under 100 ms and returns a decision you can log. Route every payment through the four gates: SCREEN, SCORE, STOP, STAMP. The STAMP gate writes the audit trail automatically. Use kya_verify to attach know-your-counterparty evidence to a payment, and dispute_open to open a documented review when a match is unclear. Store records with timestamps and a retention window, and treat a missing log as a failed check rather than a gap.</p><section class="mesh-links" style="background:#f9fafb;padding:1.25rem;border-radius:.5rem;margin-top:2rem"><h3 style="margin-top:0">Related resources</h3><ul style="list-style:none;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:.4rem 1rem;font-size:.95rem"><li><a href="/tools/wallet-checker">Free OFAC wallet checker</a></li><li><a href="/pricing">Pricing</a></li><li><a href="/docs">API docs</a></li><li><a href="/faq">All FAQs</a></li></ul></section></article><section class="cta"><h2>Screen your agent&rsquo;s next payment</h2><p>Free OFAC sanctions screening &mdash; 5 checks/day, no signup.</p><a href="/tools/wallet-checker" class="btn">Check a wallet &rarr;</a></section><footer><p>&copy; 2026 SanctionsAI. <a href="https://sanctionsai.dev/">sanctionsai.dev</a></p></footer></body>
 </html>

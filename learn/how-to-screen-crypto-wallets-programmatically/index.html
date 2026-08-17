@@ -43,31 +43,14 @@ ul.check{list-style:none;padding-left:0}ul.check li::before{content:"✓  ";colo
 <!-- isenberg-round40 -->
     <script>!function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.crossOrigin="anonymous",p.async=!0,p.src=s.api_host.replace(".i.posthog.com","-assets.i.posthog.com")+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags getFeatureFlag getFeatureFlagPayload reloadFeatureFlags group updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures getActiveMatchingSurveys getSurveys".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=!0}(document,window.posthog||[]);posthog.init("phc_lyZCgvTpicjLzAO3rY2GhxuX5WUc5jQjP8ZVwwJqauX",{api_host:"https://eu.i.posthog.com",person_profiles:"identified_only"})</script>
 </head>
-<body>
-<article>
-<header>
-<p class="lede">How to screen crypto wallets programmatically</p>
-<h1>How to screen crypto wallets programmatically</h1>
-</header>
-<p class="lede">Programmatic wallet screening means integrating OFAC checks directly into your application code, CI/CD pipeline, or agent framework — so that every payment, every counterparty, and every transaction is screened automatically.</p>
-<h2>Integration patterns</h2><h3>REST API (simplest)</h3><pre><code>curl "https://sanctionsai.dev/sanctions?wallet=0x098B..."</code></pre>
-<h3>Python SDK</h3><pre><code>import requests
-def screen(wallet): return requests.get(f"https://sanctionsai.dev/sanctions?wallet={wallet}").json()</code></pre>
-<h3>MCP (for AI agents)</h3><pre><code>sanctions_check(name="...", wallet="0x...")</code></pre>
-<h3>CLI (for scripts)</h3><pre><code>agentmail check --wallet 0x098B...</code></pre>
-<div class="cta"><a href="https://sanctionsai.dev/">Try SanctionsAI &rarr;</a></div>
-</article>
-<section class="mesh-links" style="background:#f9fafb;padding:1.25rem;border-radius:.5rem;margin-top:2rem">
-<h3 style="margin-top:0">Related resources</h3>
-<ul style="list-style:none;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:.4rem 1rem;font-size:.95rem">
-<li><a href="/tools/wallet-checker">Free OFAC wallet checker</a></li>
-<li><a href="/pricing">SanctionsAI pricing</a></li>
-<li><a href="/docs">API documentation</a></li>
-<li><a href="/faq">All FAQs</a></li>
-</ul>
-</section>
-<footer>
-<p>&copy; SanctionsAI &mdash; OFAC sanctions screening for AI agents. <a href="/">Home</a> &middot; <a href="/pricing">Pricing</a> &middot; <a href="/docs">Docs</a></p>
-</footer>
-</body>
+<body><article><h1>How to screen crypto wallets programmatically</h1>
+<p class="lede">Screen any crypto wallet in code with a single API call, a Python SDK, or an MCP server, and wire the check into your pipeline.</p>
+<h2>TL;DR</h2>
+<p><strong>TL;DR:</strong> Call a screening endpoint with the wallet address, read back clean or flagged, and block flagged addresses before any transaction is built or signed.</p>
+<h2>The basic call</h2>
+<p>A wallet check is one HTTP request. Send the address to the screening endpoint and receive a clean or flagged result in under 100 ms. Use the sanctions_check tool for a straightforward lookup and risk_score when you want a richer signal. SanctionsAI tracks 947 OFAC-listed crypto wallets and 19,218 SDN names, synced hourly.</p>
+<h2>Python SDK and MCP</h2>
+<p>For Python services, call the API directly from your backend before any payment. For agent workflows, install the MCP server with pip install sanctions-mcp so your agent can screen a counterparty before it pays. Integrations also cover LangChain, CrewAI, Eliza, and the OpenAI Agents SDK.</p>
+<h2>CI/CD integration</h2>
+<p>Add the same check to your test suite and release pipeline so any new wallet-handling code is verified against clean, flagged, and error cases. Fail closed: if the service is unreachable, block and alert rather than defaulting to allow.</p><section class="mesh-links" style="background:#f9fafb;padding:1.25rem;border-radius:.5rem;margin-top:2rem"><h3 style="margin-top:0">Related resources</h3><ul style="list-style:none;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:.4rem 1rem;font-size:.95rem"><li><a href="/tools/wallet-checker">Free OFAC wallet checker</a></li><li><a href="/pricing">Pricing</a></li><li><a href="/docs">API docs</a></li><li><a href="/faq">All FAQs</a></li></ul></section></article><section class="cta"><h2>Screen your agent&rsquo;s next payment</h2><p>Free OFAC sanctions screening &mdash; 5 checks/day, no signup.</p><a href="/tools/wallet-checker" class="btn">Check a wallet &rarr;</a></section><footer><p>&copy; 2026 SanctionsAI. <a href="https://sanctionsai.dev/">sanctionsai.dev</a></p></footer></body>
 </html>
