@@ -49,6 +49,13 @@ ul.cross{list-style:none;padding-left:0}ul.cross li::before{content:"✗  ";colo
 <h1>OFAC sanctions scenarios for AI agents</h1>
 <p class="lede">Real-world walkthroughs of how sanctions violations happen with autonomous payment agents, what the consequences look like, and the screening control that prevents each one.</p>
 </header>
+<h2>Why scenarios matter</h2>
+<p>OFAC enforcement is strict liability: intent does not matter, and a violation by an autonomous payment agent is still your violation. Civil penalties start at $356,000 per violation, and an agent that pays repeatedly can stack violations in a single night. Walking through how each failure actually unfolds is the fastest way to see where the control belongs: before the transaction is signed, not after.</p>
+<h2>What every scenario has in common</h2>
+<p>Each walkthrough follows the same anatomy: the setup (what the agent was asked to do), the failure (what went wrong and why nothing stopped it), the consequence (what OFAC and the banks do next), and the control (the single pre-payment screen that would have prevented it). In every case the fix is the same shape: check the counterparty against the OFAC SDN list, covering 947 listed crypto wallets and 19,218 names, before money moves.</p>
+<h2>Where to start</h2>
+<p>Start with the sanctioned-wallet walkthrough: it is the most common pattern for teams shipping x402 or agentic payment flows. Then read the enforcement case to see how a real penalty unfolds. Every scenario ends with a control you can wire in today with one HTTP call that returns ALLOW or BLOCK in under 100 milliseconds.</p>
+
 <ul style="line-height:2;list-style:none;padding-left:0">
 <li><a href="/scenarios/ai-agent-sanctions-violation">What happens when an AI agent screens a sanctioned wallet</a></li><li><a href="/scenarios/ofac-penalty-crypto-sanctioned-wallet">OFAC penalty for a crypto payment to a sanctioned wallet — real case</a></li>
 </ul>

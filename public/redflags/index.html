@@ -49,6 +49,13 @@ ul.cross{list-style:none;padding-left:0}ul.cross li::before{content:"✗  ";colo
 <h1>OFAC red flags for AI agents</h1>
 <p class="lede">The transaction patterns that trigger OFAC scrutiny, bank freezes, and enforcement actions &mdash; and the screening control that catches each one before the payment signs.</p>
 </header>
+<h2>What a red flag actually is</h2>
+<p>A red flag is a fact about a transaction that demands extra scrutiny before money moves. For payment agents, the red flags that matter cluster into three groups: the counterparty (a wallet or name on the OFAC SDN list, or owned 50 percent or more by someone who is), the pattern (repeated payments to fresh addresses, amounts just under review thresholds, bursts at odd hours), and the destination (high-risk jurisdictions and mixing services). Under strict liability, noticing a red flag and paying anyway is the expensive version of not noticing at all.</p>
+<h2>How to use this list</h2>
+<p>Each red flag page explains what the pattern looks like in agent logs and payment flows, why it triggers OFAC scrutiny or a bank freeze, and the control that neutralizes it. Treat the list as a review queue design: anything matching a red flag should route to a human or halt outright, and everything else should clear the same automated screen.</p>
+<h2>The single control that catches most of them</h2>
+<p>Almost every red flag on this list is caught by one pre-transaction check: screen the wallet, name, or jurisdiction against the live SDN list before the payment is signed. That is what SanctionsAI does: one HTTP call, under 100 milliseconds, returning ALLOW or BLOCK, with 5 free checks a day.</p>
+
 <ul style="line-height:2;list-style:none;padding-left:0">
 <li><a href="/redflags/crypto-payment-ofac-red-flags">5 crypto payment red flags that trigger OFAC scrutiny</a></li><li><a href="/redflags/ai-agent-sanctions-compliance-red-flags">AI agent sanctions compliance red flags</a></li><li><a href="/redflags/agent-paying-sanctioned-wallet">The #1 red flag: an agent paying a sanctioned wallet</a></li><li><a href="/redflags/stablecoin-payment-to-sanctioned-entity">Stablecoin payments to sanctioned entities</a></li><li><a href="/redflags/cross-chain-sanctions-evasion">Cross-chain sanctions evasion</a></li><li><a href="/redflags/high-risk-jurisdiction-payments">Payments to high-risk jurisdictions</a></li><li><a href="/redflags/pep-and-adverse-media-screening-red-flags">PEP & adverse-media red flags</a></li><li><a href="/redflags/agent-bypassing-screening-control">When your own agent bypasses the screen</a></li>
 </ul>
