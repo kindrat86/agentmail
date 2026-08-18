@@ -4167,7 +4167,7 @@ License: https://creativecommons.org/licenses/by/4.0/
                 if _os.path.isfile(_rp):
                     with open(_rp, "r", encoding="utf-8") as _fh:
                         return self._serve_text(_fh.read(), "text/html; charset=utf-8")
-        for _pfx in ("/vs/", "/faq/", "/learn/", "/alternatives-to/", "/penalties/", "/guides/", "/checklists/", "/cost-of/", "/best/", "/templates/", "/stats/", "/redflags/", "/scenarios/", "/programs/", "/benchmarks/", "/evasion/", "/risk-ratings/", "/regulations/", "/deadlines/", "/case-studies/", "/examples/"):
+        for _pfx in ("/vs/", "/faq/", "/learn/", "/alternatives-to/", "/penalties/", "/guides/", "/checklists/", "/cost-of/", "/best/", "/templates/", "/stats/", "/redflags/", "/scenarios/", "/programs/", "/sanctioned-addresses/", "/benchmarks/", "/evasion/", "/risk-ratings/", "/regulations/", "/deadlines/", "/case-studies/", "/examples/"):
             if p.path.startswith(_pfx):
                 _slug = p.path[len(_pfx):].split("?")[0].split("/")[0]
                 if not _slug:
@@ -4232,6 +4232,8 @@ License: https://creativecommons.org/licenses/by/4.0/
             return self._serve_file_content("public/scenarios/index.html", "text/html")
         if p.path in ("/programs", "/programs/"):
             return self._serve_file_content("public/programs/index.html", "text/html")
+        if p.path in ("/sanctioned-addresses", "/sanctioned-addresses/"):
+            return self._serve_file_content("sanctioned-addresses/index.html", "text/html")
         if p.path == "/for":
             return self._for_index_page()
         if p.path == "/glossary":
@@ -5850,6 +5852,19 @@ License: https://creativecommons.org/licenses/by/4.0/
         ("/programs/transnational-criminal-orgs", "monthly", "0.7", "Transnational criminal organizations"),
         ("/programs/cyber-related", "monthly", "0.7", "Cyber-related sanctions"),
         ("/programs/foreign-interference", "monthly", "0.7", "Foreign interference in US elections"),
+        # OFAC-sanctioned crypto addresses, by chain — restored 2026-08-18 (these
+        # were live, earning clicks/impressions, then 404'd by a soft-404 pass).
+        ("/sanctioned-addresses", "monthly", "0.8", "OFAC-sanctioned crypto addresses, by chain"),
+        ("/sanctioned-addresses/bitcoin", "monthly", "0.7", "OFAC-sanctioned Bitcoin addresses"),
+        ("/sanctioned-addresses/bitcoin-cash", "monthly", "0.7", "OFAC-sanctioned Bitcoin Cash addresses"),
+        ("/sanctioned-addresses/dash", "monthly", "0.7", "OFAC-sanctioned Dash addresses"),
+        ("/sanctioned-addresses/ethereum", "monthly", "0.7", "OFAC-sanctioned Ethereum addresses"),
+        ("/sanctioned-addresses/litecoin", "monthly", "0.7", "OFAC-sanctioned Litecoin addresses"),
+        ("/sanctioned-addresses/monero", "monthly", "0.7", "OFAC-sanctioned Monero addresses"),
+        ("/sanctioned-addresses/solana", "monthly", "0.7", "OFAC-sanctioned Solana addresses"),
+        ("/sanctioned-addresses/tether-usdt", "monthly", "0.7", "OFAC-sanctioned Tether USDT addresses"),
+        ("/sanctioned-addresses/tron", "monthly", "0.7", "OFAC-sanctioned Tron addresses"),
+        ("/sanctioned-addresses/zcash", "monthly", "0.7", "OFAC-sanctioned Zcash addresses"),
         # Missing pages discovered by Google — added 2026-07-28
         ("/agent", "monthly", "0.7", "x402 Compliance Check for AI Agents"),
         ("/contact", "monthly", "0.5", "Contact sanctionsai.dev"),

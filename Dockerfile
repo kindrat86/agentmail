@@ -34,6 +34,8 @@ COPY scenarios/ ./scenarios/
 COPY glossary/ ./glossary/
 # Round 21 pSEO — OFAC sanctions programs index
 COPY programs/ ./programs/
+# OFAC-sanctioned crypto addresses by chain (restored 2026-08-18; was live, 404'd by soft-404 pass)
+COPY sanctioned-addresses/ ./sanctioned-addresses/
 # Round 48 pSEO — sanctions evasion typologies and jurisdiction risk ratings
 COPY evasion/ ./evasion/
 COPY risk-ratings/ ./risk-ratings/
