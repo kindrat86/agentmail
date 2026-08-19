@@ -1,0 +1,16 @@
+{
+ "version": "https://jsonfeed.org/version/1.1",
+ "title": "OFAC SDN List Change Log — SanctionsAI",
+ "home_page_url": "https://sanctionsai.dev/updates/",
+ "feed_url": "https://sanctionsai.dev/updates/feed.json",
+ "description": "Every change OFAC publishes to the Specially Designated Nationals list, as structured data. Source: U.S. Treasury OFAC delta file.",
+ "items": [
+  {
+   "id": "https://sanctionsai.dev/updates/2026-07-24/",
+   "url": "https://sanctionsai.dev/updates/2026-07-24/",
+   "title": "OFAC SDN List Update — 24 July 2026 (13 added)",
+   "content_text": "OFAC published 13 added to the SDN List on 24 July 2026. Records: Solmaz Bani; BZ DIAMOND DMCC; DOT ONE VALUE CREATION GROUP; DOTONE AIRLINES COMPANY; DOTONE BARTER COMPANY; DOTONE GOLD COMPANY; DOTONE RAIL COMPANY; DOTONE TRIP; Sukhrob Oimakhmadov; Mehdi Rezazadeh; Bahareh Morteza Zanjani; ZEDPAY FINANSAL SISTEM VE HIZMETLERI ANONIM SIRKETI; ZEDX DMCC.",
+   "date_published": "2026-07-24T00:00:00Z"
+  }
+ ]
+}
