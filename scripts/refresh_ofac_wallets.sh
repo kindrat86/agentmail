@@ -58,6 +58,7 @@ log "OFAC republished the list ($PUBLISHED -> $NEW_DATE). Regenerating..."
 "$PY" "$REPO/scripts/build_ofac_wallets.py" --src "$XML" --out "$WORK/ofac_wallets.json"
 "$PY" "$REPO/scripts/gen_wallet_page.py" --json "$WORK/ofac_wallets.json" \
     --as-of "$NEW_DATE" --generated "$(date +%F)"
+"$PY" "$REPO/scripts/gen_sanctioned_addresses.py"
 
 # ---- guardrail 5.2: refuse a degenerate distribution ------------------------
 "$PY" - "$DATADIR/data.json" <<'PY'
@@ -93,7 +94,7 @@ PY
 
 # ---- commit only the regenerated files --------------------------------------
 cd "$REPO"
-git add "$DATADIR" "$REPO/data/feed.json"
+git add "$DATADIR" "$REPO/data/feed.json" "$REPO/sanctioned-addresses"
 if git diff --cached --quiet; then
     log "no diff after regeneration — aborting"
     exit 1
