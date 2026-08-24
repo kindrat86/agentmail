@@ -11,7 +11,7 @@
 <meta property="og:description" content="Every cryptocurrency address on the US Treasury OFAC SDN list: 961 unique addresses across 20 chains, with entity, program and designation date. CSV + JSON, CC BY 4.0.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://sanctionsai.dev/data/ofac-crypto-wallets/">
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Dataset", "name": "OFAC Sanctioned Cryptocurrency Wallet Addresses", "alternateName": "OFAC SDN digital currency address list", "description": "All 977 digital-currency address listings (961 unique addresses across 20 chains) on the US Treasury OFAC SDN list as of 2026-08-07, with chain, sanctioned entity, OFAC program and entity designation date for every address. CSV and JSON downloads.", "url": "https://sanctionsai.dev/data/ofac-crypto-wallets/", "identifier": "ofac-crypto-wallets", "keywords": "OFAC crypto addresses, sanctioned wallet list, SDN digital currency address, OFAC bitcoin addresses, sanctions screening", "creator": {"@type": "Organization", "name": "SanctionsAI", "url": "https://sanctionsai.dev"}, "datePublished": "2026-08-12", "dateModified": "2026-08-12", "temporalCoverage": "2010/2026", "license": "https://creativecommons.org/licenses/by/4.0/", "isAccessibleForFree": true, "isBasedOn": "https://www.treasury.gov/ofac/downloads/sanctions/1.0/sdn_advanced.xml", "distribution": [{"@type": "DataDownload", "encodingFormat": "text/csv", "contentUrl": "https://sanctionsai.dev/data/ofac-crypto-wallets/data.csv"}, {"@type": "DataDownload", "encodingFormat": "application/json", "contentUrl": "https://sanctionsai.dev/data/ofac-crypto-wallets/data.json"}], "includedInDataCatalog": {"@type": "DataCatalog", "name": "SanctionsAI Research Data", "url": "https://sanctionsai.dev/data/"}}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Dataset", "name": "OFAC Sanctioned Cryptocurrency Wallet Addresses", "alternateName": "OFAC SDN digital currency address list", "description": "All 977 digital-currency address listings (961 unique addresses across 20 chains) on the US Treasury OFAC SDN list as of 2026-08-20, with chain, sanctioned entity, OFAC program and entity designation date for every address. CSV and JSON downloads.", "url": "https://sanctionsai.dev/data/ofac-crypto-wallets/", "identifier": "ofac-crypto-wallets", "keywords": "OFAC crypto addresses, sanctioned wallet list, SDN digital currency address, OFAC bitcoin addresses, sanctions screening", "creator": {"@type": "Organization", "name": "SanctionsAI", "url": "https://sanctionsai.dev"}, "datePublished": "2026-08-24", "dateModified": "2026-08-24", "temporalCoverage": "2010/2026", "license": "https://creativecommons.org/licenses/by/4.0/", "isAccessibleForFree": true, "isBasedOn": "https://www.treasury.gov/ofac/downloads/sanctions/1.0/sdn_advanced.xml", "distribution": [{"@type": "DataDownload", "encodingFormat": "text/csv", "contentUrl": "https://sanctionsai.dev/data/ofac-crypto-wallets/data.csv"}, {"@type": "DataDownload", "encodingFormat": "application/json", "contentUrl": "https://sanctionsai.dev/data/ofac-crypto-wallets/data.json"}], "includedInDataCatalog": {"@type": "DataCatalog", "name": "SanctionsAI Research Data", "url": "https://sanctionsai.dev/data/"}}</script>
 <style>
 :root{--bg:#fafbfc;--fg:#1a1a2e;--accent:#2563eb;--muted:#6b7280;--border:#e5e7eb;--card:#fff;--green:#059669}
 *{box-sizing:border-box;margin:0;padding:0}
@@ -48,14 +48,14 @@ footer a{color:var(--accent)}
 <h1>OFAC Sanctioned Crypto Wallet Addresses</h1>
 <p class="lead">Every digital-currency address on the US Treasury OFAC SDN list — <strong>977 listings, 961 unique addresses across 20 chains</strong> — with the sanctioned entity, OFAC program(s), and the entity's designation date for each address. Parsed directly from Treasury's authoritative SDN Advanced XML.</p>
 
-<p><span class="badge">SDN list of 2026-08-07</span><span class="badge">CC BY 4.0</span><span class="badge">CSV + JSON</span></p>
+<p><span class="badge">SDN list of 2026-08-20</span><span class="badge">CC BY 4.0</span><span class="badge">CSV + JSON</span></p>
 <p>
 <a href="/data/ofac-crypto-wallets/data.csv" class="btn btn-primary" download>Download CSV</a>
 <a href="/data/ofac-crypto-wallets/data.json" class="btn btn-outline" download>Download JSON</a>
 <a href="/data/ofac-crypto-wallets/sources.json" class="btn btn-outline" download>Sources manifest</a>
 </p>
 
-<div class="note"><strong>Freshness:</strong> this page reflects the OFAC SDN publication of <strong>2026-08-07</strong> and was generated on 2026-08-12. It is regenerated when OFAC updates the list. For screening decisions, use the <a href="/check">live checker</a> or the keyless API (<code>curl "https://sanctionsai.dev/sanctions?wallet=..."</code>), which refresh against the source list every 24 hours.</div>
+<div class="note"><strong>Freshness:</strong> this page reflects the OFAC SDN publication of <strong>2026-08-20</strong> and was generated on 2026-08-24. It is regenerated when OFAC updates the list. For screening decisions, use the <a href="/check">live checker</a> or the keyless API (<code>curl "https://sanctionsai.dev/sanctions?wallet=..."</code>), which refresh against the source list every 24 hours.</div>
 
 <h2>What is in this dataset</h2>
 <p>OFAC began attaching specific cryptocurrency addresses to SDN designations in <a href="https://home.treasury.gov/news/press-releases/sm556">November 2018</a>. Today the list covers darknet markets (Hydra), mixers (Tornado Cash, Blender.io), exchanges (Garantex, SUEX, Chatex), ransomware operators, and state-linked groups. When an address appears here, US persons are generally prohibited from transacting with it, and property in US jurisdiction must be blocked. Screening against this exact list is the baseline compliance control for any wallet, exchange, or AI agent that moves value on-chain.</p>
@@ -97,7 +97,7 @@ footer a{color:var(--accent)}
 <p>The underlying OFAC list is a work of the US Government (public domain). This compilation — the parsed, joined, machine-readable form — is published under <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>: use it freely, including commercially, with attribution.</p>
 <pre>SanctionsAI, "OFAC Sanctioned Cryptocurrency Wallet Addresses",
 https://sanctionsai.dev/data/ofac-crypto-wallets/
-(derived from US Treasury OFAC SDN list of 2026-08-07)</pre>
+(derived from US Treasury OFAC SDN list of 2026-08-20)</pre>
 </div>
 
 <h2>Full list — all 977 address listings</h2>

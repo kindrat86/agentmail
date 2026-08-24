@@ -4,7 +4,7 @@
     {
       "claim": "977 digital-currency address listings",
       "source_url": "https://www.treasury.gov/ofac/downloads/sanctions/1.0/sdn_advanced.xml",
-      "method": "count of Feature elements with FeatureType 'Digital Currency Address - *' in SDN Advanced XML dated 2026-08-07"
+      "method": "count of Feature elements with FeatureType 'Digital Currency Address - *' in SDN Advanced XML dated 2026-08-20"
     },
     {
       "claim": "961 unique addresses",
@@ -42,7 +42,7 @@
   "sanctioned_addresses_family": {
     "publisher": "SanctionsAI",
     "family": "https://sanctionsai.dev/sanctioned-addresses",
-    "sdn_list_date": "2026-08-07",
+    "sdn_list_date": "2026-08-20",
     "source_url": "https://www.treasury.gov/ofac/downloads/sanctions/1.0/sdn_advanced.xml",
     "source_landing_page": "https://ofac.treasury.gov/sanctions-list-service",
     "method": "Counts are derived from every Digital Currency Address feature in OFAC SDN Advanced XML. Address listings are rows; unique addresses are distinct address strings. Entity dates are original designation dates because OFAC does not publish per-address add dates.",
