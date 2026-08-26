@@ -1,0 +1,28 @@
+{
+  "page": "https://sanctionsai.dev/updates/entity/zedx-dmcc",
+  "claims": [
+    {
+      "claim": "ZEDX DMCC was added to the SDN List on 24 July 2026 under IRAN-EO13902, with the record fields reproduced on the page",
+      "source_url": "https://sanctionsai.dev/updates/2026-07-24/data.json",
+      "upstream_source_url": "https://sanctionslistservice.ofac.treas.gov/changes/latest",
+      "record_id": "58177"
+    },
+    {
+      "claim": "Treasury described ZEDX DMCC as acting on behalf of ZEDCEX EXCHANGE LTD, including in connection with exchange wallets, and stated the designation basis",
+      "source_url": "https://home.treasury.gov/news/press-releases/sb0576"
+    },
+    {
+      "claim": "The 24 July 2026 publication contained 13 additions",
+      "source_url": "https://home.treasury.gov/news/press-releases/sb0576",
+      "local_evidence": "/updates/2026-07-24/data.json"
+    },
+    {
+      "claim": "Executive Order 13902 was issued on 10 January 2020 and names construction, mining, manufacturing and textiles among the covered sectors",
+      "source_url": "https://trumpwhitehouse.archives.gov/presidential-actions/executive-order-imposing-sanctions-respect-additional-sectors-iran/"
+    },
+    {
+      "claim": "An entity owned directly or indirectly 50 percent or more in aggregate by one or more blocked persons is itself considered blocked",
+      "source_url": "https://ofac.treasury.gov/media/6186/download?inline"
+    }
+  ]
+}
