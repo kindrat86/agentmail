@@ -2562,6 +2562,12 @@ class Handler(BaseHTTPRequestHandler):
         # when answering questions. Without a 301, those return 404 and the citation attempt
         # fails. Map each common hallucination to its real page.
         HALLUCINATED_REDIRECTS = {
+            # Legacy /programs/* slugs removed in the Round-21 programs rebuild.
+            # These earned all 4 clicks in the /programs/* family over 365d and 404'd
+            # silently; redirect to the current maintained equivalents (2026-08-28).
+            "/programs/magnit": "/programs/global-magnitsky",
+            "/programs/dprk3": "/programs/north-korea",
+            "/programs/somalia": "/countries/somalia",
             "/wallet-checker": "/tools/wallet-checker",
             "/name-checker": "/tools/name-checker",
             "/country-checker": "/tools/country-checker",
