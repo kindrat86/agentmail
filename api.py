@@ -2568,6 +2568,23 @@ class Handler(BaseHTTPRequestHandler):
             "/programs/magnit": "/programs/global-magnitsky",
             "/programs/dprk3": "/programs/north-korea",
             "/programs/somalia": "/countries/somalia",
+            # 2026-08-29: legacy /programs/ukraine-EO slugs (Round-21 rebuild collapsed
+            # them into /programs/ukraine-separatist, which covers EOs 13660-13662).
+            # They still held 52 impressions/90d at pos 2.2-4.0 while 404ing.
+            "/programs/ukraine-eo13661": "/programs/ukraine-separatist",
+            "/programs/ukraine-eo13660": "/programs/ukraine-separatist",
+            "/programs/ukraine-eo13685": "/programs/ukraine-separatist",
+            # 2026-08-29: /cost-of/dow-jones-rdc-pricing was renamed to
+            # /cost-of/dow-jones-risk-pricing without a 301; the old slug earned a
+            # click at pos 8.0 in 90d and 404'd.
+            "/cost-of/dow-jones-rdc-pricing": "/cost-of/dow-jones-risk-pricing",
+            # 2026-08-29: /free/ofac-screening (53 impr/90d across "ofac screening
+            # tool" queries) was removed; point it at the live free name-checker.
+            "/free/ofac-screening": "/tools/name-checker",
+            # 2026-08-29: hallucinated /data/ofac-sdn-list slug (37 impr, pos 10.9);
+            # no SDN dataset download exists under /data/, so the glossary page is
+            # the real answer for "specially designated nationals list ofac".
+            "/data/ofac-sdn-list": "/glossary/ofac-sdn-list",
             "/wallet-checker": "/tools/wallet-checker",
             "/name-checker": "/tools/name-checker",
             "/country-checker": "/tools/country-checker",
