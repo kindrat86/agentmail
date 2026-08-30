@@ -2510,7 +2510,9 @@ class Handler(BaseHTTPRequestHandler):
             # No payment + no key → 402 with requirements
             self.send_response(402)
             body = json.dumps({"error": "payment_required",
-                               "payment_requirements": req}).encode()
+                               "payment_requirements": req,
+                               "upgrade_url": _PUBLIC_URL + "/pricing",
+                               "upgrade_note": "Per-call x402 payment above, or a $19/mo Dev key with card checkout at " + _PUBLIC_URL + "/pricing"}).encode()
             self.send_header("Content-Type", "application/json")
             self.send_header("Content-Length", str(len(body)))
             self.end_headers()
