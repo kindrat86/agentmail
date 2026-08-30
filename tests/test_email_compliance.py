@@ -52,6 +52,14 @@ class CaptureSurfaceComplianceTests(unittest.TestCase):
         self.assertIn('_has_marketing_consent(b)', SOURCE)
         self.assertIn('explicit marketing consent required', SOURCE)
 
+    def test_landing_capture_requires_consent_only_for_email_enrollment(self):
+        landing = SOURCE[SOURCE.index('def _landing_page'):SOURCE.index('def _unsubscribe_page')]
+        self.assertIn('id="free-consent"', landing)
+        self.assertIn('href="/privacy"', landing)
+        self.assertIn('href="/terms"', landing)
+        self.assertIn("consent:'marketing'", landing)
+        self.assertIn("if(!consent)", landing)
+
     def test_email_logs_use_recipient_references(self):
         self.assertIsNone(re.search(r'print\(f[^\n]*\{(?:email|to_email)\}', SOURCE))
         self.assertIn('_email_ref(', SOURCE)

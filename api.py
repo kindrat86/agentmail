@@ -8003,6 +8003,11 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
         <input type="email" id="free-email" inputmode="email" autocomplete="email" placeholder="you@example.com (optional &mdash; for the compliance series)" aria-label="Email address (optional)">
         <button type="submit" class="btn btn-primary btn-lg" id="free-submit">Get the curl + 5-day series &rarr;</button>
       </div>
+      <label style="display:flex;gap:8px;align-items:flex-start;text-align:left;margin-top:12px;color:var(--t3);font-size:.78rem;line-height:1.45">
+        <input type="checkbox" id="free-consent" name="consent" value="marketing" style="margin-top:3px;accent-color:var(--teal)">
+        <span>I agree to receive the 5-day SanctionsAI compliance series. See the <a href="/privacy">Privacy Policy</a> and <a href="/terms">Terms</a>.</span>
+      </label>
+      <p id="free-consent-error" role="alert" style="display:none;color:var(--red);font-size:.78rem;text-align:left;margin-top:8px">Check the consent box to enroll your email. The free curl is already shown below.</p>
     </form>
     <p class="hint">The curl works right now &mdash; no waiting. The email series is a bonus, not a gate.</p>
     <div class="result" id="free-result">
@@ -8407,15 +8412,19 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
   if(f){f.addEventListener('submit',function(e){
     e.preventDefault();
     var email=document.getElementById('free-email').value.trim();
+    var consent=document.getElementById('free-consent').checked;
     var btn=document.getElementById('free-submit');
     var result=document.getElementById('free-result');
     var curl=document.getElementById('free-curl');
+    var consentError=document.getElementById('free-consent-error');
     btn.style.display='none';
     curl.textContent='curl "https://agentmail-api.fly.dev/sanctions?wallet=0x742d35Cc6634C0532925a3b844Bc9e7595f0bEbb"';
     result.style.display='block';
     result.scrollIntoView({behavior:'smooth',block:'center'});
+    consentError.style.display='none';
     if(email&&email.indexOf('@')>0){
-      fetch('/subscribe',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:email,source:'free-tier-cta'})}).catch(function(){});
+      if(!consent){consentError.style.display='block';return;}
+      fetch('/subscribe',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:email,source:'free-tier-cta',consent:'marketing'})}).catch(function(){});
     }
   });}
 
