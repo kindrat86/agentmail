@@ -12,6 +12,7 @@ Endpoints:
 from __future__ import annotations
 import base64
 import gzip
+import hashlib
 import hmac
 import html
 import io
@@ -267,6 +268,27 @@ def _record_anon_check(ip: str) -> dict:
             f"Upgrade: {_SITE}/pricing"
         )
     return info
+
+
+def _parse_request_body(content_type: str, raw: bytes) -> dict:
+    """Parse JSON or HTML/RFC-8058 form request bodies."""
+    if not raw:
+        return {}
+    content_type = (content_type or "").lower()
+    if "application/x-www-form-urlencoded" in content_type:
+        return {key: values[0] for key, values in parse_qs(raw.decode("utf-8", "replace")).items()}
+    return json.loads(raw)
+
+
+def _has_marketing_consent(body: dict) -> bool:
+    """Require an affirmative, explicit value before enrolling marketing email."""
+    return str(body.get("consent", "")).strip().lower() in {"marketing", "true", "yes", "1", "on"}
+
+
+def _email_ref(email: str) -> str:
+    """Return a stable non-PII reference for recipient logging."""
+    normalized = str(email or "").strip().lower()
+    return "recipient:" + hashlib.sha256(normalized.encode("utf-8")).hexdigest()[:12]
 
 
 def _json(handler, status, obj):
@@ -627,7 +649,7 @@ footer p{color:#444;font-size:.8em}
 
 _NAV = '<nav><div class="logo">agent<span>mail</span></div><div class="links"><a href="/">Home</a><a href="/teardown">How It Works</a><a href="/dashboard">Dashboard</a><a href="/faq">FAQ</a><a href="/docs">Docs</a><a href="/tools/wallet-checker">Free Checker</a><a href="/blog/ofac-for-agents">Blog</a><a href="/pricing">Pricing</a><a href="/checkout/dev" class="btn btn-primary">Get API key</a></div></nav>'
 
-_FOOTER = '<footer><div class="links" style="display:flex;flex-wrap:wrap;gap:12px 28px;justify-content:center;max-width:900px;margin:0 auto 16px"><div style="min-width:140px"><strong style="color:#888;font-size:.75em;text-transform:uppercase;letter-spacing:.05em">Product</strong><br><a href="/">Home</a><br><a href="/teardown">How It Works</a><br><a href="/pricing">Pricing</a><br><a href="/docs">Docs</a><br><a href="/tools">Free Tools</a><br><a href="/llms.txt">llms.txt (AI docs)</a></div><div style="min-width:140px"><strong style="color:#888;font-size:.75em;text-transform:uppercase;letter-spacing:.05em"><a href="/for" style="color:#888;text-decoration:none">By Industry</a></strong><br><a href="/for/fintech">Fintech</a><br><a href="/for/crypto">Crypto</a><br><a href="/for/defi">DeFi</a><br><a href="/for/payments">Payments</a><br><a href="/for/ai-agents">AI Agents</a><br><a href="/for/developers">Developers</a></div><div style="min-width:140px"><strong style="color:#888;font-size:.75em;text-transform:uppercase;letter-spacing:.05em"><a href="/vs" style="color:#888;text-decoration:none">Compare</a></strong><br><a href="/vs/chainalysis">vs Chainalysis</a><br><a href="/vs/elliptic">vs Elliptic</a><br><a href="/vs/comply-advantage">vs ComplyAdvantage</a><br><a href="/compare/sumsub">vs SumSub</a><br><a href="/compare/world-check">vs World-Check</a></div><div style="min-width:140px"><strong style="color:#888;font-size:.75em;text-transform:uppercase;letter-spacing:.05em">Resources</strong><br><a href="/blog">Blog</a><br><a href="/guides">Guides</a><br><a href="/penalties">Penalties</a><br><a href="/how-to">How-To</a><br><a href="/glossary">Glossary</a><br><a href="/cost">Costs</a><br><a href="/integrations">Integrations</a><br><a href="/vs">Vs</a><br><a href="/stats">Stats</a><br><a href="/content-strategy">Content Strategy</a><br><a href="/partners/jv">JV Partners (50%)</a><br><a href="/refer">Refer & Earn</a><br><a href="/hooks">Hooks Library</a><br><a href="/partners/swipe">Swipe File</a><br><a href="/calendar">Content Calendar</a><br><a href="/dream100">Dream 100</a><br><a href="https://x.com/sipiteno" style="color:inherit">X / Twitter</a><br><a href="/agent">For Agents</a><br><a href="/leaderboard">Leaderboard</a><br><a href="/about">About</a><br><a href="/contact">Contact</a><br><a href="/privacy">Privacy</a><br><a href="/terms">Terms</a><br><a href="/countries">Countries</a><br><a href="/checklists">Checklists</a><br><a href="/answers">Answers</a><br><a href="/best">Best-Of</a><br><a href="/alternatives-to">Alternatives</a><br><a href="/programs">Programs</a><br><a href="/redflags">Red Flags</a><br><a href="/scenarios">Scenarios</a></div></div><section class="subscribe-footer" style="max-width:900px;margin:16px auto 0;padding:16px 0 0;border-top:1px solid #333;text-align:center"><p style="color:#ccc;font-size:.85rem;margin:0 0 8px">Get OFAC enforcement alerts and agent compliance tips. No spam.</p><form action="/subscribe" method="post" style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;max-width:400px;margin:0 auto"><input type="email" name="email" placeholder="your@email.com" required style="flex:1;min-width:180px;padding:8px 12px;border:1px solid #444;border-radius:6px;background:#111;color:#e0e0e0;font-size:.85rem"><button type="submit" style="padding:8px 16px;border:none;border-radius:6px;background:#00d4aa;color:#0a0a0a;font-weight:600;cursor:pointer;font-size:.85rem">Subscribe</button></form></section><nav aria-label="More products from Sipiteno" data-portfolio-cross-promo="v1" data-portfolio-origin="sanctionsai.dev" style="max-width:900px;margin:16px auto 0;padding-top:12px;border-top:1px solid #333;display:flex;flex-wrap:wrap;justify-content:center;gap:0 14px;font-size:.8rem"><strong style="display:inline-flex;min-height:44px;align-items:center;color:#888">More from Sipiteno:</strong><a href="https://sipiteno.com/?utm_source=sanctionsai.dev&amp;utm_medium=referral&amp;utm_campaign=portfolio_crosspromo&amp;utm_content=footer" style="display:inline-flex;min-height:44px;align-items:center">Sipiteno</a><a href="https://gitdealflow.com/?utm_source=sanctionsai.dev&amp;utm_medium=referral&amp;utm_campaign=portfolio_crosspromo&amp;utm_content=footer" style="display:inline-flex;min-height:44px;align-items:center">GitDealFlow</a><a href="https://signals.gitdealflow.com/?utm_source=sanctionsai.dev&amp;utm_medium=referral&amp;utm_campaign=portfolio_crosspromo&amp;utm_content=footer" style="display:inline-flex;min-height:44px;align-items:center">VC Deal Flow Signal</a><a href="https://invisibleexit.com/?utm_source=sanctionsai.dev&amp;utm_medium=referral&amp;utm_campaign=portfolio_crosspromo&amp;utm_content=footer" style="display:inline-flex;min-height:44px;align-items:center">Invisible Exit</a><a href="https://unlocksaas.com/?utm_source=sanctionsai.dev&amp;utm_medium=referral&amp;utm_campaign=portfolio_crosspromo&amp;utm_content=footer" style="display:inline-flex;min-height:44px;align-items:center">UnlockSaaS</a><a href="https://voicelogpro.com/?utm_source=sanctionsai.dev&amp;utm_medium=referral&amp;utm_campaign=portfolio_crosspromo&amp;utm_content=footer" style="display:inline-flex;min-height:44px;align-items:center">VoiceLogPro</a><a href="https://carshake.online/?utm_source=sanctionsai.dev&amp;utm_medium=referral&amp;utm_campaign=portfolio_crosspromo&amp;utm_content=footer" style="display:inline-flex;min-height:44px;align-items:center">CarShake</a><a href="https://churnlens.site/?utm_source=sanctionsai.dev&amp;utm_medium=referral&amp;utm_campaign=portfolio_crosspromo&amp;utm_content=footer" style="display:inline-flex;min-height:44px;align-items:center">ChurnLens</a><a href="https://sipi.bot/?utm_source=sanctionsai.dev&amp;utm_medium=referral&amp;utm_campaign=portfolio_crosspromo&amp;utm_content=footer" style="display:inline-flex;min-height:44px;align-items:center">sipi.bot</a></nav><p style="text-align:center;color:#666">agentmail - OFAC sanctions screening for AI agents · MIT licensed · Data from US Treasury &amp; vile/ofac-sdn-list</p></footer>'
+_FOOTER = '<footer><div class="links" style="display:flex;flex-wrap:wrap;gap:12px 28px;justify-content:center;max-width:900px;margin:0 auto 16px"><div style="min-width:140px"><strong style="color:#888;font-size:.75em;text-transform:uppercase;letter-spacing:.05em">Product</strong><br><a href="/">Home</a><br><a href="/teardown">How It Works</a><br><a href="/pricing">Pricing</a><br><a href="/docs">Docs</a><br><a href="/tools">Free Tools</a><br><a href="/llms.txt">llms.txt (AI docs)</a></div><div style="min-width:140px"><strong style="color:#888;font-size:.75em;text-transform:uppercase;letter-spacing:.05em"><a href="/for" style="color:#888;text-decoration:none">By Industry</a></strong><br><a href="/for/fintech">Fintech</a><br><a href="/for/crypto">Crypto</a><br><a href="/for/defi">DeFi</a><br><a href="/for/payments">Payments</a><br><a href="/for/ai-agents">AI Agents</a><br><a href="/for/developers">Developers</a></div><div style="min-width:140px"><strong style="color:#888;font-size:.75em;text-transform:uppercase;letter-spacing:.05em"><a href="/vs" style="color:#888;text-decoration:none">Compare</a></strong><br><a href="/vs/chainalysis">vs Chainalysis</a><br><a href="/vs/elliptic">vs Elliptic</a><br><a href="/vs/comply-advantage">vs ComplyAdvantage</a><br><a href="/compare/sumsub">vs SumSub</a><br><a href="/compare/world-check">vs World-Check</a></div><div style="min-width:140px"><strong style="color:#888;font-size:.75em;text-transform:uppercase;letter-spacing:.05em">Resources</strong><br><a href="/blog">Blog</a><br><a href="/guides">Guides</a><br><a href="/penalties">Penalties</a><br><a href="/how-to">How-To</a><br><a href="/glossary">Glossary</a><br><a href="/cost">Costs</a><br><a href="/integrations">Integrations</a><br><a href="/vs">Vs</a><br><a href="/stats">Stats</a><br><a href="/content-strategy">Content Strategy</a><br><a href="/partners/jv">JV Partners (50%)</a><br><a href="/refer">Refer & Earn</a><br><a href="/hooks">Hooks Library</a><br><a href="/partners/swipe">Swipe File</a><br><a href="/calendar">Content Calendar</a><br><a href="/dream100">Dream 100</a><br><a href="https://x.com/sipiteno" style="color:inherit">X / Twitter</a><br><a href="/agent">For Agents</a><br><a href="/leaderboard">Leaderboard</a><br><a href="/about">About</a><br><a href="/contact">Contact</a><br><a href="/privacy">Privacy</a><br><a href="/terms">Terms</a><br><a href="/countries">Countries</a><br><a href="/checklists">Checklists</a><br><a href="/answers">Answers</a><br><a href="/best">Best-Of</a><br><a href="/alternatives-to">Alternatives</a><br><a href="/programs">Programs</a><br><a href="/redflags">Red Flags</a><br><a href="/scenarios">Scenarios</a></div></div><section class="subscribe-footer" style="max-width:900px;margin:16px auto 0;padding:16px 0 0;border-top:1px solid #333;text-align:center"><p style="color:#ccc;font-size:.85rem;margin:0 0 8px">Get OFAC enforcement alerts and agent compliance tips. No spam.</p><form action="/subscribe" method="post" style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;max-width:400px;margin:0 auto"><input type="email" name="email" placeholder="your@email.com" required style="flex:1;min-width:180px;padding:8px 12px;border:1px solid #444;border-radius:6px;background:#111;color:#e0e0e0;font-size:.85rem"><button type="submit" style="padding:8px 16px;border:none;border-radius:6px;background:#00d4aa;color:#0a0a0a;font-weight:600;cursor:pointer;font-size:.85rem">Subscribe</button><label style="flex-basis:100%;display:flex;gap:8px;align-items:flex-start;text-align:left;color:#999;font-size:.75rem;line-height:1.4"><input type="checkbox" name="consent" value="marketing" required style="margin-top:2px;accent-color:#00d4aa">I agree to receive SanctionsAI enforcement alerts and compliance tips. See the <a href="/privacy">Privacy Policy</a> and <a href="/terms">Terms</a>.</label></form></section><nav aria-label="More products from Sipiteno" data-portfolio-cross-promo="v1" data-portfolio-origin="sanctionsai.dev" style="max-width:900px;margin:16px auto 0;padding-top:12px;border-top:1px solid #333;display:flex;flex-wrap:wrap;justify-content:center;gap:0 14px;font-size:.8rem"><strong style="display:inline-flex;min-height:44px;align-items:center;color:#888">More from Sipiteno:</strong><a href="https://sipiteno.com/?utm_source=sanctionsai.dev&amp;utm_medium=referral&amp;utm_campaign=portfolio_crosspromo&amp;utm_content=footer" style="display:inline-flex;min-height:44px;align-items:center">Sipiteno</a><a href="https://gitdealflow.com/?utm_source=sanctionsai.dev&amp;utm_medium=referral&amp;utm_campaign=portfolio_crosspromo&amp;utm_content=footer" style="display:inline-flex;min-height:44px;align-items:center">GitDealFlow</a><a href="https://signals.gitdealflow.com/?utm_source=sanctionsai.dev&amp;utm_medium=referral&amp;utm_campaign=portfolio_crosspromo&amp;utm_content=footer" style="display:inline-flex;min-height:44px;align-items:center">VC Deal Flow Signal</a><a href="https://invisibleexit.com/?utm_source=sanctionsai.dev&amp;utm_medium=referral&amp;utm_campaign=portfolio_crosspromo&amp;utm_content=footer" style="display:inline-flex;min-height:44px;align-items:center">Invisible Exit</a><a href="https://unlocksaas.com/?utm_source=sanctionsai.dev&amp;utm_medium=referral&amp;utm_campaign=portfolio_crosspromo&amp;utm_content=footer" style="display:inline-flex;min-height:44px;align-items:center">UnlockSaaS</a><a href="https://voicelogpro.com/?utm_source=sanctionsai.dev&amp;utm_medium=referral&amp;utm_campaign=portfolio_crosspromo&amp;utm_content=footer" style="display:inline-flex;min-height:44px;align-items:center">VoiceLogPro</a><a href="https://carshake.online/?utm_source=sanctionsai.dev&amp;utm_medium=referral&amp;utm_campaign=portfolio_crosspromo&amp;utm_content=footer" style="display:inline-flex;min-height:44px;align-items:center">CarShake</a><a href="https://churnlens.site/?utm_source=sanctionsai.dev&amp;utm_medium=referral&amp;utm_campaign=portfolio_crosspromo&amp;utm_content=footer" style="display:inline-flex;min-height:44px;align-items:center">ChurnLens</a><a href="https://sipi.bot/?utm_source=sanctionsai.dev&amp;utm_medium=referral&amp;utm_campaign=portfolio_crosspromo&amp;utm_content=footer" style="display:inline-flex;min-height:44px;align-items:center">sipi.bot</a></nav><p style="text-align:center;color:#666">agentmail - OFAC sanctions screening for AI agents · MIT licensed · Data from US Treasury &amp; vile/ofac-sdn-list</p></footer>'
 
 _VERTICALS = {
     "fintech": {
@@ -2471,7 +2493,8 @@ class Handler(BaseHTTPRequestHandler):
 
     def _body(self):
         n = int(self.headers.get("Content-Length", 0) or 0)
-        return json.loads(self.rfile.read(n)) if n else {}
+        raw = self.rfile.read(n) if n else b""
+        return _parse_request_body(self.headers.get("Content-Type", ""), raw)
 
     def _x402_or_key_gate(self, audit_action: str, audit_subject: dict | None = None,
                          x402_description: str = "") -> str | None:
@@ -4499,7 +4522,6 @@ License: https://creativecommons.org/licenses/by/4.0/
                     if "application/json" in ct or not ct:
                         b = json.loads(raw)
                     elif "application/x-www-form-urlencoded" in ct:
-                        from urllib.parse import parse_qs
                         b = {k: v[0] for k, v in parse_qs(raw.decode()).items()}
                     else:
                         b = {}
@@ -4509,6 +4531,8 @@ License: https://creativecommons.org/licenses/by/4.0/
                 import re
                 if not re.match(r'^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$', email or ""):
                     return _json(self, 400, {"error": "valid email required"})
+                if not _has_marketing_consent(b):
+                    return _json(self, 400, {"error": "explicit marketing consent required"})
                 import os, json, time
                 # Use a writeable path: env AGENTMAIL_HOME, then ~/.agentmail, then /tmp
                 data_home = os.environ.get("AGENTMAIL_HOME", "")
@@ -4547,7 +4571,7 @@ License: https://creativecommons.org/licenses/by/4.0/
                     _schedule_soap_drip(email)
                 except Exception as e:
                     send_error = str(e)
-                    print(f"Email send failed for {email}: {e}", flush=True)
+                    print(f"Email send failed for {_email_ref(email)}: {e}", flush=True)
                 _capture("subscribed", email, {"source": source, "email_sent": sent, "send_error": send_error})
                 # Honest response. The subscriber IS saved either way (so the
                 # lead is not lost), but the client now knows whether the welcome
@@ -4569,10 +4593,12 @@ License: https://creativecommons.org/licenses/by/4.0/
         if p.path == "/unsubscribe" or p.path == "/api/unsubscribe":
             try:
                 b = self._body()
-                email = b.get("email", "")
+                q = parse_qs(p.query)
+                email = b.get("email", "") or q.get("email", [""])[0]
                 if not email or "@" not in email:
                     return _json(self, 400, {"error": "valid email required"})
                 import os, json
+                removed = 0
                 subs_file = os.environ.get("AGENTMAIL_HOME", "/data") + "/subscribers.jsonl"
                 if os.path.exists(subs_file):
                     remaining = []
@@ -14299,7 +14325,7 @@ def send_soap_operas():
                         new_state[email] = {"soap_day": target_day, "last_sent": now}
                         sent += 1
                     except Exception as e:
-                        print(f"Soap failed for {email} day {target_day}: {e}", flush=True)
+                        print(f"Soap failed for {_email_ref(email)} day {target_day}: {e}", flush=True)
                 
                 # If Soap Opera is complete (day 5+), start Seinfeld
                 if target_day >= 5 and current_day >= 5:
@@ -14339,9 +14365,9 @@ def _check_seinfeld(email, rec, new_state, old_state, now):
         try:
             _send_resend(email, _SEINFELD_SUBJECTS[idx], content, gate="sanctionsai:seinfeld")
             seinfeld_state[email] = {"seinfeld_day": target_day, "last_sent": now}
-            print(f"Seinfeld sent to {email} day {target_day}", flush=True)
+            print(f"Seinfeld sent to {_email_ref(email)} day {target_day}", flush=True)
         except Exception as e:
-            print(f"Seinfeld failed for {email} day {target_day}: {e}", flush=True)
+            print(f"Seinfeld failed for {_email_ref(email)} day {target_day}: {e}", flush=True)
         
         os.makedirs(os.path.dirname(state_file), exist_ok=True)
         with open(state_file, "w") as f:
@@ -14525,7 +14551,7 @@ def _gate_allows(to_email: str, sender: str) -> bool:
         with urllib.request.urlopen(req, timeout=15) as resp:
             return json.loads(resp.read()).get("allowed") is True
     except Exception as e:
-        print(f"[gate] unreachable for {to_email} ({e}) — skipping send (fail-closed)")
+        print(f"[gate] unreachable for {_email_ref(to_email)} ({e}) — skipping send (fail-closed)")
         return False
 
 
