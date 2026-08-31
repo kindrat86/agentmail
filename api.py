@@ -13906,9 +13906,11 @@ curl -H "X-API-Key: {key}" \\
 
 
 def _start_drip_scheduler():
-    """Background thread: fire Soap Opera + Seinfeld drip every hour.
-    Safe to call from main(); daemon thread dies with the process."""
-    import threading, time
+    """Start the native drip thread only after explicit owner opt-in."""
+    import os, threading, time
+    if os.environ.get("DRIP_ENABLED", "").strip().lower() not in {"1", "true", "yes", "on"}:
+        print("[drip] scheduler disabled (set DRIP_ENABLED=true to enable)", flush=True)
+        return
     def _loop():
         time.sleep(30)  # let server bind first
         while True:

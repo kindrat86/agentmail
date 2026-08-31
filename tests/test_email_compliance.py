@@ -1,8 +1,10 @@
 import ast
 import json
+import os
 import pathlib
 import re
 import unittest
+from unittest import mock
 from urllib.parse import parse_qs
 
 API_PATH = pathlib.Path(__file__).parents[1] / 'api.py'
@@ -63,6 +65,30 @@ class CaptureSurfaceComplianceTests(unittest.TestCase):
     def test_email_logs_use_recipient_references(self):
         self.assertIsNone(re.search(r'print\(f[^\n]*\{(?:email|to_email)\}', SOURCE))
         self.assertIn('_email_ref(', SOURCE)
+
+
+class NativeDripSchedulerSafetyTests(unittest.TestCase):
+    def test_scheduler_is_disabled_when_flag_is_absent(self):
+        start_scheduler = load_function('_start_drip_scheduler')
+        with mock.patch.dict(os.environ, {}, clear=True), mock.patch('threading.Thread') as thread:
+            start_scheduler()
+        thread.assert_not_called()
+
+    def test_false_like_flags_do_not_start_scheduler(self):
+        start_scheduler = load_function('_start_drip_scheduler')
+        for value in ('0', 'false', 'no', 'off'):
+            with self.subTest(value=value), mock.patch.dict(os.environ, {'DRIP_ENABLED': value}, clear=True), mock.patch('threading.Thread') as thread:
+                start_scheduler()
+            thread.assert_not_called()
+
+    def test_explicit_true_starts_one_daemon_scheduler(self):
+        start_scheduler = load_function('_start_drip_scheduler')
+        with mock.patch.dict(os.environ, {'DRIP_ENABLED': 'true'}, clear=True), mock.patch('threading.Thread') as thread:
+            start_scheduler()
+        thread.assert_called_once()
+        self.assertEqual('agentmail-drip', thread.call_args.kwargs['name'])
+        self.assertTrue(thread.call_args.kwargs['daemon'])
+        thread.return_value.start.assert_called_once_with()
 
 
 if __name__ == '__main__':
