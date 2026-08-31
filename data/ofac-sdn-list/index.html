@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OFAC SDN List: Official Search, Downloads, Formats &amp; Limitations | SanctionsAI</title>
+<meta name="description" content="How to search and download the official OFAC Specially Designated Nationals (SDN) List: official Treasury sources, file formats, update cadence, and honest limitations. Last reviewed 2026-08-31.">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://sanctionsai.dev/data/ofac-sdn-list/">
+<meta property="og:title" content="OFAC SDN List: Official Search, Downloads, Formats &amp; Limitations | SanctionsAI">
+<meta property="og:description" content="Official OFAC SDN List search and download guidance: Treasury sources, file formats, update cadence, and what an honest landing page can and cannot offer.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://sanctionsai.dev/data/ofac-sdn-list/">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebPage", "name": "OFAC SDN List: Official Search, Downloads, Formats & Limitations", "description": "How to search and download the official OFAC Specially Designated Nationals (SDN) List: official Treasury sources, file formats, update cadence, and honest limitations.", "url": "https://sanctionsai.dev/data/ofac-sdn-list/", "inLanguage": "en", "isPartOf": {"@type": "WebSite", "name": "SanctionsAI", "url": "https://sanctionsai.dev"}, "dateModified": "2026-08-31", "about": {"@type": "Thing", "name": "OFAC Specially Designated Nationals and Blocked Persons (SDN) List", "url": "https://sanctionslist.ofac.treas.gov/Home/SdnList"}}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://sanctionsai.dev/"}, {"@type": "ListItem", "position": 2, "name": "Research Data", "item": "https://sanctionsai.dev/data/"}, {"@type": "ListItem", "position": 3, "name": "OFAC SDN List", "item": "https://sanctionsai.dev/data/ofac-sdn-list/"}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "What is the OFAC SDN List?", "acceptedAnswer": {"@type": "Answer", "text": "The Specially Designated Nationals and Blocked Persons (SDN) List is a list of individuals and entities with whom U.S. persons are generally prohibited from dealing, maintained by the U.S. Treasury's Office of Foreign Assets Control (OFAC). SDNs can be located anywhere, not only in sanctioned countries. The authoritative source is https://sanctionslist.ofac.treas.gov/Home/SdnList"}}, {"@type": "Question", "name": "Where can I search or download the official SDN List?", "acceptedAnswer": {"@type": "Answer", "text": "Use OFAC's own tools. The Sanctions List Search tool (https://ofac.treasury.gov/sanctions-list-search-tool) searches the list by name. The Sanctions List Service (https://ofac.treasury.gov/sanctions-list-service) publishes downloadable data files in fixed-width, SDN.CSV, and SDN.XML formats, plus Advanced and Enhanced variants. This page links to those official resources."}}, {"@type": "Question", "name": "How often is the SDN List updated?", "acceptedAnswer": {"@type": "Answer", "text": "OFAC updates the SDN List as designation actions occur, and publishes each action on its Recent Actions page (https://ofac.treasury.gov/recent-actions). There is no fixed schedule, so any copy of the list goes stale immediately. This page was last reviewed on 2026-08-31; for current data always use the official OFAC sources."}}, {"@type": "Question", "name": "Does this page host or search the SDN List itself?", "acceptedAnswer": {"@type": "Answer", "text": "No. SanctionsAI does not mirror the full SDN List here, and there is no on-site search of SDN records on this page. Use OFAC's official search tool for authoritative results, or the free SanctionsAI name checker at /tools/name-checker for a convenient screening check that is not a substitute for the official list."}}, {"@type": "Question", "name": "Is screening against the SDN List enough for sanctions compliance?", "acceptedAnswer": {"@type": "Answer", "text": "No. SDN screening is not a compliance program by itself. OFAC's framework, A Framework for OFAC Compliance Commitments, describes five essential components of a risk-based sanctions compliance program: management commitment, risk assessment, internal controls, testing and auditing, and training. Screening is one internal control, not the whole program."}}]}</script>
+<style>
+:root{--bg:#fafbfc;--fg:#1a1a2e;--accent:#2563eb;--muted:#6b7280;--border:#e5e7eb;--card:#fff;--green:#059669}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--fg);line-height:1.7}
+.container{max-width:900px;margin:0 auto;padding:2rem 1.5rem}
+h1{font-size:2rem;font-weight:800;margin-bottom:.5rem;line-height:1.2}
+h2{font-size:1.4rem;font-weight:700;margin:2rem 0 1rem}
+h3{font-size:1.05rem;font-weight:700;margin:1.25rem 0 .5rem}
+.lead{font-size:1.1rem;color:var(--muted);margin-bottom:1.25rem}
+table{width:100%;border-collapse:collapse;margin:1.25rem 0;font-size:.88rem}
+th,td{padding:.5rem .6rem;text-align:left;border-bottom:1px solid var(--border);vertical-align:top}
+th{background:var(--bg);font-weight:600;color:var(--muted);font-size:.75rem;text-transform:uppercase;letter-spacing:.05em}
+.btn{display:inline-block;padding:.7rem 1.5rem;border-radius:8px;font-weight:600;text-decoration:none;font-size:.95rem;margin:.25rem;transition:all .15s}
+.btn-primary{background:var(--accent);color:#fff}
+.btn-primary:hover{background:#1d4ed8}
+.btn-outline{border:2px solid var(--border);color:var(--fg);background:transparent}
+.btn-outline:hover{border-color:var(--accent);color:var(--accent)}
+.breadcrumb{font-size:.85rem;color:var(--muted);margin-bottom:1.5rem}
+.breadcrumb a{color:var(--muted);text-decoration:none}
+.breadcrumb a:hover{color:var(--accent)}
+.badge{display:inline-block;padding:.2rem .6rem;border-radius:4px;font-size:.75rem;font-weight:600;background:#dcfce7;color:var(--green);margin-right:.5rem}
+.note{background:#fef3c7;border:1px solid #fcd34d;border-radius:8px;padding:1rem;margin:1.5rem 0;font-size:.9rem}
+.warn{background:#fef2f2;border:1px solid #fecaca;border-radius:8px;padding:1.25rem;margin:1.5rem 0;font-size:.9rem}
+ul{margin:.75rem 0 .75rem 1.25rem}
+li{margin:.35rem 0}
+a{color:var(--accent)}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.85em;background:#eef2ff;padding:.1rem .3rem;border-radius:4px}
+.faq dt{font-weight:700;margin-top:1rem}
+.faq dd{margin:.25rem 0 0 0;color:var(--fg)}
+footer{margin-top:3rem;padding:1.5rem 0;border-top:1px solid var(--border);color:var(--muted);font-size:.85rem}
+footer a{color:var(--accent)}
+@media(max-width:640px){.container{padding:1rem}h1{font-size:1.5rem}}
+</style>
+</head>
+<body>
+<div class="container">
+<nav class="breadcrumb"><a href="/">Home</a> &#8250; <a href="/data/">Research Data</a> &#8250; OFAC SDN List</nav>
+<h1>OFAC SDN List: Official Search, Downloads, and Formats</h1>
+<p class="lead">The Specially Designated Nationals and Blocked Persons (SDN) List is the U.S. Treasury's list of individuals and entities with whom U.S. persons are generally prohibited from dealing. This page points you to the official sources to search and download it, explains the file formats, and is honest about what lives here and what does not.</p>
+
+<p><span class="badge">Last reviewed 2026-08-31</span><span class="badge">Official sources only</span><span class="badge">No mirrored data</span></p>
+
+<div class="note"><strong>Freshness and scope:</strong> this page was <strong>last reviewed on 2026-08-31</strong> and is a guide, not a dataset. SanctionsAI <strong>does not mirror</strong> the SDN List here, and there is <strong>no on-site search</strong> of SDN records on this page. The list changes as OFAC actions occur, so for any real decision use the <a href="https://sanctionslist.ofac.treas.gov/Home/SdnList">official SDN List page</a>, the <a href="https://ofac.treasury.gov/sanctions-list-search-tool">official Sanctions List Search tool</a>, or the <a href="https://ofac.treasury.gov/sanctions-list-service">Sanctions List Service</a> downloads directly.</div>
+
+<h2>Search the SDN List: official tools first</h2>
+<p>If you need to look up a person, company, vessel, or aircraft right now, use OFAC's own tools. They are free, authoritative, and always current:</p>
+<ul>
+<li><strong><a href="https://ofac.treasury.gov/sanctions-list-search-tool">Sanctions List Search tool</a></strong> - OFAC's official search interface for screening names against the SDN List and other sanctions lists, with fuzzy matching options.</li>
+<li><strong><a href="https://sanctionslist.ofac.treas.gov/Home/SdnList">The SDN List page</a></strong> - the official listing page for the Specially Designated Nationals and Blocked Persons List.</li>
+<li><strong><a href="https://ofac.treasury.gov/recent-actions">Recent Actions</a></strong> - every designation, delisting, and update as it is published. This is the definitive record of what changed and when.</li>
+</ul>
+<p>For a convenient check inside your workflow, SanctionsAI also offers a <a href="/tools/name-checker">free name checker</a>. It is a screening aid, not a substitute for the official list or a legal determination.</p>
+
+<h2>Download the SDN List data: Sanctions List Service</h2>
+<p>Bulk data lives on OFAC's <strong><a href="https://ofac.treasury.gov/sanctions-list-service">Sanctions List Service</a></strong>, which publishes the SDN List and other OFAC lists as downloadable data files. Always download from that official page; copies hosted elsewhere (including anything cached here or anywhere else on this site) can be stale the moment OFAC publishes an update.</p>
+
+<h3>File formats the official service publishes</h3>
+<table>
+<tr><th>Format</th><th>What it is</th></tr>
+<tr><td><strong>SDN.XML</strong></td><td>Structured XML of SDN entries, programs, and remarks. The usual choice for programmatic ingestion.</td></tr>
+<tr><td><strong>SDN.CSV</strong></td><td>Comma-separated values covering the same entries for spreadsheet and simple pipeline use.</td></tr>
+<tr><td><strong>Fixed-width</strong></td><td>The classic plain-text, fixed-width layout of the list (the historical <code>sdn.txt</code> style).</td></tr>
+<tr><td><strong>Advanced</strong></td><td>Advanced variants of the files that provide additional, more granular data fields.</td></tr>
+<tr><td><strong>Enhanced</strong></td><td>Enhanced variants that include extra detail such as additional name information on entries.</td></tr>
+</table>
+<p>The exact file menu can change; treat the <a href="https://ofac.treasury.gov/sanctions-list-service">Sanctions List Service page</a> as the source of truth for which formats are currently offered.</p>
+
+<h2>What this page is, and is not</h2>
+<div class="warn">
+<p><strong>This page does not mirror the SDN List.</strong> There is no copy of the list's records hosted here, and there is no on-site search of SDN entries. Any page other than OFAC's own that claims to be "the SDN List" is a copy that can lag the real thing.</p>
+<p><strong>Not legal advice.</strong> This page is technical documentation. Nothing here is legal advice or a legal determination about any person or entity.</p>
+<p><strong>Screening is not a compliance program.</strong> Checking names against the SDN List is a single internal control, not a compliance program. OFAC's own framework, <a href="https://ofac.treasury.gov/media/16331/download?inline=">A Framework for OFAC Compliance Commitments</a>, describes five essential components of a risk-based sanctions compliance program: management commitment, risk assessment, internal controls, testing and auditing, and training.</p>
+</div>
+
+<h2>Related resources on SanctionsAI</h2>
+<ul>
+<li><a href="/glossary/ofac-sdn-list">What is the OFAC SDN List?</a> - a plain-language glossary explainer.</li>
+<li><a href="/sanctions-lists/ofac-sdn">OFAC SDN list in depth</a> - how the list fits among the other sanctions lists.</li>
+<li><a href="/data/ofac-crypto-wallets/">OFAC sanctioned crypto wallet addresses</a> - the one slice of SDN data we do publish as a dataset, parsed from Treasury's SDN Advanced XML, with CSV and JSON downloads.</li>
+<li><a href="/data/">Research Data hub</a> - all SanctionsAI datasets in one place.</li>
+</ul>
+
+<h2>Frequently asked questions</h2>
+<dl class="faq">
+<dt>What is the OFAC SDN List?</dt>
+<dd>A list of individuals and entities with whom U.S. persons are generally prohibited from dealing, maintained by the U.S. Treasury's Office of Foreign Assets Control. SDNs can be located anywhere, not only in comprehensively sanctioned countries. Official page: <a href="https://sanctionslist.ofac.treas.gov/Home/SdnList">sanctionslist.ofac.treas.gov/Home/SdnList</a>.</dd>
+<dt>Where can I search or download the official SDN List?</dt>
+<dd>Search with OFAC's <a href="https://ofac.treasury.gov/sanctions-list-search-tool">Sanctions List Search tool</a>; download bulk data from the <a href="https://ofac.treasury.gov/sanctions-list-service">Sanctions List Service</a> in fixed-width, SDN.CSV, and SDN.XML formats, plus Advanced and Enhanced variants.</dd>
+<dt>How often is the SDN List updated?</dt>
+<dd>Whenever OFAC takes action: designations, modifications, and delistings are published on the <a href="https://ofac.treasury.gov/recent-actions">Recent Actions</a> page with no fixed schedule. Any snapshot goes stale immediately, which is why this page links out instead of hosting a copy. This page was last reviewed 2026-08-31.</dd>
+<dt>Does this page host or search the SDN List itself?</dt>
+<dd>No. SanctionsAI does not mirror the list here and offers no on-site search of SDN records. Use the official tools above, or our <a href="/tools/name-checker">free name checker</a> as a screening aid.</dd>
+<dt>Is screening against the SDN List enough for compliance?</dt>
+<dd>No. SDN screening is not a compliance program. OFAC's <a href="https://ofac.treasury.gov/media/16331/download?inline=">compliance framework</a> lays out five essential components, of which screening-related internal controls are only one.</dd>
+</dl>
+
+<footer>
+<p><strong>SanctionsAI</strong> - sanctions screening for AI agent payments. This page is not legal advice and is not a compliance program; consult the <a href="https://ofac.treasury.gov/sanctions-list-service">official OFAC Sanctions List Service</a> and qualified counsel before acting.</p>
+<p><a href="https://sanctionsai.dev">sanctionsai.dev</a> &#183; <a href="/data/">Research Data</a> &#183; <a href="/data/feed.json">JSON Feed</a> &#183; Page last reviewed 2026-08-31</p>
+</footer>
+</div>
+</body>
+</html>
