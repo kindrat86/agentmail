@@ -4,10 +4,10 @@
  "url": "https://sanctionsai.dev/data/ofac-crypto-wallets/",
  "license": "CC BY 4.0 (compilation); underlying OFAC data is US Government work, public domain",
  "source": "https://www.treasury.gov/ofac/downloads/sanctions/1.0/sdn_advanced.xml",
- "sdn_list_date": "2026-08-20",
- "generated": "2026-08-24",
- "record_count": 977,
- "unique_addresses": 961,
+ "sdn_list_date": "2026-08-28",
+ "generated": "2026-08-31",
+ "record_count": 1007,
+ "unique_addresses": 991,
  "records": [
   {
    "address": "0x4f47bc496083c727c5fbe3ce9cdf2b0f6496270c",
@@ -188,6 +188,114 @@
    "ofac_programs": "CYBER2",
    "source": "https://www.treasury.gov/ofac/downloads/sanctions/1.0/sdn_advanced.xml",
    "entity_designation_date": "2020-09-16"
+  },
+  {
+   "address": "0x1CAb8177ACe78b1B6B1c393371F4f2dCAE40CbEB",
+   "chain": "ETH",
+   "entity": "MESRI Behzad",
+   "sdn_profile_id": "24003",
+   "ofac_programs": "CYBER2; HRIT-IR",
+   "source": "https://www.treasury.gov/ofac/downloads/sanctions/1.0/sdn_advanced.xml",
+   "entity_designation_date": "2018-03-23"
+  },
+  {
+   "address": "0x252a8bd2319d8a555b872990601221b3a2053bce",
+   "chain": "ETH",
+   "entity": "MESRI Behzad",
+   "sdn_profile_id": "24003",
+   "ofac_programs": "CYBER2; HRIT-IR",
+   "source": "https://www.treasury.gov/ofac/downloads/sanctions/1.0/sdn_advanced.xml",
+   "entity_designation_date": "2018-03-23"
+  },
+  {
+   "address": "0x6B0736Fed0634e15E19CC57fBA19cd179c13AbCA",
+   "chain": "ETH",
+   "entity": "MESRI Behzad",
+   "sdn_profile_id": "24003",
+   "ofac_programs": "CYBER2; HRIT-IR",
+   "source": "https://www.treasury.gov/ofac/downloads/sanctions/1.0/sdn_advanced.xml",
+   "entity_designation_date": "2018-03-23"
+  },
+  {
+   "address": "0x6Fac4D18c912343BF86fa7049364Dd4E424Ab9C0",
+   "chain": "ETH",
+   "entity": "MESRI Behzad",
+   "sdn_profile_id": "24003",
+   "ofac_programs": "CYBER2; HRIT-IR",
+   "source": "https://www.treasury.gov/ofac/downloads/sanctions/1.0/sdn_advanced.xml",
+   "entity_designation_date": "2018-03-23"
+  },
+  {
+   "address": "0x7F03679B56d8772530EFA516b58Bb83d4829E881",
+   "chain": "ETH",
+   "entity": "MESRI Behzad",
+   "sdn_profile_id": "24003",
+   "ofac_programs": "CYBER2; HRIT-IR",
+   "source": "https://www.treasury.gov/ofac/downloads/sanctions/1.0/sdn_advanced.xml",
+   "entity_designation_date": "2018-03-23"
+  },
+  {
+   "address": "0x8ac5381FCD9e7395D14e02986c344aADA84B4bC6",
+   "chain": "ETH",
+   "entity": "MESRI Behzad",
+   "sdn_profile_id": "24003",
+   "ofac_programs": "CYBER2; HRIT-IR",
+   "source": "https://www.treasury.gov/ofac/downloads/sanctions/1.0/sdn_advanced.xml",
+   "entity_designation_date": "2018-03-23"
+  },
+  {
+   "address": "0x9697749A9e8D6C119D8EEb0d6268a1b99C40684c",
+   "chain": "ETH",
+   "entity": "MESRI Behzad",
+   "sdn_profile_id": "24003",
+   "ofac_programs": "CYBER2; HRIT-IR",
+   "source": "https://www.treasury.gov/ofac/downloads/sanctions/1.0/sdn_advanced.xml",
+   "entity_designation_date": "2018-03-23"
+  },
+  {
+   "address": "0x9DD7fA4B4950154F7e75BdD8A77266B99b94Ec08",
+   "chain": "ETH",
+   "entity": "MESRI Behzad",
+   "sdn_profile_id": "24003",
+   "ofac_programs": "CYBER2; HRIT-IR",
+   "source": "https://www.treasury.gov/ofac/downloads/sanctions/1.0/sdn_advanced.xml",
+   "entity_designation_date": "2018-03-23"
+  },
+  {
+   "address": "0xA40cFBFc8534FFC84E20a7d8bBC3729B26a35F6f",
+   "chain": "ETH",
+   "entity": "MESRI Behzad",
+   "sdn_profile_id": "24003",
+   "ofac_programs": "CYBER2; HRIT-IR",
+   "source": "https://www.treasury.gov/ofac/downloads/sanctions/1.0/sdn_advanced.xml",
+   "entity_designation_date": "2018-03-23"
+  },
+  {
+   "address": "0xF45Ecc3a59C7911181C659cE9115854c6175Be91",
+   "chain": "ETH",
+   "entity": "MESRI Behzad",
+   "sdn_profile_id": "24003",
+   "ofac_programs": "CYBER2; HRIT-IR",
+   "source": "https://www.treasury.gov/ofac/downloads/sanctions/1.0/sdn_advanced.xml",
+   "entity_designation_date": "2018-03-23"
+  },
+  {
+   "address": "0xb5A69Da691670F62510793F79a9B36c7db1A7b7c",
+   "chain": "ETH",
+   "entity": "MESRI Behzad",
+   "sdn_profile_id": "24003",
+   "ofac_programs": "CYBER2; HRIT-IR",
+   "source": "https://www.treasury.gov/ofac/downloads/sanctions/1.0/sdn_advanced.xml",
+   "entity_designation_date": "2018-03-23"
+  },
+  {
+   "address": "0xd81414ABc631C6CADAe1C6198b0c2b15a9B4fDe5",
+   "chain": "ETH",
+   "entity": "MESRI Behzad",
+   "sdn_profile_id": "24003",
+   "ofac_programs": "CYBER2; HRIT-IR",
+   "source": "https://www.treasury.gov/ofac/downloads/sanctions/1.0/sdn_advanced.xml",
+   "entity_designation_date": "2018-03-23"
   },
   {
    "address": "0x08723392Ed15743cc38513C4925f5e6be5c17243",
@@ -1088,6 +1196,78 @@
    "ofac_programs": "SDGT",
    "source": "https://www.treasury.gov/ofac/downloads/sanctions/1.0/sdn_advanced.xml",
    "entity_designation_date": "2026-08-07"
+  },
+  {
+   "address": "0x1b8579cf6ab12ea6b74ac5fa41f3829a3cb61e6e",
+   "chain": "ETH",
+   "entity": "Ghal'eh-Kuhi Mojtaba",
+   "sdn_profile_id": "57064",
+   "ofac_programs": "CYBER4",
+   "source": "https://www.treasury.gov/ofac/downloads/sanctions/1.0/sdn_advanced.xml",
+   "entity_designation_date": "2026-08-24"
+  },
+  {
+   "address": "0x4060cbf80734193f521a3cc6fd4e985df2825279",
+   "chain": "ETH",
+   "entity": "Blagh Keyvan Fayyaz Gareh",
+   "sdn_profile_id": "57061",
+   "ofac_programs": "CYBER4",
+   "source": "https://www.treasury.gov/ofac/downloads/sanctions/1.0/sdn_advanced.xml",
+   "entity_designation_date": "2026-08-24"
+  },
+  {
+   "address": "0x56de1527136f76a809e5b14ded6103eecd072ba7",
+   "chain": "ETH",
+   "entity": "Blagh Keyvan Fayyaz Gareh",
+   "sdn_profile_id": "57061",
+   "ofac_programs": "CYBER4",
+   "source": "https://www.treasury.gov/ofac/downloads/sanctions/1.0/sdn_advanced.xml",
+   "entity_designation_date": "2026-08-24"
+  },
+  {
+   "address": "0x8694ed130432be2cd3efff2e4d9dc52351dc7423",
+   "chain": "ETH",
+   "entity": "Blagh Keyvan Fayyaz Gareh",
+   "sdn_profile_id": "57061",
+   "ofac_programs": "CYBER4",
+   "source": "https://www.treasury.gov/ofac/downloads/sanctions/1.0/sdn_advanced.xml",
+   "entity_designation_date": "2026-08-24"
+  },
+  {
+   "address": "0xbd3276f265b83b5e828c05f46cde9d10a1521a24",
+   "chain": "ETH",
+   "entity": "Blagh Keyvan Fayyaz Gareh",
+   "sdn_profile_id": "57061",
+   "ofac_programs": "CYBER4",
+   "source": "https://www.treasury.gov/ofac/downloads/sanctions/1.0/sdn_advanced.xml",
+   "entity_designation_date": "2026-08-24"
+  },
+  {
+   "address": "0xeb507efa9ee692a4c774ad1de9f3cb26fc459da3",
+   "chain": "ETH",
+   "entity": "Kahzadian Arman",
+   "sdn_profile_id": "57065",
+   "ofac_programs": "CYBER4",
+   "source": "https://www.treasury.gov/ofac/downloads/sanctions/1.0/sdn_advanced.xml",
+   "entity_designation_date": "2026-08-24"
+  },
+  {
+   "address": "0xef85a6fafa5942a964dc618e94e230881d29ce2a",
+   "chain": "ETH",
+   "entity": "Kahzadian Arman",
+   "sdn_profile_id": "57065",
+   "ofac_programs": "CYBER4",
+   "source": "https://www.treasury.gov/ofac/downloads/sanctions/1.0/sdn_advanced.xml",
+   "entity_designation_date": "2026-08-24"
+  },
+  {
+   "address": "0xf1c4c44d2dcbcfa704349e3b57628dbd8404e597",
+   "chain": "ETH",
+   "entity": "Blagh Keyvan Fayyaz Gareh",
+   "sdn_profile_id": "57061",
+   "ofac_programs": "CYBER4",
+   "source": "https://www.treasury.gov/ofac/downloads/sanctions/1.0/sdn_advanced.xml",
+   "entity_designation_date": "2026-08-24"
   },
   {
    "address": "LaizKtS5DUhPuP1nTQcc83MS7HwK6vk85z",
@@ -2485,6 +2665,24 @@
    "entity_designation_date": "2015-09-29"
   },
   {
+   "address": "TAbbVaBKgH4VBLXgWqACuwoKF4cH1HinQh",
+   "chain": "TRX",
+   "entity": "MESRI Behzad",
+   "sdn_profile_id": "24003",
+   "ofac_programs": "CYBER2; HRIT-IR",
+   "source": "https://www.treasury.gov/ofac/downloads/sanctions/1.0/sdn_advanced.xml",
+   "entity_designation_date": "2018-03-23"
+  },
+  {
+   "address": "TEsxMcVocweTM82Mdmc5diKC6qyCWqSpPv",
+   "chain": "TRX",
+   "entity": "MESRI Behzad",
+   "sdn_profile_id": "24003",
+   "ofac_programs": "CYBER2; HRIT-IR",
+   "source": "https://www.treasury.gov/ofac/downloads/sanctions/1.0/sdn_advanced.xml",
+   "entity_designation_date": "2018-03-23"
+  },
+  {
    "address": "TFwjPScaJRCbSWVAywE1S1WgaUgSnyYUbD",
    "chain": "TRX",
    "entity": "GARANTEX EUROPE OU",
@@ -3032,6 +3230,24 @@
    "ofac_programs": "SDGT",
    "source": "https://www.treasury.gov/ofac/downloads/sanctions/1.0/sdn_advanced.xml",
    "entity_designation_date": "2026-08-07"
+  },
+  {
+   "address": "TP3kVtnFgDSoSqzw178nLJtGWNjrbKNgB6",
+   "chain": "TRX",
+   "entity": "Blagh Keyvan Fayyaz Gareh",
+   "sdn_profile_id": "57061",
+   "ofac_programs": "CYBER4",
+   "source": "https://www.treasury.gov/ofac/downloads/sanctions/1.0/sdn_advanced.xml",
+   "entity_designation_date": "2026-08-24"
+  },
+  {
+   "address": "TXR4FDAZZLDSvuRxveW9aBMybbaS12WWHk",
+   "chain": "TRX",
+   "entity": "Blagh Keyvan Fayyaz Gareh",
+   "sdn_profile_id": "57061",
+   "ofac_programs": "CYBER4",
+   "source": "https://www.treasury.gov/ofac/downloads/sanctions/1.0/sdn_advanced.xml",
+   "entity_designation_date": "2026-08-24"
   },
   {
    "address": "0xb6f5ec1a0a9cd1526536d3f0426c429529471f40",
@@ -3889,6 +4105,24 @@
    "entity_designation_date": "2024-12-04"
   },
   {
+   "address": "TJCBpxZ3yC7C7oegSRZMFxBcscmUVeSA36",
+   "chain": "USDT",
+   "entity": "Tsoris Almpertos",
+   "sdn_profile_id": "58409",
+   "ofac_programs": "IRAN-EO13902",
+   "source": "https://www.treasury.gov/ofac/downloads/sanctions/1.0/sdn_advanced.xml",
+   "entity_designation_date": "2026-08-24"
+  },
+  {
+   "address": "12aNKp2iDKuhEde2YfPdd4DFGenRUTKupL",
+   "chain": "XBT",
+   "entity": "MESRI Behzad",
+   "sdn_profile_id": "24003",
+   "ofac_programs": "CYBER2; HRIT-IR",
+   "source": "https://www.treasury.gov/ofac/downloads/sanctions/1.0/sdn_advanced.xml",
+   "entity_designation_date": "2018-03-23"
+  },
+  {
    "address": "149w62rY42aZBox8fGcmqNsXUzSStKeq8C",
    "chain": "XBT",
    "entity": "Khorashadizadeh Ali",
@@ -4490,15 +4724,6 @@
    "ofac_programs": "CYBER2; ELECTION-EO13848; NPWMD",
    "source": "https://www.treasury.gov/ofac/downloads/sanctions/1.0/sdn_advanced.xml",
    "entity_designation_date": "2021-04-15"
-  },
-  {
-   "address": "17a5bpKvEp1j1Trs4qTbcNZrby53JbaS9C",
-   "chain": "XBT",
-   "entity": "FAYZIMATOV Farrukh Furkatovitch",
-   "sdn_profile_id": "31811",
-   "ofac_programs": "SDGT",
-   "source": "https://www.treasury.gov/ofac/downloads/sanctions/1.0/sdn_advanced.xml",
-   "entity_designation_date": "2021-07-28"
   },
   {
    "address": "1295rkVyNfFpqZpXvKGhDqwhP1jZcNNDMV",
@@ -8648,6 +8873,51 @@
    "ofac_programs": "SDGT",
    "source": "https://www.treasury.gov/ofac/downloads/sanctions/1.0/sdn_advanced.xml",
    "entity_designation_date": "2026-08-07"
+  },
+  {
+   "address": "1GXeCkFQq7SYo6B7wdLAPkkri6NFTFB7No",
+   "chain": "XBT",
+   "entity": "Ghal'eh-Kuhi Mojtaba",
+   "sdn_profile_id": "57064",
+   "ofac_programs": "CYBER4",
+   "source": "https://www.treasury.gov/ofac/downloads/sanctions/1.0/sdn_advanced.xml",
+   "entity_designation_date": "2026-08-24"
+  },
+  {
+   "address": "1JGPiQGK78xTxAVoxA1MjK3Z15M84Rj6BL",
+   "chain": "XBT",
+   "entity": "Kahzadian Arman",
+   "sdn_profile_id": "57065",
+   "ofac_programs": "CYBER4",
+   "source": "https://www.treasury.gov/ofac/downloads/sanctions/1.0/sdn_advanced.xml",
+   "entity_designation_date": "2026-08-24"
+  },
+  {
+   "address": "bc1q4ktvxxhhvf8qhs9qkdsm9arcxfmmeex6rl7n50",
+   "chain": "XBT",
+   "entity": "Blagh Keyvan Fayyaz Gareh",
+   "sdn_profile_id": "57061",
+   "ofac_programs": "CYBER4",
+   "source": "https://www.treasury.gov/ofac/downloads/sanctions/1.0/sdn_advanced.xml",
+   "entity_designation_date": "2026-08-24"
+  },
+  {
+   "address": "bc1qf6zxs4lkp9umh6hf087mh70w0ymcyt8cunp58r",
+   "chain": "XBT",
+   "entity": "Blagh Keyvan Fayyaz Gareh",
+   "sdn_profile_id": "57061",
+   "ofac_programs": "CYBER4",
+   "source": "https://www.treasury.gov/ofac/downloads/sanctions/1.0/sdn_advanced.xml",
+   "entity_designation_date": "2026-08-24"
+  },
+  {
+   "address": "bc1qr2pwmvkpq5tc5um2g9uh34yyu6wepwx89rts70",
+   "chain": "XBT",
+   "entity": "Blagh Keyvan Fayyaz Gareh",
+   "sdn_profile_id": "57061",
+   "ofac_programs": "CYBER4",
+   "source": "https://www.treasury.gov/ofac/downloads/sanctions/1.0/sdn_advanced.xml",
+   "entity_designation_date": "2026-08-24"
   },
   {
    "address": "44dZUJ7w1T3fKAvFW8XyXUVoAGSbFvXef2wcbnsjNKGWYorpLJBjth5VKSFhLGkpYKJb2J341tdZHBnbpv72WL7e8zuxfR2",
