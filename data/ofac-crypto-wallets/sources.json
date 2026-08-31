@@ -2,12 +2,12 @@
   "page": "https://sanctionsai.dev/data/ofac-crypto-wallets/",
   "claims": [
     {
-      "claim": "977 digital-currency address listings",
+      "claim": "1007 digital-currency address listings",
       "source_url": "https://www.treasury.gov/ofac/downloads/sanctions/1.0/sdn_advanced.xml",
-      "method": "count of Feature elements with FeatureType 'Digital Currency Address - *' in SDN Advanced XML dated 2026-08-20"
+      "method": "count of Feature elements with FeatureType 'Digital Currency Address - *' in SDN Advanced XML dated 2026-08-28"
     },
     {
-      "claim": "961 unique addresses",
+      "claim": "991 unique addresses",
       "source_url": "https://www.treasury.gov/ofac/downloads/sanctions/1.0/sdn_advanced.xml",
       "method": "distinct address strings (some addresses are listed under two chain labels, e.g. USDT on Tron)"
     },
@@ -42,25 +42,25 @@
   "sanctioned_addresses_family": {
     "publisher": "SanctionsAI",
     "family": "https://sanctionsai.dev/sanctioned-addresses",
-    "sdn_list_date": "2026-08-20",
+    "sdn_list_date": "2026-08-28",
     "source_url": "https://www.treasury.gov/ofac/downloads/sanctions/1.0/sdn_advanced.xml",
     "source_landing_page": "https://ofac.treasury.gov/sanctions-list-service",
     "method": "Counts are derived from every Digital Currency Address feature in OFAC SDN Advanced XML. Address listings are rows; unique addresses are distinct address strings. Entity dates are original designation dates because OFAC does not publish per-address add dates.",
     "hub_claims": {
-      "listing_count": 977,
-      "unique_address_count": 961,
+      "listing_count": 1007,
+      "unique_address_count": 991,
       "chain_count": 20,
-      "designated_person_count": 94,
-      "bitcoin_listing_count": 529
+      "designated_person_count": 98,
+      "bitcoin_listing_count": 534
     },
     "pages": [
       {
         "url": "https://sanctionsai.dev/sanctioned-addresses/bitcoin",
         "chain_code": "XBT",
-        "listing_count": 529,
-        "designated_person_count": 62,
-        "first_entity_designation_date": "2018-11-28",
-        "latest_entity_designation_date": "2026-08-07",
+        "listing_count": 534,
+        "designated_person_count": 65,
+        "first_entity_designation_date": "2018-03-23",
+        "latest_entity_designation_date": "2026-08-24",
         "source_url": "https://www.treasury.gov/ofac/downloads/sanctions/1.0/sdn_advanced.xml",
         "method": "Filter the dataset records by exact OFAC chain code, count rows and distinct entity names, and take min/max entity_designation_date."
       },
@@ -87,10 +87,10 @@
       {
         "url": "https://sanctionsai.dev/sanctioned-addresses/ethereum",
         "chain_code": "ETH",
-        "listing_count": 100,
-        "designated_person_count": 41,
-        "first_entity_designation_date": "2019-09-13",
-        "latest_entity_designation_date": "2026-08-07",
+        "listing_count": 120,
+        "designated_person_count": 45,
+        "first_entity_designation_date": "2018-03-23",
+        "latest_entity_designation_date": "2026-08-24",
         "source_url": "https://www.treasury.gov/ofac/downloads/sanctions/1.0/sdn_advanced.xml",
         "method": "Filter the dataset records by exact OFAC chain code, count rows and distinct entity names, and take min/max entity_designation_date."
       },
@@ -127,20 +127,20 @@
       {
         "url": "https://sanctionsai.dev/sanctioned-addresses/tether-usdt",
         "chain_code": "USDT",
-        "listing_count": 93,
-        "designated_person_count": 19,
+        "listing_count": 94,
+        "designated_person_count": 20,
         "first_entity_designation_date": "2017-09-26",
-        "latest_entity_designation_date": "2024-12-04",
+        "latest_entity_designation_date": "2026-08-24",
         "source_url": "https://www.treasury.gov/ofac/downloads/sanctions/1.0/sdn_advanced.xml",
         "method": "Filter the dataset records by exact OFAC chain code, count rows and distinct entity names, and take min/max entity_designation_date."
       },
       {
         "url": "https://sanctionsai.dev/sanctioned-addresses/tron",
         "chain_code": "TRX",
-        "listing_count": 198,
-        "designated_person_count": 28,
+        "listing_count": 202,
+        "designated_person_count": 30,
         "first_entity_designation_date": "2010-06-16",
-        "latest_entity_designation_date": "2026-08-07",
+        "latest_entity_designation_date": "2026-08-24",
         "source_url": "https://www.treasury.gov/ofac/downloads/sanctions/1.0/sdn_advanced.xml",
         "method": "Filter the dataset records by exact OFAC chain code, count rows and distinct entity names, and take min/max entity_designation_date."
       },
@@ -178,8 +178,8 @@
       "no_constant_default_fields": true,
       "dominant_chain": {
         "code": "XBT",
-        "count": 529,
-        "share": 0.5415,
+        "count": 534,
+        "share": 0.5303,
         "note": "This exceeds 20% but is a verified property of the OFAC source list, not a parser default. The independent legacy SDN CSV cross-check is documented in data/ofac-crypto-wallets/sources.json."
       }
     }
