@@ -3317,6 +3317,12 @@ Sitemap: https://sanctionsai.dev/updates-sitemap.xml
             return self._serve_file_content(".well-known/assetlinks.json", "application/json")
         if p.path == "/.well-known/security.txt":
             return self._serve_text("Contact: mailto:security@sanctionsai.dev\nExpires: 2027-07-19T00:00:00Z\nCanonical: https://sanctionsai.dev/.well-known/security.txt\n", "text/plain")
+        if p.path == "/.well-known/x402":
+            return _json(self, 200, {
+                "version": 1,
+                "resources": ["https://sanctionsai.dev/x402/sanctions"],
+                "instructions": "GET the resource with a wallet query parameter. Pay $0.05 USDC on Base using x402 v2.",
+            })
         if p.path == "/87aaa199.txt":
             return self._serve_text("87aaa199", "text/plain")
         if p.path == "/87aaa199acaf7d14c812e974ce115e32.txt":
@@ -4351,6 +4357,79 @@ License: https://creativecommons.org/licenses/by/4.0/
         # Viral embeddable SVG badge — each embed = a permanent backlink
         if p.path == "/badge/clean" or p.path.startswith("/badge/clean?"):
             return self._serve_verified_badge()
+        # Dedicated, always-paid x402 endpoint for agent-native discovery.
+        # Unauthenticated probes receive the 402 before input validation, which
+        # lets x402scan and compatible agents discover the payment contract.
+        if p.path == "/x402/sanctions":
+            if not x402.is_enabled():
+                return _json(self, 503, {"error": "x402_not_configured"})
+            payment_required = x402.build_payment_required(
+                _SITE + "/x402/sanctions", "OFAC wallet sanctions screen"
+            )
+            payment_header = (
+                self.headers.get("Payment-Signature", "")
+                or self.headers.get("X-PAYMENT", "")
+            )
+            if not payment_header:
+                body = json.dumps(payment_required).encode("utf-8")
+                self.send_response(402)
+                self.send_header("Content-Type", "application/json")
+                self.send_header("Payment-Required", x402.encode_payment_header(payment_required))
+                self.send_header("Content-Length", str(len(body)))
+                self.end_headers()
+                self.wfile.write(body)
+                return
+
+            q = parse_qs(p.query)
+            subject = {
+                "name": q.get("name", [""])[0],
+                "wallet": q.get("wallet", [""])[0],
+                "country": q.get("country", [""])[0],
+            }
+            if not any(subject.values()):
+                return _json(self, 400, {"error": "wallet, name, or country is required"})
+
+            paid, settlement = x402.verify_and_settle(payment_header, payment_required)
+            if not paid:
+                body = json.dumps({"error": "payment_failed", **settlement}).encode("utf-8")
+                self.send_response(402)
+                self.send_header("Content-Type", "application/json")
+                self.send_header("Payment-Required", x402.encode_payment_header(payment_required))
+                self.send_header("Content-Length", str(len(body)))
+                self.end_headers()
+                self.wfile.write(body)
+                return
+
+            screen_start = time.perf_counter()
+            result = core.sanctions_check(**subject)
+            screen_ms = round((time.perf_counter() - screen_start) * 1000)
+            payer = settlement.get("payer", "unknown")
+            _audit({
+                "action": "sanctions_check_flagged" if result.get("matches") else "sanctions_check_clean",
+                "caller": "x402:" + str(payer),
+                "subject": subject,
+                "flagged": bool(result.get("matches")),
+                "match_count": len(result.get("matches", [])),
+                "latency_ms": screen_ms,
+                "paid": True,
+                "transaction": settlement.get("transaction"),
+            })
+            result["x402"] = {
+                "paid": True,
+                "amount": "0.05",
+                "currency": "USDC",
+                "network": settlement.get("network", "eip155:8453"),
+                "transaction": settlement.get("transaction"),
+            }
+            body = json.dumps(result).encode("utf-8")
+            self.send_response(200)
+            self.send_header("Content-Type", "application/json")
+            self.send_header("Payment-Response", x402.encode_payment_header(settlement))
+            self.send_header("Content-Length", str(len(body)))
+            self.end_headers()
+            self.wfile.write(body)
+            return
+
         # sanctions GET - paid endpoint (accepts API key OR x402 payment)
         if p.path == "/sanctions" or p.path.startswith("/sanctions?"):
             q = parse_qs(p.query)
@@ -13773,6 +13852,7 @@ compute();
                 "title": "agentmail - OFAC Sanctions Screening for AI Agents",
                 "description": "Screen wallet addresses, names, and countries against the OFAC SDN list before your AI agent pays. 947 crypto wallets, 19,218 names, 16 embargoed jurisdictions. Free tier: 5 checks/day, no API key.",
                 "version": "1.0.0",
+                "x-guidance": "Use GET /x402/sanctions?wallet=<address> for an agent-paid $0.05 USDC screen with no API key. Use GET /sanctions for the free or subscription-key flow.",
                 "contact": {"name": "agentmail", "url": "https://sanctionsai.dev", "email": "support@sanctionsai.dev"},
                 "license": {"name": "MIT", "url": "https://github.com/kindrat86/agentmail"},
             },
@@ -13794,11 +13874,33 @@ compute();
                         "security": [{"ApiKeyAuth": []}, {"x402": []}],
                     }
                 },
+                "/x402/sanctions": {
+                    "get": {
+                        "operationId": "x402SanctionsCheck",
+                        "summary": "Pay $0.05 USDC to screen a wallet against OFAC lists",
+                        "description": "Always-paid x402 v2 route for autonomous agents. Send Payment-Signature after receiving the 402 challenge.",
+                        "tags": ["Sanctions", "x402"],
+                        "x-payment-info": {
+                            "price": {"mode": "fixed", "currency": "USD", "amount": "0.05"},
+                            "protocols": [{"x402": {}}],
+                        },
+                        "parameters": [
+                            {"name": "wallet", "in": "query", "required": True, "schema": {"type": "string", "minLength": 3, "example": "0x098B716B8Aaf21512996dC57EB0615e2383E2f96"}, "description": "EVM, Bitcoin, or Tron wallet address to screen"},
+                        ],
+                        "responses": {
+                            "200": {"description": "Paid screening result", "content": {"application/json": {"schema": {"type": "object", "properties": {"clean": {"type": "boolean"}, "matches": {"type": "array"}, "x402": {"type": "object"}}, "required": ["clean", "matches", "x402"]}}}},
+                            "400": {"description": "Missing screening input"},
+                            "402": {"description": "Payment Required"},
+                        },
+                        "security": [{"x402": []}],
+                    }
+                },
                 "/risk": {
                     "post": {
                         "summary": "Score transaction fraud risk before authorizing payment",
                         "requestBody": {"content": {"application/json": {"schema": {"type": "object", "properties": {"counterparty_id": {"type": "string"}, "amount": {"type": "string"}, "currency": {"type": "string", "default": "USDC"}, "rail": {"type": "string"}, "category": {"type": "string"}}}}}},
                         "responses": {"200": {"description": "Risk score with recommendation (allow/review/decline)"}},
+                        "security": [{"ApiKeyAuth": []}],
                     }
                 },
                 "/kya": {
@@ -13806,26 +13908,30 @@ compute();
                         "summary": "Verify an AI agent's identity (Know Your Agent)",
                         "requestBody": {"content": {"application/json": {"schema": {"type": "object", "properties": {"agent_id": {"type": "string"}, "evidence": {"type": "object"}}}}}},
                         "responses": {"200": {"description": "KYA verification result"}},
+                        "security": [{"ApiKeyAuth": []}],
                     }
                 },
                 "/health": {
                     "get": {
                         "summary": "Health check",
                         "responses": {"200": {"description": "Service status"}},
+                        "security": [],
                     }
                 },
                 "/dashboard/logs": {
                     "get": {
                         "summary": "Recent screening logs (WRAP layer)",
-                        "description": "Returns last 100 screening events with stats. No auth required.",
+                        "description": "Returns the last 100 screening events with aggregate stats. Requires the admin dashboard token in X-API-Key.",
                         "responses": {"200": {"description": "Screening logs and aggregate stats"}},
+                        "security": [{"AdminDashboardAuth": []}],
                     }
                 },
             },
             "components": {
                 "securitySchemes": {
                     "ApiKeyAuth": {"type": "apiKey", "in": "header", "name": "X-API-Key"},
-                    "x402": {"type": "http", "scheme": "bearer", "description": "x402 micropayment header ($0.05/check)"},
+                    "AdminDashboardAuth": {"type": "apiKey", "in": "header", "name": "X-API-Key"},
+                    "x402": {"type": "apiKey", "in": "header", "name": "Payment-Signature", "description": "Base64-encoded x402 v2 PaymentPayload ($0.05 USDC/check)"},
                 }
             },
         }
