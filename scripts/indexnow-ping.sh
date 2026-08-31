@@ -1,9 +1,9 @@
 #!/bin/bash
 # IndexNow ping for sanctionsai.dev
-# Key file: https://sanctionsai.dev/89ce69c8d5e147dda9a4e6e9e5372f22.txt
+# Key file: https://sanctionsai.dev/87aaa199.txt
 set -euo pipefail
 
-KEY="89ce69c8d5e147dda9a4e6e9e5372f22"
+KEY="87aaa199"
 HOST="sanctionsai.dev"
 KEY_LOCATION="https://${HOST}/${KEY}.txt"
 
