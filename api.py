@@ -2606,10 +2606,9 @@ class Handler(BaseHTTPRequestHandler):
             # 2026-08-29: /free/ofac-screening (53 impr/90d across "ofac screening
             # tool" queries) was removed; point it at the live free name-checker.
             "/free/ofac-screening": "/tools/name-checker",
-            # 2026-08-29: hallucinated /data/ofac-sdn-list slug (37 impr, pos 10.9);
-            # no SDN dataset download exists under /data/, so the glossary page is
-            # the real answer for "specially designated nationals list ofac".
-            "/data/ofac-sdn-list": "/glossary/ofac-sdn-list",
+            # 2026-08-31: /data/ofac-sdn-list/ is now a real static landing page
+            # (data/ofac-sdn-list/index.html) served by the /data/ prefix below,
+            # so the 301 to the glossary page is removed.
             "/wallet-checker": "/tools/wallet-checker",
             "/name-checker": "/tools/name-checker",
             "/country-checker": "/tools/country-checker",
@@ -5459,6 +5458,7 @@ License: https://creativecommons.org/licenses/by/4.0/
             "/countries/yemen": "2026-07-13",
             "/countries/zimbabwe": "2026-07-13",
             "/data/ofac-enforcement": "2026-07-19",
+            "/data/ofac-sdn-list/": "2026-08-31",
             "/docs": "2026-07-24",
             "/dream100": "2026-07-26",
             "/hooks": "2026-07-26",
@@ -5677,6 +5677,7 @@ License: https://creativecommons.org/licenses/by/4.0/
         ("/data/", "weekly", "0.8", "SanctionsAI Research Data - free downloadable datasets"),
         ("/data/global-sanctions-statistics/", "monthly", "0.8", "Global Sanctions & Compliance Statistics 2026"),
         ("/data/ofac-crypto-wallets/", "weekly", "0.9", "OFAC Sanctioned Crypto Wallet Addresses - full list, CSV + JSON"),
+        ("/data/ofac-sdn-list/", "weekly", "0.9", "OFAC SDN List: official search, downloads, formats & limitations"),
         ("/integrations/langchain", "monthly", "0.7", "OFAC screening for LangChain agents"),
         ("/integrations/crewai", "monthly", "0.7", "OFAC screening for CrewAI agents"),
         ("/integrations/claude-code", "monthly", "0.7", "OFAC screening for Claude Code"),
