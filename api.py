@@ -7978,7 +7978,7 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
 <div class="trust" style="border-top:none;padding:18px 0 22px;background:linear-gradient(180deg,rgba(0,212,170,.04),transparent)">
   <div class="wrap">
     <div class="row" style="gap:14px 30px;justify-content:center;flex-wrap:wrap;opacity:.92">
-      <span class="label" style="color:var(--teal2)">In the conversation with</span>
+      <span class="label" style="color:var(--teal2)">Built on</span>
       <span class="item"><span class="mk" style="color:var(--teal2)">&#9670;</span> x402 working group</span>
       <span class="item"><span class="mk" style="color:var(--teal2)">&#9670;</span> Anthropic agent docs</span>
       <span class="item"><span class="mk" style="color:var(--teal2)">&#9670;</span> Base / Coinbase AgentKit</span>
