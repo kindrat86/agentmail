@@ -1,0 +1,27 @@
+{
+  "page": "https://sanctionsai.dev/cost-of/elliptic-pricing",
+  "brand": "SanctionsAI",
+  "reviewed_at": "2026-09-01",
+  "claims": [
+    {
+      "claim": "On the official buying page reviewed by SanctionsAI on 1 September 2026, Elliptic used a book-a-demo path and offered a requestable free trial, while the reviewed page did not show a public list price or self-serve checkout",
+      "source_url": "https://www.elliptic.co/get-started"
+    },
+    {
+      "claim": "Elliptic describes Lens as a wallet and transaction screening workspace with continuous monitoring, configurable risk rules, alerts, and case handling",
+      "source_url": "https://www.elliptic.co/products/lens/"
+    },
+    {
+      "claim": "Elliptic describes Investigator as a blockchain-forensics product for tracing funds, mapping entities, building visual cases, and exporting evidence",
+      "source_url": "https://www.elliptic.co/products/investigator/"
+    },
+    {
+      "claim": "Elliptic describes Data Fabric as blockchain data and intelligence delivered through feeds, files, or API access",
+      "source_url": "https://www.elliptic.co/platform/data-fabric"
+    },
+    {
+      "claim": "SanctionsAI published this page on 8 August 2026 and materially reviewed and revised it on 1 September 2026",
+      "source_url": "https://sanctionsai.dev/cost-of/elliptic-pricing"
+    }
+  ]
+}
