@@ -2,9 +2,14 @@ from __future__ import annotations
 
 import importlib.util
 import json
+import os
 import pathlib
+import sqlite3
+import sys
 import tempfile
+import types
 import unittest
+from unittest import mock
 from typing import Any
 
 
@@ -37,6 +42,7 @@ class BillingWebhookIsolationTests(unittest.TestCase):
         subscription: str | None,
         metadata: dict[str, str],
         email: str = "buyer@example.com",
+        payment_status: str = "paid",
     ) -> bytes:
         return json.dumps(
             {
@@ -47,6 +53,7 @@ class BillingWebhookIsolationTests(unittest.TestCase):
                         "id": session_id,
                         "mode": mode,
                         "subscription": subscription,
+                        "payment_status": payment_status,
                         "customer": "cus_test" if subscription else None,
                         "customer_details": {"email": email},
                         "customer_email": email,
@@ -133,6 +140,25 @@ class BillingWebhookIsolationTests(unittest.TestCase):
         self.assertEqual("invalid_owned_checkout", result["detail"])
         self.assertEqual(0, self.key_count(session_id))
 
+    def test_owned_pending_checkout_must_be_paid_before_key_issuance(self):
+        session_id = "cs_owned_but_unpaid"
+        self.add_pending(session_id, "dev")
+        payload = self.checkout_event(
+            session_id=session_id,
+            mode="subscription",
+            subscription="sub_owned_but_unpaid",
+            metadata={"plan": "dev"},
+            email="unpaid@example.test",
+            payment_status="unpaid",
+        )
+
+        result = self.process_checkout(payload)
+
+        self.assertFalse(result["handled"])
+        self.assertEqual("owned_checkout_not_paid", result["detail"])
+        self.assertNotIn("email", result, "unpaid results must not trigger post-purchase email")
+        self.assertEqual(0, self.key_count(session_id))
+
     def test_pending_plan_must_match_session_metadata(self):
         session_id = "cs_plan_mismatch"
         self.add_pending(session_id, "dev")
@@ -199,6 +225,76 @@ class BillingWebhookIsolationTests(unittest.TestCase):
         self.assertTrue(result["handled"])
         self.assertEqual("team", result["plan"])
         self.assertEqual(1, self.key_count(session_id))
+
+    def test_server_created_pending_session_survives_price_rotation(self):
+        old_price = "price_agentmail_dev_rotating_old"
+        new_price = "price_agentmail_dev_rotating_new"
+        session_id = "cs_created_before_price_rotation"
+        created = types.SimpleNamespace(id=session_id, url="https://checkout.stripe.test/session")
+        fake_stripe = types.SimpleNamespace(
+            api_key=None,
+            checkout=types.SimpleNamespace(
+                Session=types.SimpleNamespace(create=lambda **_kwargs: created)
+            ),
+        )
+        self.billing._STRIPE_SECRET = "sk_test_agentmail"
+
+        with mock.patch.dict(os.environ, {"STRIPE_PRICE_DEV": old_price}), \
+                mock.patch.dict(sys.modules, {"stripe": fake_stripe}):
+            self.billing.create_checkout_session("dev")
+
+        payload = self.checkout_event(
+            session_id=session_id,
+            mode="subscription",
+            subscription="sub_created_before_price_rotation",
+            metadata={"plan": "dev"},
+        )
+        with mock.patch.dict(os.environ, {"STRIPE_PRICE_DEV": new_price}):
+            result = self.process_checkout(payload)
+
+        self.assertTrue(result["handled"])
+        self.assertEqual("dev", result["plan"])
+        self.assertEqual(1, self.key_count(session_id))
+
+    def test_init_db_migrates_existing_pending_sessions_fail_closed(self):
+        legacy_db = pathlib.Path(self.tmp.name) / "legacy-billing.db"
+        self.billing._DB_PATH = legacy_db
+        with sqlite3.connect(legacy_db) as conn:
+            conn.execute(
+                """CREATE TABLE pending_sessions (
+                       session_id TEXT PRIMARY KEY,
+                       plan TEXT NOT NULL,
+                       created_at REAL NOT NULL
+                   )"""
+            )
+            conn.execute(
+                "INSERT INTO pending_sessions (session_id, plan, created_at) VALUES (?, ?, ?)",
+                ("cs_preownership", "dev", 1.0),
+            )
+            conn.commit()
+
+        self.billing.init_db()
+
+        with self.billing._db() as conn:
+            columns = {row[1] for row in conn.execute("PRAGMA table_info(pending_sessions)")}
+            row = conn.execute(
+                "SELECT price_id, owned_at_creation FROM pending_sessions WHERE session_id = ?",
+                ("cs_preownership",),
+            ).fetchone()
+        self.assertIn("price_id", columns)
+        self.assertIn("owned_at_creation", columns)
+        self.assertEqual("", row["price_id"])
+        self.assertEqual(0, row["owned_at_creation"])
+
+    def test_foreign_subscription_deletion_is_ignored_without_email_result(self):
+        db_before = self.billing._DB_PATH.read_bytes()
+
+        result = self.billing._on_subscription_deleted({"id": "sub_foreign_product"})
+
+        self.assertFalse(result["handled"])
+        self.assertEqual("foreign_subscription_ignored", result["detail"])
+        self.assertNotIn("emails", result)
+        self.assertEqual(db_before, self.billing._DB_PATH.read_bytes())
 
 
 if __name__ == "__main__":

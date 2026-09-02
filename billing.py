@@ -111,6 +111,7 @@ def init_db():
                 session_id TEXT PRIMARY KEY,
                 plan TEXT NOT NULL,
                 price_id TEXT NOT NULL,
+                owned_at_creation INTEGER NOT NULL DEFAULT 0,
                 created_at REAL NOT NULL
             )
         """)
@@ -118,6 +119,10 @@ def init_db():
         if "price_id" not in columns:
             c.execute(
                 "ALTER TABLE pending_sessions ADD COLUMN price_id TEXT NOT NULL DEFAULT ''"
+            )
+        if "owned_at_creation" not in columns:
+            c.execute(
+                "ALTER TABLE pending_sessions ADD COLUMN owned_at_creation INTEGER NOT NULL DEFAULT 0"
             )
         c.execute("""
             CREATE TABLE IF NOT EXISTS leads (
@@ -265,7 +270,9 @@ def create_checkout_session(plan: str, bump: str | None = None) -> dict:
     now = time.time()
     with _lock, _db() as c:
         c.execute(
-            "INSERT OR REPLACE INTO pending_sessions (session_id, plan, price_id, created_at) VALUES (?, ?, ?, ?)",
+            """INSERT OR REPLACE INTO pending_sessions
+               (session_id, plan, price_id, owned_at_creation, created_at)
+               VALUES (?, ?, ?, 1, ?)""",
             (session.id, plan, price_id, now),
         )
         c.commit()
@@ -336,23 +343,29 @@ def _on_checkout_completed(session_obj: dict) -> dict:
                     "detail": "checkout_already_processed"}
 
         pending = c.execute(
-            "SELECT plan, price_id FROM pending_sessions WHERE session_id = ?", (session_id,)
+            """SELECT plan, price_id, owned_at_creation
+               FROM pending_sessions WHERE session_id = ?""",
+            (session_id,),
         ).fetchone()
         if not pending:
             return {"handled": False, "event_type": "checkout.session.completed",
                     "detail": "foreign_checkout_ignored"}
 
         price_id = str(pending["price_id"] or "")
-        owned_price_plans = [
-            candidate_plan
-            for candidate_plan in TIERS
-            if price_id in _owned_price_ids(candidate_plan)
-        ]
+        pending_plan = str(pending["plan"] or "")
+        if pending["owned_at_creation"] and price_id and pending_plan in TIERS:
+            owned_price_plans = [pending_plan]
+        else:
+            owned_price_plans = [
+                candidate_plan
+                for candidate_plan in TIERS
+                if price_id in _owned_price_ids(candidate_plan)
+            ]
         if len(owned_price_plans) != 1:
             return {"handled": False, "event_type": "checkout.session.completed",
                     "detail": "foreign_checkout_ignored"}
 
-        plan = pending["plan"]
+        plan = pending_plan
         if plan != owned_price_plans[0]:
             return {"handled": False, "event_type": "checkout.session.completed",
                     "detail": "owned_checkout_plan_mismatch"}
@@ -363,6 +376,9 @@ def _on_checkout_completed(session_obj: dict) -> dict:
         if metadata_plan != plan:
             return {"handled": False, "event_type": "checkout.session.completed",
                     "detail": "owned_checkout_plan_mismatch"}
+        if session_obj.get("payment_status") != "paid":
+            return {"handled": False, "event_type": "checkout.session.completed",
+                    "detail": "owned_checkout_not_paid"}
 
         key = generate_key()
         now = time.time()
@@ -386,6 +402,9 @@ def _on_subscription_deleted(sub_obj: dict) -> dict:
         rows = c.execute(
             "SELECT key, email FROM api_keys WHERE stripe_subscription_id = ?", (sub_id,)
         ).fetchall()
+        if not rows:
+            return {"handled": False, "event_type": "subscription.deleted",
+                    "detail": "foreign_subscription_ignored"}
         for row in rows:
             c.execute("UPDATE api_keys SET active = 0 WHERE key = ?", (row["key"],))
         c.commit()
