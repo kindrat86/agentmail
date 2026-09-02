@@ -289,33 +289,53 @@ def handle_webhook(payload: bytes, signature: str) -> dict:
 
 
 def _on_checkout_completed(session_obj: dict) -> dict:
-    """Issue an API key when a checkout completes."""
-    session_id = session_obj["id"]
+    """Issue one API key for a checkout created by this service."""
+    session_id = str(session_obj.get("id") or "")
     meta = session_obj.get("metadata")
-    plan = meta.get("plan", "dev") if isinstance(meta, dict) else "dev"
+    metadata_plan = meta.get("plan") if isinstance(meta, dict) else None
     customer_id = session_obj.get("customer") or ""
+    subscription_id = session_obj.get("subscription") or ""
     details = session_obj.get("customer_details")
     email = (session_obj.get("customer_email") or ""
              or (details.get("email", "") if isinstance(details, dict) else ""))
 
-    # Look up subscription from pending session
-    with _db() as c:
+    # The Stripe account is shared by several products. A valid signature proves
+    # Stripe sent the event, not that this checkout belongs to SanctionsAI.
+    # Claim ownership only through the pending row written by create_checkout_session().
+    with _lock, _db() as c:
+        c.execute("BEGIN IMMEDIATE")
+        existing = c.execute(
+            "SELECT 1 FROM api_keys WHERE stripe_checkout_session = ? LIMIT 1",
+            (session_id,),
+        ).fetchone()
+        if existing:
+            return {"handled": False, "event_type": "checkout.session.completed",
+                    "detail": "checkout_already_processed"}
+
         pending = c.execute(
             "SELECT plan FROM pending_sessions WHERE session_id = ?", (session_id,)
         ).fetchone()
-    if pending:
-        plan = pending["plan"]
+        if not pending:
+            return {"handled": False, "event_type": "checkout.session.completed",
+                    "detail": "foreign_checkout_ignored"}
 
-    key = generate_key()
-    now = time.time()
-    with _lock, _db() as c:
+        plan = pending["plan"]
+        if (session_obj.get("mode") != "subscription" or not subscription_id
+                or plan not in TIERS):
+            return {"handled": False, "event_type": "checkout.session.completed",
+                    "detail": "invalid_owned_checkout"}
+        if metadata_plan != plan:
+            return {"handled": False, "event_type": "checkout.session.completed",
+                    "detail": "owned_checkout_plan_mismatch"}
+
+        key = generate_key()
+        now = time.time()
         c.execute(
             """INSERT INTO api_keys
                (key, tier, email, stripe_customer_id, stripe_subscription_id,
                 stripe_checkout_session, created_at, active, usage_count, usage_window_start)
                VALUES (?, ?, ?, ?, ?, ?, ?, 1, 0, ?)""",
-            (key, plan, email, customer_id,
-             session_obj.get("subscription", ""), session_id, now, now),
+            (key, plan, email, customer_id, subscription_id, session_id, now, now),
         )
         c.execute("DELETE FROM pending_sessions WHERE session_id = ?", (session_id,))
         c.commit()
