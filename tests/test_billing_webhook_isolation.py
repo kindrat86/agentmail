@@ -76,21 +76,24 @@ class BillingWebhookIsolationTests(unittest.TestCase):
             ).fetchone()
         return int(row["n"])
 
-    def test_foreign_one_time_checkout_is_ignored(self):
-        session_id = "cs_gitdealflow_offer1"
-        payload = self.checkout_event(
-            session_id=session_id,
-            mode="payment",
-            subscription=None,
-            metadata={"source": "gf_offer1", "tier": "founder_teardown"},
-            email="claudius@example.com",
-        )
+    def test_gitdealflow_eur1_foreign_checkout_has_zero_fulfillment_side_effects(self):
+        fixture_path = pathlib.Path(__file__).parent / "fixtures" / "gitdealflow_foreign_checkout_session.json"
+        payload = fixture_path.read_bytes()
+        event = json.loads(payload)
+        session_id = event["data"]["object"]["id"]
+        db_before = self.billing._DB_PATH.read_bytes()
 
+        def key_issuance_must_not_start() -> str:
+            raise AssertionError("foreign checkout reached key issuance")
+
+        self.billing.generate_key = key_issuance_must_not_start
         result = self.process_checkout(payload)
 
         self.assertFalse(result["handled"])
         self.assertEqual("foreign_checkout_ignored", result["detail"])
+        self.assertNotIn("email", result, "email-bearing results trigger post-purchase email")
         self.assertEqual(0, self.key_count(session_id))
+        self.assertEqual(db_before, self.billing._DB_PATH.read_bytes(), "foreign checkout wrote to DB")
 
     def test_subscription_without_local_pending_session_is_ignored(self):
         session_id = "cs_other_product_subscription"
