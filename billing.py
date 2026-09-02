@@ -57,6 +57,23 @@ TIERS = {
     # },
 }
 
+# Stable Stripe resources owned by this service. Environment-configured
+# replacements are also accepted so an intentional price rotation does not
+# strand sessions created during a rollout.
+AGENTMAIL_PRICE_IDS = {
+    "dev": "price_1TnPb7CwGoUDklRea1WyTvIU",
+    "team": "price_1TnPb8CwGoUDklRetzbPbSS8",
+}
+
+
+def _owned_price_ids(plan: str) -> set[str]:
+    ids = {AGENTMAIL_PRICE_IDS[plan]} if plan in AGENTMAIL_PRICE_IDS else set()
+    tier = TIERS.get(plan)
+    configured = os.environ.get(tier["price_id_env"], "") if tier else ""
+    if configured:
+        ids.add(configured)
+    return ids
+
 _STRIPE_SECRET = os.environ.get("STRIPE_SECRET_KEY", "")
 _STRIPE_WEBHOOK_SECRET = os.environ.get("STRIPE_WEBHOOK_SECRET", "")
 _PUBLIC_URL = os.environ.get("AGENTMAIL_PUBLIC_URL", "https://agentmail-api.fly.dev")
@@ -93,9 +110,15 @@ def init_db():
             CREATE TABLE IF NOT EXISTS pending_sessions (
                 session_id TEXT PRIMARY KEY,
                 plan TEXT NOT NULL,
+                price_id TEXT NOT NULL,
                 created_at REAL NOT NULL
             )
         """)
+        columns = {row[1] for row in c.execute("PRAGMA table_info(pending_sessions)")}
+        if "price_id" not in columns:
+            c.execute(
+                "ALTER TABLE pending_sessions ADD COLUMN price_id TEXT NOT NULL DEFAULT ''"
+            )
         c.execute("""
             CREATE TABLE IF NOT EXISTS leads (
                 email TEXT PRIMARY KEY,
@@ -242,8 +265,8 @@ def create_checkout_session(plan: str, bump: str | None = None) -> dict:
     now = time.time()
     with _lock, _db() as c:
         c.execute(
-            "INSERT OR REPLACE INTO pending_sessions (session_id, plan, created_at) VALUES (?, ?, ?)",
-            (session.id, plan, now),
+            "INSERT OR REPLACE INTO pending_sessions (session_id, plan, price_id, created_at) VALUES (?, ?, ?, ?)",
+            (session.id, plan, price_id, now),
         )
         c.commit()
     return {"url": session.url, "session_id": session.id}
@@ -313,13 +336,26 @@ def _on_checkout_completed(session_obj: dict) -> dict:
                     "detail": "checkout_already_processed"}
 
         pending = c.execute(
-            "SELECT plan FROM pending_sessions WHERE session_id = ?", (session_id,)
+            "SELECT plan, price_id FROM pending_sessions WHERE session_id = ?", (session_id,)
         ).fetchone()
         if not pending:
             return {"handled": False, "event_type": "checkout.session.completed",
                     "detail": "foreign_checkout_ignored"}
 
+        price_id = str(pending["price_id"] or "")
+        owned_price_plans = [
+            candidate_plan
+            for candidate_plan in TIERS
+            if price_id in _owned_price_ids(candidate_plan)
+        ]
+        if len(owned_price_plans) != 1:
+            return {"handled": False, "event_type": "checkout.session.completed",
+                    "detail": "foreign_checkout_ignored"}
+
         plan = pending["plan"]
+        if plan != owned_price_plans[0]:
+            return {"handled": False, "event_type": "checkout.session.completed",
+                    "detail": "owned_checkout_plan_mismatch"}
         if (session_obj.get("mode") != "subscription" or not subscription_id
                 or plan not in TIERS):
             return {"handled": False, "event_type": "checkout.session.completed",

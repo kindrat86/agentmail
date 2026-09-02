@@ -56,11 +56,18 @@ class BillingWebhookIsolationTests(unittest.TestCase):
             }
         ).encode("utf-8")
 
-    def add_pending(self, session_id: str, plan: str = "dev") -> None:
+    def add_pending(
+        self,
+        session_id: str,
+        plan: str = "dev",
+        price_id: str | None = None,
+    ) -> None:
+        if price_id is None:
+            price_id = self.billing.AGENTMAIL_PRICE_IDS[plan]
         with self.billing._db() as conn:
             conn.execute(
-                "INSERT INTO pending_sessions (session_id, plan, created_at) VALUES (?, ?, ?)",
-                (session_id, plan, 1.0),
+                "INSERT INTO pending_sessions (session_id, plan, price_id, created_at) VALUES (?, ?, ?, ?)",
+                (session_id, plan, price_id, 1.0),
             )
             conn.commit()
 
@@ -142,6 +149,22 @@ class BillingWebhookIsolationTests(unittest.TestCase):
         self.assertEqual("owned_checkout_plan_mismatch", result["detail"])
         self.assertEqual(0, self.key_count(session_id))
 
+    def test_pending_checkout_requires_an_owned_price_before_plan(self):
+        session_id = "cs_pending_foreign_price"
+        self.add_pending(session_id, "dev", "price_foreign_gitdealflow")
+        payload = self.checkout_event(
+            session_id=session_id,
+            mode="subscription",
+            subscription="sub_foreign_price",
+            metadata={"plan": "dev"},
+        )
+
+        result = self.process_checkout(payload)
+
+        self.assertFalse(result["handled"])
+        self.assertEqual("foreign_checkout_ignored", result["detail"])
+        self.assertEqual(0, self.key_count(session_id))
+
     def test_owned_subscription_issues_one_key_and_replay_is_idempotent(self):
         session_id = "cs_owned_dev"
         self.add_pending(session_id, "dev")
@@ -159,6 +182,22 @@ class BillingWebhookIsolationTests(unittest.TestCase):
         self.assertEqual("dev", first["plan"])
         self.assertFalse(second["handled"])
         self.assertEqual("checkout_already_processed", second["detail"])
+        self.assertEqual(1, self.key_count(session_id))
+
+    def test_owned_team_price_issues_team_key(self):
+        session_id = "cs_owned_team"
+        self.add_pending(session_id, "team")
+        payload = self.checkout_event(
+            session_id=session_id,
+            mode="subscription",
+            subscription="sub_owned_team",
+            metadata={"plan": "team"},
+        )
+
+        result = self.process_checkout(payload)
+
+        self.assertTrue(result["handled"])
+        self.assertEqual("team", result["plan"])
         self.assertEqual(1, self.key_count(session_id))
 
 
