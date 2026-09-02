@@ -1,0 +1,39 @@
+{
+  "id": "evt_gitdealflow_foreign_eur1",
+  "type": "checkout.session.completed",
+  "data": {
+    "object": {
+      "id": "cs_live_b1YT1hupteOe5cvg90saJZYucg9Zu9v2MJsJ2RZArs4NTxnpp27pUle8GT",
+      "object": "checkout.session",
+      "amount_total": 100,
+      "currency": "eur",
+      "mode": "payment",
+      "payment_status": "paid",
+      "payment_link": "plink_1TU4ZvCwGoUDklReEjuprkH0",
+      "subscription": null,
+      "customer": "cus_foreign_regression",
+      "customer_details": {
+        "email": "foreign-buyer@example.test"
+      },
+      "customer_email": "foreign-buyer@example.test",
+      "metadata": {
+        "source": "landing-tripwire",
+        "tier": "teardown"
+      },
+      "line_items": {
+        "data": [
+          {
+            "price": {
+              "id": "price_1TU4ZuCwGoUDklRev3fh8xib",
+              "product": "prod_UT0aPLSENVCw5o",
+              "unit_amount": 100,
+              "currency": "eur",
+              "type": "one_time"
+            },
+            "quantity": 1
+          }
+        ]
+      }
+    }
+  }
+}
