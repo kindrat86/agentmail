@@ -2621,6 +2621,8 @@ class Handler(BaseHTTPRequestHandler):
             "/know-your-agent": "/glossary/know-your-agent",
             "/kya": "/glossary/know-your-agent",
             "/x402": "/glossary/x402-protocol",
+            "/quickstart": "/x402-quickstart",
+            "/x402-quick-start": "/x402-quickstart",
             "/x402-protocol": "/glossary/x402-protocol",
             "/voluntary-self-disclosure": "/glossary/voluntary-self-disclosure",
             "/blocked-person": "/glossary/blocked-person",
@@ -3375,6 +3377,8 @@ Allow: Storing
             return self._agent_page()
         if p.path == "/x402-demo":
             return self._x402_demo_page()
+        if p.path == "/x402-quickstart":
+            return self._x402_quickstart_page()
         if p.path == "/teardown":
             return self._teardown_page()
         if p.path == "/data/ofac-enforcement":
@@ -4944,6 +4948,7 @@ License: https://creativecommons.org/licenses/by/4.0/
 
     def _sitemap_xml(self):
         URL_LASTMOD = {
+            "/x402-quickstart": "2026-09-03",
             "/faq/are-russian-banks-sanctioned": "2026-08-17",
             "/faq/can-an-agent-violate-ofac": "2026-08-17",
             "/faq/can-i-screen-by-name-only": "2026-08-17",
@@ -5709,6 +5714,7 @@ License: https://creativecommons.org/licenses/by/4.0/
         ("/faq/ofac-screening-wallet", "monthly", "0.7", "OFAC Wallet compliance FAQs"),
         ("/faq/ofac-screening-web3", "monthly", "0.7", "OFAC Web3 compliance FAQs"),
         ("/teardown", "weekly", "0.9", "Workflow teardown: what happens when your AI agent pays a sanctioned wallet"),
+        ("/x402-quickstart", "monthly", "0.9", "60-second x402 quickstart: paid OFAC sanctions screen at $0.05/call on Base"),
         # /dashboard is auth-gated (403) and robots-disallowed — removed from sitemap 2026-07-21
         ("/about", "monthly", "0.5", "About sanctionsai.dev"),
         ("/privacy", "monthly", "0.4", "Privacy Policy"),
@@ -8672,6 +8678,139 @@ Written by the team at <a href="https://sanctionsai.dev">agentmail</a>. MIT lice
 </body>
 </html>"""
         self._send_html(200, html)
+    def _x402_quickstart_page(self):
+        """60-second x402 quickstart: prerequisites, exact request, cost math."""
+        html = """<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>x402 quickstart: paid OFAC sanctions screen in 60 seconds - SanctionsAI</title>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<meta name="description" content="60-second quickstart for the always-paid x402 sanctions endpoint: $0.05 USDC per call on Base, no API key, no signup. Exact curl, response shapes, and cost math.">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,system-ui,sans-serif;background:#0a0a0a;color:#e0e0e0;line-height:1.6;padding:40px 20px}
+h1{font-size:1.5em;color:#fff;font-weight:700;margin-bottom:12px}
+h1 span{color:#00d4aa}
+.step{background:#111;border:1px solid #1a1a1a;border-radius:12px;padding:20px;margin-bottom:16px;max-width:720px}
+.step h2{font-size:1em;color:#00d4aa;margin-bottom:8px}
+.step .num{display:inline-block;background:rgba(0,212,170,.1);color:#00d4aa;border-radius:6px;padding:2px 10px;font-size:0.75em;font-weight:700;margin-bottom:8px}
+pre{background:#1a1a1a;padding:14px;border-radius:6px;font-family:monospace;font-size:0.78em;color:#34d399;overflow-x:auto;margin-top:8px}
+code{background:#1a1a1a;padding:2px 6px;border-radius:3px;font-size:0.88em;color:#34d399}
+.note{color:#888;font-size:0.82em;margin-top:8px;line-height:1.5}
+table{border-collapse:collapse;margin-top:10px;width:100%}
+th,td{border:1px solid #1a1a1a;padding:8px 12px;text-align:left;font-size:0.88em}
+th{color:#00d4aa;background:#111}
+.btn{display:inline-block;padding:12px 24px;border-radius:8px;font-weight:600;font-size:0.9em;cursor:pointer;border:none;text-decoration:none!important;background:#00d4aa;color:#0a0a0a;margin-top:16px}
+a{color:#00d4aa}
+.lead{color:#aaa;max-width:640px;margin-bottom:24px}
+.warn{border-left:3px solid #f5a623;padding:10px 14px;background:rgba(245,166,35,.05);font-size:0.85em;color:#c9b18a;margin-top:12px}
+</style>
+</head>
+<body>
+<h1>The 60-second <span>x402</span> quickstart</h1>
+<p class="lead">A per-call OFAC sanctions screen that costs exactly $0.05 in USDC on Base. No API key, no signup, no subscription. Your agent pays only when it screens.</p>
+
+<div class="step">
+<span class="num">PREREQUISITES</span>
+<h2>What you need before step 1</h2>
+<ul style="margin-top:8px;padding-left:20px;font-size:0.9em">
+<li>An EVM wallet you control (private key available to your agent, e.g. a CDP smart wallet or any EOA).</li>
+<li><strong>USDC on Base</strong> (asset <code>0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913</code>) &mdash; at least <strong>$0.05 per call</strong> you plan to make, plus gas. Base gas for an ERC-20 transfer is typically fractions of a cent.</li>
+<li><code>curl</code> for the raw flow, or any x402 v2 client (x402-fetch, CDP AgentKit, agentic wallets) that signs and retries automatically.</li>
+</ul>
+</div>
+
+<div class="step">
+<span class="num">STEP 1</span>
+<h2>Make the request &mdash; get the 402 payment contract</h2>
+<pre>curl -i "https://sanctionsai.dev/x402/sanctions?wallet=0x098B716B8Aaf21512996dC57EB0615e2383E2f96"</pre>
+<p class="note">The endpoint answers <code>402 Payment Required</code> with a <code>Payment-Required</code> response header (base64, x402 v2) and a JSON body describing the price, asset, and payee. Redacted excerpt:</p>
+<pre>HTTP/1.1 402 Payment Required
+Payment-Required: eyJhY2...JENG
+
+{
+  "x402Version": 2,
+  "error": "Payment required",
+  "resource": {
+    "url": "https://sanctionsai.dev/x402/sanctions",
+    "description": "OFAC wallet sanctions screen",
+    "serviceName": "Sanctions AI"
+  },
+  "accepts": [{
+    "scheme": "exact",
+    "network": "eip155:8453",
+    "amount": "50000",
+    "asset": "0x833589fCD6...dA02913",
+    "payTo": "0xe30f9cf8...D8e4b85"
+  }]
+}</pre>
+<p class="note">USDC on Base has 6 decimals, so <code>amount: 50000</code> atomic units = <strong>$0.05</strong> exactly.</p>
+</div>
+
+<div class="step">
+<span class="num">STEP 2</span>
+<h2>Pay and retry with the signed payment</h2>
+<p class="note">Any x402 client does this for you: it reads the requirements, pays USDC on Base to <code>payTo</code>, and retries the same request with a <code>Payment-Signature</code> header (v2; the legacy <code>X-PAYMENT</code> header is also accepted). Raw form:</p>
+<pre>curl -i "https://sanctionsai.dev/x402/sanctions?wallet=0x098B716B8Aaf21512996dC57EB0615e2383E2f96" \\
+  -H "Payment-Signature: &lt;base64-signed-payment-payload&gt;"</pre>
+</div>
+
+<div class="step">
+<span class="num">STEP 3</span>
+<h2>Read the result</h2>
+<p class="note">A verified payment settles on-chain and the screen returns immediately. Redacted success response:</p>
+<pre>{
+  "clean": true,
+  "matches": [],
+  "x402": {
+    "paid": true,
+    "amount": "0.05",
+    "currency": "USDC",
+    "network": "eip155:8453",
+    "transaction": "0x[tx-hash]"
+  }
+}</pre>
+<p class="note"><code>clean: false</code> with a non-empty <code>matches</code> array means the subject hit the OFAC SDN list &mdash; do not proceed with the payment you were about to make.</p>
+</div>
+
+<div class="step">
+<span class="num">COST MATH</span>
+<h2>What a call costs</h2>
+<table>
+<tr><th>Volume</th><th>Atomic units (6 dp)</th><th>Cost</th></tr>
+<tr><td>1 call</td><td>50,000</td><td>$0.05</td></tr>
+<tr><td>20 calls</td><td>1,000,000</td><td>$1.00</td></tr>
+<tr><td>1,000 calls</td><td>50,000,000</td><td>$50.00</td></tr>
+</table>
+<p class="note">Per-call pricing is flat: $0.05 every call, no tiers, no minimum. Higher volume is cheaper on a subscription key (from $19/mo at <a href="/pricing">/pricing</a>).</p>
+</div>
+
+<div class="step">
+<span class="num">HONEST LIMITS</span>
+<h2>Quotas and what this endpoint is not</h2>
+<ul style="margin-top:8px;padding-left:20px;font-size:0.9em">
+<li><code>/x402/sanctions</code> is <strong>always paid</strong> &mdash; there is no free tier on this endpoint. Every call, including test calls, costs $0.05.</li>
+<li>There is no per-IP rate limit on the paid path; the payment itself is the gate.</li>
+<li>Want free first? The identical screen runs <strong>5 times/day per IP, no key</strong> at <code>GET /sanctions?wallet=...</code>.</li>
+<li>Query params: <code>wallet</code> (EVM/BTC/Tron), <code>name</code>, or <code>country</code> &mdash; at least one is required after payment is verified.</li>
+</ul>
+<div class="warn">This service screens against the OFAC SDN list (refreshed daily). Screening is a control, not a legal opinion &mdash; it does not certify you as OFAC-compliant and is not legal advice.</div>
+</div>
+
+<div class="step">
+<h2>Keep going</h2>
+<a class="btn" href="/x402-demo">See the full 402 cycle</a>&nbsp;
+<a class="btn" href="/pricing" style="background:#1a1a1a;color:#00d4aa">Subscription pricing</a>&nbsp;
+<a class="btn" href="/docs" style="background:#1a1a1a;color:#00d4aa">API docs</a>
+<p class="note">Updated 2026-09-03 &middot; SanctionsAI</p>
+</div>
+
+</body>
+</html>"""
+        self._send_html(200, html)
+
     def _x402_demo_page(self):
         """Interactive x402 flow demo for developers - shows the 402 cycle."""
         html = """<!DOCTYPE html>
