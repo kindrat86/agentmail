@@ -29,7 +29,15 @@ from urllib.parse import urlparse
 MAX_MODE_SHARE = 0.20
 MIN_BODY_CHARS = 1_000
 EXPECTED_BRAND = "SanctionsAI"
-METRIC_FIELDS = ("actions", "amountUSD")
+# 5.2 repair (2026-09-03): the retired publication shipped `actions` as a
+# top-level metric and 90.97% of records carried the value 1. The field is now
+# provenance under ofacChart.aggregateActions. Fail closed if it ever returns
+# as a published metric.
+FORBIDDEN_METRIC_FIELDS = ("actions",)
+# Declared temporal dimensions of the dataset, not analytical metrics. `year`
+# is bounded by definition (24 values across 1,052 rows); a share gate on it
+# would flag every honestly-published time series.
+DIMENSION_FIELDS = ("year", "date")
 
 
 class VisibleTextParser(HTMLParser):
@@ -88,7 +96,31 @@ def main() -> int:
         if declared != len(rows):
             failures.append(f"metadata actions={declared!r}, rows={len(rows)}")
 
-        for field in METRIC_FIELDS:
+        for field in FORBIDDEN_METRIC_FIELDS:
+            present = [row for row in rows if field in row]
+            if present:
+                failures.append(
+                    f"5.2 regression: forbidden metric field {field!r} is published "
+                    f"top-level in {len(present)}/{len(rows)} records (provenance "
+                    "belongs under ofacChart.aggregateActions)"
+                )
+
+        # Dynamic scan: every top-level numeric field that is not a declared
+        # dimension is an analytical metric and must pass the concentration
+        # gate. This catches any future field that drifts back toward a
+        # constant, not just the ones this validator was written knowing about.
+        numeric_fields = sorted(
+            {
+                key
+                for row in rows
+                for key, value in row.items()
+                if isinstance(value, (int, float))
+                and not isinstance(value, bool)
+                and key not in DIMENSION_FIELDS
+                and key not in FORBIDDEN_METRIC_FIELDS
+            }
+        )
+        for field in numeric_fields:
             mode, count, share = mode_result(rows, field)
             status = "PASS" if share <= MAX_MODE_SHARE else "FAIL"
             print(
