@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KYC/AML Implementation Checklist for Small Fintech Teams [2026]</title>
+<meta name="description" content="A practical KYC/AML implementation checklist for small fintech teams with no compliance department: free screening data, what to build, what to buy.">
+<link rel="canonical" href="https://sanctionsai.dev/checklists/kyc-aml-implementation-checklist">
+<meta property="og:title" content="KYC/AML Implementation Checklist for Small Fintech Teams [2026]">
+<meta property="og:description" content="A practical KYC/AML implementation checklist for small fintech teams with no compliance department: free screening data, what to build, what to buy.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://sanctionsai.dev/checklists/kyc-aml-implementation-checklist">
+<meta property="og:image" content="https://sanctionsai.dev/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "KYC/AML Implementation Checklist for Small Fintech Teams [2026]", "description": "A practical KYC/AML implementation checklist for small fintech teams with no compliance department: free screening data, what to build, what to buy.", "author": {"@type": "Organization", "name": "SanctionsAI", "url": "https://sanctionsai.dev"}, "publisher": {"@type": "Organization", "name": "SanctionsAI", "url": "https://sanctionsai.dev"}, "mainEntityOfPage": {"@type": "WebPage", "@id": "https://sanctionsai.dev/checklists/kyc-aml-implementation-checklist"}, "datePublished": "2026-09-04", "dateModified": "2026-09-04"}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://sanctionsai.dev/"}, {"@type": "ListItem", "position": 2, "name": "Checklists", "item": "https://sanctionsai.dev/checklists"}, {"@type": "ListItem", "position": 3, "name": "KYC/AML Implementation Checklist", "item": "https://sanctionsai.dev/checklists/kyc-aml-implementation-checklist"}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "How do I implement KYC/AML screening with no compliance team?", "acceptedAnswer": {"@type": "Answer", "text": "Do not build screening logic yourself. Use free official data (OFAC Sanctions List Search or OpenSanctions) or a cheap API for the screening step, and spend your limited engineering time on the two things regulators actually check: a written decision trail for every screen, and a documented risk assessment. Screening is one control inside a KYC/AML program, not the whole program."}}, {"@type": "Question", "name": "What is the cheapest way to screen names against sanctions lists?", "acceptedAnswer": {"@type": "Answer", "text": "Free options: OFAC's own Sanctions List Search (sanctionssearch.ofac.treas.gov) for one-off lookups, and OpenSanctions (open-sanctions.org), which consolidates OFAC, EU, UN and UK lists into one searchable open database with an API. If volume is low, these may be all the screening data you need."}}, {"@type": "Question", "name": "Is sanctions screening the same as KYC?", "acceptedAnswer": {"@type": "Answer", "text": "No. Sanctions screening is the list-checking slice: compare a name, company or wallet against sanctioned-party lists. KYC/AML is the wider program around it: identity verification, PEP checks, ownership verification, transaction monitoring, reporting, and the audit trail. Screening is the part you can buy cheaply or get for free; the program is the expensive part."}}, {"@type": "Question", "name": "Which sanctions lists does a small fintech need to screen against?", "acceptedAnswer": {"@type": "Answer", "text": "It depends on your nexus. US persons must comply with OFAC, whose SDN list currently carries 19,218 names, 947 digital-currency wallet addresses and 16 embargoed jurisdictions. If you serve EU, UK or UN-jurisdiction customers, add those lists. OpenSanctions consolidates all four in one dataset."}}, {"@type": "Question", "name": "Do beneficial owners need to be screened too?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Under OFAC's 50 percent rule, an entity owned 50 percent or more in the aggregate by blocked persons is itself blocked, even if the entity appears on no list. Screen every beneficial owner, not just the company name."}}, {"@type": "Question", "name": "How long must screening records be kept?", "acceptedAnswer": {"@type": "Answer", "text": "OFAC regulations require records of transactions to be retained for five years after the transaction date (31 C.F.R. 501.601). Store every screening result with timestamp, subject, list version and outcome so an inquiry is answered with exports, not archaeology."}}]}</script>
+<style>
+
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;line-height:1.65;color:#0a0a0a;max-width:760px;margin:0 auto;padding:2rem 1.25rem}
+h1{font-size:2.1rem;line-height:1.2;margin:.3em 0}
+h2{font-size:1.45rem;margin-top:2rem;border-bottom:2px solid #e5e7eb;padding-bottom:.3rem}
+h3{font-size:1.15rem;margin-top:1.5rem}
+a{color:#0066cc;text-decoration:none}a:hover{text-decoration:underline}
+.lede{font-size:1.1rem;color:#374151;margin-bottom:1.5rem}
+table{border-collapse:collapse;width:100%;margin:1rem 0;font-size:.95rem}
+th,td{border:1px solid #e5e7eb;padding:.6rem .75rem;text-align:left}
+th{background:#f9fafb;font-weight:600}
+.callout{background:#f0f7ff;border-left:4px solid #0066cc;padding:1rem 1.25rem;margin:1.5rem 0;border-radius:0 .375rem .375rem 0}
+.callout.warn{background:#fef3c7;border-left-color:#d97706}
+.card-grid{display:grid;grid-template-columns:1fr;gap:1rem;margin:1.5rem 0}
+@media(min-width:560px){.card-grid{grid-template-columns:1fr 1fr}}
+.card{background:#f9fafb;border:1px solid #e5e7eb;border-radius:.5rem;padding:1.25rem}
+.card h3{margin-top:0;font-size:1.1rem}
+.card .tag{display:inline-block;background:#dbeafe;color:#1e40af;font-size:.75rem;padding:.15rem .5rem;border-radius:99px;margin-bottom:.5rem}
+.checklist{list-style:none;padding-left:0}
+.checklist li{padding:.4rem 0 .4rem 1.75rem;position:relative}
+.checklist li::before{content:"\2610";position:absolute;left:0;color:#0066cc;font-size:1.1rem}
+.template-section{background:#f9fafb;border:1px solid #e5e7eb;border-radius:.5rem;padding:1.25rem;margin:1rem 0}
+.template-section h3{margin-top:0}
+.price-tag{display:inline-block;background:#dcfce7;color:#166534;font-weight:700;padding:.25rem .75rem;border-radius:.375rem;font-size:1.1rem}
+.related-links{background:#f9fafb;padding:1rem 1.25rem;border-radius:.5rem;margin-top:2rem}
+.related-links ul{list-style:none;padding-left:0}.related-links li{padding:.25rem 0}
+.qa-block{margin:1.5rem 0;padding:1rem 1.25rem;background:#f9fafb;border:1px solid #e5e7eb;border-radius:.5rem}
+.qa-block h3{margin:0 0 .5rem;font-size:1.05rem}
+.qa-block p{margin:0}
+.cta{background:linear-gradient(135deg,#0066cc,#004499);color:#fff;padding:2rem;border-radius:.75rem;margin-top:2rem;text-align:center}
+.cta h2{color:#fff;border:none}.cta .btn{display:inline-block;background:#fff;color:#0066cc;padding:.75rem 1.5rem;border-radius:.375rem;font-weight:600;margin-top:.5rem}
+.cta .btn.ghost{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.6)}
+footer{margin-top:3rem;padding-top:1.5rem;border-top:1px solid #e5e7eb;color:#6b7280;font-size:.9rem}
+
+</style>
+<!-- kyc-aml-demand-signal-2026-09-04 -->
+    
+    <script>!function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.crossOrigin="anonymous",p.async=!0,p.src=s.api_host.replace(".i.posthog.com","-assets.i.posthog.com")+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags getFeatureFlag getFeatureFlagPayload reloadFeatureFlags group updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures getActiveMatchingSurveys getSurveys".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=!0}(document,window.posthog||[]);posthog.init("phc_lyZCgvTpicjLzAO3rY2GhxuX5WUc5jQjP8ZVwwJqauX",{api_host:"https://eu.i.posthog.com",person_profiles:"identified_only"})</script>
+
+</head>
+<body>
+<article>
+<h1>KYC/AML Implementation Checklist for Small Fintech Teams</h1>
+<p class="lede">A practical KYC/AML implementation checklist for engineers asked to stand up sanctions screening with no compliance department, no budget and no vendor contract.</p>
+
+<div class="callout"><strong>TL;DR — the direct answer:</strong> sanctions screening itself is a buy-or-borrow problem, not a build problem. Free official data exists (OFAC's own Sanctions List Search, OpenSanctions' consolidated OFAC/EU/UN/UK database). The expensive parts of KYC/AML are everything around the screening call: ownership verification, PEP checks, the audit trail and the documented program. Work this checklist top to bottom; it separates the 10% you must engineer from the 90% you must document.</div>
+
+<h2>How to use</h2>
+<div class="callout"><strong>How to use:</strong> for teams of one to ten shipping a fintech product where the engineer is also the de-facto compliance owner. Run it once before launch, then re-run the monitoring section quarterly. Every checkbox produces an artifact — keep those artifacts; they are your defense in an inquiry.</div>
+
+<h2>Straight answers first</h2>
+<div class="qa-block">
+<h3>How do I implement KYC/AML screening with no compliance team?</h3>
+<p>You do not build screening logic yourself. Use free official data (OFAC Sanctions List Search or OpenSanctions) or a cheap per-call API for the list-checking step, and spend your engineering time on the two things regulators actually examine: a written decision trail for every screen, and a documented risk assessment. Screening is one control inside a KYC/AML program — not the whole program.</p>
+</div>
+<div class="qa-block">
+<h3>What is the cheapest way to screen names against sanctions lists?</h3>
+<p>Free: OFAC's Sanctions List Search (sanctionssearch.ofac.treas.gov) for one-off lookups, and OpenSanctions (open-sanctions.org), which consolidates OFAC, EU, UN and UK lists into one searchable open database with an API. At low volume, these may be all the screening data you need. If you want an API with an audit log and no subscription, pay-per-call options exist — see the comparison below.</p>
+</div>
+<div class="qa-block">
+<h3>Is sanctions screening the same as KYC?</h3>
+<p>No. Screening is the list-checking slice: compare a name, company or wallet against sanctioned-party lists. KYC/AML is the wider program: identity verification, PEP checks, ownership verification, transaction monitoring, reporting, and the audit trail. Screening is the cheap slice; the program around it is the expensive part — which is exactly why "buy the screening, document the program" is the right split for a small team.</p>
+</div>
+
+<h2>Phase 1 — Scope before you build</h2>
+<ul class="checklist">
+<li>Written one-page risk assessment: what products, which customer geographies, what payment rails (the <a href="/checklists/sanctions-risk-assessment-checklist">sanctions risk assessment checklist</a> does this step by step)</li>
+<li>Determine your regulatory nexus: US nexus → OFAC obligations; EU/UK/UN customers → add those lists</li>
+<li>Confirm whether your client or partner is already a regulated entity with a screening vendor — if they are, ask before building anything</li>
+<li>Decide buy vs build for each layer separately (data, matching, audit trail) — not for "KYC/AML" as one blob</li>
+<li>Get the resourcing gap on record in writing: what you were asked to own, what support you did not get</li>
+</ul>
+
+<h2>Phase 2 — Screening data (the cheap slice)</h2>
+<ul class="checklist">
+<li>OFAC SDN list as the baseline: 19,218 names, 947 digital-currency wallet addresses, 16 embargoed jurisdictions</li>
+<li>Free official lookups: OFAC Sanctions List Search (sanctionssearch.ofac.treas.gov)</li>
+<li>Free consolidated data: OpenSanctions (OFAC + EU + UN + UK in one dataset, with an API)</li>
+<li>Screening API with audit log if you need programmatic checks — subscription or pay-per-call (see the table below)</li>
+<li>Pin the list version used for every screen — you must be able to say which list version produced which answer</li>
+</ul>
+
+<h2>Phase 3 — What you actually engineer</h2>
+<ul class="checklist">
+<li>Screen at onboarding: legal name, aliases, company name, wallet addresses</li>
+<li>Screen beneficial owners, not just the company — the 50% rule blocks entities majority-owned by blocked persons even when the entity itself is unlisted (<a href="/blog/the-ofac-50-percent-rule-explained">the OFAC 50% rule explained</a>)</li>
+<li>Screen at transaction time for ongoing exposure, not only at signup</li>
+<li>Fail closed: if the screen errors or times out, the payment does not proceed</li>
+<li>Handle fuzzy matching: transliterations and aliases are where homemade screens miss real hits</li>
+<li>Named escalation path for a positive match — even if that path is "the founder calls a lawyer"</li>
+</ul>
+
+<h2>Phase 4 — The audit trail (your real deliverable)</h2>
+<ul class="checklist">
+<li>Every screen logged with: timestamp, subject screened, list version, result, and the decision made</li>
+<li>Retention: five years after the transaction date (31 C.F.R. 501.601)</li>
+<li>Exportable as CSV/JSON — an inquiry is answered with exports, not archaeology (see the <a href="/checklists/regulator-readiness-checklist">regulator-readiness checklist</a>)</li>
+<li>Pair each payment record with the screen result that authorized it</li>
+<li>Quarterly drill: pick one month, export the trail, verify every decision is reconstructable</li>
+</ul>
+
+<h2>Screening data options compared</h2>
+<table>
+<tr><th>Option</th><th>Cost</th><th>Best for</th></tr>
+<tr><td>OFAC Sanctions List Search (official)</td><td>Free</td><td>One-off manual lookups</td></tr>
+<tr><td>OpenSanctions</td><td>Free / open data</td><td>Consolidated OFAC+EU+UN+UK screening at low volume</td></tr>
+<tr><td>Mid-tier subscription platforms (ComplyAdvantage, SumSub, Alloy, Persona)</td><td>Monthly subscription</td><td>Onboarding flows with identity verification built in</td></tr>
+<tr><td>Enterprise data (LexisNexis, World-Check)</td><td>Annual contract</td><td>Regulated institutions with a real program to plug into</td></tr>
+<tr><td>SanctionsAI pay-per-call API (this site)</td><td>$0.05 per check, no subscription</td><td>A handful of documented programmatic checks, no contract — <a href="/x402-quickstart">x402 quickstart</a></td></tr>
+</table>
+
+<h2>FAQ</h2>
+<div class="qa-block">
+<h3>Which sanctions lists does a small fintech need to screen against?</h3>
+<p>It depends on your nexus. US persons must comply with OFAC, whose SDN list currently carries 19,218 names, 947 digital-currency wallet addresses and 16 embargoed jurisdictions. If you serve EU, UK or UN-jurisdiction customers, add those lists. OpenSanctions consolidates all four in one dataset.</p>
+</div>
+<div class="qa-block">
+<h3>Do beneficial owners need to be screened too?</h3>
+<p>Yes. Under OFAC's 50 percent rule, an entity owned 50 percent or more in the aggregate by blocked persons is itself blocked, even if the entity appears on no list. Screen every beneficial owner, not just the company name.</p>
+</div>
+<div class="qa-block">
+<h3>How long must screening records be kept?</h3>
+<p>OFAC regulations require records of transactions to be retained for five years after the transaction date (31 C.F.R. 501.601). Store every screening result with timestamp, subject, list version and outcome so an inquiry is answered with exports, not archaeology.</p>
+</div>
+
+<h2>Why this exists</h2>
+<p>Small fintech teams are routinely asked to "implement KYC/AML" as an engineering ticket, with no compliance hire and no vendor budget. The honest answer is that the screening slice is cheap or free, and the program slice is mostly documentation you can produce yourself. This checklist separates the two so neither gets skipped.</p>
+
+<div class="callout warn"><strong>Not legal advice.</strong> This is a technical implementation checklist published by a screening-API provider. It does not certify any program as compliant, and it cannot substitute for counsel in your jurisdiction.</div>
+
+<!-- mesh-round-kycaml-2026-09-04 -->
+<section class="mesh-links" style="background:#f9fafb;padding:1.25rem;border-radius:.5rem;margin-top:2rem">
+<h3 style="margin-top:0">Related resources</h3>
+<ul style="list-style:none;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:.4rem 1rem;font-size:.95rem">
+<li><a href="/checklists/onboarding-screening-checklist">Onboarding screening checklist</a></li><li><a href="/checklists/sanctions-risk-assessment-checklist">Sanctions risk assessment checklist</a></li><li><a href="/learn/kyc-vs-sanctions-screening">KYC vs sanctions screening</a></li><li><a href="/learn/beneficial-ownership-sanctions">Beneficial ownership and sanctions</a></li><li><a href="/blog/the-ofac-50-percent-rule-explained">The OFAC 50% rule explained</a></li><li><a href="/for/fintech">SanctionsAI for fintech teams</a></li>
+</ul>
+</section>
+</article>
+<section class="cta"><h2>Screen names and wallets from $0.05 per check</h2><p>Free name checker (no signup), or a screening API with an audit log — no subscription required.</p><a href="/tools/name-checker" class="btn">Try the free name checker &rarr;</a> &nbsp; <a href="/pricing" class="btn ghost">See API pricing</a></section>
+<footer><p>&copy; 2026 SanctionsAI. <a href="https://sanctionsai.dev/">sanctionsai.dev</a></p></footer>
+</body>
+</html>
