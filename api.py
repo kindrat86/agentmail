@@ -2611,6 +2611,12 @@ class Handler(BaseHTTPRequestHandler):
             # so the 301 to the glossary page is removed.
             "/wallet-checker": "/tools/wallet-checker",
             "/name-checker": "/tools/name-checker",
+            # 2026-09-04: short slugs AI assistants guess for the KYC/AML
+            # implementation checklist (r/fintech demand-signal page).
+            "/kyc-aml-checklist": "/checklists/kyc-aml-implementation-checklist",
+            "/kyc-checklist": "/checklists/kyc-aml-implementation-checklist",
+            "/aml-checklist": "/checklists/kyc-aml-implementation-checklist",
+            "/kyc-aml-implementation": "/checklists/kyc-aml-implementation-checklist",
             "/country-checker": "/tools/country-checker",
             "/batch-checker": "/tools/batch-checker",
             "/compliance-checker": "/tools/compliance-checker",
@@ -5495,6 +5501,7 @@ License: https://creativecommons.org/licenses/by/4.0/
             "/checklists/ofac-compliance-checklist": "2026-07-18",
             "/checklists/sanctions-risk-assessment-checklist": "2026-07-18",
             "/checklists/shipper-ofac-checklist": "2026-07-18",
+            "/checklists/kyc-aml-implementation-checklist": "2026-09-04",
             "/compare": "2026-07-18",
             "/compare/amlbot": "2026-07-06",
             "/compare/charmverse": "2026-06-29",
@@ -5933,6 +5940,7 @@ License: https://creativecommons.org/licenses/by/4.0/
         ("/checklists/crypto-ofac-checklist", "monthly", "0.7", "Crypto sanctions screening checklist"),
         ("/checklists/shipper-ofac-checklist", "monthly", "0.6", "Shipping and trade OFAC checklist"),
         ("/checklists/sanctions-risk-assessment-checklist", "monthly", "0.7", "Sanctions risk assessment checklist"),
+        ("/checklists/kyc-aml-implementation-checklist", "monthly", "0.9", "KYC/AML implementation checklist for small fintech teams"),
         ("/best/best-ofac-screening-apis", "monthly", "0.7", "Best OFAC sanctions screening APIs 2026"),
         ("/best/best-aml-compliance-tools", "monthly", "0.7", "Best AML compliance tools 2026"),
         ("/cost-of/chainalysis-pricing", "monthly", "0.7", "Chainalysis pricing breakdown"),
