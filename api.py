@@ -2638,7 +2638,34 @@ class Handler(BaseHTTPRequestHandler):
             "/sanctions-screening-best-practices": "/learn/sanctions-screening-best-practices",
             "/ofac-compliance-guide": "/learn/ofac-compliance-guide",
             "/crypto-sanctions-risk": "/learn/crypto-sanctions-risk",
-            "/enforcement": "/data/ofac-enforcement",
+            # /enforcement restored 2026-09-04 (order 5c): the hub + 258-page
+            # OFAC civil-penalties family is served from the enforcement/ tree
+            # and listed in sitemap.xml via enforcement/urls.txt, so the old
+            # 301 to /data/ofac-enforcement is retired.
+            # Enforcement-family consolidation (order 5c, ported from c285b2f8).
+            # /data/ofac-enforcement and the two /cost/* stubs are superseded by
+            # the restored hub. The /penalties/* case studies below asserted
+            # OFAC penalties that appear nowhere in OFAC's published 2003-2026
+            # chart: five were other-agency actions (NYDFS, SEC, CFTC, FinCEN or
+            # none) and three more carried the wrong figure - 5.8 fix, they now
+            # 301 to the sourced records in /enforcement/*.
+            "/cost/ofac-enforcement-actions": "/enforcement",
+            "/cost/ofac-settlement-costs": "/enforcement",
+            "/data/ofac-enforcement": "/enforcement",
+            "/penalties/binance": "/enforcement/binance-2023",
+            "/penalties/binance-ofac-2023": "/enforcement/binance-2023",
+            "/penalties/kraken": "/enforcement/payward-inc-kraken-2022",
+            "/penalties/kraken-ofac-2022": "/enforcement/payward-inc-kraken-2022",
+            "/penalties/bitpay-ofac-2021": "/enforcement/bitpay-inc-2021",
+            "/penalties/bitgo-ofac-2021": "/enforcement/2020",
+            "/penalties/standard-chartered": "/enforcement/standard-chartered-bank-2019",
+            "/penalties/societe-generale": "/enforcement/societe-generale-s-a-2018",
+            "/penalties/coinbase-ofac-2023": "/enforcement/2023",
+            "/penalties/etherdelta-ofac-2018": "/enforcement/2018",
+            "/penalties/ofac-acd-penalties-2023": "/enforcement/2023",
+            "/penalties/etry": "/enforcement",
+            "/penalties/bitfinex": "/enforcement",
+            "/penalties/ripple": "/enforcement",
             "/compare/chainalysis": "/vs/chainalysis",
             "/compare/elliptic": "/vs/elliptic",
             "/compare/complyadvantage": "/vs/comply-advantage",
@@ -4236,7 +4263,7 @@ License: https://creativecommons.org/licenses/by/4.0/
         # 404 on a page type Google is meant to index is worse than no page.
         if p.path == "/updates" or p.path.startswith("/updates/"):
             return self._updates_page(p.path)
-        for _pfx in ("/vs/", "/faq/", "/learn/", "/alternatives-to/", "/penalties/", "/guides/", "/checklists/", "/cost-of/", "/best/", "/templates/", "/stats/", "/redflags/", "/scenarios/", "/programs/", "/sanctioned-addresses/", "/designations/", "/benchmarks/", "/evasion/", "/risk-ratings/", "/regulations/", "/deadlines/", "/case-studies/", "/examples/"):
+        for _pfx in ("/vs/", "/faq/", "/learn/", "/alternatives-to/", "/penalties/", "/guides/", "/checklists/", "/cost-of/", "/best/", "/templates/", "/stats/", "/redflags/", "/scenarios/", "/programs/", "/sanctioned-addresses/", "/designations/", "/enforcement/", "/benchmarks/", "/evasion/", "/risk-ratings/", "/regulations/", "/deadlines/", "/case-studies/", "/examples/"):
             if p.path.startswith(_pfx):
                 _slug = p.path[len(_pfx):].split("?")[0].split("/")[0]
                 if not _slug:
@@ -4303,6 +4330,8 @@ License: https://creativecommons.org/licenses/by/4.0/
             return self._serve_file_content("public/programs/index.html", "text/html")
         if p.path in ("/sanctioned-addresses", "/sanctioned-addresses/"):
             return self._serve_file_content("sanctioned-addresses/index.html", "text/html")
+        if p.path in ("/enforcement", "/enforcement/"):
+            return self._serve_file_content("enforcement/index.html", "text/html")
         if p.path in ("/designations", "/designations/"):
             return self._serve_file_content("designations/index.html", "text/html")
         if p.path == "/for":
@@ -5759,8 +5788,7 @@ License: https://creativecommons.org/licenses/by/4.0/
         ("/for/developers", "monthly", "0.8", "OFAC sanctions API for developers building AI agents"),
         ("/for/kyc-aml", "monthly", "0.7", "OFAC sanctions for KYC and AML teams"),
         ("/integrations/coinbase-agentkit", "monthly", "0.7", "OFAC screening for Coinbase AgentKit agents"),
-        ("/data/ofac-enforcement", "weekly", "0.8", "OFAC Enforcement Database 2017-2024 - historical civil penalties"),
-        ("/data/", "weekly", "0.8", "SanctionsAI Research Data - free downloadable datasets"),
+                ("/data/", "weekly", "0.8", "SanctionsAI Research Data - free downloadable datasets"),
         ("/data/global-sanctions-statistics/", "monthly", "0.8", "Global Sanctions & Compliance Statistics 2026"),
         ("/data/ofac-crypto-wallets/", "weekly", "0.9", "OFAC Sanctioned Crypto Wallet Addresses - full list, CSV + JSON"),
         ("/data/ofac-sdn-list/", "weekly", "0.9", "OFAC SDN List: official search, downloads, formats & limitations"),
@@ -5833,12 +5861,10 @@ License: https://creativecommons.org/licenses/by/4.0/
         ("/cost/ofac-fine-per-violation", "monthly", "0.8", "OFAC fine amount per violation"),
         ("/cost/ofac-criminal-penalties", "monthly", "0.7", "OFAC criminal penalties"),
         ("/cost/ofac-penalty-for-crypto", "monthly", "0.8", "OFAC penalties for crypto transactions"),
-        ("/cost/ofac-settlement-costs", "monthly", "0.7", "OFAC settlement costs"),
-        ("/cost/cost-of-non-compliance", "monthly", "0.7", "True cost of OFAC non-compliance"),
+                ("/cost/cost-of-non-compliance", "monthly", "0.7", "True cost of OFAC non-compliance"),
         ("/cost/ofac-penalty-multiplier", "monthly", "0.7", "How OFAC penalties multiply"),
         ("/cost/cost-of-sanctions-screening", "monthly", "0.8", "How much does sanctions screening cost"),
-        ("/cost/ofac-enforcement-actions", "monthly", "0.7", "Recent OFAC enforcement actions"),
-        ("/tools/name-checker", "weekly", "0.9", "Free OFAC name checker"),
+                ("/tools/name-checker", "weekly", "0.9", "Free OFAC name checker"),
         ("/tools/country-checker", "weekly", "0.9", "Free OFAC country checker"),
         ("/tools/batch-checker", "weekly", "0.8", "Free OFAC batch screening tool"),
         ("/tools/compliance-checker", "weekly", "0.8", "Free OFAC compliance checker"),
@@ -5929,14 +5955,7 @@ License: https://creativecommons.org/licenses/by/4.0/
         ("/by-country/lebanon-hezbollah", "monthly", "0.7", "OFAC-sanctioned entities in Lebanon (Hezbollah)"),
         ("/by-country/pakistan", "monthly", "0.7", "OFAC-sanctioned entities in Pakistan"),
         # Round 19 pSEO: penalties (case studies), checklists, best-of, cost-of
-        ("/penalties/binance-ofac-2023", "monthly", "0.8", "Binance OFAC penalty — $968M case study"),
-        ("/penalties/coinbase-ofac-2023", "monthly", "0.7", "Coinbase OFAC penalty — $50M case study"),
-        ("/penalties/bitgo-ofac-2021", "monthly", "0.7", "BitGo OFAC penalty — $98K case study"),
-        ("/penalties/kraken-ofac-2022", "monthly", "0.7", "Kraken OFAC penalty — $362K case study"),
-        ("/penalties/etherdelta-ofac-2018", "monthly", "0.7", "EtherDelta OFAC penalty — $450K case study"),
-        ("/penalties/bitpay-ofac-2021", "monthly", "0.7", "BitPay OFAC penalty — $507K case study"),
-        ("/penalties/ofac-acd-penalties-2023", "monthly", "0.7", "OFAC 2023 enforcement actions summary"),
-        ("/checklists/ofac-compliance-checklist", "monthly", "0.7", "OFAC sanctions compliance checklist"),
+                                                                ("/checklists/ofac-compliance-checklist", "monthly", "0.7", "OFAC sanctions compliance checklist"),
         ("/checklists/crypto-ofac-checklist", "monthly", "0.7", "Crypto sanctions screening checklist"),
         ("/checklists/shipper-ofac-checklist", "monthly", "0.6", "Shipping and trade OFAC checklist"),
         ("/checklists/sanctions-risk-assessment-checklist", "monthly", "0.7", "Sanctions risk assessment checklist"),
@@ -6076,8 +6095,7 @@ License: https://creativecommons.org/licenses/by/4.0/
         ("/guides/risk-assessment-guide", "monthly", "0.6", "OFAC risk assessment guide"),
         ("/guides/sanctions-compliance-program", "monthly", "0.6", "How to build a sanctions compliance program"),
         ("/learn/sanctions-risk-assessment", "monthly", "0.6", "How to Conduct a Sanctions Risk Assessment"),
-        ("/penalties/kraken", "monthly", "0.6", "Kraken OFAC penalty case study"),
-        # Round 22 pSEO: agent-path comparisons, screening costs, agent compliance
+                # Round 22 pSEO: agent-path comparisons, screening costs, agent compliance
         ("/vs/sumsub", "monthly", "0.7", "SanctionsAI vs Sumsub"),
         ("/vs/notabene", "monthly", "0.7", "SanctionsAI vs Notabene"),
         ("/vs/amlbot", "monthly", "0.7", "SanctionsAI vs AMLBot"),
@@ -6170,12 +6188,7 @@ License: https://creativecommons.org/licenses/by/4.0/
         ("/scenarios/agent-receives-payment-from-sanctioned-wallet", "weekly", "0.7", "Agent receives a payment from a sanctioned wallet"),
         ("/templates/designated-party-review-template", "monthly", "0.7", "Designated party review template"),
         # Round 28 pSEO: link-integrity gap-fill (penalties precedents, guides, FAQ)
-        ("/penalties/binance", "monthly", "0.7", "Binance OFAC settlement $968M"),
-        ("/penalties/bitfinex", "monthly", "0.7", "Bitfinex OFAC settlement $800K"),
-        ("/penalties/ripple", "monthly", "0.7", "Ripple OFAC settlement $700K"),
-        ("/penalties/societe-generale", "monthly", "0.7", "Societe Generale OFAC settlement $53.9M"),
-        ("/penalties/standard-chartered", "monthly", "0.7", "Standard Chartered OFAC settlement $132M"),
-        ("/guides/recordkeeping-requirements", "monthly", "0.7", "OFAC recordkeeping requirements"),
+                                                ("/guides/recordkeeping-requirements", "monthly", "0.7", "OFAC recordkeeping requirements"),
         ("/guides/voluntary-self-disclosure", "monthly", "0.7", "OFAC voluntary self-disclosure guide"),
         ("/faq/how-often-does-ofac-update-sanctions", "monthly", "0.7", "How often does OFAC update sanctions?"),
         ("/learn/crypto-compliance-guide", "monthly", "0.6", "Crypto compliance guide"),
@@ -7198,6 +7211,34 @@ License: https://creativecommons.org/licenses/by/4.0/
         ("/redflags/vasp-onboarding-red-flags", "monthly", "0.8", "Vasp Onboarding Red Flags"),
         ("/redflags/ai-agent-payment-red-flags", "monthly", "0.8", "Ai Agent Payment Red Flags"),
     ]
+        # The OFAC Civil Penalties Database (restored 2026-09-04, order 5c).
+        # Read from the file the builder writes so this list cannot drift from
+        # what was actually generated.
+        import os as _os
+        for _base in (_os.path.dirname(_os.path.abspath(__file__)),
+                      "/home/agentmail/app", _os.getcwd()):
+            try:
+                with open(_os.path.join(_base, "enforcement", "urls.txt"), encoding="utf-8") as _fh:
+                    pages += [(_u.strip(), "monthly", "0.7", "OFAC enforcement record")
+                              for _u in _fh if _u.strip()]
+                break
+            except OSError:
+                continue
+        # A sitemap must list destinations, not sources: these 301 now (see
+        # HALLUCINATED_REDIRECTS), and a redirecting URL in a sitemap is a
+        # Search Console "Page with redirect" error, not an indexed page.
+        _enf_redirect_sources = {
+            "/cost/ofac-enforcement-actions", "/cost/ofac-settlement-costs",
+            "/data/ofac-enforcement",
+            "/penalties/binance", "/penalties/binance-ofac-2023",
+            "/penalties/kraken", "/penalties/kraken-ofac-2022",
+            "/penalties/bitpay-ofac-2021", "/penalties/bitgo-ofac-2021",
+            "/penalties/standard-chartered", "/penalties/societe-generale",
+            "/penalties/coinbase-ofac-2023", "/penalties/etherdelta-ofac-2018",
+            "/penalties/ofac-acd-penalties-2023", "/penalties/etry",
+            "/penalties/bitfinex", "/penalties/ripple",
+        }
+        pages = [_pg for _pg in pages if _pg[0] not in _enf_redirect_sources]
         import datetime
         today = datetime.date.today().isoformat()
         xml = '<?xml version="1.0" encoding="UTF-8"?>\n'

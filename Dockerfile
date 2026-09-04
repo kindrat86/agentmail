@@ -38,6 +38,9 @@ COPY programs/ ./programs/
 COPY sanctioned-addresses/ ./sanctioned-addresses/
 COPY updates/ ./updates/
 COPY designations/ ./designations/
+# OFAC Civil Penalties Database (restored 2026-09-04, order 5c): without this
+# COPY the /enforcement/* routes resolve to no file and serve hard 404s.
+COPY enforcement/ ./enforcement/
 # Round 48 pSEO — sanctions evasion typologies and jurisdiction risk ratings
 COPY evasion/ ./evasion/
 COPY risk-ratings/ ./risk-ratings/
