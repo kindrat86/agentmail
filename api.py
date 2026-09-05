@@ -3379,6 +3379,9 @@ Allow: Storing
             return self._blog_x402_page()
         if p.path == "/agent":
             return self._agent_page()
+        if p.path == "/x402-quickstart":
+            from .x402_quickstart import render
+            return self._page("x402 quickstart - SanctionsAI", "Inspect the payment challenge before authorizing a paid sanctions screen.", render(), canonical="/x402-quickstart")
         if p.path == "/x402-demo":
             return self._x402_demo_page()
         if p.path == "/teardown":
@@ -4950,6 +4953,7 @@ License: https://creativecommons.org/licenses/by/4.0/
 
     def _sitemap_xml(self):
         URL_LASTMOD = {
+            "/x402-quickstart": "2026-09-06",
             "/faq/are-russian-banks-sanctioned": "2026-08-17",
             "/faq/can-an-agent-violate-ofac": "2026-08-17",
             "/faq/can-i-screen-by-name-only": "2026-08-17",
@@ -5717,6 +5721,7 @@ License: https://creativecommons.org/licenses/by/4.0/
         ("/faq/ofac-screening-web3", "monthly", "0.7", "OFAC Web3 compliance FAQs"),
         ("/teardown", "weekly", "0.9", "Workflow teardown: what happens when your AI agent pays a sanctioned wallet"),
         # /dashboard is auth-gated (403) and robots-disallowed — removed from sitemap 2026-07-21
+        ("/x402-quickstart", "monthly", "0.9", "Inspect the x402 payment challenge before a paid sanctions screen"),
         ("/about", "monthly", "0.5", "About sanctionsai.dev"),
         ("/privacy", "monthly", "0.4", "Privacy Policy"),
         ("/terms", "monthly", "0.4", "Terms of Service"),
