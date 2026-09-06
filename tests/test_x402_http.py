@@ -56,6 +56,37 @@ class BuyerPathHTTPTests(unittest.TestCase):
             self.assertEqual(challenge['accepts'][0]['network'], 'eip155:8453')
             screen.assert_not_called()
 
+    def test_exhausted_quota_keeps_public_instructions_and_paid_challenge(self):
+        from collections import defaultdict, deque
+        import time
+        # Local synthetic quota state for the actual loopback peer, no spoofed IP.
+        quota = defaultdict(deque, {'127.0.0.1': deque([time.time()] * 5)})
+        with patch.object(api, '_free_used', quota), patch.object(api, '_FREE_TIER_DAILY', 5), patch.object(api.x402, '_ENABLED', True), patch.object(api.x402, '_PAY_TO', '0x1111111111111111111111111111111111111111'), patch.object(api.core, 'sanctions_check') as screen:
+            self.assertEqual(api._check_free_tier('127.0.0.1'), (False, 'free_tier_exhausted'))
+            self.assertEqual(self.request('/x402-quickstart')[0], 200)
+            for path in ('/x402/sanctions', '/x402/sanctions?name=ACME'):
+                status, headers, body = self.request(path)
+                self.assertEqual(status, 402)
+                challenge = json.loads(body)
+                self.assertEqual(json.loads(base64.b64decode(headers['Payment-Required'])), challenge)
+                self.assertEqual(challenge['x402Version'], 2)
+                self.assertEqual(challenge['accepts'][0]['scheme'], 'exact')
+            self.assertEqual(self.request('/sanctions?name=ACME')[0], 402)
+            with patch.object(api.x402, '_ENABLED', False):
+                status, _, body = self.request('/sanctions?name=ACME')
+                self.assertEqual(status, 429)
+                self.assertEqual(json.loads(body)['error'], 'free_tier_exhausted')
+            screen.assert_not_called()
+            self.assertEqual(len(quota['127.0.0.1']), 5)
+
+    def test_verification_failure_never_settles_or_screens(self):
+        with patch.object(api.x402, 'is_enabled', return_value=True), patch.object(api.x402, '_post_facilitator', return_value={'isValid': False}) as facilitator, patch.object(api.core, 'sanctions_check') as screen:
+            status, _, _ = self.request('/x402/sanctions?name=ACME', {'Payment-Signature': '{"synthetic":true}'})
+            self.assertEqual(status, 402)
+            self.assertEqual(facilitator.call_count, 1)
+            self.assertEqual(facilitator.call_args.args[0], 'verify')
+            screen.assert_not_called()
+
     def test_disabled_fails_closed(self):
         with patch.object(api.x402, 'is_enabled', return_value=False):
             self.assertEqual(self.request('/x402/sanctions?name=ACME')[0], 503)
