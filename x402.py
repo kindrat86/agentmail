@@ -14,8 +14,10 @@ Environment:
 from __future__ import annotations
 
 import base64
+import hashlib
 import json
 import os
+import re
 import urllib.error
 import urllib.request
 
@@ -32,6 +34,119 @@ _BASE_CHAIN = "eip155:8453"
 _USDC_BASE = "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913"
 _USDC_ATOMIC_UNITS_PER_CENT = 10_000  # USDC has 6 decimals; $0.01 = 10,000.
 _MAX_TIMEOUT_SECONDS = 60
+_EVM_WALLET = re.compile(r"0x[0-9a-fA-F]{40}$")
+_BASE58_ALPHABET = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"
+_BASE58_INDEX = {char: index for index, char in enumerate(_BASE58_ALPHABET)}
+_BECH32_ALPHABET = "qpzry9x8gf2tvdw0s3jn54khce6mua7l"
+_BECH32_INDEX = {char: index for index, char in enumerate(_BECH32_ALPHABET)}
+_BECH32_CONST = 1
+_BECH32M_CONST = 0x2BC830A3
+
+
+def _base58check_payload(address: str) -> bytes | None:
+    """Decode a Base58Check address and return its version plus payload."""
+    try:
+        number = 0
+        for char in address:
+            number = number * 58 + _BASE58_INDEX[char]
+    except KeyError:
+        return None
+    decoded = b"\0" * (len(address) - len(address.lstrip("1")))
+    decoded += number.to_bytes((number.bit_length() + 7) // 8, "big")
+    if len(decoded) < 5:
+        return None
+    payload, checksum = decoded[:-4], decoded[-4:]
+    expected = hashlib.sha256(hashlib.sha256(payload).digest()).digest()[:4]
+    return payload if checksum == expected else None
+
+
+def _is_bitcoin_legacy_wallet(address: str) -> bool:
+    payload = _base58check_payload(address)
+    return bool(payload and len(payload) == 21 and payload[0] in (0x00, 0x05))
+
+
+def _is_tron_wallet(address: str) -> bool:
+    payload = _base58check_payload(address)
+    return bool(payload and len(payload) == 21 and payload[0] == 0x41)
+
+
+def _bech32_polymod(values: list[int]) -> int:
+    checksum = 1
+    generators = (0x3B6A57B2, 0x26508E6D, 0x1EA119FA, 0x3D4233DD, 0x2A1462B3)
+    for value in values:
+        top = checksum >> 25
+        checksum = (checksum & 0x1FFFFFF) << 5 ^ value
+        for index, generator in enumerate(generators):
+            if (top >> index) & 1:
+                checksum ^= generator
+    return checksum
+
+
+def _bech32_hrp_expand(hrp: str) -> list[int]:
+    return [ord(char) >> 5 for char in hrp] + [0] + [ord(char) & 31 for char in hrp]
+
+
+def _convert_bits(data: list[int], from_bits: int, to_bits: int, pad: bool) -> list[int] | None:
+    accumulator = 0
+    bits = 0
+    result = []
+    max_value = (1 << to_bits) - 1
+    for value in data:
+        if value < 0 or value >> from_bits:
+            return None
+        accumulator = (accumulator << from_bits) | value
+        bits += from_bits
+        while bits >= to_bits:
+            bits -= to_bits
+            result.append((accumulator >> bits) & max_value)
+    if pad:
+        if bits:
+            result.append((accumulator << (to_bits - bits)) & max_value)
+    elif bits >= from_bits or ((accumulator << (to_bits - bits)) & max_value):
+        return None
+    return result
+
+
+def _is_bitcoin_segwit_wallet(address: str) -> bool:
+    if not address or address.lower() != address and address.upper() != address:
+        return False
+    normalized = address.lower()
+    if len(normalized) > 90 or not normalized.startswith("bc1"):
+        return False
+    separator = normalized.rfind("1")
+    if normalized[:separator] != "bc" or separator + 7 > len(normalized):
+        return False
+    try:
+        data = [_BECH32_INDEX[char] for char in normalized[separator + 1:]]
+    except KeyError:
+        return False
+    checksum_kind = _bech32_polymod(_bech32_hrp_expand(normalized[:separator]) + data)
+    if checksum_kind not in (_BECH32_CONST, _BECH32M_CONST):
+        return False
+    witness_version = data[0]
+    if witness_version > 16:
+        return False
+    program = _convert_bits(data[1:-6], 5, 8, pad=False)
+    if program is None or not 2 <= len(program) <= 40:
+        return False
+    if witness_version == 0:
+        return len(program) in (20, 32) and checksum_kind == _BECH32_CONST
+    return checksum_kind == _BECH32M_CONST
+
+
+def is_supported_screening_wallet(wallet: str) -> bool:
+    """Validate the EVM, Bitcoin, and Tron wallet formats documented by x402."""
+    if not isinstance(wallet, str):
+        return False
+    if _EVM_WALLET.fullmatch(wallet):
+        return True
+    if wallet.startswith(("1", "3")):
+        return _is_bitcoin_legacy_wallet(wallet)
+    if wallet.startswith("T"):
+        return _is_tron_wallet(wallet)
+    if wallet.lower().startswith("bc1"):
+        return _is_bitcoin_segwit_wallet(wallet)
+    return False
 
 
 def is_enabled() -> bool:

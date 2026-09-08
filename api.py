@@ -4387,13 +4387,14 @@ License: https://creativecommons.org/licenses/by/4.0/
                 return
 
             q = parse_qs(p.query)
+            wallet = q.get("wallet", [""])[0].strip()
+            if not x402.is_supported_screening_wallet(wallet):
+                return _json(self, 400, {"error": "invalid_wallet"})
             subject = {
                 "name": q.get("name", [""])[0],
-                "wallet": q.get("wallet", [""])[0],
+                "wallet": wallet,
                 "country": q.get("country", [""])[0],
             }
-            if not any(subject.values()):
-                return _json(self, 400, {"error": "wallet, name, or country is required"})
 
             paid, settlement = x402.verify_and_settle(payment_header, payment_required)
             if not paid:
