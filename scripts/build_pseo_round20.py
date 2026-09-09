@@ -459,7 +459,7 @@ def build_alternatives() -> list[str]:
             (f"/vs/{a['slug']}", f"SanctionsAI vs {a['name']}"),
             ("/alternatives-to/chainalysis", "vs Chainalysis alternative"),
             ("/alternatives-to/elliptic", "vs Elliptic alternative"),
-            ("/compare/sumsub", "vs SumSub"),
+            ("/vs/sumsub", "vs SumSub"),
             ("/best/best-ofac-screening-apis", "Best OFAC screening APIs"),
             ("/pricing", "Pricing"),
         ])}""")
