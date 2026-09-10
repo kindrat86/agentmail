@@ -649,7 +649,7 @@ footer p{color:#444;font-size:.8em}
 
 _NAV = '<nav><div class="logo">agent<span>mail</span></div><div class="links"><a href="/">Home</a><a href="/teardown">How It Works</a><a href="/dashboard">Dashboard</a><a href="/faq">FAQ</a><a href="/docs">Docs</a><a href="/tools/wallet-checker">Free Checker</a><a href="/blog/ofac-for-agents">Blog</a><a href="/pricing">Pricing</a><a href="/checkout/dev" class="btn btn-primary">Get API key</a></div></nav>'
 
-_FOOTER = '<footer><div class="links" style="display:flex;flex-wrap:wrap;gap:12px 28px;justify-content:center;max-width:900px;margin:0 auto 16px"><div style="min-width:140px"><strong style="color:#888;font-size:.75em;text-transform:uppercase;letter-spacing:.05em">Product</strong><br><a href="/">Home</a><br><a href="/teardown">How It Works</a><br><a href="/pricing">Pricing</a><br><a href="/docs">Docs</a><br><a href="/tools">Free Tools</a><br><a href="/llms.txt">llms.txt (AI docs)</a></div><div style="min-width:140px"><strong style="color:#888;font-size:.75em;text-transform:uppercase;letter-spacing:.05em"><a href="/for" style="color:#888;text-decoration:none">By Industry</a></strong><br><a href="/for/fintech">Fintech</a><br><a href="/for/crypto">Crypto</a><br><a href="/for/defi">DeFi</a><br><a href="/for/payments">Payments</a><br><a href="/for/ai-agents">AI Agents</a><br><a href="/for/developers">Developers</a></div><div style="min-width:140px"><strong style="color:#888;font-size:.75em;text-transform:uppercase;letter-spacing:.05em"><a href="/vs" style="color:#888;text-decoration:none">Compare</a></strong><br><a href="/vs/chainalysis">vs Chainalysis</a><br><a href="/vs/elliptic">vs Elliptic</a><br><a href="/vs/comply-advantage">vs ComplyAdvantage</a><br><a href="/compare/sumsub">vs SumSub</a><br><a href="/compare/world-check">vs World-Check</a></div><div style="min-width:140px"><strong style="color:#888;font-size:.75em;text-transform:uppercase;letter-spacing:.05em">Resources</strong><br><a href="/blog">Blog</a><br><a href="/guides">Guides</a><br><a href="/penalties">Penalties</a><br><a href="/how-to">How-To</a><br><a href="/glossary">Glossary</a><br><a href="/cost">Costs</a><br><a href="/integrations">Integrations</a><br><a href="/vs">Vs</a><br><a href="/stats">Stats</a><br><a href="/content-strategy">Content Strategy</a><br><a href="/partners/jv">JV Partners (50%)</a><br><a href="/refer">Refer & Earn</a><br><a href="/hooks">Hooks Library</a><br><a href="/partners/swipe">Swipe File</a><br><a href="/calendar">Content Calendar</a><br><a href="/dream100">Dream 100</a><br><a href="https://x.com/sipiteno" style="color:inherit">X / Twitter</a><br><a href="/agent">For Agents</a><br><a href="/leaderboard">Leaderboard</a><br><a href="/about">About</a><br><a href="/contact">Contact</a><br><a href="/privacy">Privacy</a><br><a href="/terms">Terms</a><br><a href="/countries">Countries</a><br><a href="/checklists">Checklists</a><br><a href="/answers">Answers</a><br><a href="/best">Best-Of</a><br><a href="/alternatives-to">Alternatives</a><br><a href="/programs">Programs</a><br><a href="/redflags">Red Flags</a><br><a href="/scenarios">Scenarios</a></div></div><section class="subscribe-footer" style="max-width:900px;margin:16px auto 0;padding:16px 0 0;border-top:1px solid #333;text-align:center"><p style="color:#ccc;font-size:.85rem;margin:0 0 8px">Get OFAC enforcement alerts and agent compliance tips. No spam.</p><form action="/subscribe" method="post" style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;max-width:400px;margin:0 auto"><input type="email" name="email" placeholder="your@email.com" required style="flex:1;min-width:180px;padding:8px 12px;border:1px solid #444;border-radius:6px;background:#111;color:#e0e0e0;font-size:.85rem"><button type="submit" style="padding:8px 16px;border:none;border-radius:6px;background:#00d4aa;color:#0a0a0a;font-weight:600;cursor:pointer;font-size:.85rem">Subscribe</button><label style="flex-basis:100%;display:flex;gap:8px;align-items:flex-start;text-align:left;color:#999;font-size:.75rem;line-height:1.4"><input type="checkbox" name="consent" value="marketing" required style="margin-top:2px;accent-color:#00d4aa">I agree to receive SanctionsAI enforcement alerts and compliance tips. See the <a href="/privacy">Privacy Policy</a> and <a href="/terms">Terms</a>.</label></form></section><nav aria-label="More products from Sipiteno" data-portfolio-cross-promo="v1" data-portfolio-origin="sanctionsai.dev" style="max-width:900px;margin:16px auto 0;padding-top:12px;border-top:1px solid #333;display:flex;flex-wrap:wrap;justify-content:center;gap:0 14px;font-size:.8rem"><strong style="display:inline-flex;min-height:44px;align-items:center;color:#888">More from Sipiteno:</strong><a href="https://sipiteno.com/?utm_source=sanctionsai.dev&amp;utm_medium=referral&amp;utm_campaign=portfolio_crosspromo&amp;utm_content=footer" style="display:inline-flex;min-height:44px;align-items:center">Sipiteno</a><a href="https://gitdealflow.com/?utm_source=sanctionsai.dev&amp;utm_medium=referral&amp;utm_campaign=portfolio_crosspromo&amp;utm_content=footer" style="display:inline-flex;min-height:44px;align-items:center">GitDealFlow</a><a href="https://signals.gitdealflow.com/?utm_source=sanctionsai.dev&amp;utm_medium=referral&amp;utm_campaign=portfolio_crosspromo&amp;utm_content=footer" style="display:inline-flex;min-height:44px;align-items:center">VC Deal Flow Signal</a><a href="https://invisibleexit.com/?utm_source=sanctionsai.dev&amp;utm_medium=referral&amp;utm_campaign=portfolio_crosspromo&amp;utm_content=footer" style="display:inline-flex;min-height:44px;align-items:center">Invisible Exit</a><a href="https://unlocksaas.com/?utm_source=sanctionsai.dev&amp;utm_medium=referral&amp;utm_campaign=portfolio_crosspromo&amp;utm_content=footer" style="display:inline-flex;min-height:44px;align-items:center">UnlockSaaS</a><a href="https://voicelogpro.com/?utm_source=sanctionsai.dev&amp;utm_medium=referral&amp;utm_campaign=portfolio_crosspromo&amp;utm_content=footer" style="display:inline-flex;min-height:44px;align-items:center">VoiceLogPro</a><a href="https://carshake.online/?utm_source=sanctionsai.dev&amp;utm_medium=referral&amp;utm_campaign=portfolio_crosspromo&amp;utm_content=footer" style="display:inline-flex;min-height:44px;align-items:center">CarShake</a><a href="https://churnlens.site/?utm_source=sanctionsai.dev&amp;utm_medium=referral&amp;utm_campaign=portfolio_crosspromo&amp;utm_content=footer" style="display:inline-flex;min-height:44px;align-items:center">ChurnLens</a><a href="https://sipi.bot/?utm_source=sanctionsai.dev&amp;utm_medium=referral&amp;utm_campaign=portfolio_crosspromo&amp;utm_content=footer" style="display:inline-flex;min-height:44px;align-items:center">sipi.bot</a></nav><p style="text-align:center;color:#666">agentmail - OFAC sanctions screening for AI agents · MIT licensed · Data from US Treasury &amp; vile/ofac-sdn-list</p></footer>'
+_FOOTER = '<footer><div class="links" style="display:flex;flex-wrap:wrap;gap:12px 28px;justify-content:center;max-width:900px;margin:0 auto 16px"><div style="min-width:140px"><strong style="color:#888;font-size:.75em;text-transform:uppercase;letter-spacing:.05em">Product</strong><br><a href="/">Home</a><br><a href="/teardown">How It Works</a><br><a href="/pricing">Pricing</a><br><a href="/docs">Docs</a><br><a href="/tools">Free Tools</a><br><a href="/llms.txt">llms.txt (AI docs)</a></div><div style="min-width:140px"><strong style="color:#888;font-size:.75em;text-transform:uppercase;letter-spacing:.05em"><a href="/for" style="color:#888;text-decoration:none">By Industry</a></strong><br><a href="/for/fintech">Fintech</a><br><a href="/for/crypto">Crypto</a><br><a href="/for/defi">DeFi</a><br><a href="/for/payments">Payments</a><br><a href="/for/ai-agents">AI Agents</a><br><a href="/for/developers">Developers</a></div><div style="min-width:140px"><strong style="color:#888;font-size:.75em;text-transform:uppercase;letter-spacing:.05em"><a href="/vs" style="color:#888;text-decoration:none">Compare</a></strong><br><a href="/vs/chainalysis">vs Chainalysis</a><br><a href="/vs/elliptic">vs Elliptic</a><br><a href="/vs/comply-advantage">vs ComplyAdvantage</a><br><a href="/vs/sumsub">vs SumSub</a><br><a href="/vs/world-check">vs World-Check</a></div><div style="min-width:140px"><strong style="color:#888;font-size:.75em;text-transform:uppercase;letter-spacing:.05em">Resources</strong><br><a href="/blog">Blog</a><br><a href="/guides">Guides</a><br><a href="/penalties">Penalties</a><br><a href="/how-to">How-To</a><br><a href="/glossary">Glossary</a><br><a href="/cost">Costs</a><br><a href="/integrations">Integrations</a><br><a href="/vs">Vs</a><br><a href="/stats">Stats</a><br><a href="/content-strategy">Content Strategy</a><br><a href="/partners/jv">JV Partners (50%)</a><br><a href="/refer">Refer & Earn</a><br><a href="/hooks">Hooks Library</a><br><a href="/partners/swipe">Swipe File</a><br><a href="/calendar">Content Calendar</a><br><a href="/dream100">Dream 100</a><br><a href="https://x.com/sipiteno" style="color:inherit">X / Twitter</a><br><a href="/agent">For Agents</a><br><a href="/leaderboard">Leaderboard</a><br><a href="/about">About</a><br><a href="/contact">Contact</a><br><a href="/privacy">Privacy</a><br><a href="/terms">Terms</a><br><a href="/countries">Countries</a><br><a href="/checklists">Checklists</a><br><a href="/answers">Answers</a><br><a href="/best">Best-Of</a><br><a href="/alternatives-to">Alternatives</a><br><a href="/programs">Programs</a><br><a href="/redflags">Red Flags</a><br><a href="/scenarios">Scenarios</a></div></div><section class="subscribe-footer" style="max-width:900px;margin:16px auto 0;padding:16px 0 0;border-top:1px solid #333;text-align:center"><p style="color:#ccc;font-size:.85rem;margin:0 0 8px">Get OFAC enforcement alerts and agent compliance tips. No spam.</p><form action="/subscribe" method="post" style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;max-width:400px;margin:0 auto"><input type="email" name="email" placeholder="your@email.com" required style="flex:1;min-width:180px;padding:8px 12px;border:1px solid #444;border-radius:6px;background:#111;color:#e0e0e0;font-size:.85rem"><button type="submit" style="padding:8px 16px;border:none;border-radius:6px;background:#00d4aa;color:#0a0a0a;font-weight:600;cursor:pointer;font-size:.85rem">Subscribe</button><label style="flex-basis:100%;display:flex;gap:8px;align-items:flex-start;text-align:left;color:#999;font-size:.75rem;line-height:1.4"><input type="checkbox" name="consent" value="marketing" required style="margin-top:2px;accent-color:#00d4aa">I agree to receive SanctionsAI enforcement alerts and compliance tips. See the <a href="/privacy">Privacy Policy</a> and <a href="/terms">Terms</a>.</label></form></section><nav aria-label="More products from Sipiteno" data-portfolio-cross-promo="v1" data-portfolio-origin="sanctionsai.dev" style="max-width:900px;margin:16px auto 0;padding-top:12px;border-top:1px solid #333;display:flex;flex-wrap:wrap;justify-content:center;gap:0 14px;font-size:.8rem"><strong style="display:inline-flex;min-height:44px;align-items:center;color:#888">More from Sipiteno:</strong><a href="https://sipiteno.com/?utm_source=sanctionsai.dev&amp;utm_medium=referral&amp;utm_campaign=portfolio_crosspromo&amp;utm_content=footer" style="display:inline-flex;min-height:44px;align-items:center">Sipiteno</a><a href="https://gitdealflow.com/?utm_source=sanctionsai.dev&amp;utm_medium=referral&amp;utm_campaign=portfolio_crosspromo&amp;utm_content=footer" style="display:inline-flex;min-height:44px;align-items:center">GitDealFlow</a><a href="https://signals.gitdealflow.com/?utm_source=sanctionsai.dev&amp;utm_medium=referral&amp;utm_campaign=portfolio_crosspromo&amp;utm_content=footer" style="display:inline-flex;min-height:44px;align-items:center">VC Deal Flow Signal</a><a href="https://invisibleexit.com/?utm_source=sanctionsai.dev&amp;utm_medium=referral&amp;utm_campaign=portfolio_crosspromo&amp;utm_content=footer" style="display:inline-flex;min-height:44px;align-items:center">Invisible Exit</a><a href="https://unlocksaas.com/?utm_source=sanctionsai.dev&amp;utm_medium=referral&amp;utm_campaign=portfolio_crosspromo&amp;utm_content=footer" style="display:inline-flex;min-height:44px;align-items:center">UnlockSaaS</a><a href="https://voicelogpro.com/?utm_source=sanctionsai.dev&amp;utm_medium=referral&amp;utm_campaign=portfolio_crosspromo&amp;utm_content=footer" style="display:inline-flex;min-height:44px;align-items:center">VoiceLogPro</a><a href="https://carshake.online/?utm_source=sanctionsai.dev&amp;utm_medium=referral&amp;utm_campaign=portfolio_crosspromo&amp;utm_content=footer" style="display:inline-flex;min-height:44px;align-items:center">CarShake</a><a href="https://churnlens.site/?utm_source=sanctionsai.dev&amp;utm_medium=referral&amp;utm_campaign=portfolio_crosspromo&amp;utm_content=footer" style="display:inline-flex;min-height:44px;align-items:center">ChurnLens</a><a href="https://sipi.bot/?utm_source=sanctionsai.dev&amp;utm_medium=referral&amp;utm_campaign=portfolio_crosspromo&amp;utm_content=footer" style="display:inline-flex;min-height:44px;align-items:center">sipi.bot</a></nav><p style="text-align:center;color:#666">SanctionsAI - OFAC sanctions screening for AI agents · MIT licensed · Data from US Treasury &amp; vile/ofac-sdn-list</p></footer>'
 
 _VERTICALS = {
     "fintech": {
@@ -2642,6 +2642,23 @@ class Handler(BaseHTTPRequestHandler):
             "/compare/chainalysis": "/vs/chainalysis",
             "/compare/elliptic": "/vs/elliptic",
             "/compare/complyadvantage": "/vs/comply-advantage",
+            # 2026-09-09 §5.8 brand fix: the /compare/* family rendered as
+            # "agentmail vs X" (stale pre-SanctionsAI brand) while the parallel
+            # /vs/* family correctly says "SanctionsAI vs X". 301 every
+            # /compare detail page to its 1:1 /vs twin instead of maintaining
+            # two half-branded copies of the same comparison.
+            "/compare/amlbot": "/vs/amlbot",
+            "/compare/blockdaemon": "/vs/blockdaemon",
+            "/compare/charmverse": "/vs/charmverse",
+            "/compare/ciphertrace": "/vs/ciphertrace",
+            "/compare/dow-jones-risk": "/vs/dow-jones-rdc",
+            "/compare/identitymind": "/vs/identitymind",
+            "/compare/notabene": "/vs/notabene",
+            "/compare/scorechain": "/vs/scorechain",
+            "/compare/sumsub": "/vs/sumsub",
+            "/compare/trm-labs": "/vs/trm-labs",
+            "/compare/world-check": "/vs/world-check",
+            "/compare": "/vs",
             "/alternatives/chainalysis": "/alternatives-to/chainalysis",
             "/integration/eliza": "/integrations/elizaos",
             "/integrations/eliza": "/integrations/elizaos",
@@ -5506,14 +5523,6 @@ License: https://creativecommons.org/licenses/by/4.0/
             "/checklists/sanctions-risk-assessment-checklist": "2026-07-18",
             "/checklists/shipper-ofac-checklist": "2026-07-18",
             "/checklists/kyc-aml-implementation-checklist": "2026-09-04",
-            "/compare": "2026-07-18",
-            "/compare/amlbot": "2026-07-06",
-            "/compare/charmverse": "2026-06-29",
-            "/compare/identitymind": "2026-07-06",
-            "/compare/scorechain": "2026-07-06",
-            "/compare/sumsub": "2026-07-02",
-            "/compare/trm-labs": "2026-07-18",
-            "/compare/world-check": "2026-07-06",
             "/content-strategy": "2026-07-06",
             "/cost": "2026-07-18",
             "/cost-of/chainalysis-pricing": "2026-07-18",
@@ -5747,14 +5756,12 @@ License: https://creativecommons.org/licenses/by/4.0/
             ("/for/gaming", "monthly", "0.7", "OFAC sanctions for gaming agents"),
             ("/for/nft", "monthly", "0.7", "OFAC sanctions for NFT marketplace agents"),
             ("/for/lending", "monthly", "0.7", "OFAC sanctions for lending agents"),
-            ("/compare/sumsub", "monthly", "0.7", "agentmail vs SumSub - OFAC sanctions for agents"),
             ("/blog/ofac-for-agents", "monthly", "0.6", "Why AI agents need OFAC sanctions screening"),
             ("/blog/know-your-agent", "monthly", "0.6", "Know Your Agent (KYA) explained"),
             ("/blog/x402-compliance", "monthly", "0.6", "x402 payment compliance for AI agents"),
                 ("/for/insurance", "monthly", "0.7", "Insurance"),
         ("/for/healthcare", "monthly", "0.7", "Healthcare"),
         ("/for/real-estate", "monthly", "0.7", "Real Estate"),
-        ("/compare/charmverse", "monthly", "0.7", "Charmverse"),
         ("/blog/openai-agents-sdk-compliance", "monthly", "0.7", "Openai Agents Sdk Compliance"),
         ("/blog/ofac-penalties-for-agents", "monthly", "0.7", "What Does an OFAC Violation Cost Your AI Agent? ($330K+)"),
         ("/blog/how-to-screen-wallet-agent", "monthly", "0.7", "How to Screen a Crypto Wallet Before Your AI Agent Pays"),
@@ -5788,10 +5795,6 @@ License: https://creativecommons.org/licenses/by/4.0/
         ("/for/startup", "monthly", "0.7", "OFAC sanctions for startup AI agents"),
         ("/for/freelance-developer", "monthly", "0.7", "OFAC sanctions API for freelance developers"),
         ("/for/enterprise", "monthly", "0.7", "OFAC sanctions for enterprise AI agents"),
-        ("/compare/world-check", "monthly", "0.7", "agentmail vs World-Check"),
-        ("/compare/identitymind", "monthly", "0.7", "agentmail vs IdentityMind"),
-        ("/compare/scorechain", "monthly", "0.7", "agentmail vs Scorechain"),
-        ("/compare/amlbot", "monthly", "0.7", "agentmail vs AMLBot"),
         ("/integrations/autonome", "monthly", "0.7", "OFAC screening for Autonome agents"),
         ("/integrations/vercel-ai-sdk", "monthly", "0.7", "OFAC screening for Vercel AI SDK"),
         ("/integrations/elizaos", "monthly", "0.7", "OFAC screening for ElizaOS agents"),
@@ -5957,7 +5960,7 @@ License: https://creativecommons.org/licenses/by/4.0/
         ("/faq/how-to-screen-crypto-wallets-ofac", "monthly", "0.7", "How to screen crypto wallets against OFAC"),
         # Round 21: section-index pages (AEO — AI crawler entry points)
         ("/for", "weekly", "0.7", "OFAC sanctions screening by industry — SanctionsAI"),
-        ("/compare", "weekly", "0.7", "agentmail vs competitors — OFAC screening comparison"),
+        # /compare removed 2026-09-09: it 301s to /vs (§5.8 brand fix) and /vs is already listed below.
         ("/integrations", "weekly", "0.7", "Agentmail integrations — OFAC screening for agent frameworks"),
         ("/glossary", "weekly", "0.9", "OFAC and sanctions compliance glossary"),
         ("/tools", "weekly", "0.8", "Free OFAC screening tools — wallet, name, country, batch"),
@@ -5970,7 +5973,7 @@ License: https://creativecommons.org/licenses/by/4.0/
         # Interactive SEI calculator
         ("/tools/sei-calculator", "weekly", "0.9", "SEI Calculator — agentmail Sanctions Exposure Index"),
         # pSEO URLs (from sitemap-pseo.xml — now merged into main for discoverability)
-        ("/compare/trm-labs", "weekly", "0.8", "Compare TRM Labs"),
+        ("/vs/trm-labs", "weekly", "0.8", "Compare TRM Labs"),
         ("/for/nft-marketplaces", "weekly", "0.8", "OFAC sanctions for NFT marketplaces"),
         ("/for/dao-treasuries", "weekly", "0.8", "OFAC sanctions for DAO treasuries"),
         ("/for/cross-border-payments", "weekly", "0.8", "OFAC sanctions for cross-border payments"),
@@ -6126,7 +6129,7 @@ License: https://creativecommons.org/licenses/by/4.0/
         ("/templates/sanctions-risk-assessment-template", "monthly", "0.7", "Sanctions risk assessment template"),
         ("/best/best-free-sanctions-screening-tools", "monthly", "0.7", "Best free sanctions screening tools"),
         # Round 24 pSEO: compare twin for Notabene, remaining pricing, depth
-        ("/compare/notabene", "monthly", "0.7", "agentmail vs Notabene"),
+        ("/vs/notabene", "monthly", "0.7", "SanctionsAI vs Notabene"),
         ("/cost-of/scorechain-pricing", "monthly", "0.7", "How much does Scorechain cost?"),
         ("/cost-of/identitymind-pricing", "monthly", "0.7", "How much does IdentityMind cost?"),
         ("/faq/how-many-wallets-are-sanctioned", "monthly", "0.7", "How many crypto wallets does OFAC sanction?"),
@@ -6205,7 +6208,7 @@ License: https://creativecommons.org/licenses/by/4.0/
         ("/by-country/nicaragua", "monthly", "0.6", "Nicaragua sanctions"),
         ("/by-country/hong-kong", "monthly", "0.6", "Hong Kong sanctions"),
         ("/by-country/iraq", "monthly", "0.6", "Iraq sanctions"),
-        ("/compare/dow-jones-risk", "monthly", "0.7", "agentmail vs Dow Jones Risk & Compliance"),
+        ("/vs/dow-jones-rdc", "monthly", "0.7", "SanctionsAI vs Dow Jones Risk & Compliance"),
         ("/blog/ofac-compliance-framework", "monthly", "0.7", "OFAC's five-pillar compliance framework"),
         ("/blog/kyc-vs-kyb-vs-kya", "monthly", "0.7", "KYC vs KYB vs KYA"),
         ("/faq/screening-vs-monitoring", "monthly", "0.7", "Sanctions screening vs monitoring"),
@@ -8436,7 +8439,7 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
     <div class="cols">
       <div class="col"><h4>Product</h4><a href="/">Home</a><a href="/pricing">Pricing</a><a href="/docs">Docs</a><a href="/faq">FAQ</a><a href="/tools/wallet-checker">Wallet checker</a></div>
       <div class="col"><h4>By Industry</h4><a href="/for/fintech">Fintech</a><a href="/for/crypto">Crypto</a><a href="/for/dex">DEX</a><a href="/for/defi">DeFi</a><a href="/for/trading">Trading</a><a href="/for/payments">Payments</a><a href="/for/ecommerce">E-commerce</a></div>
-      <div class="col"><h4>Compare</h4><a href="/vs/chainalysis">vs Chainalysis</a><a href="/vs/elliptic">vs Elliptic</a><a href="/vs/comply-advantage">vs ComplyAdvantage</a><a href="/compare/sumsub">vs SumSub</a></div>
+      <div class="col"><h4>Compare</h4><a href="/vs/chainalysis">vs Chainalysis</a><a href="/vs/elliptic">vs Elliptic</a><a href="/vs/comply-advantage">vs ComplyAdvantage</a><a href="/vs/sumsub">vs SumSub</a></div>
       <div class="col"><h4>Developers</h4><a href="https://github.com/kindrat86/agentmail">GitHub</a><a href="https://pypi.org/project/sanctions-mcp/">PyPI</a><a href="/blog/ofac-for-agents">Blog</a><a href="https://agentmail-api.fly.dev/health">API status</a></div>
     </div>
   </div>
@@ -9222,7 +9225,7 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
     <div class="cols">
       <div class="col"><h4>Product</h4><a href="/">Home</a><a href="/pricing">Pricing</a><a href="/docs">Docs</a><a href="/faq">FAQ</a><a href="/tools/wallet-checker">Wallet checker</a></div>
       <div class="col"><h4>By Industry</h4><a href="/for/fintech">Fintech</a><a href="/for/crypto">Crypto</a><a href="/for/dex">DEX</a><a href="/for/defi">DeFi</a><a href="/for/trading">Trading</a><a href="/for/payments">Payments</a></div>
-      <div class="col"><h4>Compare</h4><a href="/vs/chainalysis">vs Chainalysis</a><a href="/vs/elliptic">vs Elliptic</a><a href="/vs/comply-advantage">vs ComplyAdvantage</a><a href="/compare/sumsub">vs SumSub</a></div>
+      <div class="col"><h4>Compare</h4><a href="/vs/chainalysis">vs Chainalysis</a><a href="/vs/elliptic">vs Elliptic</a><a href="/vs/comply-advantage">vs ComplyAdvantage</a><a href="/vs/sumsub">vs SumSub</a></div>
       <div class="col"><h4>Developers</h4><a href="https://github.com/kindrat86/agentmail">GitHub</a><a href="https://pypi.org/project/sanctions-mcp/">PyPI</a><a href="/blog/ofac-for-agents">Blog</a><a href="https://agentmail-api.fly.dev/health">API status</a></div>
     </div>
   </div>
@@ -9605,7 +9608,7 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
             '<ul>'
             '<li><a href="/vs/elliptic">agentmail vs Elliptic</a></li>'
             '<li><a href="/vs/comply-advantage">agentmail vs ComplyAdvantage</a></li>'
-            '<li><a href="/compare/sumsub">agentmail vs SumSub</a></li>'
+            '<li><a href="/vs/sumsub">agentmail vs SumSub</a></li>'
             '<li><a href="/guides/choose-sanctions-api">How to choose a sanctions API</a></li>'
             '<li><a href="/for/developers">OFAC screening for developers</a></li>'
             '</ul>'
@@ -10294,8 +10297,8 @@ document.getElementById("wallet").addEventListener("keydown",function(e){if(e.ke
             '<li><a href="/vs/chainalysis">agentmail vs Chainalysis</a></li>'
             '<li><a href="/vs/elliptic">agentmail vs Elliptic</a></li>'
             '<li><a href="/vs/comply-advantage">agentmail vs ComplyAdvantage</a></li>'
-            '<li><a href="/compare/sumsub">agentmail vs Sumsub</a></li>'
-            '<li><a href="/compare/world-check">agentmail vs World-Check</a></li>'
+            '<li><a href="/vs/sumsub">agentmail vs Sumsub</a></li>'
+            '<li><a href="/vs/world-check">agentmail vs World-Check</a></li>'
             '</ul>'
             '</div></section>'
 
@@ -12174,7 +12177,7 @@ curl "https://agentmail-api.fly.dev/sanctions?wallet=<span style="color:#f59e0b"
         ]
         items = "".join(
             f'<div style="padding:18px 0;border-bottom:1px solid #1a1a1a">'
-            f'<h3><a href="/compare/{slug}" style="color:#fff;text-decoration:none">{title}</a></h3>'
+            f'<h3><a href="/vs/{slug}" style="color:#fff;text-decoration:none">{title}</a></h3>'
             f'</div>'
             for slug, title in slugs
         )
@@ -13625,7 +13628,7 @@ compute();
         # Map known page_keys to their canonical paths
         path_map = {
             "chainalysis": "/vs/chainalysis", "elliptic": "/vs/elliptic",
-            "complyadvantage": "/vs/comply-advantage", "world-check": "/compare/world-check",
+            "complyadvantage": "/vs/comply-advantage", "world-check": "/vs/world-check",
             "for-defi": "/for/defi", "for-fintech": "/for/fintech", "for-ai-agents": "/for/ai-agents",
             "glossary-ofac": "/glossary/ofac", "glossary-sdn": "/glossary/sdn-list",
             "glossary-strict-liability": "/glossary/strict-liability",
