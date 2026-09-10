@@ -1,0 +1,66 @@
+{
+  "page": "https://sanctionsai.dev/glossary/ofac-reporting-requirements",
+  "brand": "SanctionsAI",
+  "reviewed_at": "2026-09-10",
+  "regulatory_basis": {
+    "sections": ["31 CFR 501.603", "31 CFR 501.604"],
+    "publisher": "U.S. Government Publishing Office / Office of the Federal Register",
+    "currency_note": "Text retrieved from the eCFR API on 2026-09-10; sections carry amendments cited at 91 FR 46837 (July 27, 2026), 89 FR 40376 (May 10, 2024), 89 FR 15740 (Mar. 5, 2024), and 84 FR 29058-29060 (June 21, 2019)."
+  },
+  "claims": [
+    {
+      "claim": "Initial reports of blocked property are due within 10 business days from the date that property becomes blocked",
+      "source_url": "https://www.ecfr.gov/current/title-31/subtitle-B/chapter-V/part-501/section-501.603",
+      "citation": "31 CFR 501.603(b)(1)(i)"
+    },
+    {
+      "claim": "An annual report on all blocked property held as of June 30 shall be filed by September 30",
+      "source_url": "https://www.ecfr.gov/current/title-31/subtitle-B/chapter-V/part-501/section-501.603",
+      "citation": "31 CFR 501.603(b)(2)(i)"
+    },
+    {
+      "claim": "Annual report values are stated in U.S. dollars as of June 30, and if a June 30 value date is unavailable the report must so indicate",
+      "source_url": "https://www.ecfr.gov/current/title-31/subtitle-B/chapter-V/part-501/section-501.603",
+      "citation": "31 CFR 501.603(b)(2)(ii)(F)"
+    },
+    {
+      "claim": "Reports of blocked property that is unblocked or transferred are due within 10 business days, subject to four enumerated exceptions (authorized service-charge debits; intra-institution transfers between blocked accounts; license-authorized unblocking or transfer unless the license requires a separate report; unblocking upon OFAC removal from the SDN List)",
+      "source_url": "https://www.ecfr.gov/current/title-31/subtitle-B/chapter-V/part-501/section-501.603",
+      "citation": "31 CFR 501.603(b)(3)(i)(A)-(D)"
+    },
+    {
+      "claim": "Initial and annual blocked-property reports must be filed electronically through the OFAC Reporting System (ORS); unblocking/transfer reports by email to OFACReport@treasury.gov or through ORS; requests to file by alternative means carry a presumption of denial and must be granted in writing",
+      "source_url": "https://www.ecfr.gov/current/title-31/subtitle-B/chapter-V/part-501/section-501.603",
+      "citation": "31 CFR 501.603(d)(1)-(2)"
+    },
+    {
+      "claim": "Reports of rejected transactions are due within 10 business days of the rejected transaction and are submitted through the OFAC Reporting System",
+      "source_url": "https://www.ecfr.gov/current/title-31/subtitle-B/chapter-V/part-501/section-501.604",
+      "citation": "31 CFR 501.604(c)-(d)"
+    },
+    {
+      "claim": "Any U.S. person holding, unblocking, or transferring blocked property must report, including financial institutions that receive and block payments; primary responsibility rests with the actual holder, transferrer, or releaser; another person's report does not excuse filing absent actual knowledge of it",
+      "source_url": "https://www.ecfr.gov/current/title-31/subtitle-B/chapter-V/part-501/section-501.603",
+      "citation": "31 CFR 501.603(a)(1)-(2)"
+    },
+    {
+      "claim": "A rejected-transaction report is required when a transaction that is not blocked would nonetheless violate a sanctions provision if processed; 'transaction' includes wire transfers, trade finance, securities transactions, checks, foreign exchange, and sales or purchases of goods or services",
+      "source_url": "https://www.ecfr.gov/current/title-31/subtitle-B/chapter-V/part-501/section-501.604",
+      "citation": "31 CFR 501.604(a)"
+    },
+    {
+      "claim": "The legal authority cited in a blocked-property report may be a sanctions program, a CFR part (e.g., 31 CFR part 515 or 544), an Executive order (e.g., E.O. 13224, E.O. 13599), or a statute; the generic term 'SDN' alone is not sufficient",
+      "source_url": "https://www.ecfr.gov/current/title-31/subtitle-B/chapter-V/part-501/section-501.603",
+      "citation": "31 CFR 501.603(b)(1)(ii)(H)"
+    },
+    {
+      "claim": "Blocked property with a negative balance (outstanding loans, credit card receivables) is reported as $0.00 with the amount owed described in the narrative",
+      "source_url": "https://www.ecfr.gov/current/title-31/subtitle-B/chapter-V/part-501/section-501.603",
+      "citation": "31 CFR 501.603(b)(1)(ii)(F)"
+    },
+    {
+      "claim": "SanctionsAI published the original glossary entry on 8 August 2026 and materially revised it with statutory citations on 10 September 2026",
+      "source_url": "https://sanctionsai.dev/glossary/ofac-reporting-requirements"
+    }
+  ]
+}
