@@ -2659,6 +2659,13 @@ class Handler(BaseHTTPRequestHandler):
             "/compare/trm-labs": "/vs/trm-labs",
             "/compare/world-check": "/vs/world-check",
             "/compare": "/vs",
+            # 2026-09-11: /regulations/ofac-reporting-requirements was a 1,915-char
+            # near-twin of /glossary/ofac-reporting-requirements (6,387 chars,
+            # rebuilt 2026-09-10 with 31 CFR 501.603/501.604 citations) — identical
+            # title/h1 "OFAC reporting requirements", both self-canonical, both in
+            # the sitemap: textbook cannibalisation on the site's highest-impression
+            # surviving query. Consolidate into the deepened glossary canonical.
+            "/regulations/ofac-reporting-requirements": "/glossary/ofac-reporting-requirements",
             "/alternatives/chainalysis": "/alternatives-to/chainalysis",
             "/integration/eliza": "/integrations/elizaos",
             "/integrations/eliza": "/integrations/elizaos",
@@ -7154,7 +7161,6 @@ License: https://creativecommons.org/licenses/by/4.0/
         ("/regulations/ofac-north-korea-nkspea", "monthly", "0.8", "OFAC North Korea NKSPEA"),
         ("/regulations/eu-sanctions-regulation", "monthly", "0.8", "EU Sanctions Regulation"),
         ("/regulations/uk-ofsi-regime", "monthly", "0.8", "UK OFSI Regime"),
-        ("/regulations/ofac-reporting-requirements", "monthly", "0.8", "OFAC Reporting Requirements"),
         ("/regulations/fincen-aml-requirements", "monthly", "0.8", "FinCEN AML Requirements"),
         ("/regulations/ofac-general-licenses", "monthly", "0.8", "OFAC General Licenses"),
         ("/regulations/corporate-transparency-act", "monthly", "0.8", "Corporate Transparency Act"),
