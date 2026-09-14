@@ -4,10 +4,10 @@
  "url": "https://sanctionsai.dev/data/ofac-crypto-wallets/",
  "license": "CC BY 4.0 (compilation); underlying OFAC data is US Government work, public domain",
  "source": "https://www.treasury.gov/ofac/downloads/sanctions/1.0/sdn_advanced.xml",
- "sdn_list_date": "2026-09-04",
- "generated": "2026-09-07",
- "record_count": 1007,
- "unique_addresses": 991,
+ "sdn_list_date": "2026-09-10",
+ "generated": "2026-09-14",
+ "record_count": 1059,
+ "unique_addresses": 1043,
  "records": [
   {
    "address": "0x4f47bc496083c727c5fbe3ce9cdf2b0f6496270c",
@@ -3248,6 +3248,474 @@
    "ofac_programs": "CYBER4",
    "source": "https://www.treasury.gov/ofac/downloads/sanctions/1.0/sdn_advanced.xml",
    "entity_designation_date": "2026-08-24"
+  },
+  {
+   "address": "TAQPzv9941nVuTj4ng2vd6L11Re57r42pW",
+   "chain": "TRX",
+   "entity": "Xinbi Guarantee",
+   "sdn_profile_id": "58361",
+   "ofac_programs": "TCO",
+   "source": "https://www.treasury.gov/ofac/downloads/sanctions/1.0/sdn_advanced.xml",
+   "entity_designation_date": "2026-09-09"
+  },
+  {
+   "address": "TAkpWPt2JZdiLSkG7ZX2VAQkZQsnGZ1nqh",
+   "chain": "TRX",
+   "entity": "Xinbi Guarantee",
+   "sdn_profile_id": "58361",
+   "ofac_programs": "TCO",
+   "source": "https://www.treasury.gov/ofac/downloads/sanctions/1.0/sdn_advanced.xml",
+   "entity_designation_date": "2026-09-09"
+  },
+  {
+   "address": "TBEqQGTxXRWXXeqe7ZwmSB6hc5MMMMMMMM",
+   "chain": "TRX",
+   "entity": "Xinbi Guarantee",
+   "sdn_profile_id": "58361",
+   "ofac_programs": "TCO",
+   "source": "https://www.treasury.gov/ofac/downloads/sanctions/1.0/sdn_advanced.xml",
+   "entity_designation_date": "2026-09-09"
+  },
+  {
+   "address": "TBKpozurdWLrbKkxtDqkveeq1dSB8Axj3V",
+   "chain": "TRX",
+   "entity": "Xinbi Guarantee",
+   "sdn_profile_id": "58361",
+   "ofac_programs": "TCO",
+   "source": "https://www.treasury.gov/ofac/downloads/sanctions/1.0/sdn_advanced.xml",
+   "entity_designation_date": "2026-09-09"
+  },
+  {
+   "address": "TBNjCi1d5Ns6ec5aMp28LpfKcX7xTpykAN",
+   "chain": "TRX",
+   "entity": "Xinbi Guarantee",
+   "sdn_profile_id": "58361",
+   "ofac_programs": "TCO",
+   "source": "https://www.treasury.gov/ofac/downloads/sanctions/1.0/sdn_advanced.xml",
+   "entity_designation_date": "2026-09-09"
+  },
+  {
+   "address": "TCoKgVdQbSyPnJnf9oNUNQn3dWMDD9wbQL",
+   "chain": "TRX",
+   "entity": "Xinbi Guarantee",
+   "sdn_profile_id": "58361",
+   "ofac_programs": "TCO",
+   "source": "https://www.treasury.gov/ofac/downloads/sanctions/1.0/sdn_advanced.xml",
+   "entity_designation_date": "2026-09-09"
+  },
+  {
+   "address": "TDU61o35UEe5hdB3R16c116DrPSV4kiyKz",
+   "chain": "TRX",
+   "entity": "Xinbi Guarantee",
+   "sdn_profile_id": "58361",
+   "ofac_programs": "TCO",
+   "source": "https://www.treasury.gov/ofac/downloads/sanctions/1.0/sdn_advanced.xml",
+   "entity_designation_date": "2026-09-09"
+  },
+  {
+   "address": "TEECjwHqVG8sDmM3VtscjuCaRe5p351MU7",
+   "chain": "TRX",
+   "entity": "Xinbi Guarantee",
+   "sdn_profile_id": "58361",
+   "ofac_programs": "TCO",
+   "source": "https://www.treasury.gov/ofac/downloads/sanctions/1.0/sdn_advanced.xml",
+   "entity_designation_date": "2026-09-09"
+  },
+  {
+   "address": "TF7LUSoZQyDFxTFzCL11saBHAqMAyPh8dK",
+   "chain": "TRX",
+   "entity": "Xinbi Guarantee",
+   "sdn_profile_id": "58361",
+   "ofac_programs": "TCO",
+   "source": "https://www.treasury.gov/ofac/downloads/sanctions/1.0/sdn_advanced.xml",
+   "entity_designation_date": "2026-09-09"
+  },
+  {
+   "address": "TG83Fk56S2mycAUMYHZyZp9wMg6DCf4bUn",
+   "chain": "TRX",
+   "entity": "Xinbi Guarantee",
+   "sdn_profile_id": "58361",
+   "ofac_programs": "TCO",
+   "source": "https://www.treasury.gov/ofac/downloads/sanctions/1.0/sdn_advanced.xml",
+   "entity_designation_date": "2026-09-09"
+  },
+  {
+   "address": "TGSGw4aUeAMNCfD8WqLRLe8ErQiJ1vqghj",
+   "chain": "TRX",
+   "entity": "Xinbi Guarantee",
+   "sdn_profile_id": "58361",
+   "ofac_programs": "TCO",
+   "source": "https://www.treasury.gov/ofac/downloads/sanctions/1.0/sdn_advanced.xml",
+   "entity_designation_date": "2026-09-09"
+  },
+  {
+   "address": "TGcewGsDLy7Fzc66kXXEB8Kh2b6u2XCvnV",
+   "chain": "TRX",
+   "entity": "Xinbi Guarantee",
+   "sdn_profile_id": "58361",
+   "ofac_programs": "TCO",
+   "source": "https://www.treasury.gov/ofac/downloads/sanctions/1.0/sdn_advanced.xml",
+   "entity_designation_date": "2026-09-09"
+  },
+  {
+   "address": "TGjYoJLhfAiD2BRV9hwCeuHhZ54D3gLKTd",
+   "chain": "TRX",
+   "entity": "Xinbi Guarantee",
+   "sdn_profile_id": "58361",
+   "ofac_programs": "TCO",
+   "source": "https://www.treasury.gov/ofac/downloads/sanctions/1.0/sdn_advanced.xml",
+   "entity_designation_date": "2026-09-09"
+  },
+  {
+   "address": "TGu8xk3u1QcA9FNCQZ4RUTvniiCjNkjXkA",
+   "chain": "TRX",
+   "entity": "Xinbi Guarantee",
+   "sdn_profile_id": "58361",
+   "ofac_programs": "TCO",
+   "source": "https://www.treasury.gov/ofac/downloads/sanctions/1.0/sdn_advanced.xml",
+   "entity_designation_date": "2026-09-09"
+  },
+  {
+   "address": "TH1yknksde3pBY3oWVhUxVTbWbLqdafqYT",
+   "chain": "TRX",
+   "entity": "Xinbi Guarantee",
+   "sdn_profile_id": "58361",
+   "ofac_programs": "TCO",
+   "source": "https://www.treasury.gov/ofac/downloads/sanctions/1.0/sdn_advanced.xml",
+   "entity_designation_date": "2026-09-09"
+  },
+  {
+   "address": "THH9JJNbLDN7qs1CyTxJQEjhC9y5FnZUhU",
+   "chain": "TRX",
+   "entity": "Xinbi Guarantee",
+   "sdn_profile_id": "58361",
+   "ofac_programs": "TCO",
+   "source": "https://www.treasury.gov/ofac/downloads/sanctions/1.0/sdn_advanced.xml",
+   "entity_designation_date": "2026-09-09"
+  },
+  {
+   "address": "THifikwE6RtxYNWdcP9CWUjXS8Gh1xBCoa",
+   "chain": "TRX",
+   "entity": "Xinbi Guarantee",
+   "sdn_profile_id": "58361",
+   "ofac_programs": "TCO",
+   "source": "https://www.treasury.gov/ofac/downloads/sanctions/1.0/sdn_advanced.xml",
+   "entity_designation_date": "2026-09-09"
+  },
+  {
+   "address": "TJ6NznpBV5uUpp5uZGDub9zD1999999999",
+   "chain": "TRX",
+   "entity": "Xinbi Guarantee",
+   "sdn_profile_id": "58361",
+   "ofac_programs": "TCO",
+   "source": "https://www.treasury.gov/ofac/downloads/sanctions/1.0/sdn_advanced.xml",
+   "entity_designation_date": "2026-09-09"
+  },
+  {
+   "address": "TK3n8pGHvDTcK53mpfeDAMzdwjb22qvFU3",
+   "chain": "TRX",
+   "entity": "Xinbi Guarantee",
+   "sdn_profile_id": "58361",
+   "ofac_programs": "TCO",
+   "source": "https://www.treasury.gov/ofac/downloads/sanctions/1.0/sdn_advanced.xml",
+   "entity_designation_date": "2026-09-09"
+  },
+  {
+   "address": "TKRNCETxbiMmyyMraCkgdXKdLr1ZkmKxV5",
+   "chain": "TRX",
+   "entity": "Xinbi Guarantee",
+   "sdn_profile_id": "58361",
+   "ofac_programs": "TCO",
+   "source": "https://www.treasury.gov/ofac/downloads/sanctions/1.0/sdn_advanced.xml",
+   "entity_designation_date": "2026-09-09"
+  },
+  {
+   "address": "TLHWeZcDmXk6idnaGwsQ9CEmK24KpoGgRM",
+   "chain": "TRX",
+   "entity": "Xinbi Guarantee",
+   "sdn_profile_id": "58361",
+   "ofac_programs": "TCO",
+   "source": "https://www.treasury.gov/ofac/downloads/sanctions/1.0/sdn_advanced.xml",
+   "entity_designation_date": "2026-09-09"
+  },
+  {
+   "address": "TM9c5uR2UKwd5fMySgaoYSjphRyi3AjAtc",
+   "chain": "TRX",
+   "entity": "Xinbi Guarantee",
+   "sdn_profile_id": "58361",
+   "ofac_programs": "TCO",
+   "source": "https://www.treasury.gov/ofac/downloads/sanctions/1.0/sdn_advanced.xml",
+   "entity_designation_date": "2026-09-09"
+  },
+  {
+   "address": "TMdZfVVAsxKsbXGmV3kBnEgM69z3QHH3kz",
+   "chain": "TRX",
+   "entity": "Xinbi Guarantee",
+   "sdn_profile_id": "58361",
+   "ofac_programs": "TCO",
+   "source": "https://www.treasury.gov/ofac/downloads/sanctions/1.0/sdn_advanced.xml",
+   "entity_designation_date": "2026-09-09"
+  },
+  {
+   "address": "TNUQ2rZSRjZaGhtbwaFZEvuaemMj5z5Fnm",
+   "chain": "TRX",
+   "entity": "Xinbi Guarantee",
+   "sdn_profile_id": "58361",
+   "ofac_programs": "TCO",
+   "source": "https://www.treasury.gov/ofac/downloads/sanctions/1.0/sdn_advanced.xml",
+   "entity_designation_date": "2026-09-09"
+  },
+  {
+   "address": "TNwe3WoEX6XrQ5NPAeWPkvpTtdaf27XYxK",
+   "chain": "TRX",
+   "entity": "Xinbi Guarantee",
+   "sdn_profile_id": "58361",
+   "ofac_programs": "TCO",
+   "source": "https://www.treasury.gov/ofac/downloads/sanctions/1.0/sdn_advanced.xml",
+   "entity_designation_date": "2026-09-09"
+  },
+  {
+   "address": "TPD4pmojFA2f2RvgnSDa7YCuGJ4BeS9yK2",
+   "chain": "TRX",
+   "entity": "Xinbi Guarantee",
+   "sdn_profile_id": "58361",
+   "ofac_programs": "TCO",
+   "source": "https://www.treasury.gov/ofac/downloads/sanctions/1.0/sdn_advanced.xml",
+   "entity_designation_date": "2026-09-09"
+  },
+  {
+   "address": "TQhT3QWAbFiy6GEYuBrbK97uP3XVmTpRD8",
+   "chain": "TRX",
+   "entity": "Xinbi Guarantee",
+   "sdn_profile_id": "58361",
+   "ofac_programs": "TCO",
+   "source": "https://www.treasury.gov/ofac/downloads/sanctions/1.0/sdn_advanced.xml",
+   "entity_designation_date": "2026-09-09"
+  },
+  {
+   "address": "TR983hNyUNgrNSB1xncG9thZNhgYpbNvSh",
+   "chain": "TRX",
+   "entity": "Xinbi Guarantee",
+   "sdn_profile_id": "58361",
+   "ofac_programs": "TCO",
+   "source": "https://www.treasury.gov/ofac/downloads/sanctions/1.0/sdn_advanced.xml",
+   "entity_designation_date": "2026-09-09"
+  },
+  {
+   "address": "TRyQivSkQChryfnYnE1bUmJhnL3TvKUpvS",
+   "chain": "TRX",
+   "entity": "Xinbi Guarantee",
+   "sdn_profile_id": "58361",
+   "ofac_programs": "TCO",
+   "source": "https://www.treasury.gov/ofac/downloads/sanctions/1.0/sdn_advanced.xml",
+   "entity_designation_date": "2026-09-09"
+  },
+  {
+   "address": "TSmcHwvTR27Ao4NN8HhPFCVcPU5aTEqLDt",
+   "chain": "TRX",
+   "entity": "Xinbi Guarantee",
+   "sdn_profile_id": "58361",
+   "ofac_programs": "TCO",
+   "source": "https://www.treasury.gov/ofac/downloads/sanctions/1.0/sdn_advanced.xml",
+   "entity_designation_date": "2026-09-09"
+  },
+  {
+   "address": "TT4WKPQscK7fkxrPj1E9PjZp1HTVBUpoTm",
+   "chain": "TRX",
+   "entity": "Xinbi Guarantee",
+   "sdn_profile_id": "58361",
+   "ofac_programs": "TCO",
+   "source": "https://www.treasury.gov/ofac/downloads/sanctions/1.0/sdn_advanced.xml",
+   "entity_designation_date": "2026-09-09"
+  },
+  {
+   "address": "TTWBrNgoooSs9HQQKMty3ZQDbS9LzgjNiH",
+   "chain": "TRX",
+   "entity": "Xinbi Guarantee",
+   "sdn_profile_id": "58361",
+   "ofac_programs": "TCO",
+   "source": "https://www.treasury.gov/ofac/downloads/sanctions/1.0/sdn_advanced.xml",
+   "entity_designation_date": "2026-09-09"
+  },
+  {
+   "address": "TTWRf2MD6zJ26bS4uKCNrcp84aAr7AmTjm",
+   "chain": "TRX",
+   "entity": "Xinbi Guarantee",
+   "sdn_profile_id": "58361",
+   "ofac_programs": "TCO",
+   "source": "https://www.treasury.gov/ofac/downloads/sanctions/1.0/sdn_advanced.xml",
+   "entity_designation_date": "2026-09-09"
+  },
+  {
+   "address": "TTYf9kcvABTSizXsdbC2E5co6jx9jvJ111",
+   "chain": "TRX",
+   "entity": "Xinbi Guarantee",
+   "sdn_profile_id": "58361",
+   "ofac_programs": "TCO",
+   "source": "https://www.treasury.gov/ofac/downloads/sanctions/1.0/sdn_advanced.xml",
+   "entity_designation_date": "2026-09-09"
+  },
+  {
+   "address": "TThRMUSidD4gQeCnu56cFfCmqS421Nmbu7",
+   "chain": "TRX",
+   "entity": "Xinbi Guarantee",
+   "sdn_profile_id": "58361",
+   "ofac_programs": "TCO",
+   "source": "https://www.treasury.gov/ofac/downloads/sanctions/1.0/sdn_advanced.xml",
+   "entity_designation_date": "2026-09-09"
+  },
+  {
+   "address": "TTjHn8qNVxazB3UroiekGRPuM2w2GwvNbn",
+   "chain": "TRX",
+   "entity": "Xinbi Guarantee",
+   "sdn_profile_id": "58361",
+   "ofac_programs": "TCO",
+   "source": "https://www.treasury.gov/ofac/downloads/sanctions/1.0/sdn_advanced.xml",
+   "entity_designation_date": "2026-09-09"
+  },
+  {
+   "address": "TTmvr41Fa9LeWJQ8NKQ5t4wFUspgEA1mJF",
+   "chain": "TRX",
+   "entity": "Xinbi Guarantee",
+   "sdn_profile_id": "58361",
+   "ofac_programs": "TCO",
+   "source": "https://www.treasury.gov/ofac/downloads/sanctions/1.0/sdn_advanced.xml",
+   "entity_designation_date": "2026-09-09"
+  },
+  {
+   "address": "TTrHak4biV5ZtNwN1K8oi7916CjmeVVeH8",
+   "chain": "TRX",
+   "entity": "Xinbi Guarantee",
+   "sdn_profile_id": "58361",
+   "ofac_programs": "TCO",
+   "source": "https://www.treasury.gov/ofac/downloads/sanctions/1.0/sdn_advanced.xml",
+   "entity_designation_date": "2026-09-09"
+  },
+  {
+   "address": "TW5tokvhEfrb77z98Rc8HqbkzQJ6sxYtGX",
+   "chain": "TRX",
+   "entity": "Xinbi Guarantee",
+   "sdn_profile_id": "58361",
+   "ofac_programs": "TCO",
+   "source": "https://www.treasury.gov/ofac/downloads/sanctions/1.0/sdn_advanced.xml",
+   "entity_designation_date": "2026-09-09"
+  },
+  {
+   "address": "TWHwre81Mv4hvupNdHnsYX9FPocm29dQQQ",
+   "chain": "TRX",
+   "entity": "Xinbi Guarantee",
+   "sdn_profile_id": "58361",
+   "ofac_programs": "TCO",
+   "source": "https://www.treasury.gov/ofac/downloads/sanctions/1.0/sdn_advanced.xml",
+   "entity_designation_date": "2026-09-09"
+  },
+  {
+   "address": "TWPma8xH48AEN93x2krdukV9e1j6sPsBeS",
+   "chain": "TRX",
+   "entity": "Xinbi Guarantee",
+   "sdn_profile_id": "58361",
+   "ofac_programs": "TCO",
+   "source": "https://www.treasury.gov/ofac/downloads/sanctions/1.0/sdn_advanced.xml",
+   "entity_designation_date": "2026-09-09"
+  },
+  {
+   "address": "TWqcMjV7Wq2RHe2CSiKQHpkn6A7B2AWUPe",
+   "chain": "TRX",
+   "entity": "Xinbi Guarantee",
+   "sdn_profile_id": "58361",
+   "ofac_programs": "TCO",
+   "source": "https://www.treasury.gov/ofac/downloads/sanctions/1.0/sdn_advanced.xml",
+   "entity_designation_date": "2026-09-09"
+  },
+  {
+   "address": "TXHX2NUvcgft4zs6MkkUtdNVERPTavHDWN",
+   "chain": "TRX",
+   "entity": "Xinbi Guarantee",
+   "sdn_profile_id": "58361",
+   "ofac_programs": "TCO",
+   "source": "https://www.treasury.gov/ofac/downloads/sanctions/1.0/sdn_advanced.xml",
+   "entity_designation_date": "2026-09-09"
+  },
+  {
+   "address": "TXT9atp8qBMXKbFYnRyWkM88UXYyobQNLP",
+   "chain": "TRX",
+   "entity": "Xinbi Guarantee",
+   "sdn_profile_id": "58361",
+   "ofac_programs": "TCO",
+   "source": "https://www.treasury.gov/ofac/downloads/sanctions/1.0/sdn_advanced.xml",
+   "entity_designation_date": "2026-09-09"
+  },
+  {
+   "address": "TXka5xc6mEkcoVXR7F2TFDKernyLt3XyW4",
+   "chain": "TRX",
+   "entity": "Xinbi Guarantee",
+   "sdn_profile_id": "58361",
+   "ofac_programs": "TCO",
+   "source": "https://www.treasury.gov/ofac/downloads/sanctions/1.0/sdn_advanced.xml",
+   "entity_designation_date": "2026-09-09"
+  },
+  {
+   "address": "TXtH3iUipk6DZnYNu3kgjDsnSSLHLz8ZZU",
+   "chain": "TRX",
+   "entity": "Xinbi Guarantee",
+   "sdn_profile_id": "58361",
+   "ofac_programs": "TCO",
+   "source": "https://www.treasury.gov/ofac/downloads/sanctions/1.0/sdn_advanced.xml",
+   "entity_designation_date": "2026-09-09"
+  },
+  {
+   "address": "TYZKYK2fbvw3EAPES2daFvoV4DqPna43Jd",
+   "chain": "TRX",
+   "entity": "Xinbi Guarantee",
+   "sdn_profile_id": "58361",
+   "ofac_programs": "TCO",
+   "source": "https://www.treasury.gov/ofac/downloads/sanctions/1.0/sdn_advanced.xml",
+   "entity_designation_date": "2026-09-09"
+  },
+  {
+   "address": "TYkE8VwX1SGHM3Q2CA29nka5U2F2khKAj5",
+   "chain": "TRX",
+   "entity": "Xinbi Guarantee",
+   "sdn_profile_id": "58361",
+   "ofac_programs": "TCO",
+   "source": "https://www.treasury.gov/ofac/downloads/sanctions/1.0/sdn_advanced.xml",
+   "entity_designation_date": "2026-09-09"
+  },
+  {
+   "address": "TYq3iRujcBELXX89i9JY32UmLxcyZAJe7E",
+   "chain": "TRX",
+   "entity": "Xinbi Guarantee",
+   "sdn_profile_id": "58361",
+   "ofac_programs": "TCO",
+   "source": "https://www.treasury.gov/ofac/downloads/sanctions/1.0/sdn_advanced.xml",
+   "entity_designation_date": "2026-09-09"
+  },
+  {
+   "address": "TYvjt4ZKfsipHjA52nzgjUjDBF622SLCih",
+   "chain": "TRX",
+   "entity": "Xinbi Guarantee",
+   "sdn_profile_id": "58361",
+   "ofac_programs": "TCO",
+   "source": "https://www.treasury.gov/ofac/downloads/sanctions/1.0/sdn_advanced.xml",
+   "entity_designation_date": "2026-09-09"
+  },
+  {
+   "address": "TZ42sU5kQ2n5rLZ6PhEGkmfLtmHjoi2vpr",
+   "chain": "TRX",
+   "entity": "Xinbi Guarantee",
+   "sdn_profile_id": "58361",
+   "ofac_programs": "TCO",
+   "source": "https://www.treasury.gov/ofac/downloads/sanctions/1.0/sdn_advanced.xml",
+   "entity_designation_date": "2026-09-09"
+  },
+  {
+   "address": "TZ8zsUe9M9tkhrFtfE7vMMmEwgVEF3n2UN",
+   "chain": "TRX",
+   "entity": "Xinbi Guarantee",
+   "sdn_profile_id": "58361",
+   "ofac_programs": "TCO",
+   "source": "https://www.treasury.gov/ofac/downloads/sanctions/1.0/sdn_advanced.xml",
+   "entity_designation_date": "2026-09-09"
   },
   {
    "address": "0xb6f5ec1a0a9cd1526536d3f0426c429529471f40",
@@ -8929,7 +9397,7 @@
    "entity_designation_date": "2015-09-29"
   },
   {
-   "address": "45ezvPejNsKYntjhyyeb7fbfzilsxYQozc5Ffseh8jPGW4JZQQVXykNTfK5uGFiij7Hp3qPv3T5HCR7F3Fnmz2mzE1aKQwo",
+   "address": "45ezvPejNsKYntjhyyeb7fbfzi1sxYQozc5Ffseh8jPGW4JZQQVXykNTfK5uGFiij7Hp3qPv3T5HCR7F3Fnmz2mzE1aKQwo",
    "chain": "XMR",
    "entity": "ISIL Khorasan",
    "sdn_profile_id": "18647",
