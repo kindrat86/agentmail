@@ -120,7 +120,13 @@ function check(path) {
     }
 
     for (const node of Array.isArray(parsed) ? parsed : [parsed]) {
-      if (!node || typeof node !== 'object') continue;
+      if (!node || typeof node !== 'object' || Array.isArray(node)) {
+        const kind = node === null ? 'null' : Array.isArray(node) ? 'array' : typeof node;
+        errors.push(
+          `${rel} [block ${i}]: invalid top-level element ${kind}; expected object or array of objects`
+        );
+        continue;
+      }
       const ctx = node['@context'];
       if (ctx === undefined) {
         errors.push(`${rel} [block ${i}]: missing @context`);
