@@ -1,7 +1,7 @@
 from pathlib import Path
 import collections, html, json, re
 
-REPO = Path('/Users/sipi/workspace/agentmail')
+REPO = Path(__file__).resolve().parents[1]
 ROOT = REPO / 'sanctioned-addresses'
 DATA = REPO / 'data/ofac-crypto-wallets/data.json'
 SOURCE = 'https://www.treasury.gov/ofac/downloads/sanctions/1.0/sdn_advanced.xml'
@@ -55,6 +55,7 @@ assert all(r.get('source') == SOURCE for r in records)
 assert all(r.get('address') and r.get('chain') and r.get('entity') and r.get('ofac_programs') and r.get('entity_designation_date') for r in records)
 
 hub = (ROOT / 'index.html').read_text()
+hub = hub.replace('<a href="/free/ofac-screening">Free bulk screening</a>', '<a href="/tools/batch-checker">Free bulk screening</a>')
 entities = len({r['entity'] for r in records})
 chain_counts = collections.Counter(r['chain'] for r in records)
 hub = re.sub(r'OFAC-Sanctioned Crypto Addresses — All \d+ (?:on the SDN List|Listings)…', f'OFAC-Sanctioned Crypto Addresses — All {len(records)} Listings…', hub)
@@ -83,6 +84,7 @@ manifest_pages=[]
 for slug,(code,name,ticker) in CONFIG.items():
     path=ROOT/slug/'index.html'
     text=path.read_text()
+    text=text.replace('<a href="/free/ofac-screening">Free bulk screening</a>', '<a href="/tools/batch-checker">Free bulk screening</a>')
     rr=sorted(by_chain[code], key=lambda r:(r['entity_designation_date'],r['address']), reverse=True)
     n=len(rr); ents=len({r['entity'] for r in rr}); first=min(r['entity_designation_date'] for r in rr); last=max(r['entity_designation_date'] for r in rr)
     title_name=name
