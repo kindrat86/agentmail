@@ -8807,6 +8807,7 @@ const payment = await x402.pay({
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>x402 Compliance Check for AI Agents | $0.05/check | agentmail</title>
+<link rel="canonical" href="https://sanctionsai.dev/agent">
 <meta name="description" content="OFAC sanctions screening for AI agents. Pay $0.05 USDC per check via x402 on Base. No API key. No signup. 947 wallets, 19,218 names, 16 jurisdictions.">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <meta name="theme-color" content="#0a0a0a">
