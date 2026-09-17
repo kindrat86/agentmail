@@ -3445,16 +3445,17 @@ Allow: Storing
         if p.path == "/answers":
             return self._legal_page("answers")
         # pSEO pages
-        if p.path == "/alternatives-to/chainalysis":
-            return self._pseo_page("chainalysis")
-        if p.path == "/alternatives-to/elliptic":
-            return self._pseo_page("elliptic")
-        if p.path == "/alternatives-to/complyadvantage":
-            return self._pseo_page("complyadvantage")
-        if p.path == "/alternatives-to/world-check":
-            return self._pseo_page("world-check")
+        # NOTE: /alternatives-to/{chainalysis,elliptic,complyadvantage,world-check}
+        # previously had explicit _pseo_page() routes here that rendered thin
+        # duplicate content with cross-canonicals to /vs/*. Google ignored the
+        # cross-canonical (content differs) and flagged the pages
+        # "Duplicate, Google chose different canonical than user" (GSC 2026-09-16).
+        # The committed static files under alternatives-to/<slug>/index.html carry
+        # self-canonicals (same serving path as /alternatives-to/sumsub, which
+        # inspects healthy), so these URLs now fall through to the static-prefix
+        # handler below.
         if p.path.startswith("/for/"):
-            return self._vertical_page(p.path.replace("/for/",""))
+            return self._vertical_page(p.path.replace("/for/", ""))
         if p.path == "/glossary/ofac":
             return self._pseo_page("glossary-ofac")
         if p.path == "/glossary/sdn-list":
