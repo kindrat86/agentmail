@@ -3,6 +3,9 @@
 The page upgrades the old 301-to-glossary redirect into a real 200 landing
 page: official OFAC search/download guidance, honest limitations, no mirrored
 dataset, no fake search, disclaimer, schema, sitemap + pinned lastmod.
+Retargeted 2026-09-18 to the queries that actually earn impressions
+("sdn.csv" / "sdn.xml" file-intent searches): title/H1/intro now name the
+files and the page explains where they live.
 These tests parse the static HTML file and the api.py wiring directly, so
 they run without a live server.
 """
@@ -18,6 +21,7 @@ ROOT = pathlib.Path(__file__).parents[1]
 PAGE = ROOT / "data" / "ofac-sdn-list" / "index.html"
 API = ROOT / "api.py"
 CANONICAL = "https://sanctionsai.dev/data/ofac-sdn-list/"
+REVIEW_DATE = "2026-09-18"  # pinned review date; HTML and api.py lastmod must agree
 
 
 def _page_text() -> str:
@@ -53,7 +57,10 @@ class PageMetaTest(unittest.TestCase):
         page = _page_text()
         self.assertIn(CANONICAL, page)
         self.assertIn('rel="canonical"', page)
-        self.assertRegex(page, r"<title>[^<]*OFAC SDN List[^<]*</title>")
+        # Title retargeted to file-intent queries; must name the actual files.
+        self.assertRegex(page, r"<title>[^<]*sdn\.csv[^<]*</title>")
+        self.assertRegex(page, r"<title>[^<]*sdn\.xml[^<]*</title>")
+        self.assertRegex(page, r"<h1>[^<]*sdn\.csv[^<]*</h1>")
         self.assertRegex(page, r'<meta name="description" content="[^"]{50,}"')
 
     def test_no_em_dash(self) -> None:
@@ -90,7 +97,7 @@ class HonestyTest(unittest.TestCase):
 
     def test_declares_review_date_not_live_data(self) -> None:
         page = _page_text()
-        self.assertIn("2026-08-31", page)
+        self.assertIn(REVIEW_DATE, page)
         self.assertIn("last reviewed", page.lower())
 
     def test_search_cta_points_to_real_existing_flow(self) -> None:
@@ -148,7 +155,7 @@ class ApiWiringTest(unittest.TestCase):
         keys = _local_dict_keys(source, "URL_LASTMOD")
         self.assertIn("/data/ofac-sdn-list/", keys)
         self.assertIn(
-            '"/data/ofac-sdn-list/": "2026-08-31"', source,
+            f'"/data/ofac-sdn-list/": "{REVIEW_DATE}"', source,
             "lastmod pin must be a durable literal date, not computed",
         )
 

@@ -5565,7 +5565,7 @@ License: https://creativecommons.org/licenses/by/4.0/
             "/countries/yemen": "2026-07-13",
             "/countries/zimbabwe": "2026-07-13",
             "/data/ofac-enforcement": "2026-07-19",
-            "/data/ofac-sdn-list/": "2026-08-31",
+            "/data/ofac-sdn-list/": "2026-09-18",
             "/docs": "2026-07-24",
             "/dream100": "2026-07-26",
             "/hooks": "2026-07-26",
