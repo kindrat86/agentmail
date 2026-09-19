@@ -13091,11 +13091,12 @@ compute();
                 "Know Your Agent (KYA)",
                 "voluntary self-disclosure",
             ],
-            "alumniOf": "US Treasury OFAC compliance framework",
+            # 2026-09-19 integrity fix: removed fabricated "alumniOf": "US Treasury OFAC
+            # compliance framework" (no such credential exists) and the unverifiable
+            # linkedin.com/in/data-nerd-sanctions sameAs. Kept only verified profiles.
             "sameAs": [
                 "https://x.com/sipiteno",
                 "https://github.com/kindrat86",
-                "https://www.linkedin.com/in/data-nerd-sanctions",
             ],
         }
         schema = {"@context": "https://schema.org", "@graph": [
@@ -13121,6 +13122,12 @@ compute();
              "speakable": {"@type": "SpeakableSpecification", "cssSelector": ["h1", "h2", ".note"]}},
         ]}
         faq_html = "".join(f'<details><summary>{q}</summary><p>{a}</p></details>' for q, a in faqs)
+        # 2026-09-19 integrity fix: every _render_pseo caller rendered h2-first with no <h1>,
+        # failing the h1 health gate and leaving Speakable's "h1" cssSelector pointing at
+        # nothing. Inject the h1 from the page title (mirrors the Article headline) only
+        # when the body genuinely lacks one.
+        if "<h1" not in body_html.lower():
+            body_html = f"<h1>{title}</h1>\n{body_html}"
         html = f"""<!DOCTYPE html>
 <html lang="en-US"><head>
 <meta charset="utf-8">
