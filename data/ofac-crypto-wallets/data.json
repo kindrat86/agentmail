@@ -4,8 +4,8 @@
  "url": "https://sanctionsai.dev/data/ofac-crypto-wallets/",
  "license": "CC BY 4.0 (compilation); underlying OFAC data is US Government work, public domain",
  "source": "https://www.treasury.gov/ofac/downloads/sanctions/1.0/sdn_advanced.xml",
- "sdn_list_date": "2026-09-10",
- "generated": "2026-09-14",
+ "sdn_list_date": "2026-09-18",
+ "generated": "2026-09-21",
  "record_count": 1059,
  "unique_addresses": 1043,
  "records": [
