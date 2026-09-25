@@ -688,13 +688,6 @@
       </image:image>
   </url>
   <url>
-    <loc>https://sanctionsai.dev/vs/ofac-list-download</loc>
-      <image:image>
-        <image:loc>https://sanctionsai.dev/og.png</image:loc>
-        <image:title>SanctionsAI</image:title>
-      </image:image>
-  </url>
-  <url>
     <loc>https://sanctionsai.dev/vs/refinitiv-worldcheck</loc>
       <image:image>
         <image:loc>https://sanctionsai.dev/og.png</image:loc>

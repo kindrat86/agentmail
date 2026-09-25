@@ -2665,6 +2665,13 @@ class Handler(BaseHTTPRequestHandler):
             # title/h1 "OFAC reporting requirements", both self-canonical, both in
             # the sitemap: textbook cannibalisation on the site's highest-impression
             # surviving query. Consolidate into the deepened glossary canonical.
+            # 2026-09-25: /vs/ofac-list-download was a template "vs" page whose
+            # "competitor" is a CSV file — pos 1.6 / 7 impr / 0 clicks on
+            # download-intent queries (28d GSC). The site's real download-intent
+            # canonical is /data/ofac-sdn-list/ (retargeted 2026-09-18 to name
+            # sdn.csv + sdn.xml). Same consolidation mechanism as
+            # /regulations/ofac-reporting-requirements (9bbd525).
+            "/vs/ofac-list-download": "/data/ofac-sdn-list/",
             "/regulations/ofac-reporting-requirements": "/glossary/ofac-reporting-requirements",
             "/alternatives/chainalysis": "/alternatives-to/chainalysis",
             "/integration/eliza": "/integrations/elizaos",
@@ -5695,7 +5702,6 @@ License: https://creativecommons.org/licenses/by/4.0/
             "/vs/comply-advantage": "2026-07-18",
             "/vs/dow-jones-rdc": "2026-07-18",
             "/vs/elliptic": "2026-07-18",
-            "/vs/ofac-list-download": "2026-07-18",
             "/vs/refinitiv": "2026-07-18",
             "/vs/refinitiv-worldcheck": "2026-07-18",
             "/vs/swift-sanctions": "2026-07-18",
@@ -5863,7 +5869,6 @@ License: https://creativecommons.org/licenses/by/4.0/
         ("/vs/comply-advantage", "monthly", "0.7", "SanctionsAI vs ComplyAdvantage"),
         ("/vs/dow-jones-rdc", "monthly", "0.7", "SanctionsAI vs Dow Jones RDC"),
         ("/vs/elliptic", "monthly", "0.7", "SanctionsAI vs Elliptic"),
-        ("/vs/ofac-list-download", "monthly", "0.7", "SanctionsAI vs OFAC list download"),
         ("/vs/refinitiv-worldcheck", "monthly", "0.7", "SanctionsAI vs Refinitiv World-Check"),
         ("/vs/refinitiv", "monthly", "0.7", "SanctionsAI vs Refinitiv"),
         ("/vs/swift-sanctions", "monthly", "0.7", "SanctionsAI vs SWIFT Sanctions Screening"),
@@ -12181,7 +12186,6 @@ curl "https://agentmail-api.fly.dev/sanctions?wallet=<span style="color:#f59e0b"
             ("refinitiv-worldcheck", "SanctionsAI vs Refinitiv World-Check"),
             ("swift-sanctions", "SanctionsAI vs SWIFT Sanctions Screening"),
             ("trm-labs", "SanctionsAI vs TRM Labs"),
-            ("ofac-list-download", "SanctionsAI vs OFAC List Download"),
         ]
         items = "".join(
             f'<div style="padding:18px 0;border-bottom:1px solid #1a1a1a">'
@@ -12198,7 +12202,7 @@ curl "https://agentmail-api.fly.dev/sanctions?wallet=<span style="color:#f59e0b"
             '<a href="/tools/wallet-checker" class="btn btn-primary">Try the free wallet checker</a></div></section>'
         )
         return self._page("SanctionsAI vs Alternatives — OFAC Screening Comparison",
-                          "Compare sanctionsai.dev to Chainalysis, Elliptic, ComplyAdvantage, Dow Jones RDC, Refinitiv World-Check, SWIFT Sanctions, TRM Labs, and OFAC list download.",
+                          "Compare sanctionsai.dev to Chainalysis, Elliptic, ComplyAdvantage, Dow Jones RDC, Refinitiv World-Check, SWIFT Sanctions, and TRM Labs.",
                           body, canonical="/vs")
 
     def _how_to_index_page(self):
