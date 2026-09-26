@@ -3213,6 +3213,60 @@ class Handler(BaseHTTPRequestHandler):
             "/glossary/ofac-web3-regulation-glossary-3": "/glossary/ofac-web3-regulation-glossary-1",
             "/glossary/ofac-web3-regulation-glossary-4": "/glossary/ofac-web3-regulation-glossary-1",
             "/glossary/ofac-web3-regulation-glossary-5": "/glossary/ofac-web3-regulation-glossary-1",
+            # 2026-09-26: internal-link repair. The wallet-page generator and the
+            # designations/updates templates link raw OFAC program codes as
+            # /programs/<code> slugs (e.g. /programs/ifsr), but only 20 maintained
+            # /programs/<topic> pages exist; ~232 internal links 404'd across
+            # designations/*, sanctioned-addresses/* and checklists/*, and the weekly
+            # wallet refresh re-emits them. Each target below was verified to actually
+            # cover the program's jurisdiction or theme (content grep or live check).
+            "/programs/belarus-eo14038": "/programs/belarus",
+            "/programs/burma-eo14014": "/programs/myanmar",
+            "/programs/caatsa-russia": "/programs/countering-americas-adversaries",
+            "/programs/car": "/countries/central-african-republic",
+            "/programs/cuba-eo14404": "/countries/cuba",
+            "/programs/cyber2": "/programs/cyber-related",
+            "/programs/cyber4": "/programs/cyber-related",
+            "/programs/dprk": "/programs/north-korea",
+            "/programs/dprk2": "/programs/north-korea",
+            "/programs/dprk4": "/programs/north-korea",
+            "/programs/drcongo": "/countries/dr-congo",
+            "/programs/election-eo13848": "/programs/foreign-interference",
+            "/programs/fto": "/programs/sdgt",
+            "/programs/glomag": "/programs/global-magnitsky",
+            "/programs/hrit-ir": "/programs/iran",
+            "/programs/icc-eo14203": "/programs/global-magnitsky",
+            "/programs/ifsr": "/programs/iran",
+            "/programs/illicit-drugs-eo14059": "/programs/narcotics-trafficking",
+            "/programs/iran-con-arms-eo": "/programs/iran",
+            "/programs/iran-eo13846": "/programs/iran",
+            "/programs/iran-eo13871": "/programs/iran",
+            "/programs/iran-eo13876": "/programs/iran",
+            "/programs/iran-eo13902": "/programs/iran",
+            "/programs/iran-hr": "/programs/iran",
+            "/programs/irgc": "/programs/iran",
+            "/programs/libya3": "/countries/libya",
+            "/programs/nicaragua": "/countries/nicaragua",
+            "/programs/npwmd": "/programs/non-proliferation",
+            "/programs/paarssr-eo13894": "/countries/syria",
+            "/programs/peesa-eo14039": "/countries/ethiopia",
+            "/programs/sdntk": "/programs/narcotics-trafficking",
+            "/programs/sudan-eo14098": "/countries/sudan",
+            "/programs/tco": "/programs/transnational-criminal-orgs",
+            "/programs/ukraine-eo13662": "/programs/ukraine-separatist",
+            "/programs/venezuela-eo13850": "/programs/venezuela",
+            "/programs/venezuela-eo13884": "/programs/venezuela",
+            # 2026-09-26: internal links pointing at never-built section hubs.
+            # /hub appears in the ts-nav of 26 static pages ("Start here (hub)")
+            # with no /hub route behind it.
+            "/hub": "/",
+            "/evasion": "/glossary/sanctions-evasion",
+            "/case-studies": "/blog",
+            "/regulations": "/learn/ofac-compliance-guide",
+            "/deadlines": "/glossary/ofac-reporting-requirements",
+            "/risk-ratings": "/countries",
+            "/examples": "/tools",
+            "/playbook": "/playbook.pdf",
         }
         if p.path in HALLUCINATED_REDIRECTS:
             target = "https://sanctionsai.dev" + HALLUCINATED_REDIRECTS[p.path]
