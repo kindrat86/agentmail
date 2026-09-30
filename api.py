@@ -7474,7 +7474,6 @@ The server exposes four tools (call by these exact names):
       "description": "OFAC sanctions screening API for AI agents. Screen every counterparty before your agent pays.",
       "disambiguatingDescription": "SanctionsAI (agentmail) is an OFAC sanctions screening API purpose-built for AI agents. It checks names against the consolidated US Treasury SDN sanctions list and returns machine-readable verdicts through MCP, A2A, and REST endpoints — designed for autonomous agent-to-agent workflows where a human is not in the loop. It is NOT a human-facing compliance dashboard (ComplyAdvantage, Refinitiv World-Check, Dow Jones RDC), a blockchain analytics tool (Chainalysis, Elliptic), or a generic AML/KYC platform. The API model is agent-native: agents query it directly, receive structured JSON-LD responses, and act on them without human approval.",
       "email": "hello@sanctionsai.dev",
-      "founder": {"@id": "https://sanctionsai.dev/#founder"},
       "sameAs": [
         "https://x.com/sipiteno",
         "https://github.com/kindrat86/agentmail",
@@ -7487,32 +7486,6 @@ The server exposes four tools (call by these exact names):
         "https://carshake.online",
         "https://churnlens.site",
         "https://sipi.bot"
-      ]
-    },
-    {
-      "@type": "Person",
-      "@id": "https://sanctionsai.dev/#founder",
-      "name": "The Data Nerd",
-      "jobTitle": "Founder & Compliance Engineer",
-      "url": "https://sanctionsai.dev/about",
-      "image": "https://sanctionsai.dev/og.png",
-      "worksFor": {"@id": "https://sanctionsai.dev/#organization"},
-      "knowsAbout": [
-        "OFAC sanctions compliance",
-        "AML and KYC screening",
-        "Crypto wallet sanctions screening",
-        "AI agent payment compliance",
-        "Specially Designated Nationals (SDN) list",
-        "x402 payment protocol",
-        "Know Your Agent (KYA)",
-        "Voluntary Self-Disclosure under OFAC",
-        "Bank Secrecy Act (BSA) compliance"
-      ],
-      "description": "Founder and lead compliance engineer at agentmail (sanctionsai.dev). Builds OFAC sanctions screening infrastructure for AI agents that transact autonomously, with a focus on sub-100ms pre-payment screening and audit-ready evidence chains for Voluntary Self-Disclosure.",
-      "sameAs": [
-        "https://x.com/sipiteno",
-        "https://github.com/kindrat86",
-        "https://pypi.org/user/kindrat86/"
       ]
     },
     {
@@ -7950,7 +7923,7 @@ footer{padding-bottom:max(40px,env(safe-area-inset-bottom))}
   "@id": "https://sanctionsai.dev/#article",
   "headline": "OFAC Sanctions Screening API for AI Agents — Real-Time Wallet & Name Checks Under 100ms",
   "description": "agentmail (sanctionsai.dev) provides sub-100ms OFAC sanctions screening for AI agents. Screen crypto wallets, names, and countries before your autonomous agent pays. Free tier + $0.05/check via x402 payment protocol.",
-  "author": {"@type": "Person", "name": "The Data Nerd", "url": "https://sanctionsai.dev/about"},
+  "author": {"@type": "Organization", "name": "agentmail", "url": "https://sanctionsai.dev/"},
   "publisher": {"@type": "Organization", "name": "agentmail", "url": "https://sanctionsai.dev/"},
   "datePublished": "2025-05-24",
   "dateModified": "2026-07-18",
@@ -12373,7 +12346,7 @@ curl "https://agentmail-api.fly.dev/sanctions?wallet=<span style="color:#f59e0b"
         and the SDN-list coverage agentmail screens against.
         """
         today = "2026-07-18"
-        body = f"""<p class="note">By <a href="/about" rel="author" style="color:#00d4aa">The Data Nerd</a>, Founder &amp; Compliance Engineer &middot; <time datetime="{today}">{today}</time> &middot; <strong>Cite as:</strong> "agentmail Sanctions Exposure Index (SEI), 2026 Agent-Payment Sanctions Exposure Report, sanctionsai.dev"</p>
+        body = f"""<p class="note">By <a href="/about" rel="author" style="color:#00d4aa">agentmail team</a> &middot; <time datetime="{today}">{today}</time> &middot; <strong>Cite as:</strong> "agentmail Sanctions Exposure Index (SEI), 2026 Agent-Payment Sanctions Exposure Report, sanctionsai.dev"</p>
 <section style="border-top:none">
 <div class="prose" style="padding-top:32px">
 <h1>The 2026 Agent-Payment Sanctions Exposure Report</h1>
@@ -12492,7 +12465,7 @@ SEI = (2.4 + 3.0 + 2.0 + 0.15 + 0) × 100
             "description": "First annual agentmail report quantifying OFAC sanctions exposure in autonomous AI-agent payment flows, introducing the agentmail Sanctions Exposure Index (SEI).",
             "url": "https://sanctionsai.dev/research/agent-payment-sanctions-exposure-2026",
             "creator": {"@id": "https://sanctionsai.dev/#organization"},
-            "author": {"@id": "https://sanctionsai.dev/#founder"},
+            "author": {"@id": "https://sanctionsai.dev/#organization"},
             "datePublished": "2026-07-18",
             "dateModified": "2026-07-18",
             "inLanguage": "en-US",
@@ -12507,7 +12480,7 @@ SEI = (2.4 + 3.0 + 2.0 + 0.15 + 0) × 100
             "headline": "The 2026 Agent-Payment Sanctions Exposure Report",
             "description": "First annual report quantifying OFAC sanctions exposure in autonomous agent payment flows. Introduces the agentmail Sanctions Exposure Index (SEI).",
             "url": "https://sanctionsai.dev/research/agent-payment-sanctions-exposure-2026",
-            "author": {"@id": "https://sanctionsai.dev/#founder"},
+            "author": {"@id": "https://sanctionsai.dev/#organization"},
             "publisher": {"@id": "https://sanctionsai.dev/#organization"},
             "datePublished": "2026-07-18",
             "dateModified": "2026-07-18",
@@ -13122,7 +13095,7 @@ compute();
     def _render_pseo(self, title, desc, body_html, faqs, canonical_path):
         """Shared renderer for pSEO pages with schema.
 
-        Includes Person (E-E-A-T author), Organization publisher, hreflang
+        Includes Organization publisher/author (team attribution), hreflang
         (en-US default + self-referencing), and FAQ/Breadcrumb/Speakable schema.
         """
         today = "2026-07-18"
@@ -13130,45 +13103,19 @@ compute();
         faq_schema = {"@context": "https://schema.org", "@type": "FAQPage",
                        "mainEntity": [{"@type": "Question", "name": q,
                                        "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in faqs]}
-        # Founder/author Person schema — E-E-A-T signal across every pSEO page.
-        _author_person = {
-            "@type": "Person",
-            "@id": _SITE + "/#founder",
-            "name": "The Data Nerd",
-            "jobTitle": "Founder & Compliance Engineer",
-            "url": _SITE + "/about",
-            "image": _SITE + "/og.png",
-            "worksFor": {"@id": _SITE + "/#organization"},
-            "knowsAbout": [
-                "OFAC sanctions compliance",
-                "AML/KYC screening",
-                "crypto wallet sanctions screening",
-                "AI agent payment compliance",
-                "Specially Designated Nationals (SDN) list",
-                "x402 payment protocol",
-                "Know Your Agent (KYA)",
-                "voluntary self-disclosure",
-            ],
-            # 2026-09-19 integrity fix: removed fabricated "alumniOf": "US Treasury OFAC
-            # compliance framework" (no such credential exists) and the unverifiable
-            # linkedin.com/in/data-nerd-sanctions sameAs. Kept only verified profiles.
-            "sameAs": [
-                "https://x.com/sipiteno",
-                "https://github.com/kindrat86",
-            ],
-        }
+        # 2026-09-30 integrity fix: removed the fabricated "The Data Nerd, Founder &
+        # Compliance Engineer" Person persona (unverifiable credentials claim).
+        # Authorship is now the Organization (agentmail): team attribution only.
         schema = {"@context": "https://schema.org", "@graph": [
-            {  # Organization publisher (needed so Person.worksFor resolves)
+            {  # Organization: publisher and author (team attribution)
                 "@type": "Organization", "@id": _SITE + "/#organization",
                 "name": "agentmail", "alternateName": "sanctionsai.dev",
                 "url": _SITE + "/", "logo": {"@type": "ImageObject", "url": _SITE + "/og.png"},
                 "email": "hello@sanctionsai.dev",
-                "founder": {"@id": _SITE + "/#founder"},
                 "sameAs": ["https://x.com/sipiteno", "https://github.com/kindrat86/agentmail"],
             },
-            _author_person,
             {"@type": "Article", "headline": title, "description": desc,
-             "author": {"@id": _SITE + "/#founder"},
+             "author": {"@id": _SITE + "/#organization"},
              "publisher": {"@id": _SITE + "/#organization"},
              "datePublished": today, "dateModified": today,
              "mainEntityOfPage": _page_url},
@@ -13232,7 +13179,7 @@ compute();
         status_color = "#ff6b6b" if flagged else "#00d4aa"
         detail = matches[0].get("detail", "") if matches else "No OFAC SDN match"
         today = "2026-07-18"
-        body = f"""<p class="note">By <a href="/about" rel="author" style="color:#00d4aa">The Data Nerd</a>, Founder &amp; Compliance Engineer &middot; <time datetime="{today}">{today}</time></p>
+        body = f"""<p class="note">By <a href="/about" rel="author" style="color:#00d4aa">agentmail team</a> &middot; <time datetime="{today}">{today}</time></p>
 <h2>OFAC Screening Result for <code>{_addr_display}</code></h2>
 <p><strong style="color:{status_color}">Status: {status_text}</strong> &middot; Chain: {_chain} &middot; List: OFAC SDN &middot; Checked: {today}</p>
 <p>This wallet was screened against the OFAC Specially Designated Nationals (SDN) list in real time. {('The wallet is <strong style="color:#ff6b6b">flagged</strong>: ' + detail + '. US persons and AI agents operating on their behalf are prohibited from transacting with this address under OFAC strict liability.') if flagged else 'The wallet is <strong style="color:#00d4aa">clean</strong> — no match against the 947 OFAC-sanctioned crypto wallets. Continue with normal transaction flows and log this screening receipt for your compliance audit trail.'}</p>
@@ -13313,7 +13260,7 @@ compute();
         if not e:
             return _json(self, 404, {"error": "not found"})
         today = "2026-07-18"
-        body = f"""<p class="note">By <a href="/about" rel="author" style="color:#00d4aa">The Data Nerd</a>, Founder &amp; Compliance Engineer &middot; <time datetime="{today}">{today}</time></p>
+        body = f"""<p class="note">By <a href="/about" rel="author" style="color:#00d4aa">agentmail team</a> &middot; <time datetime="{today}">{today}</time></p>
 <h2>OFAC Sanctioned: {e["name"]}</h2>
 <p><strong style="color:#ff6b6b">SANCTIONED</strong> &middot; Designated: {e["designated"]} &middot; Type: {e["type"]} &middot; Jurisdiction: {e["country"]}</p>
 <p>{e["desc"]}</p>
@@ -13361,7 +13308,7 @@ compute();
         if not L:
             return _json(self, 404, {"error": "not found"})
         today = "2026-07-18"
-        body = f"""<p class="note">By <a href="/about" rel="author" style="color:#00d4aa">The Data Nerd</a>, Founder &amp; Compliance Engineer &middot; <time datetime="{today}">{today}</time></p>
+        body = f"""<p class="note">By <a href="/about" rel="author" style="color:#00d4aa">agentmail team</a> &middot; <time datetime="{today}">{today}</time></p>
 <h2>{L["name"]}</h2>
 <p><strong>{L["full"]}</strong> &middot; Jurisdiction: {L["jurisdiction"]}</p>
 <p>{L["desc"]}</p>
@@ -13435,7 +13382,7 @@ compute();
         if not c:
             return _json(self, 404, {"error": "not found"})
         today = "2026-07-18"
-        body = f"""<p class="note">By <a href="/about" rel="author" style="color:#00d4aa">The Data Nerd</a>, Founder &amp; Compliance Engineer &middot; <time datetime="{today}">{today}</time></p>
+        body = f"""<p class="note">By <a href="/about" rel="author" style="color:#00d4aa">agentmail team</a> &middot; <time datetime="{today}">{today}</time></p>
 <h2>OFAC-Sanctioned Entities in {c["name"]}</h2>
 <p><strong>Program:</strong> {c["program"]}<br>
 <strong>Designations:</strong> {c["count"]}</p>
@@ -13467,7 +13414,7 @@ compute();
     def _sanctions_lists_index_page(self):
         """Index page for /sanctions-lists — lists all sanctions list explainers."""
         today = "2026-07-18"
-        body = f"""<p class="note">By <a href="/about" rel="author" style="color:#00d4aa">The Data Nerd</a>, Founder &amp; Compliance Engineer &middot; <time datetime="{today}">{today}</time></p>
+        body = f"""<p class="note">By <a href="/about" rel="author" style="color:#00d4aa">agentmail team</a> &middot; <time datetime="{today}">{today}</time></p>
 <h2>Sanctions Lists Explained</h2>
 <p>Sanctions screening requires checking counterparties against multiple lists maintained by different jurisdictions. Below is a guide to the major sanctions lists that matter for AI agent compliance.</p>
 <ul>
@@ -13495,7 +13442,7 @@ compute();
     def _by_country_index_page(self):
         """Index page for /by-country — sanctioned entities by country."""
         today = "2026-07-18"
-        body = f"""<p class="note">By <a href="/about" rel="author" style="color:#00d4aa">The Data Nerd</a>, Founder &amp; Compliance Engineer &middot; <time datetime="{today}">{today}</time></p>
+        body = f"""<p class="note">By <a href="/about" rel="author" style="color:#00d4aa">agentmail team</a> &middot; <time datetime="{today}">{today}</time></p>
 <h2>OFAC-Sanctioned Entities by Country</h2>
 <p>Browse sanctioned individuals and entities by jurisdiction. Each country page lists the sanctions program, notable designees, and a copy-ready screening command.</p>
 <ul>
@@ -13527,7 +13474,7 @@ compute();
     def _check_index_page(self):
         """Index page for /check — screening results for known sanctioned entities."""
         today = "2026-07-18"
-        body = f"""<p class="note">By <a href="/about" rel="author" style="color:#00d4aa">The Data Nerd</a>, Founder &amp; Compliance Engineer &middot; <time datetime="{today}">{today}</time></p>
+        body = f"""<p class="note">By <a href="/about" rel="author" style="color:#00d4aa">agentmail team</a> &middot; <time datetime="{today}">{today}</time></p>
 <h2>OFAC Screening Results — Known Sanctioned Entities</h2>
 <p>Permanent screening-result pages for known OFAC-sanctioned wallets and entities. Each page shows live status, designation detail, and a copy-ready API call.</p>
 <h3>Wallets</h3>
@@ -13724,7 +13671,7 @@ compute();
             "@graph": [
                 {"@type": "Article", "headline": page["title"], "description": page["desc"],
                  "url": page_url, "datePublished": today, "dateModified": today,
-                 "author": {"@id": _SITE + "/#founder"},
+                 "author": {"@id": _SITE + "/#organization"},
                  "publisher": {"@id": _SITE + "/#organization"},
                  "mainEntityOfPage": page_url},
                 {"@type": "BreadcrumbList", "itemListElement": [
