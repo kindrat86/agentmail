@@ -1,0 +1,55 @@
+{
+  "page": "https://sanctionsai.dev/cost-of/dow-jones-risk-pricing",
+  "brand": "SanctionsAI",
+  "reviewed_at": "2026-10-03",
+  "claims": [
+    {
+      "claim": "Dow Jones describes its Risk & Compliance offering as data and solutions for anti-money-laundering, counter-terrorist-financing, sanctions, anti-bribery and corruption, and international trade compliance",
+      "source_url": "https://www.dowjones.com/business-intelligence/risk/"
+    },
+    {
+      "claim": "Dow Jones's djrc.dowjones.com site describes analyzing data on high-risk individuals and entities to meet anti-money-laundering, bribery, corruption, and sanctions regulatory obligations",
+      "source_url": "https://djrc.dowjones.com/"
+    },
+    {
+      "claim": "Dow Jones's 2024 Data Quality Report states the consolidated profile database grew from 530,000 profiles in 2008 to 4.23 million in July 2024, up from 3.99 million in July 2023",
+      "source_url": "https://139612483.fs1.hubspotusercontent-eu1.net/hubfs/139612483/Dow_Jones_Risk_%26_Compliance_Data_Quality_Report_-_2024%20(1).pdf"
+    },
+    {
+      "claim": "Dow Jones's 2024 Data Quality Report states all sanctions data is consolidated into the flagship Watchlist risk database, updated every 24 hours via an XML or CSV download, and that the premium Lists for Payments & Transaction Screening (LPTS) feed updates up to six times a day at intervals as narrow as four hours",
+      "source_url": "https://139612483.fs1.hubspotusercontent-eu1.net/hubfs/139612483/Dow_Jones_Risk_%26_Compliance_Data_Quality_Report_-_2024%20(1).pdf"
+    },
+    {
+      "claim": "Dow Jones documents a daily update limit of 12,500 profiles per major content set for Risk & Compliance feeds, covering the Watchlist, State Owned Companies, Adverse Media Entities, Marijuana-Related Businesses, Money Service Businesses, and Military End Use Associated Entities content sets",
+      "source_url": "https://developer.dowjones.com/documents/site-docs-risk_and_compliance_feeds-documentation-behind_login_reference-general_reference-daily_update_limits"
+    },
+    {
+      "claim": "Dow Jones's data feeds and APIs page describes feeds and APIs that plug directly into customer workflows for onboarding, monitoring, and investigation, and describes Factiva as delivering unstructured news from 33,000+ sources in 33 languages across 200 countries",
+      "source_url": "https://www.dowjones.com/business-intelligence/risk/products/data-feeds-apis/"
+    },
+    {
+      "claim": "Dow Jones announced that sanctions data quality was affirmed by a seventh annual ISAE 3000 audit, with the risk database at 3.5 million consolidated profiles at that announcement",
+      "source_url": "https://smi.wsj.com/press-room/dow-jones-risk-compliance-sanctions-data-quality-affirmed-with-seventh-annual-isae-3000-audit/"
+    },
+    {
+      "claim": "The Dow Jones developer portal's compliance dataset description directs requests for a detailed list of sources to a Request a Trial action, and no public price list, package table, or self-serve checkout appeared on the official Dow Jones pages SanctionsAI reviewed on 3 October 2026",
+      "source_url": "https://developer.dowjones.com/datasets/datasets-details-compliance"
+    },
+    {
+      "claim": "LSEG Risk Intelligence describes itself as the owner of the World-Check screening database today ('you might know us for our World-Check screening database'), and Dow Jones Risk & Compliance is a separate competing database operated by Dow Jones",
+      "source_url": "https://www.lseg.com/en/risk-intelligence"
+    },
+    {
+      "claim": "Thomson Reuters announced its acquisition of World-Check on 16 May 2011",
+      "source_url": "https://investors.thomsonreuters.com/news-releases/news-release-details/thomson-reuters-acquires-world-check"
+    },
+    {
+      "claim": "World-Check formed part of the Thomson Reuters Risk Management Solutions suite before being transferred to Refinitiv after a merger deal with The Blackstone Group in October 2018",
+      "source_url": "https://en.wikipedia.org/wiki/World-Check"
+    },
+    {
+      "claim": "SanctionsAI published this page on 8 August 2026 and materially reviewed and revised it on 3 October 2026, correcting a World-Check lineage error in the earlier version",
+      "source_url": "https://sanctionsai.dev/cost-of/dow-jones-risk-pricing"
+    }
+  ]
+}

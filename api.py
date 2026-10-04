@@ -5596,6 +5596,8 @@ License: https://creativecommons.org/licenses/by/4.0/
             "/cost": "2026-07-18",
             "/cost-of/chainalysis-pricing": "2026-07-18",
             "/cost-of/complyadvantage-pricing": "2026-07-18",
+            "/best/best-ofac-screening-for-fintech": "2026-10-04",
+            "/cost-of/dow-jones-risk-pricing": "2026-10-03",
             "/cost-of/refinitiv-worldcheck-pricing": "2026-07-18",
             "/cost/cost-of-non-compliance": "2026-07-13",
             "/cost/cost-of-sanctions-screening": "2026-07-13",

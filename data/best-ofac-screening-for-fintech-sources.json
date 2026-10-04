@@ -1,0 +1,59 @@
+{
+  "page": "https://sanctionsai.dev/best/best-ofac-screening-for-fintech",
+  "brand": "SanctionsAI",
+  "reviewed_at": "2026-10-04",
+  "claims": [
+    {
+      "claim": "OFAC administers civil penalties on a strict liability basis",
+      "source_url": "https://home.treasury.gov/system/files/126/ofac_compliance_framework_20191031.pdf"
+    },
+    {
+      "claim": "The 50 Percent Rule: entities owned 50 percent or more, individually or in the aggregate, by blocked persons are themselves blocked even if not on the SDN list",
+      "source_url": "https://home.treasury.gov/system/files/126/ofac_compliance_framework_20191031.pdf"
+    },
+    {
+      "claim": "Blocked property and rejected transactions are reported to OFAC within 10 business days under 31 CFR 501.603",
+      "source_url": "https://www.ecfr.gov/current/title-31/subtitle-B/chapter-V/part-501/subpart-E/section-501.603"
+    },
+    {
+      "claim": "Holders of blocked property file an annual report by September 30 covering June 30 holdings under 31 CFR 501.604",
+      "source_url": "https://www.ecfr.gov/current/title-31/subtitle-B/chapter-V/part-501/subpart-E/section-501.604"
+    },
+    {
+      "claim": "OFAC maintains the SDN list and its non-SDN supplements",
+      "source_url": "https://ofac.treasury.gov/specially-designated-nationals-and-blocked-persons-list-sdn-human-readable-lists"
+    },
+    {
+      "claim": "The UK maintains the OFSI consolidated list for UK-connected activity",
+      "source_url": "https://www.gov.uk/government/publications/financial-sanctions-consolidated-list-of-targets"
+    },
+    {
+      "claim": "Chainalysis describes itself as a blockchain-data platform and its KYT product monitors transactions and manages compliance",
+      "source_url": "https://www.chainalysis.com/"
+    },
+    {
+      "claim": "SumSub describes itself as identity verification and trust infrastructure covering KYC, AML screening, and transaction monitoring",
+      "source_url": "https://sumsub.com/"
+    },
+    {
+      "claim": "ComplyAdvantage describes itself as AI-driven fraud and AML risk detection including customer, company, and payment screening applications",
+      "source_url": "https://www.complyadvantage.com/"
+    },
+    {
+      "claim": "Elliptic describes itself as crypto compliance software to screen, monitor and investigate on-chain risk for banks, exchanges and governments",
+      "source_url": "https://www.elliptic.co/"
+    },
+    {
+      "claim": "SanctionsAI pricing: free 5 checks/day, Dev $19/mo for 10,000 checks, Pro $99/mo, x402 $0.05/check",
+      "source_url": "https://sanctionsai.dev/pricing"
+    },
+    {
+      "claim": "SanctionsAI coverage: SDN list, 947 sanctioned crypto addresses, 16 embargoed jurisdictions, keyless GET /sanctions endpoint returning clean + matches",
+      "source_url": "https://sanctionsai.dev/docs"
+    },
+    {
+      "claim": "The page's earlier version quoted a generic per-check price range and enterprise subscription range that SanctionsAI could not source; both removed",
+      "source_url": "https://sanctionsai.dev/best/best-ofac-screening-for-fintech (correction note)"
+    }
+  ]
+}

@@ -4,18 +4,18 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Best OFAC screening tools for fintech | SanctionsAI</title>
-<meta name="description" content="Best OFAC sanctions screening tools for fintech companies. Comparison of APIs, pricing, and compliance features for financial technology startups and scaleups.">
+<meta name="description" content="OFAC screening tools for fintech, reviewed against what vendors publish: the compliance duty, what actually differs between tools, and an honest comparison with sources.">
 <link rel="canonical" href="https://sanctionsai.dev/best/best-ofac-screening-for-fintech">
 <meta property="og:title" content="Best OFAC screening tools for fintech | SanctionsAI">
-<meta property="og:description" content="Best OFAC sanctions screening tools for fintech companies. Comparison of APIs, pricing, and compliance features for financial technology startups and scaleups.">
+<meta property="og:description" content="OFAC screening tools for fintech, reviewed against what vendors publish: the compliance duty, what actually differs between tools, and an honest comparison with sources.">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://sanctionsai.dev/best/best-ofac-screening-for-fintech">
 <meta property="og:image" content="https://sanctionsai.dev/og.png">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="robots" content="index, follow, max-image-preview:large">
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "Best OFAC screening tools for fintech", "description": "Best OFAC sanctions screening tools for fintech companies. Comparison of APIs, pricing, and compliance features for financial technology startups and scaleups.", "author": {"@type": "Organization", "name": "SanctionsAI", "url": "https://sanctionsai.dev"}, "publisher": {"@type": "Organization", "name": "SanctionsAI", "url": "https://sanctionsai.dev"}, "mainEntityOfPage": {"@type": "WebPage", "@id": "https://sanctionsai.dev/best/best-ofac-screening-for-fintech"}, "datePublished": "2026-08-09", "dateModified": "2026-08-09"}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "Best OFAC screening tools for fintech", "description": "OFAC screening tools for fintech, reviewed against what vendors publish: the compliance duty, what actually differs between tools, and an honest comparison with sources.", "author": {"@type": "Organization", "name": "SanctionsAI", "url": "https://sanctionsai.dev"}, "publisher": {"@type": "Organization", "name": "SanctionsAI", "url": "https://sanctionsai.dev"}, "mainEntityOfPage": {"@type": "WebPage", "@id": "https://sanctionsai.dev/best/best-ofac-screening-for-fintech"}, "datePublished": "2026-08-09", "dateModified": "2026-10-04", "citation": ["https://www.ecfr.gov/current/title-31/subtitle-B/chapter-V/part-501/subpart-E/section-501.603", "https://www.ecfr.gov/current/title-31/subtitle-B/chapter-V/part-501/subpart-E/section-501.604", "https://home.treasury.gov/system/files/126/ofac_compliance_framework_20191031.pdf", "https://ofac.treasury.gov/specially-designated-nationals-and-blocked-persons-list-sdn-human-readable-lists", "https://www.gov.uk/government/publications/financial-sanctions-consolidated-list-of-targets", "https://www.chainalysis.com/", "https://sumsub.com/", "https://www.complyadvantage.com/", "https://www.elliptic.co/", "https://sanctionsai.dev/pricing", "https://sanctionsai.dev/docs"]}</script>
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://sanctionsai.dev/"}, {"@type": "ListItem", "position": 2, "name": "Best Of", "item": "https://sanctionsai.dev/best"}, {"@type": "ListItem", "position": 3, "name": "Best OFAC screening tools for fintech", "item": "https://sanctionsai.dev/best/best-ofac-screening-for-fintech"}]}</script>
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "How much does OFAC screening cost for a fintech?", "acceptedAnswer": {"@type": "Answer", "text": "Pricing ranges from per-check ($0.001-$0.10 per screen) to annual subscriptions ($10,000-$100,000+). SanctionsAI offers per-check pricing with no minimum, suitable for early-stage fintechs."}}, {"@type": "Question", "name": "Is OFAC screening required for fintech companies?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. OFAC compliance is mandatory for all US persons and entities, including fintechs. The scope depends on your business model, but payment processors and money transmitters must screen transactions."}}, {"@type": "Question", "name": "Can I integrate OFAC screening via API?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Most modern sanctions screening tools offer REST APIs. SanctionsAI provides a simple API endpoint: GET /sanctions?wallet=0x... or GET /sanctions?name=..."}}, {"@type": "Question", "name": "What is the difference between KYC and sanctions screening?", "acceptedAnswer": {"@type": "Answer", "text": "KYC (Know Your Customer) verifies customer identity. Sanctions screening checks customers and transactions against OFAC and other sanctions lists. They are separate compliance functions, though many tools bundle them."}}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "How much does OFAC screening cost for a fintech?", "acceptedAnswer": {"@type": "Answer", "text": "Most enterprise screening vendors do not publish prices; buyers get a quote after a sales process. SanctionsAI publishes its pricing: a free tier of 5 checks per day with no signup, Dev at $19 per month for 10,000 checks, and per-call x402 pricing at $0.05 per check. Generic per-check ranges quoted around the web are not vendor-verified and we no longer repeat them."}}, {"@type": "Question", "name": "Is OFAC screening required for fintech companies?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. OFAC compliance is mandatory for all US persons and entities, including fintechs. OFAC administers civil penalties on a strict liability basis, so exposure exists even without intent. Payment processors and money transmitters must screen the transactions they move."}}, {"@type": "Question", "name": "Can I integrate OFAC screening via API?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Most modern screening tools expose REST APIs. SanctionsAI works from a plain curl with no key on the free tier: GET /sanctions?wallet=0x... or GET /sanctions?name=... returns a clean boolean plus match details."}}, {"@type": "Question", "name": "What should a fintech do after a sanctions match?", "acceptedAnswer": {"@type": "Answer", "text": "Halt the payment, then follow the reporting rules: blocked property and rejected transactions are reported to OFAC within 10 business days under 31 CFR 501.603, and holders of blocked property file an annual report by September 30 covering June 30 holdings under 31 CFR 501.604. Your tool's audit trail should support both reports."}}]}</script>
 
 <style>
 body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;line-height:1.65;color:#0a0a0a;max-width:760px;margin:0 auto;padding:2rem 1.25rem}
@@ -29,34 +29,83 @@ th,td{border:1px solid #e5e7eb;padding:.6rem .75rem;text-align:left}
 th{background:#f9fafb;font-weight:600}
 .callout{background:#f0f7ff;border-left:4px solid #0066cc;padding:1rem 1.25rem;margin:1.5rem 0;border-radius:0 .375rem .375rem 0}
 .callout.warn{background:#fef3c7;border-left-color:#d97706}
-.callout.good{background:#ecfdf5;border-left-color:#059669}
 .cta{background:#0a0a0a;color:#fff;padding:2rem;border-radius:.5rem;text-align:center;margin:2rem 0}
 .cta h2{border:none;color:#fff}
 .cta a{display:inline-block;background:#00d4aa;color:#0a0a0a;padding:.6rem 1.5rem;border-radius:.375rem;font-weight:600;margin-top:.5rem}
 .faq-section dt{font-weight:600;margin-top:1.2rem;font-size:1.05rem}.faq-section dd{margin:.3rem 0 0 0;color:#374151}
 .byline{color:#6b7280;font-size:.85rem;margin-bottom:2rem}
+.source-note{font-size:.92rem;color:#4b5563}
+pre{background:#f6f8fa;border:1px solid #e5e7eb;border-radius:.375rem;padding:.75rem 1rem;overflow-x:auto;font-size:.85rem}
+code{background:#f3f4f6;padding:.1rem .3rem;border-radius:.25rem;font-size:.9em}
 </style>
 </head>
 <body>
-<p class="byline">By SanctionsAI team · Updated 2026-08-09</p>
+<main>
+<p class="byline">By agentmail team · Reviewed 2026-10-04</p>
 <h1>Best OFAC screening tools for fintech</h1>
-<p class="lede">Fintech companies need sanctions screening that integrates with modern payment infrastructure via API, handles high transaction volumes, and scales without enterprise pricing. This guide compares the top options.</p>
-<h2>Top OFAC screening tools for fintech</h2>
-<table><tr><th>Tool</th><th>Best for</th><th>Pricing model</th><th>API-first</th></tr>
-<tr><td>SanctionsAI</td><td>AI agent payment paths, real-time wallet screening</td><td>Per-check, no minimum</td><td>Yes</td></tr>
-<tr><td>Chainalysis KYT</td><td>Crypto-native fintechs</td><td>Enterprise pricing</td><td>Yes</td></tr>
-<tr><td>SumSub</td><td>KYC + sanctions bundle</td><td>Per-verification</td><td>Yes</td></tr>
-<tr><td>ComplyAdvantage</td><td>Global AML + sanctions</td><td>Annual subscription</td><td>Yes</td></tr>
-<tr><td>Elliptic</td><td>Crypto compliance</td><td>Enterprise pricing</td><td>Yes</td></tr>
-<tr><td>Refinitiv World-Check</td><td>Traditional financial institutions</td><td>Annual subscription</td><td>Yes (but heavier integration)</td></tr></table>
-<h2>What fintech companies should prioritize</h2>
-<p>Fintech compliance teams should evaluate sanctions screening on: (1) API quality and documentation, (2) real-time screening speed (sub-second for payment flows), (3) list coverage (OFAC SDN, EU, UN, UK HMT), (4) pricing model (per-check vs. subscription), (5) webhook/alert capabilities.</p>
-<div class="callout"><strong>Editor's pick for AI-first fintech:</strong> SanctionsAI offers per-check pricing with no minimum, real-time API, and AI-agent-native integration. Best for fintechs building automated payment workflows.</div>
-<div class="cta"><h2>Screen your agent's next payment</h2>
-<p style="color:#9ca3af;margin:.5rem 0">Check any wallet, name, or entity against OFAC, EU, UN sanctions lists in real time.</p>
-<a href="/tools/wallet-checker">Free wallet checker</a></div>
-<div class="faq-section"><h2>Frequently Asked Questions</h2><dl>
-<dt>How much does OFAC screening cost for a fintech?</dt><dd>Pricing ranges from per-check ($0.001-$0.10 per screen) to annual subscriptions ($10,000-$100,000+). SanctionsAI offers per-check pricing with no minimum, suitable for early-stage fintechs.</dd><dt>Is OFAC screening required for fintech companies?</dt><dd>Yes. OFAC compliance is mandatory for all US persons and entities, including fintechs. The scope depends on your business model, but payment processors and money transmitters must screen transactions.</dd><dt>Can I integrate OFAC screening via API?</dt><dd>Yes. Most modern sanctions screening tools offer REST APIs. SanctionsAI provides a simple API endpoint: GET /sanctions?wallet=0x... or GET /sanctions?name=...</dd><dt>What is the difference between KYC and sanctions screening?</dt><dd>KYC (Know Your Customer) verifies customer identity. Sanctions screening checks customers and transactions against OFAC and other sanctions lists. They are separate compliance functions, though many tools bundle them.</dd>
+<p class="lede">Fintech teams need sanctions screening that fits payment infrastructure: an API, predictable latency, and a price model that does not assume a bank budget. This guide covers the compliance duty behind the tools, what actually differs between vendors, and how to compare candidates on your own data. Reviewed by SanctionsAI on 4 October 2026; every vendor description below links to the vendor's own pages.</p>
+<p class="source-note">A machine-readable <a href="/data/best-ofac-screening-for-fintech-sources.json">source manifest</a> maps each claim in this page to its source. This page corrects an error in its earlier version - see the correction note below.</p>
+
+<h2>The compliance duty your tooling has to serve</h2>
+<p>Sanctions screening is not optional overhead for a US-connected fintech. OFAC administers civil penalties on a <strong>strict liability</strong> basis, meaning exposure does not depend on intent, per <a href="https://home.treasury.gov/system/files/126/ofac_compliance_framework_20191031.pdf" rel="nofollow">Treasury's 2019 Framework for OFAC Compliance Commitments</a>. The same framework describes the "50 Percent Rule": entities owned 50 percent or more, individually or in the aggregate, by blocked persons are themselves blocked even if they never appear on the SDN list - which is why tool coverage claims deserve scrutiny.</p>
+<p>Two reporting deadlines shape your audit trail. Under <a href="https://www.ecfr.gov/current/title-31/subtitle-B/chapter-V/part-501/subpart-E/section-501.603" rel="nofollow">31 CFR 501.603</a>, blocked property and rejected transactions are reported to OFAC within <strong>10 business days</strong>. Under <a href="https://www.ecfr.gov/current/title-31/subtitle-B/chapter-V/part-501/subpart-E/section-501.604" rel="nofollow">31 CFR 501.604</a>, holders of blocked property file an annual report by <strong>September 30</strong> covering June 30 holdings. Whatever tool you buy must produce records that let a compliance officer meet both without archaeology.</p>
+<p>The lists themselves are public. OFAC maintains the <a href="https://ofac.treasury.gov/specially-designated-nationals-and-blocked-persons-list-sdn-human-readable-lists" rel="nofollow">SDN list and its non-SDN supplements</a>; the UK maintains the <a href="https://www.gov.uk/government/publications/financial-sanctions-consolidated-list-of-targets" rel="nofollow">OFSI consolidated list</a> for UK-connected activity. Vendors differentiate on how they ingest, deduplicate, match, and explain those lists - not on secret access to them.</p>
+
+<h2>What actually differs between tools</h2>
+<p>Strip the marketing and four dimensions separate candidates:</p>
+<ul>
+<li><strong>Screening scope:</strong> names only, or names plus crypto wallets plus jurisdiction checks; SDN only, or SDN plus non-SDN lists plus the 50 Percent Rule.</li>
+<li><strong>Integration surface:</strong> a REST API your engineers call, batch file feeds for overnight screening, or dashboard-first tooling built for analyst seats.</li>
+<li><strong>Pricing model:</strong> per-check, per-verification, monthly allowance, or quote-based enterprise contracts. Only some vendors publish this.</li>
+<li><strong>Evidence and audit:</strong> whether each result carries a match type, a confidence figure, and a list reference you can put in a 501.603 report.</li>
+</ul>
+
+<h2>The 2026 landscape for fintech teams</h2>
+<p>The table below describes each vendor using the vendor's own words, linked. Where a vendor does not publish pricing on its site, we say so rather than estimate.</p>
+<table><tr><th>Tool</th><th>What the vendor says it is</th><th>Published pricing</th><th>API-first</th></tr>
+<tr><td><a href="https://sanctionsai.dev/" rel="nofollow">SanctionsAI</a></td><td>Keyless OFAC sanctions screening for AI agents and payment paths; one curl call, no key on the free tier</td><td><a href="https://sanctionsai.dev/pricing" rel="nofollow">Published</a>: free 5 checks/day, Dev $19/mo (10,000 checks), x402 $0.05/check</td><td>Yes</td></tr>
+<tr><td><a href="https://www.chainalysis.com/" rel="nofollow">Chainalysis</a></td><td>Blockchain-data platform; its KYT product "monitor[s] transactions and manage[s] compliance"</td><td>Not published (sales quote)</td><td>Yes</td></tr>
+<tr><td><a href="https://sumsub.com/" rel="nofollow">SumSub</a></td><td>Identity verification and trust infrastructure: KYC, AML screening, transaction monitoring across the user journey</td><td>Not published (sales quote)</td><td>Yes</td></tr>
+<tr><td><a href="https://www.complyadvantage.com/" rel="nofollow">ComplyAdvantage</a></td><td>AI-driven fraud and AML risk detection, including customer, company, and payment screening applications</td><td>Not published (sales quote)</td><td>Yes</td></tr>
+<tr><td><a href="https://www.elliptic.co/" rel="nofollow">Elliptic</a></td><td>Crypto compliance software to "screen, monitor and investigate" on-chain risk, aimed at banks, exchanges and governments</td><td>Not published (sales quote)</td><td>Yes</td></tr></table>
+<p class="source-note">Vendor descriptions are paraphrased from the linked homepages, reviewed 4 October 2026. "Not published" means no price list appeared on the pages reviewed - it does not mean a price is unavailable through sales.</p>
+
+<div class="callout"><strong>Where SanctionsAI fits:</strong> it is deliberately narrow. It screens names, crypto wallets, and countries against OFAC data - the SDN list, 947 sanctioned crypto addresses, and 16 embargoed jurisdictions per our <a href="/docs">API documentation</a> - from a keyless call, free to start. It is not a full enterprise risk platform: no KYC document flows, no adverse-media pipeline, no analyst seats. Fintechs that need those buy the suites above; teams adding a fast, auditable sanctions check to an automated payment path start with us.</div>
+
+<h2>A concrete way to compare candidates</h2>
+<p>Demos hide the differences that matter. Run this instead:</p>
+<ol>
+<li><strong>Screen your own sample.</strong> Take 50 real counterparty names and wallets your compliance team is permitted to test, and push them through every finalist. Generic demo data flatters everyone.</li>
+<li><strong>Demand explainable output.</strong> Every result should carry a match type, a confidence figure, and the list it matched. Here is SanctionsAI's actual response shape from our <a href="/docs">docs</a>:</li>
+</ol>
+<pre>curl "https://sanctionsai.dev/sanctions?wallet=0x098B716B8Aaf21512996dC57EB0615e2383E2f96"
+
+{
+  "matches": [
+    {"list": "OFAC_SDN", "match_type": "wallet", "confidence": 1.0}
+  ],
+  "clean": false,
+  "checked_at": 1718000000
+}</pre>
+<ol start="3">
+<li><strong>Check the audit trail against the deadlines.</strong> Can you reconstruct, from tool records alone, what was blocked and when - so the 10-business-day 501.603 report is a form rather than a project?</li>
+<li><strong>Pin down coverage.</strong> Ask each vendor exactly which lists are screened (SDN only, or SDN plus non-SDN lists), whether the 50 Percent Rule is applied, and how updates arrive after Treasury republishes.</li>
+<li><strong>Price the real workflow.</strong> Ask for the total cost of your expected monthly volume, including what happens above any allowance.</li>
+</ol>
+
+<h2>Frequently Asked Questions</h2>
+<div class="faq-section"><dl>
+<dt>How much does OFAC screening cost for a fintech?</dt><dd>Most enterprise screening vendors do not publish prices; buyers get a quote after a sales process. SanctionsAI publishes its pricing: a free tier of 5 checks per day with no signup, Dev at $19 per month for 10,000 checks, and per-call x402 pricing at $0.05 per check. Generic per-check ranges quoted around the web are not vendor-verified, and we no longer repeat them.</dd>
+<dt>Is OFAC screening required for fintech companies?</dt><dd>Yes. OFAC compliance is mandatory for all US persons and entities, including fintechs. OFAC administers civil penalties on a strict liability basis, so exposure exists even without intent, per Treasury's compliance framework. Payment processors and money transmitters must screen the transactions they move.</dd>
+<dt>Can I integrate OFAC screening via API?</dt><dd>Yes. Most modern screening tools expose REST APIs. SanctionsAI works from a plain curl with no API key on the free tier: <code>GET /sanctions?wallet=0x...</code> or <code>GET /sanctions?name=...</code> returns a <code>clean</code> boolean plus match details, as shown above.</dd>
+<dt>What should a fintech do after a sanctions match?</dt><dd>Halt the payment, then follow the reporting rules: blocked property and rejected transactions are reported to OFAC within 10 business days under 31 CFR 501.603, and holders of blocked property file an annual report by September 30 covering June 30 holdings under 31 CFR 501.604. Your tool's audit trail should support both reports without manual reconstruction.</dd>
 </dl></div>
+
+<div class="callout warn"><strong>Correction (4 October 2026):</strong> an earlier version of this page quoted a generic per-check price range and an enterprise subscription range in its FAQ. SanctionsAI cannot source either range to any vendor, so both were removed. Vendor pricing claims on this page now reflect only what each vendor publishes on its own pages.</div>
+
 <p><a href="/best">← Back to Best Of</a> · <a href="/">SanctionsAI</a></p>
+</main>
+<div class="cta"><h2>Screen your agent's next payment</h2>
+<p style="color:#9ca3af;margin:.5rem 0">Check any wallet, name, or entity against OFAC sanctions lists in real time.</p>
+<a href="/tools/wallet-checker">Free wallet checker</a></div>
 </body></html>
