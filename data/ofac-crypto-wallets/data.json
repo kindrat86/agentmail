@@ -4,10 +4,10 @@
  "url": "https://sanctionsai.dev/data/ofac-crypto-wallets/",
  "license": "CC BY 4.0 (compilation); underlying OFAC data is US Government work, public domain",
  "source": "https://www.treasury.gov/ofac/downloads/sanctions/1.0/sdn_advanced.xml",
- "sdn_list_date": "2026-09-23",
- "generated": "2026-09-24",
- "record_count": 1059,
- "unique_addresses": 1043,
+ "sdn_list_date": "2026-10-02",
+ "generated": "2026-10-05",
+ "record_count": 1066,
+ "unique_addresses": 1050,
  "records": [
   {
    "address": "0x4f47bc496083c727c5fbe3ce9cdf2b0f6496270c",
@@ -3716,6 +3716,69 @@
    "ofac_programs": "TCO",
    "source": "https://www.treasury.gov/ofac/downloads/sanctions/1.0/sdn_advanced.xml",
    "entity_designation_date": "2026-09-09"
+  },
+  {
+   "address": "TBEmt7kPSwAv6NJTYKNdBVW524bUfPwJpJ",
+   "chain": "TRX",
+   "entity": "Hernandez Guerrero Anthony Wuiliam",
+   "sdn_profile_id": "58262",
+   "ofac_programs": "SDGT; TCO",
+   "source": "https://www.treasury.gov/ofac/downloads/sanctions/1.0/sdn_advanced.xml",
+   "entity_designation_date": "2026-09-30"
+  },
+  {
+   "address": "TCUmMCHQEbFFdGvfdg2LeS64QfzUKP2AgW",
+   "chain": "TRX",
+   "entity": "Cardenas Arzola Eric Gabriel",
+   "sdn_profile_id": "58257",
+   "ofac_programs": "SDGT; TCO",
+   "source": "https://www.treasury.gov/ofac/downloads/sanctions/1.0/sdn_advanced.xml",
+   "entity_designation_date": "2026-09-30"
+  },
+  {
+   "address": "TCifMAMwst3oEJx8GaNfqZw75dkFUa8vjG",
+   "chain": "TRX",
+   "entity": "Martinez Armenta Carlos Javier",
+   "sdn_profile_id": "58254",
+   "ofac_programs": "SDGT; TCO",
+   "source": "https://www.treasury.gov/ofac/downloads/sanctions/1.0/sdn_advanced.xml",
+   "entity_designation_date": "2026-09-30"
+  },
+  {
+   "address": "TDxZ1XTZCmqkJJW2eJT362z6omRchJyGBX",
+   "chain": "TRX",
+   "entity": "Martinez Pirona Oscar Leonardo",
+   "sdn_profile_id": "58260",
+   "ofac_programs": "SDGT; TCO",
+   "source": "https://www.treasury.gov/ofac/downloads/sanctions/1.0/sdn_advanced.xml",
+   "entity_designation_date": "2026-09-30"
+  },
+  {
+   "address": "THwbVuBBb26abe5TrAsYUpYz9mhWnBppdz",
+   "chain": "TRX",
+   "entity": "Galeano Bazurto Jose Dario",
+   "sdn_profile_id": "58256",
+   "ofac_programs": "SDGT; TCO",
+   "source": "https://www.treasury.gov/ofac/downloads/sanctions/1.0/sdn_advanced.xml",
+   "entity_designation_date": "2026-09-30"
+  },
+  {
+   "address": "TJjRAn9kLiyh8h6gjBjaYjkfDkskgZfyW9",
+   "chain": "TRX",
+   "entity": "CANELON AGUIRRE Anibal Alexander",
+   "sdn_profile_id": "58161",
+   "ofac_programs": "SDGT; TCO",
+   "source": "https://www.treasury.gov/ofac/downloads/sanctions/1.0/sdn_advanced.xml",
+   "entity_designation_date": "2026-09-30"
+  },
+  {
+   "address": "TWJmTGhquvdp1jhBmgeGxBBwefteGZUQYW",
+   "chain": "TRX",
+   "entity": "Mejia Castillo Alejandro",
+   "sdn_profile_id": "58255",
+   "ofac_programs": "SDGT; TCO",
+   "source": "https://www.treasury.gov/ofac/downloads/sanctions/1.0/sdn_advanced.xml",
+   "entity_designation_date": "2026-09-30"
   },
   {
    "address": "0xb6f5ec1a0a9cd1526536d3f0426c429529471f40",
