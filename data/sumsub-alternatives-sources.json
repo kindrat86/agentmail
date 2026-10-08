@@ -1,0 +1,73 @@
+{
+  "page": "https://sanctionsai.dev/alternatives-to/sumsub",
+  "brand": "SanctionsAI",
+  "reviewed_at": "2026-10-07",
+  "claims": [
+    {
+      "claim": "Sumsub's published Basic plan is $1.35 per verification with a $149 minimum monthly commitment, positioned for non-regulated businesses",
+      "source_url": "https://sumsub.com/pricing/"
+    },
+    {
+      "claim": "Sumsub's published Compliance plan is $1.85 per verification with a $299 minimum monthly commitment, positioned for regulated businesses, and includes AML screening and proof of address",
+      "source_url": "https://sumsub.com/pricing/"
+    },
+    {
+      "claim": "Sumsub's Enterprise plan is a custom rate not published on the pricing page",
+      "source_url": "https://sumsub.com/pricing/"
+    },
+    {
+      "claim": "Sumsub phone verification adds $0.04 per applicant plus $0.04 per successful verification, plus SMS notification fees of $0.09 to $0.54 depending on country price tier (tiers 1-5)",
+      "source_url": "https://sumsub.com/pricing/"
+    },
+    {
+      "claim": "Sumsub ongoing AML monitoring adds $0.08 per initial check and per subsequently checked match",
+      "source_url": "https://sumsub.com/pricing/"
+    },
+    {
+      "claim": "At 1,000 verifications per month, Sumsub Basic costs $1,350 (1,000 x $1.35, above the $149 minimum) and Compliance costs $1,850",
+      "source_url": "https://sumsub.com/pricing/",
+      "method": "arithmetic from the two published per-verification prices; verified with bc before publication"
+    },
+    {
+      "claim": "Sumsub describes itself as an identity verification and trust platform covering KYC, KYB, AML screening, transaction monitoring, fraud prevention, Travel Rule, orchestration, case management, and analytics",
+      "source_url": "https://sumsub.com/"
+    },
+    {
+      "claim": "SEON describes itself as an AI fraud prevention and AML compliance platform built on 1,100+ real-time signals, covering customer screening, payment screening, transaction monitoring, and case management",
+      "source_url": "https://seon.io/"
+    },
+    {
+      "claim": "Persona describes itself as a flexible and secure way to verify real people and real businesses online, with a modular platform covering government ID, Document AI, selfie checks, and database checks",
+      "source_url": "https://withpersona.com/"
+    },
+    {
+      "claim": "Veriff describes itself as an enterprise identity verification platform supporting 12,500+ documents from 230+ countries and territories in 50 languages, with AML screening against sanctions, PEPs, and adverse media",
+      "source_url": "https://www.veriff.com/"
+    },
+    {
+      "claim": "Shufti (formerly Shufti Pro) describes itself as a global identity verification platform for KYC and AML, spanning KYC, KYB, KYI, ongoing monitoring, and FRAML",
+      "source_url": "https://www.shuftipro.com/"
+    },
+    {
+      "claim": "SanctionsAI pricing: free 5 checks/day with no signup, Dev $19/mo for 10,000 checks, Pro $99/mo, x402 $0.05/check",
+      "source_url": "https://sanctionsai.dev/pricing"
+    },
+    {
+      "claim": "SanctionsAI response latency is sub-100 ms and the service is MIT-licensed and self-hostable",
+      "source_url": "https://sanctionsai.dev/docs"
+    },
+    {
+      "claim": "SanctionsAI coverage: 1,066 digital-currency address listings (1,050 unique addresses) from the SDN Advanced XML dated 2026-10-02, plus 16 embargoed jurisdictions",
+      "source_url": "https://www.treasury.gov/ofac/downloads/sanctions/1.0/sdn_advanced.xml",
+      "method": "count of Feature elements with FeatureType 'Digital Currency Address - *'; same dataset published at /data/ofac-crypto-wallets/ and refreshed 2026-10-05"
+    },
+    {
+      "claim": "The previous version of this page quoted Sumsub 'per-verification, from ~$0.50', which Sumsub's published pricing page contradicts; the range was unsourced and is removed with this correction note",
+      "source_url": "https://sumsub.com/pricing/"
+    },
+    {
+      "claim": "The sibling page /vs/sumsub (2026-08-08) claimed 'Sumsub pricing is not published (custom quotes)' and 'Screens 947 OFAC wallets'; both claims were stale by 2026-10 (published pricing; dataset refreshed to 1,066 listings). The page now 301s here and its unique content was merged",
+      "source_url": "https://sanctionsai.dev/vs/sumsub (301 consolidation, 2026-10-07)"
+    }
+  ]
+}

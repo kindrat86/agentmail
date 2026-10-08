@@ -29,7 +29,7 @@ EXPECTED_REDIRECTS = {
     "/compare/identitymind": "/vs/identitymind",
     "/compare/notabene": "/vs/notabene",
     "/compare/scorechain": "/vs/scorechain",
-    "/compare/sumsub": "/vs/sumsub",
+    "/compare/sumsub": "/alternatives-to/sumsub",
     "/compare/trm-labs": "/vs/trm-labs",
     "/compare/world-check": "/vs/world-check",
     "/compare": "/vs",
