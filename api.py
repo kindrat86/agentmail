@@ -5763,7 +5763,7 @@ License: https://creativecommons.org/licenses/by/4.0/
             "/vs": "2026-07-18",
             "/vs/chainalysis": "2026-07-18",
             "/vs/comply-advantage": "2026-07-18",
-            "/vs/dow-jones-rdc": "2026-07-18",
+            "/vs/dow-jones-rdc": "2026-10-09",
             "/vs/elliptic": "2026-07-18",
             "/vs/refinitiv": "2026-07-18",
             "/vs/refinitiv-worldcheck": "2026-07-18",
