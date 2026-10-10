@@ -1,0 +1,79 @@
+{
+  "page": "https://sanctionsai.dev/vs/world-check",
+  "brand": "SanctionsAI",
+  "reviewed_at": "2026-10-10",
+  "claims": [
+    {
+      "claim": "LSEG's Risk Intelligence page introduces the product with 'You might know us for our World-Check screening database, but what you might not know is that we offer so much more'",
+      "source_url": "https://www.lseg.com/en/risk-intelligence"
+    },
+    {
+      "claim": "LSEG describes World-Check as intelligence data used across LSEG screening solutions to help organisations identify potential sanctions, politically exposed person (PEP), adverse media, enforcement and other risk indicators",
+      "source_url": "https://www.lseg.com/en/risk-intelligence"
+    },
+    {
+      "claim": "LSEG positions World-Check data inside screening solutions for KYC, sanctions screening, adverse media reviews, third-party assessments and payment verification workflows",
+      "source_url": "https://www.lseg.com/en/risk-intelligence"
+    },
+    {
+      "claim": "LSEG documents LSEG World-Check Verify as a cloud-native API that uses World-Check data for selected digital onboarding and payment journeys",
+      "source_url": "https://www.lseg.com/en/risk-intelligence"
+    },
+    {
+      "claim": "LSEG's screening-solutions FAQ states World-Check provides structured sanctions intelligence that organisations can use to support sanctions screening processes",
+      "source_url": "https://www.lseg.com/en/risk-intelligence"
+    },
+    {
+      "claim": "Thomson Reuters announced its acquisition of World-Check on 16 May 2011 in a press release hosted on world-check.com",
+      "source_url": "https://www.world-check.com/media/d/content_pressrelease_reference/World-Check__NR_051611.pdf"
+    },
+    {
+      "claim": "World-Check formed part of the Thomson Reuters Risk Management Solutions suite before being transferred to Refinitiv after a merger deal with The Blackstone Group in October 2018",
+      "source_url": "https://en.wikipedia.org/wiki/World-Check"
+    },
+    {
+      "claim": "Thomson Reuters sold a 55% majority stake in its Financial & Risk unit to Blackstone Group LP on October 1, 2018, valuing the business at about $20 billion, and this business was formed into Refinitiv",
+      "source_url": "https://en.wikipedia.org/wiki/Refinitiv"
+    },
+    {
+      "claim": "LSEG agreed to buy Refinitiv in an all-share transaction announced August 2019, and the acquisition was completed on 29 April 2021",
+      "source_url": "https://en.wikipedia.org/wiki/Refinitiv"
+    },
+    {
+      "claim": "LSEG said in August 2023 it intended to retire the Refinitiv name across the group",
+      "source_url": "https://en.wikipedia.org/wiki/Refinitiv"
+    },
+    {
+      "claim": "No public World-Check price list and no public profile count appear on the official LSEG Risk Intelligence page reviewed on 10 October 2026",
+      "source_url": "https://www.lseg.com/en/risk-intelligence"
+    },
+    {
+      "claim": "SanctionsAI screens against the official US Treasury OFAC SDN list, synced hourly",
+      "source_url": "https://sanctionsai.dev/"
+    },
+    {
+      "claim": "SanctionsAI's published scope is 19,218 OFAC SDN name entries, 16 embargoed jurisdictions, and 947 sanctioned crypto wallet addresses",
+      "source_url": "https://sanctionsai.dev/docs"
+    },
+    {
+      "claim": "SanctionsAI publishes a downloadable dataset of 947 OFAC-sanctioned crypto wallet addresses, refreshed to the OFAC SDN publication of 2026-10-02 at time of review",
+      "source_url": "https://sanctionsai.dev/data/ofac-crypto-wallets/"
+    },
+    {
+      "claim": "SanctionsAI pricing is published: free for 5 checks a day with no signup and no API key, from $19/month in production",
+      "source_url": "https://sanctionsai.dev/pricing"
+    },
+    {
+      "claim": "SanctionsAI is MIT licensed and self-hostable, per this site's homepage",
+      "source_url": "https://sanctionsai.dev/"
+    },
+    {
+      "claim": "SanctionsAI documents response latency as under 100 ms on its homepage",
+      "source_url": "https://sanctionsai.dev/"
+    },
+    {
+      "claim": "SanctionsAI published this page on 18 July 2026 (original template) and materially reviewed and revised it on 10 October 2026, removing the unsourced '$50,000 to $250,000 per year' pricing range, the unsourced 'over 4 million profiles across 240 countries' figure (a Dow Jones RDC figure mistakenly attributed to World-Check), the stated-as-fact 'no free tier, no developer sandbox' claim, and the 'under 5 minutes' integration claim",
+      "source_url": "https://sanctionsai.dev/vs/world-check"
+    }
+  ]
+}
