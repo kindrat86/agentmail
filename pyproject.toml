@@ -50,10 +50,10 @@ Documentation = "https://sanctionsai.dev/docs"
 Changelog = "https://github.com/kindrat86/agentmail/blob/main/CHANGELOG.md"
 
 [tool.setuptools]
-# The package is the SanctionsAI/ directory; treat the repo root as the package.
-packages = ["SanctionsAI", "SanctionsAI.sms", "SanctionsAI.compliance"]
+# The package is the agentmail/ directory; treat the repo root as the package.
+packages = ["agentmail", "agentmail.sms", "agentmail.compliance"]
 
 [tool.setuptools.package-dir]
-SanctionsAI = "."
-"SanctionsAI.sms" = "sms"
-"SanctionsAI.compliance" = "compliance"
+agentmail = "."
+"agentmail.sms" = "sms"
+"agentmail.compliance" = "compliance"

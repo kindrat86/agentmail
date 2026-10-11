@@ -76,6 +76,7 @@ COPY scripts/validate_jsonld.py /tmp/validate_jsonld.py
 RUN python3 /tmp/validate_jsonld.py . && rm /tmp/validate_jsonld.py
 
 RUN pip install --no-cache-dir ".[mcp]" && \
+    mkdir -p /usr/local/lib/python3.11/site-packages/agentmail && \
     cp /home/agentmail/app/api.py /usr/local/lib/python3.11/site-packages/agentmail/api.py && \
     cp /home/agentmail/app/core.py /usr/local/lib/python3.11/site-packages/agentmail/core.py && \
     cp /home/agentmail/app/billing.py /usr/local/lib/python3.11/site-packages/agentmail/billing.py && \
