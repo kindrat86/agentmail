@@ -2664,6 +2664,14 @@ class Handler(BaseHTTPRequestHandler):
             "/vs/sumsub": "/alternatives-to/sumsub",
             "/compare/sumsub": "/alternatives-to/sumsub",
             "/compare/trm-labs": "/vs/trm-labs",
+            # 2026-10-10: /vs/refinitiv-worldcheck 301s to /vs/world-check.
+            # GSC 90d (probe 2026-10-10): the "refinitiv world check" query
+            # cluster (206 impr, pos 42.6) ranks /compare/world-check, which
+            # 301s into /vs/world-check — while twin page /vs/refinitiv-worldcheck
+            # (same product demand, same LSEG database) sat as a second,
+            # thinner copy. /vs/world-check is the canonical and was rebuilt
+            # to a documented-facts comparison the same tick.
+            "/vs/refinitiv-worldcheck": "/vs/world-check",
             "/compare/world-check": "/vs/world-check",
             "/compare": "/vs",
             # 2026-09-11: /regulations/ofac-reporting-requirements was a 1,915-char
@@ -5764,9 +5772,9 @@ License: https://creativecommons.org/licenses/by/4.0/
             "/vs/chainalysis": "2026-07-18",
             "/vs/comply-advantage": "2026-07-18",
             "/vs/dow-jones-rdc": "2026-10-09",
+            "/vs/world-check": "2026-10-10",
             "/vs/elliptic": "2026-07-18",
             "/vs/refinitiv": "2026-07-18",
-            "/vs/refinitiv-worldcheck": "2026-07-18",
             "/vs/swift-sanctions": "2026-07-18",
             "/vs/trm-labs": "2026-07-18",
             "/widgets": "2026-07-19",
@@ -5932,7 +5940,9 @@ License: https://creativecommons.org/licenses/by/4.0/
         ("/vs/comply-advantage", "monthly", "0.7", "SanctionsAI vs ComplyAdvantage"),
         ("/vs/dow-jones-rdc", "monthly", "0.7", "SanctionsAI vs Dow Jones RDC"),
         ("/vs/elliptic", "monthly", "0.7", "SanctionsAI vs Elliptic"),
-        ("/vs/refinitiv-worldcheck", "monthly", "0.7", "SanctionsAI vs Refinitiv World-Check"),
+        # 2026-10-10: /vs/refinitiv-worldcheck row removed — GSC 90d probe shows
+        # the "refinitiv world check" cluster consolidated on /vs/world-check
+        # (via /compare/world-check); the twin now 301s there (HALLUCINATED_REDIRECTS).
         ("/vs/refinitiv", "monthly", "0.7", "SanctionsAI vs Refinitiv"),
         ("/vs/swift-sanctions", "monthly", "0.7", "SanctionsAI vs SWIFT Sanctions Screening"),
         ("/vs/trm-labs", "monthly", "0.7", "SanctionsAI vs TRM Labs"),
@@ -10350,7 +10360,7 @@ document.getElementById("wallet").addEventListener("keydown",function(e){if(e.ke
             '<li><a href="/vs/elliptic">agentmail vs Elliptic</a></li>'
             '<li><a href="/vs/comply-advantage">agentmail vs ComplyAdvantage</a></li>'
             '<li><a href="/alternatives-to/sumsub">Sumsub alternatives</a></li>'
-            '<li><a href="/vs/world-check">agentmail vs World-Check</a></li>'
+            '<li><a href="/vs/world-check">SanctionsAI vs World-Check</a></li>'
             '</ul>'
             '</div></section>'
 

@@ -3,17 +3,17 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SanctionsAI vs World-Check: Which Is Right for You?</title>
-<meta name="description" content="An honest comparison of SanctionsAI and Refinitiv World-Check. World-Check is the enterprise name-screening data platform; SanctionsAI is the agent-path screen.">
+<title>SanctionsAI vs World-Check (Refinitiv/LSEG): A Documented Comparison</title>
+<meta name="description" content="World-Check is LSEG's screening database for sanctions, PEP and adverse-media risk. SanctionsAI is a free-to-start OFAC screening API. A documented comparison, reviewed 10 October 2026.">
 <link rel="canonical" href="https://sanctionsai.dev/vs/world-check">
-<meta property="og:title" content="SanctionsAI vs World-Check: Which Is Right for You?">
-<meta property="og:description" content="An honest comparison of SanctionsAI and Refinitiv World-Check. World-Check is the enterprise name-screening data platform; SanctionsAI is the agent-path screen.">
+<meta property="og:title" content="SanctionsAI vs World-Check (Refinitiv/LSEG): A Documented Comparison">
+<meta property="og:description" content="World-Check is LSEG's screening database for sanctions, PEP and adverse-media risk. SanctionsAI is a free-to-start OFAC screening API. A documented comparison, reviewed 10 October 2026.">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://sanctionsai.dev/vs/world-check">
 <meta property="og:image" content="https://sanctionsai.dev/og.png">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="robots" content="index, follow, max-image-preview:large">
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "SanctionsAI vs World-Check: Which Is Right for You?", "description": "An honest comparison of SanctionsAI and Refinitiv World-Check. World-Check is the enterprise name-screening data platform; SanctionsAI is the agent-path screen.", "author": {"@type": "Organization", "name": "SanctionsAI", "url": "https://sanctionsai.dev"}, "publisher": {"@type": "Organization", "name": "SanctionsAI", "url": "https://sanctionsai.dev"}, "mainEntityOfPage": {"@type": "WebPage", "@id": "https://sanctionsai.dev/vs/world-check"}, "datePublished": "2026-08-08", "dateModified": "2026-08-08"}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://sanctionsai.dev/"}, {"@type": "ListItem", "position": 2, "name": "SanctionsAI", "item": "https://sanctionsai.dev/vs/world-check"}]}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Is World-Check a SanctionsAI alternative?", "acceptedAnswer": {"@type": "Answer", "text": "For agent-path screening, no - it is a name-screening data platform for compliance teams."}}, {"@type": "Question", "name": "Can I use both?", "acceptedAnswer": {"@type": "Answer", "text": "Yes - they solve different layers and compose in a broader stack."}}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "SanctionsAI vs World-Check (Refinitiv/LSEG): A Documented Comparison", "description": "World-Check is LSEG's screening database for sanctions, PEP and adverse-media risk. SanctionsAI is a free-to-start OFAC screening API. A documented comparison, reviewed 10 October 2026.", "author": {"@type": "Organization", "name": "SanctionsAI", "url": "https://sanctionsai.dev"}, "publisher": {"@type": "Organization", "name": "SanctionsAI", "url": "https://sanctionsai.dev"}, "mainEntityOfPage": {"@type": "WebPage", "@id": "https://sanctionsai.dev/vs/world-check"}, "datePublished": "2026-08-08", "dateModified": "2026-10-10"}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://sanctionsai.dev/"}, {"@type": "ListItem", "position": 2, "name": "SanctionsAI", "item": "https://sanctionsai.dev/vs/world-check"}]}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Who owns World-Check today?", "acceptedAnswer": {"@type": "Answer", "text": "LSEG (London Stock Exchange Group). Thomson Reuters acquired World-Check in May 2011; it moved to Refinitiv with the 2018 Blackstone deal; LSEG acquired Refinitiv in 2021 and LSEG's own Risk Intelligence page says 'you might know us for our World-Check screening database'."}}, {"@type": "Question", "name": "Is World-Check a SanctionsAI alternative?", "acceptedAnswer": {"@type": "Answer", "text": "For agent-path OFAC screening, no. World-Check is an enterprise screening database consumed through LSEG screening solutions; SanctionsAI is a self-serve OFAC screening API with a free tier. They overlap on sanctions data and differ on delivery model, scope, and buyer."}}, {"@type": "Question", "name": "How much does World-Check cost?", "acceptedAnswer": {"@type": "Answer", "text": "LSEG does not publish a price list for World-Check. Access runs through LSEG Risk Intelligence sales. Sites quoting per-year dollar figures are estimates, not vendor-published prices."}}, {"@type": "Question", "name": "Can I use both together?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. A common pattern: World-Check data through an enterprise screening program for onboarding and investigations, plus a real-time OFAC check in the agent payment path where a sub-second decision is required before money moves."}}]}</script>
 <style>
 
 body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;line-height:1.65;color:#0a0a0a;max-width:760px;margin:0 auto;padding:2rem 1.25rem}
@@ -27,17 +27,8 @@ th,td{border:1px solid #e5e7eb;padding:.6rem .75rem;text-align:left}
 th{background:#f9fafb;font-weight:600}
 .callout{background:#f0f7ff;border-left:4px solid #0066cc;padding:1rem 1.25rem;margin:1.5rem 0;border-radius:0 .375rem .375rem 0}
 .callout.warn{background:#fef3c7;border-left-color:#d97706}
-.card-grid{display:grid;grid-template-columns:1fr;gap:1rem;margin:1.5rem 0}
-@media(min-width:560px){.card-grid{grid-template-columns:1fr 1fr}}
-.card{background:#f9fafb;border:1px solid #e5e7eb;border-radius:.5rem;padding:1.25rem}
-.card h3{margin-top:0;font-size:1.1rem}
-.card .tag{display:inline-block;background:#dbeafe;color:#1e40af;font-size:.75rem;padding:.15rem .5rem;border-radius:99px;margin-bottom:.5rem}
-.checklist{list-style:none;padding-left:0}
-.checklist li{padding:.4rem 0 .4rem 1.75rem;position:relative}
-.checklist li::before{content:"\2610";position:absolute;left:0;color:#0066cc;font-size:1.1rem}
-.template-section{background:#f9fafb;border:1px solid #e5e7eb;border-radius:.5rem;padding:1.25rem;margin:1rem 0}
-.template-section h3{margin-top:0}
-.price-tag{display:inline-block;background:#dcfce7;color:#166534;font-weight:700;padding:.25rem .75rem;border-radius:.375rem;font-size:1.1rem}
+blockquote{border-left:3px solid #e5e7eb;margin:1rem 0;padding:.25rem 0 .25rem 1rem;color:#374151}
+code{background:#f3f4f6;padding:.1rem .35rem;border-radius:.25rem;font-size:.9em}
 .related-links{background:#f9fafb;padding:1rem 1.25rem;border-radius:.5rem;margin-top:2rem}
 .related-links ul{list-style:none;padding-left:0}.related-links li{padding:.25rem 0}
 .cta{background:linear-gradient(135deg,#0066cc,#004499);color:#fff;padding:2rem;border-radius:.75rem;margin-top:2rem;text-align:center}
@@ -47,36 +38,56 @@ footer{margin-top:3rem;padding-top:1.5rem;border-top:1px solid #e5e7eb;color:#6b
 </style>
 <!-- isenberg-round19 -->
     
-    <script>!function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.crossOrigin="anonymous",p.async=!0,p.src=s.api_host.replace(".i.posthog.com","-assets.i.posthog.com")+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags getFeatureFlag getFeatureFlagPayload reloadFeatureFlags group updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures getActiveMatchingSurveys getSurveys".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=!0}(document,window.posthog||[]);posthog.init("phc_lyZCgvTpicjLzAO3rY2GhxuX5WUc5jQjP8ZVwwJqauX",{api_host:"https://eu.i.posthog.com",person_profiles:"identified_only"})</script>
+    <script>!function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.crossOrigin="anonymous",p.async=!0,p.src=s.api_host.replace(".i.posthog.com","-assets.i.posthog.com")+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){return u.toString(1)+".people (stub)"},o="capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags getFeatureFlag getFeatureFlagPayload reloadFeatureFlags group updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures getActiveMatchingSurveys getSurveys".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=!0}(document,window.posthog||[]);posthog.init("phc_lyZCgvTpicjLzAO3rY2GhxuX5WUc5jQjP8ZVwwJqauX",{api_host:"https://eu.i.posthog.com",person_profiles:"identified_only"})</script>
 
 </head>
 <body>
+<main>
 <article>
 <h1>SanctionsAI vs World-Check</h1>
-<p class="lede">An honest comparison of SanctionsAI and Refinitiv World-Check for teams wiring compliance into agent payments.</p>
-<h2>TL;DR</h2>
-<p><strong>TL;DR:</strong> World-Check is the enterprise name-screening data platform (PEPs, adverse media, sanctions lists) for compliance teams. SanctionsAI is the sub-100 ms screening API for the agent payment path. They are different layers - many teams run both.</p>
-<h2>What World-Check does well</h2>
-<ul class="check"><li>Deep global name-screening datasets (PEP, adverse media, ownership)</li><li>Enterprise compliance workflows and case management</li><li>Established trust in regulated institutions</li></ul>
-<h2>Where it falls short for agents</h2>
-<ul class="cross"><li>Not built for sub-100 ms pre-payment decisions at agent volume</li><li>Enterprise contracts - no free tier, no $19/mo developer plan</li><li>Integration path for autonomous agents: verify current docs</li></ul>
-<h2>Where SanctionsAI wins</h2>
-<ul class="check"><li>One HTTP/MCP/CLI call before money moves - under 100 ms</li><li>947 OFAC wallets, 19,218 names, 16 jurisdictions, hourly sync</li><li>Free tier (5 checks/day), $19/mo dev plan, MIT self-host</li></ul>
-<h2>When to use which</h2>
-<p>World-Check when you need enterprise-grade name data for onboarding and investigations. SanctionsAI when an agent - not a human - is paying. They compose.</p>
-<h2>Methodology</h2>
-<p>Scoring dimensions: screening scope, agent-path support, latency, pricing, self-hosting. Verify current capabilities with each vendor; re-evaluated quarterly.</p>
-
-<!-- mesh-round19 -->
-<section class="mesh-links" style="background:#f9fafb;padding:1.25rem;border-radius:.5rem;margin-top:2rem">
-<h3 style="margin-top:0">Related resources</h3>
-<ul style="list-style:none;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:.4rem 1rem;font-size:.95rem">
-<li><a href="/vs/refinitiv">SanctionsAI vs Refinitiv</a></li><li><a href="/vs/dow-jones-rdc">SanctionsAI vs Dow Jones</a></li><li><a href="/cost-of/refinitiv-worldcheck-pricing">How much does World-Check cost?</a></li><li><a href="/best/best-ofac-screening-apis">Best OFAC screening APIs</a></li><li><a href="/learn/sanctions-screening-methods">Sanctions screening methods</a></li><li><a href="/learn/kyc-vs-sanctions-screening">KYC vs sanctions screening</a></li>
+<p class="lede">World-Check is LSEG's screening database for sanctions, politically exposed person (PEP), adverse media, and enforcement risk. SanctionsAI is a self-serve OFAC screening API built for the agent payment path. This page compares the two only on documented facts, each traced to its operator's own pages, and says plainly where they are not comparable. Reviewed 10 October 2026.</p>
+<h2 id="tldr">TL;DR</h2>
+<p><strong>TL;DR:</strong> World-Check is an enterprise screening database owned by LSEG (London Stock Exchange Group), consumed through LSEG screening solutions by compliance teams at regulated institutions. SanctionsAI is a narrow OFAC screening API with a published free tier, built so an AI agent can check a wallet or a name mid-payment with a plain HTTP call. One is a data-and-workflow platform sold through sales conversations; the other is a metered API you can call from <code>curl</code> without an account. They overlap on sanctions data and differ on almost everything else, so most teams that need both buy both for different layers.</p>
+<h2 id="what-world-check-is">What World-Check is, per its operator</h2>
+<p>LSEG's Risk Intelligence page introduces the product by name: <em>&ldquo;You might know us for our World-Check screening database, but what you might not know is that we offer so much more.&rdquo;</em> The same page describes the dataset's scope: <em>&ldquo;intelligence data used across LSEG screening solutions to help organisations identify potential sanctions, politically exposed person (PEP), adverse media, enforcement and other risk indicators.&rdquo;</em> LSEG positions World-Check data inside its screening solutions for <em>&ldquo;KYC, sanctions screening, adverse media reviews, third-party assessments and payment verification workflows.&rdquo;</em> It also documents <strong>LSEG World-Check Verify</strong>, <em>&ldquo;a cloud-native API that uses World-Check data&rdquo;</em> for digital onboarding and payment journeys. All four quotations are from the LSEG Risk Intelligence page as reviewed on 10 October 2026.</p>
+<p>The ownership lineage is public record. Thomson Reuters announced its acquisition of World-Check on 16 May 2011 in a press release still hosted on world-check.com. World-Check then formed part of the Thomson Reuters Risk Management Solutions suite before being transferred to Refinitiv after a merger deal with The Blackstone Group announced in October 2018, per the World-Check Wikipedia article with citations. LSEG acquired Refinitiv in 2021, which is why LSEG's own page speaks of World-Check in the first person today. If you meet the product under the names <em>Refinitiv World-Check</em> or the older <em>World-Check One</em> interface family, it is the same product lineage under the current owner's branding.</p>
+<h2 id="what-sanctionsai-is">What SanctionsAI is, per its own documentation</h2>
+<p>SanctionsAI screens against the official US Treasury OFAC SDN list, synced hourly, per this site's homepage. Its published scope at review time: 19,218 SDN name entries, 16 embargoed jurisdictions, and a downloadable dataset of 947 OFAC-sanctioned crypto wallet addresses refreshed to the OFAC SDN publication of 2 October 2026. Delivery is a REST API returning JSON, an MCP server for agent frameworks, and a CLI. The free tier allows 5 checks per day per IP with no signup and no API key; paid plans start at $19/month; the platform is MIT licensed and self-hostable. Latency is documented as under 100&nbsp;ms on the site's homepage. Every number in this paragraph is traceable to a page on this site, listed in the sources manifest linked below.</p>
+<h2 id="comparison">Side-by-side comparison</h2>
+<table>
+<thead><tr><th>Dimension</th><th>SanctionsAI</th><th>World-Check (LSEG)</th></tr></thead>
+<tbody>
+<tr><td>Owner</td><td>Independent (Sipiteno); MIT-licensed code</td><td>LSEG (London Stock Exchange Group), via the 2011 Thomson Reuters acquisition and the 2021 Refinitiv acquisition</td></tr>
+<tr><td>Scope</td><td>OFAC only: SDN names, crypto wallet addresses, embargoed jurisdictions</td><td>Sanctions, PEP, adverse media, enforcement and other risk indicators, per LSEG's own scope description</td></tr>
+<tr><td>Update cadence</td><td>Hourly sync from the official US Treasury SDN list; crypto dataset refreshed to the 2026-10-02 OFAC publication at review time</td><td>Not documented on the public LSEG page reviewed; cadence terms live in customer contracts</td></tr>
+<tr><td>Delivery</td><td>REST JSON API, MCP server, CLI; works from a plain <code>curl</code> without an account</td><td>LSEG screening solutions; World-Check Verify, a cloud-native API for onboarding and payment journeys, per LSEG's page</td></tr>
+<tr><td>Pricing</td><td>Published: free, 5 checks/day, no key; from $19/month in production</td><td>No public price list on the official page reviewed; enterprise, quote-based access through LSEG sales</td></tr>
+<tr><td>Self-hosting</td><td>Yes &mdash; MIT licensed, self-hostable</td><td>No; the database is licensed, not shipped</td></tr>
+<tr><td>External audit evidence</td><td>Not published</td><td>Not reviewed on the public page; ask LSEG for current audit attestations during procurement</td></tr>
+</tbody>
+</table>
+<h2 id="fit">Where each one fits</h2>
+<p><strong>Choose World-Check when the requirement is screening breadth inside an enterprise compliance program.</strong> PEP coverage, adverse media, enforcement data, and integration with LSEG's screening solutions are the documented product. A regulated institution's compliance program may be expected to demonstrate exactly those capabilities to a supervisor or a bank partner, and procurement will want the vendor's audit and data-governance documentation, which is negotiated through sales rather than published on a pricing page. That is the documented product, and it is a real product. SanctionsAI does not screen PEPs, does not screen adverse media, and does not replace a consolidated enterprise risk database.</p>
+<p><strong>Choose SanctionsAI when the decision point is an agent about to move money.</strong> The question at that moment is narrow: is this counterparty, this name, or this wallet on the OFAC lists, answered before the transaction signs. That check needs to be callable from the agent's own runtime &mdash; an HTTP call, an MCP tool, or a CLI &mdash; without a sales cycle, and it needs a published answer at zero cost while you wire it up. It also needs wallet-address coverage, which the OFAC crypto designations provide and which the 947-address dataset makes inspectable before you write any code. If your compliance program already runs World-Check for onboarding, the two compose: enterprise screening where breadth matters, a real-time OFAC gate in the payment path where seconds matter.</p>
+<h2 id="naming">A note on naming, because search results conflate it</h2>
+<p>Queries about this product arrive as &ldquo;World-Check&rdquo;, &ldquo;Refinitiv World-Check&rdquo;, &ldquo;World-Check One&rdquo;, and &ldquo;LSEG World-Check&rdquo;. All of them land on the same lineage: World-Check database, transferred Thomson Reuters &rarr; Refinitiv &rarr; LSEG. LSEG's current page front-lines the World-Check database inside LSEG Risk Intelligence and documents World-Check Verify as the cloud-native API. If a vendor document still says &ldquo;Refinitiv&rdquo;, the product is the same one LSEG owns today: LSEG agreed to buy Refinitiv in 2019 and completed the acquisition on 29 April 2021, and has been retiring the Refinitiv name across the group since 2023.</p>
+<h2 id="corrections">Correction note (10 October 2026)</h2>
+<p>This page was a short template before this rebuild. In the version published from July 2026 to 9 October 2026, claims appeared here that did not meet this site's evidence bar, and they have been removed: that World-Check costs &ldquo;$50,000 to $250,000 per year&rdquo; and that industry estimates support that range; that there is &ldquo;no free tier, no developer sandbox&rdquo; stated as current vendor fact rather than as an observation about access model; that World-Check provides &ldquo;over 4 million profiles across 240 countries&rdquo; (that figure describes Dow Jones Risk &amp; Compliance's consolidated profile database, a competing product &mdash; the two were conflated); and that SanctionsAI integration takes &ldquo;under 5 minutes&rdquo;. LSEG publishes no public price list and no public profile count for World-Check on the page reviewed, so this page now states exactly that, and nothing more. A separate page documents what is and is not knowable about <a href="/cost-of/refinitiv-worldcheck-pricing">Refinitiv World-Check pricing</a>.</p>
+<div class="related-links">
+<h3>Related resources</h3>
+<ul>
+<li><a href="/vs/dow-jones-rdc">SanctionsAI vs Dow Jones RDC</a> &mdash; the competing consolidated database</li>
+<li><a href="/vs/refinitiv">SanctionsAI vs Refinitiv</a> &mdash; the former brand under which World-Check was sold</li>
+<li><a href="/cost-of/refinitiv-worldcheck-pricing">How much does World-Check cost?</a></li>
+<li><a href="/alternatives-to/world-check">World-Check alternatives</a></li>
+<li><a href="/data/ofac-crypto-wallets/">The 947 OFAC crypto addresses, downloadable</a></li>
+<li><a href="/best/best-ofac-screening-apis">Best OFAC screening APIs</a></li>
 </ul>
-</section>
-<div class="callout"><strong>Disclaimer:</strong> this page is a technical research dataset, not legal advice, and does not certify any platform as OFAC-compliant. Verify current capabilities with each vendor.</div>
+</div>
+<div class="callout"><strong>Disclaimer:</strong> this page is a technical research comparison, not legal advice, and does not certify any platform as OFAC-compliant. Vendor facts are quoted from each operator's own published pages as reviewed on 10 October 2026; verify current capabilities with each vendor.</div>
 </article>
-<section class="cta"><h2>Screen your agent's next payment</h2><p>Free OFAC sanctions screening — 5 checks/day, no signup.</p><a href="/tools/wallet-checker" class="btn">Check a wallet &rarr;</a></section>
+</main>
+<section class="cta"><h2>Screen your agent's next payment</h2><p>Free OFAC sanctions screening &mdash; 5 checks/day, no signup.</p><a href="/tools/wallet-checker" class="btn">Check a wallet &rarr;</a></section>
 <footer><p>&copy; 2026 SanctionsAI. <a href="https://sanctionsai.dev/">sanctionsai.dev</a></p></footer>
 </body>
 </html>
