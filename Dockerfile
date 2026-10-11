@@ -2,7 +2,7 @@
 FROM python:3.11-slim
 
 # Non-root user for security
-RUN useradd --create-home --uid 1000 SanctionsAI
+RUN useradd --create-home --uid 1000 agentmail
 WORKDIR /home/agentmail/app
 
 # Install the package + mcp extra
@@ -76,16 +76,16 @@ COPY scripts/validate_jsonld.py /tmp/validate_jsonld.py
 RUN python3 /tmp/validate_jsonld.py . && rm /tmp/validate_jsonld.py
 
 RUN pip install --no-cache-dir ".[mcp]" && \
-    cp /home/agentmail/app/api.py /usr/local/lib/python3.11/site-packages/SanctionsAI/api.py && \
-    cp /home/agentmail/app/core.py /usr/local/lib/python3.11/site-packages/SanctionsAI/core.py && \
-    cp /home/agentmail/app/billing.py /usr/local/lib/python3.11/site-packages/SanctionsAI/billing.py && \
-    cp /home/agentmail/app/x402.py /usr/local/lib/python3.11/site-packages/SanctionsAI/x402.py
+    cp /home/agentmail/app/api.py /usr/local/lib/python3.11/site-packages/agentmail/api.py && \
+    cp /home/agentmail/app/core.py /usr/local/lib/python3.11/site-packages/agentmail/core.py && \
+    cp /home/agentmail/app/billing.py /usr/local/lib/python3.11/site-packages/agentmail/billing.py && \
+    cp /home/agentmail/app/x402.py /usr/local/lib/python3.11/site-packages/agentmail/x402.py
 
 # Persistent volume for the registry + OFAC cache
-RUN mkdir -p /home/agentmail/data && chown -R SanctionsAI:SanctionsAI /home/agentmail
+RUN mkdir -p /home/agentmail/data && chown -R agentmail:agentmail /home/agentmail
 ENV AGENTMAIL_HOME=/home/agentmail/data
 VOLUME ["/home/agentmail/data"]
-USER SanctionsAI
+USER agentmail
 
 EXPOSE 8000
 ENV HOST=0.0.0.0 PORT=8000 PYTHONPATH=/home/agentmail/app
