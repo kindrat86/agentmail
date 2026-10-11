@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-agentmail MCP server — exposes verification-inbox tools to AI agents.
+SanctionsAI MCP server — exposes verification-inbox tools to AI agents.
 
 Tools:
   create_inbox(label?, prefix?)        -> {address, id, label}
@@ -24,7 +24,7 @@ except ImportError as e:
         "Then re-run:  python -m agentmail.mcp_server"
     ) from e
 
-mcp = FastMCP("agentmail")
+mcp = FastMCP("SanctionsAI")
 
 
 @mcp.tool()

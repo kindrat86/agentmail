@@ -22,7 +22,7 @@ import json
 import threading
 from pathlib import Path
 
-_HOME = Path(os.environ.get("AGENTMAIL_HOME", str(Path.home() / ".agentmail")))
+_HOME = Path(os.environ.get("AGENTMAIL_HOME", str(Path.home() / ".SanctionsAI")))
 _DB_PATH = _HOME / "billing.db"
 _HOME.mkdir(parents=True, exist_ok=True)
 _lock = threading.Lock()

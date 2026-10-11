@@ -1,5 +1,5 @@
 """
-agentmail — Verification inbox for AI agents.
+SanctionsAI — Verification inbox for AI agents.
 
 Two front-ends over the same Mail.tm backend:
   1. HTTP API  (python api.py)        — REST, any agent can call
@@ -18,8 +18,8 @@ from .otp import analyze
 from .sms import get_provider as _sms_get_provider
 from .compliance import get_provider as _compliance_get_provider
 
-REGISTRY_PATH = Path(os.environ.get("AGENTMAIL_HOME", str(Path.home() / ".agentmail"))) / "inboxes.json"
-COMPLIANCE_REGISTRY_PATH = Path(os.environ.get("AGENTMAIL_HOME", str(Path.home() / ".agentmail"))) / "compliance.json"
+REGISTRY_PATH = Path(os.environ.get("AGENTMAIL_HOME", str(Path.home() / ".SanctionsAI"))) / "inboxes.json"
+COMPLIANCE_REGISTRY_PATH = Path(os.environ.get("AGENTMAIL_HOME", str(Path.home() / ".SanctionsAI"))) / "compliance.json"
 _lock = threading.Lock()
 _clients: dict[str, MailTmClient] = {}
 # SMS provider is process-wide; provider holds its own number state

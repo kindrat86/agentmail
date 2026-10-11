@@ -1,8 +1,8 @@
 
 #!/usr/bin/env python3
-"""Email template builder for agentmail. Returns HTML string for each email type."""
+"""Email template builder for SanctionsAI. Returns HTML string for each email type."""
 
-_HEADER = """<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>agentmail</title></head>
+_HEADER = """<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>SanctionsAI</title></head>
 <body style="margin:0;padding:0;background-color:#f4f6f8;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif">
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#f4f6f8">
 <tr><td align="center" style="padding:32px 16px">
@@ -19,7 +19,7 @@ _HEADER = """<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewpo
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#f8fafc;border-top:1px solid #e2e8f0">
 <tr><td style="padding:24px 32px;text-align:center">
 <p style="margin:0 0 8px;font-size:12px;color:#94a3b8;line-height:1.5">
-agentmail &mdash; OFAC sanctions screening for AI agents<br>
+SanctionsAI &mdash; OFAC sanctions screening for AI agents<br>
 <a href="https://sanctionsai.dev" style="color:#14b8a6;text-decoration:none">sanctionsai.dev</a>
 &nbsp;&middot;&nbsp;
 <a href="https://github.com/kindrat86/agentmail" style="color:#14b8a6;text-decoration:none">GitHub</a>
@@ -28,7 +28,7 @@ agentmail &mdash; OFAC sanctions screening for AI agents<br>
 </p>
 <p style="margin:0;font-size:11px;color:#cbd5e1">UNSUBSCRIBE_LINK</p>
 </td></tr></table></td></tr></table>
-<p style="margin:16px 0 0;font-size:11px;color:#94a3b8;text-align:center">You received this because you signed up for agentmail.</p>
+<p style="margin:16px 0 0;font-size:11px;color:#94a3b8;text-align:center">You received this because you signed up for SanctionsAI.</p>
 </td></tr></table></body></html>"""
 
 def build(subject, content_html, unsubscribe_url):
@@ -69,4 +69,4 @@ def welcome_email(unsubscribe_url):
         '<p style="margin:6px 0 0;font-size:11px;color:#94a3b8">10,000 checks/month &middot; All 4 tools &middot; API key &middot; Audit log</p>'
         '</td></tr></table>'
     )
-    return build("Your agentmail API key is ready", content, unsubscribe_url)
+    return build("Your SanctionsAI API key is ready", content, unsubscribe_url)

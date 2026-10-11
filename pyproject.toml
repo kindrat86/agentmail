@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "sanctions-mcp"
 version = "0.5.0"
-description = "OFAC sanctions screen, KYA, and transaction risk for AI agents — MCP + HTTP + CLI. Real OFAC data, no API key. (package: agentmail)"
+description = "OFAC sanctions screen, KYA, and transaction risk for AI agents — MCP + HTTP + CLI. Real OFAC data, no API key. (pip package: sanctions-mcp)"
 readme = "README.md"
 license = { file = "LICENSE" }
 requires-python = ">=3.11"
@@ -30,8 +30,8 @@ dependencies = [
     # Optional: self-host users don't need it, but it's a core dep for hosted.
     "stripe>=8.0",
     # mcp is optional for HTTP/CLI-only users, but required for the MCP server.
-    # Kept as a dep so `pip install agentmail` gives the full MCP experience.
-    # If you only want HTTP/CLI, pip install agentmail then ignore mcp import errors.
+    # Kept as a dep so `pip install sanctions-mcp` gives the full MCP experience.
+    # If you only want HTTP/CLI, pip install sanctions-mcp then ignore mcp import errors.
 ]
 
 [project.optional-dependencies]
@@ -40,7 +40,7 @@ all = ["mcp>=0.9", "posthog>=3.0.0", "requests>=2.28"]
 dev = ["pytest>=7", "mcp>=0.9", "posthog>=3.0.0"]
 
 [project.scripts]
-agentmail = "agentmail.cli:main"
+sanctionsai = "agentmail.cli:main"
 
 [project.urls]
 Homepage = "https://sanctionsai.dev"
@@ -50,10 +50,10 @@ Documentation = "https://sanctionsai.dev/docs"
 Changelog = "https://github.com/kindrat86/agentmail/blob/main/CHANGELOG.md"
 
 [tool.setuptools]
-# The package is the agentmail/ directory; treat the repo root as the package.
-packages = ["agentmail", "agentmail.sms", "agentmail.compliance"]
+# The package is the SanctionsAI/ directory; treat the repo root as the package.
+packages = ["SanctionsAI", "SanctionsAI.sms", "SanctionsAI.compliance"]
 
 [tool.setuptools.package-dir]
-agentmail = "."
-"agentmail.sms" = "sms"
-"agentmail.compliance" = "compliance"
+SanctionsAI = "."
+"SanctionsAI.sms" = "sms"
+"SanctionsAI.compliance" = "compliance"

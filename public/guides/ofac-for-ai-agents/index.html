@@ -15,14 +15,14 @@
     "headline": "OFAC Screening for AI Agents: What Developers Need to Know",
     "description": "AI agents that send payments must screen counterparties against OFAC sanctions before money moves.",
     "datePublished": "2026-07-20",
-    "author": {"@type": "Organization", "name": "agentmail"},
-    "publisher": {"@type": "Organization", "name": "agentmail", "url": "https://sanctionsai.dev"}
+    "author": {"@type": "Organization", "name": "sanctionsai"},
+    "publisher": {"@type": "Organization", "name": "sanctionsai", "url": "https://sanctionsai.dev"}
   },{
     "@type": "FAQPage",
     "mainEntity": [
       {"@type": "Question", "name": "Why do AI agents need OFAC screening?", "acceptedAnswer": {"@type": "Answer", "text": "An autonomous agent that pays a sanctioned wallet has committed a federal violation. OFAC civil penalties start at $356,000 per violation. The operator is responsible regardless of whether the agent knew. One API call before every payment prevents this."}},
-      {"@type": "Question", "name": "What does agentmail screen against?", "acceptedAnswer": {"@type": "Answer", "text": "agentmail screens counterparties against the OFAC SDN list: 19,086 names, 782 crypto wallet addresses, and 16 embargoed jurisdictions. It also checks against EU, UN, and UK sanctions lists."}},
-      {"@type": "Question", "name": "Is there a free tier?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. agentmail has a free tier with 5 checks per day, no API key required. Paid plans start at $19/month for 10,000 checks. The core is open source (MIT) and self-hostable via pip install sanctions-mcp."}},
+      {"@type": "Question", "name": "What does SanctionsAI screen against?", "acceptedAnswer": {"@type": "Answer", "text": "SanctionsAI screens counterparties against the OFAC SDN list: 19,086 names, 782 crypto wallet addresses, and 16 embargoed jurisdictions. It also checks against EU, UN, and UK sanctions lists."}},
+      {"@type": "Question", "name": "Is there a free tier?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. SanctionsAI has a free tier with 5 checks per day, no API key required. Paid plans start at $19/month for 10,000 checks. The core is open source (MIT) and self-hostable via pip install sanctions-mcp."}},
       {"@type": "Question", "name": "How fast is the screening API?", "acceptedAnswer": {"@type": "Answer", "text": "Under 100ms per check. The screening runs against an in-memory dataset, so there is no external API call latency. The response includes a clean boolean: true means proceed, false means halt."}}
     ]
   }]
@@ -45,7 +45,7 @@
 </style>
 </head>
 <body>
-<nav><a href="/">agentmail</a> &rsaquo; <span>OFAC for AI Agents</span></nav>
+<nav><a href="/">SanctionsAI</a> &rsaquo; <span>OFAC for AI Agents</span></nav>
 
 <h1>OFAC Screening for AI Agents: What Developers Need to Know</h1>
 <p>If your AI agent sends payments, it must screen every counterparty against OFAC sanctions before money moves. One transaction to a sanctioned wallet or entity is a federal violation. Here is what developers need to know to build compliant agents.</p>
@@ -66,7 +66,7 @@ curl -s "https://sanctionsai.dev/sanctions?wallet=0x742d35Cc6634C0532929dC57EB06
 <p>Response includes a <code>clean</code> boolean. <code>true</code> = proceed. <code>false</code> = halt and log. Under 100ms latency, so your agent's payment loop is not slowed down.</p>
 
 <h2>Free tier: no key, no signup</h2>
-<p>agentmail's free tier lets you screen 5 counterparties per day without an API key. This is enough for development and low-volume agents. When you scale, paid plans start at <span class="stat">$19/mo</span> for 10,000 checks.</p>
+<p>SanctionsAI's free tier lets you screen 5 counterparties per day without an API key. This is enough for development and low-volume agents. When you scale, paid plans start at <span class="stat">$19/mo</span> for 10,000 checks.</p>
 
 <div class="cta">
   <h2>Start screening today</h2>
@@ -74,6 +74,6 @@ curl -s "https://sanctionsai.dev/sanctions?wallet=0x742d35Cc6634C0532929dC57EB06
   <a href="/checkout/dev" class="btn">Get API Access →</a>
 </div>
 
-<footer><p><a href="/">agentmail</a> · OFAC sanctions screening for AI agents</p></footer>
+<footer><p><a href="/">SanctionsAI</a> · OFAC sanctions screening for AI agents</p></footer>
 </body>
 </html>

@@ -1,14 +1,14 @@
-# AEO Action Plan — agentmail (sanctionsai.dev)
+# AEO Action Plan — SanctionsAI (sanctionsai.dev)
 
 _Prepared 2026-07-18 · Answer Engine Optimization plan following the Ahrefs AEO methodology. All findings from live HTTP probes, robots.txt + edge-layer checks, sitemap audit, schema/llms.txt review, and GitHub/PyPI/mcp.so presence — no Ahrefs/Brand Radar access, so AI-visibility numbers are labeled as estimates where used._
 
 ## 0 · Snapshot & scope
 
-- **Brand + URL:** `agentmail` — https://sanctionsai.dev
+- **Brand + URL:** `SanctionsAI` — https://sanctionsai.dev
 - **Business type:** **Developer product / SaaS API** (OFAC sanctions screening for autonomous AI agents).
-  → **Visibility that matters most:** category queries ("best OFAC screening API", "sanctions screening for AI agents", "agentmail vs Chainalysis") and **training-data authority** (be so widely mentioned the model bakes the brand in).
+  → **Visibility that matters most:** category queries ("best OFAC screening API", "sanctions screening for AI agents", "SanctionsAI vs Chainalysis") and **training-data authority** (be so widely mentioned the model bakes the brand in).
 - **Branded entity map:**
-  - **Main brand:** `agentmail` (canonical product name per schema/title/og:site_name) ⚠️ but **domain is `sanctionsai.dev`** and **PyPI package is `sanctions-mcp`** and **repo is `kindrat86/agentmail`** — four names for one entity. **#1 narrative problem.**
+  - **Main brand:** `SanctionsAI` (canonical product name per schema/title/og:site_name) ⚠️ but **domain is `sanctionsai.dev`** and **PyPI package is `sanctions-mcp`** and **repo is `kindrat86/agentmail`** — four names for one entity. **#1 narrative problem.**
   - **Sub-brands / proprietary concepts to own:** `Know-Your-Agent (KYA)`, `x402 compliance`, `agent-payment compliance`, `sanctions_check` / `risk_score` / `kya_verify` / `dispute_open` (MCP tool names).
   - **Personal brand:** "The Data Nerd" (`@data_nerd`) — founder persona. ⚠️ LinkedIn `/in/data-nerd-sanctions` looks unverified.
 - **Competitors benchmarked (from the /vs/ pages):** Chainalysis, ComplyAdvantage, Elliptic, TRM Labs, Refinitiv World-Check, Dow Jones RDC, Sumsub, AMLBot, Scorechain, IdentityMind, SWIFT Sanctions Screening.
@@ -32,7 +32,7 @@ _Prepared 2026-07-18 · Answer Engine Optimization plan following the Ahrefs AEO
 See `brand-gap-analysis.csv` (filled). Top gaps by dimension:
 
 - **Visibility:** ⚠️ Zero off-site mentions — the #1 blocker. Recall: branded web mentions correlate 0.664 with AI visibility, stronger than backlinks/DR. Without consensus, AI won't repeat the brand.
-- **Narrative:** ⚠️ Four different names for one product (`agentmail` / `sanctionsai.dev` / `sanctions-mcp` / `kindrat86/agentmail`). Models can't consolidate the entity.
+- **Narrative:** ⚠️ Four different names for one product (`SanctionsAI` / `sanctionsai.dev` / `sanctions-mcp` / `kindrat86/agentmail`). Models can't consolidate the entity.
 - **Topic:** ✅ Strong on-site (182 URLs cover the whole sanctions/compliance/agent-payment topic tree). ❌ Zero off-site topic authority.
 - **Format:** ❌ No YouTube (misses ~5.6% of AIO citations). ❌ No original research / proprietary data (the formats AI cites most after listicles).
 - **Web mentions:** ⚠️ Zero detected — not on any "best sanctions API" listicle, no Reddit/HN/forum threads.
@@ -42,7 +42,7 @@ See `brand-gap-analysis.csv` (filled). Top gaps by dimension:
 
 ### 🔧 Fix (optimize what exists)
 
-- [ ] **[P1]** **Pick ONE canonical brand name and enforce it everywhere.** Right now `agentmail` (schema/title) vs `sanctionsai.dev` (domain) vs `sanctions-mcp` (PyPI) vs `kindrat86/agentmail` (repo) fragment the entity. Decide: is the brand **`agentmail`** or **`SanctionsAI`**? Update title tag, JSON-LD `Organization.name`, `og:site_name`, PyPI package metadata, GitHub repo description, and llms.txt to match exactly. Models need identical naming to merge mentions into one entity.
+- [ ] **[P1]** **Pick ONE canonical brand name and enforce it everywhere.** Right now `SanctionsAI` (schema/title) vs `sanctionsai.dev` (domain) vs `sanctions-mcp` (PyPI) vs `kindrat86/agentmail` (repo) fragment the entity. Decide: is the brand **`SanctionsAI`** or **`SanctionsAI`**? Update title tag, JSON-LD `Organization.name`, `og:site_name`, PyPI package metadata, GitHub repo description, and llms.txt to match exactly. Models need identical naming to merge mentions into one entity.
 - [x] **[P1]** **Fix robots.txt `Allow:` lines pointing at 404s.** `/compare`, `/ofac-sdn-list`, `/know-your-agent`, `/x402`, `/wallet-checker`, `/sanctions-screening-best-practices`, `/integrations` were advertised to every bot but returned 404. **FIXED 2026-07-18:** removed all dead-path Allow lines; kept only AI-surface file allows.
 - [x] **[P1]** **Remove `/integrations/eliza` from sitemap** (it 404s; real page is `/integrations/elizaos`). **FIXED 2026-07-18:** removed from sitemap pages list + added 301 redirect `/integrations/eliza` → `/integrations/elizaos`.
 - [x] **[P1]** **Hallucinated-URL 301 redirects.** **FIXED 2026-07-18:** added 36-entry redirect map covering AI-guessed slugs (`/wallet-checker`, `/ofac-sdn-list`, `/know-your-agent`, `/x402`, `/kya`, `/sdn-list`, `/compare`, `/sanctions-screening-best-practices`, etc.) → their real canonical pages. Trailing-slash variants also redirect.
@@ -56,8 +56,8 @@ See `brand-gap-analysis.csv` (filled). Top gaps by dimension:
 
 ### 🏗️ Build (create what's missing)
 
-- [x] **[P1]** **Publish the category-defining original research and label it with the brand name.** Idea: *"The 2026 Agent-Payment Sanctions Report"* — proprietary dataset of agent-payment OFAC exposure (you have the screening data). LLMs flatten un-attributed originality into generic knowledge — **label the framework** ("the agentmail Sanctions Exposure Index") and distribute it. This is the highest-leverage Build item.
-  - **DONE 2026-07-18:** Published `/research/agent-payment-sanctions-exposure-2026` — "The 2026 Agent-Payment Sanctions Exposure Report" introducing the **agentmail Sanctions Exposure Index (SEI)**, a 5-factor scoring model (Velocity 30%, Jurisdiction overlap 25%, Asset class 20%, Screening posture 15%, Disclosure readiness 10%). Grounded in real OFAC enforcement data (Binance $968M, Kraken $362K, EtherDelta $450K, BitGo $98K, BitPay $507K, Société Générale $53.9M, Standard Chartered $132M). Includes Dataset + Article + BreadcrumbList schema, worked example with SEI formula, CC BY 4.0 license with explicit citation. Surfaced in llms.txt, qa.jsonl (13th Q&A), sitemap, and `/research` index page. **+ Interactive SEI Calculator** at `/tools/sei-calculator` — a self-contained tool with 5 sliders that computes the SEI score in real-time, shows exposure ceiling, and links back to the report. Added to homepage trust bar, tools index, and sitemap.
+- [x] **[P1]** **Publish the category-defining original research and label it with the brand name.** Idea: *"The 2026 Agent-Payment Sanctions Report"* — proprietary dataset of agent-payment OFAC exposure (you have the screening data). LLMs flatten un-attributed originality into generic knowledge — **label the framework** ("the SanctionsAI Sanctions Exposure Index") and distribute it. This is the highest-leverage Build item.
+  - **DONE 2026-07-18:** Published `/research/agent-payment-sanctions-exposure-2026` — "The 2026 Agent-Payment Sanctions Exposure Report" introducing the **SanctionsAI Sanctions Exposure Index (SEI)**, a 5-factor scoring model (Velocity 30%, Jurisdiction overlap 25%, Asset class 20%, Screening posture 15%, Disclosure readiness 10%). Grounded in real OFAC enforcement data (Binance $968M, Kraken $362K, EtherDelta $450K, BitGo $98K, BitPay $507K, Société Générale $53.9M, Standard Chartered $132M). Includes Dataset + Article + BreadcrumbList schema, worked example with SEI formula, CC BY 4.0 license with explicit citation. Surfaced in llms.txt, qa.jsonl (13th Q&A), sitemap, and `/research` index page. **+ Interactive SEI Calculator** at `/tools/sei-calculator` — a self-contained tool with 5 sliders that computes the SEI score in real-time, shows exposure ceiling, and links back to the report. Added to homepage trust bar, tools index, and sitemap.
 - [x] **[P1]** **Build the 8 missing section-index pages** (AEO crawlability). Robots.txt advertised `/for/`, `/compare/`, `/integrations/`, `/glossary/`, `/tools/` — but those paths returned 404. **FIXED 2026-07-18:** built all 8 section-index pages (`/for`, `/compare`, `/integrations`, `/glossary`, `/tools`, `/vs`, `/how-to`, `/cost`) with full listings of child pages, added them to sitemap + footer nav. Each returns 200.
 - [ ] **[P2]** **YouTube: 2–3 search-hit videos.** Title = the keyword, say the keyword in the first 10 seconds, timestamps in description.
   - "How to screen a crypto wallet for OFAC sanctions (2026)"
@@ -73,7 +73,7 @@ See `brand-gap-analysis.csv` (filled). Top gaps by dimension:
   - **Reddit:** `r/MachineLearning` (agent safety), `r/ethfinance`, `r/CryptoCurrency` (sanctions/wallet screening), `r/OpenAI` / `r/LocalLLaMA` (agent tooling), `r/compliance` / `r/AML`. **Genuine participation, not brand-dropping.**
   - **Developer listicles:** RapidAPI hub, PublicAPIs.org, "fintech compliance APIs" roundups, any "best OFAC API" list. Outreach to publishers — your `/vs/` pages already rank for these terms.
   - **MCP ecosystem:** you're on `mcp.so` (HTTP 200 ✅). Get listed on every MCP registry/directory (smithery.ai, glama.ai, mcpindex). Agent-tooling curators are starved of compliance tools.
-  - **Agent framework docs:** get `agentmail` mentioned in ElizaOS, CrewAI, OpenAI Agents SDK, Vercel AI SDK, Coinbase AgentKit integration docs (you have `/for/langchain`, `/for/claude-code`, `/for/vercel-ai-sdk`, `/for/openai-agents-sdk`, `/for/crewai`, `/for/eliza` pages — push PRs upstream to those frameworks linking back).
+  - **Agent framework docs:** get `SanctionsAI` mentioned in ElizaOS, CrewAI, OpenAI Agents SDK, Vercel AI SDK, Coinbase AgentKit integration docs (you have `/for/langchain`, `/for/claude-code`, `/for/vercel-ai-sdk`, `/for/openai-agents-sdk`, `/for/crewai`, `/for/eliza` pages — push PRs upstream to those frameworks linking back).
 - [ ] **[P2]** **Drive GitHub stars organically** (currently 0). Show HN + Reddit + dev Twitter. Star count is a training-data signal — models see popular repos as more authoritative.
 - [ ] **[P3]** **Own properties to activate:** X (`@data_nerd` is set up), LinkedIn (activate the founder profile), a dev blog on `sanctionsai.dev/blog` with the original research.
 

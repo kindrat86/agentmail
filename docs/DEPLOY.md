@@ -1,6 +1,6 @@
 # Deployment & Distribution Guide
 
-Step-by-step to take agentmail from "works on my machine" to live and discoverable.
+Step-by-step to take SanctionsAI from "works on my machine" to live and discoverable.
 Each section is independent — do them in any order.
 
 ---
@@ -24,7 +24,7 @@ flyctl auth login
 cd ~/workspace/agentmail
 
 # Create the app (one-time)
-flyctl apps create agentmail
+flyctl apps create SanctionsAI
 
 # Create persistent volume for OFAC cache + audit log (one-time)
 flyctl volumes create agentmail_data --region fra --size 1
@@ -43,8 +43,8 @@ flyctl secrets set AGENTMAIL_AUDIT_LOG=/data/audit.jsonl
 flyctl deploy
 
 # Verify
-curl https://agentmail.fly.dev/health
-curl -H "X-API-Key: YOUR_KEY" https://agentmail.fly.dev/sanctions?wallet=0x098B716B8Aaf21512996dC57EB0615e2383E2f96
+curl https://SanctionsAI.fly.dev/health
+curl -H "X-API-Key: YOUR_KEY" https://SanctionsAI.fly.dev/sanctions?wallet=0x098B716B8Aaf21512996dC57EB0615e2383E2f96
 ```
 
 ### Cost
@@ -80,7 +80,7 @@ curl -H "X-API-Key: YOUR_KEY" https://agentmail.fly.dev/sanctions?wallet=0x098B7
 
 ## 3. Publish on PyPI — ~5 min, free
 
-This makes `pip install agentmail` work globally (not just from GitHub).
+This makes `pip install sanctions-mcp` work globally (not just from GitHub).
 
 ### Prerequisites
 ```bash
@@ -104,11 +104,11 @@ twine check dist/*
 twine upload dist/*
 
 # Verify
-pip install agentmail
-python -c "import agentmail; print(agentmail.__version__)"
+pip install sanctions-mcp
+python -c "import agentmail; print(SanctionsAI.__version__)"
 ```
 
-After this, update README install line from `git clone + pip install -e .` to just `pip install agentmail[mcp]`.
+After this, update README install line from `git clone + pip install -e .` to just `pip install sanctions-mcp[mcp]`.
 
 ---
 

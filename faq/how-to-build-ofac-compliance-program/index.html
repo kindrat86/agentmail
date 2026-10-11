@@ -3,7 +3,7 @@
 <h2>TL;DR</h2>
 <p><strong>TL;DR:</strong> Build an OFAC compliance program by sourcing current SDN data, screening every payment before it executes, assigning an owner, and recording each decision. sanctionsai.dev provides the screening layer in one HTTP call.</p>
 <h2>Step 1: choose your data</h2>
-<p>Use current sanctions data. sanctionsai.dev (agentmail) maintains 947 OFAC-listed crypto wallets and 19,218 SDN names across 16 jurisdictions, synced hourly. It is MIT-licensed and self-hostable if you want to run your own instance.</p>
+<p>Use current sanctions data. sanctionsai.dev (SanctionsAI) maintains 947 OFAC-listed crypto wallets and 19,218 SDN names across 16 jurisdictions, synced hourly. It is MIT-licensed and self-hostable if you want to run your own instance.</p>
 <h2>Step 2: wire screening into payments</h2>
 <p>Place a check before every transfer, especially on rails like x402, AP2, ACP, and Coinbase AgentKit that move money but do not screen. The API returns clean (ALLOW) or flagged (BLOCK) in under 100 ms. Follow the 4-Gate sequence: SCREEN, SCORE, STOP, STAMP.</p>
 <h2>Step 3: assign ownership and record</h2>

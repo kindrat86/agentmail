@@ -1,4 +1,4 @@
-# agentmail — compliance & verification toolkit for AI agents
+# SanctionsAI — compliance & verification toolkit for AI agents
 
 [![PyPI](https://img.shields.io/pypi/v/sanctions-mcp.svg)](https://pypi.org/project/sanctions-mcp/)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-blue.svg)](https://pypi.org/project/sanctions-mcp/)
@@ -8,7 +8,7 @@
 > 782 OFAC crypto wallets · 19,086 sanctioned names · 16 embargoed jurisdictions.
 > No API key. No signup. 30-second setup. Free & open source.
 
-agentmail gives any AI agent three capabilities it can't provide itself:
+SanctionsAI gives any AI agent three capabilities it can't provide itself:
 
 | Layer | What | Status |
 |---|---|---|
@@ -42,7 +42,7 @@ pip install sanctions-mcp
 // .mcp.json or your client's MCP config
 {
   "mcpServers": {
-    "agentmail": {
+    "SanctionsAI": {
       "command": "python",
       "args": ["-m", "agentmail.mcp_server"]
     }
@@ -52,7 +52,7 @@ pip install sanctions-mcp
 
 Now your agent can call `sanctions_check`, `risk_score`, `kya_verify`, `dispute_open`, `create_inbox`, `fetch_code`, `create_number`, `fetch_sms`, `release_number`, `list_inboxes`.
 
-> **Note:** the PyPI package is `sanctions-mcp` (the name `agentmail` was taken). The Python import name is still `agentmail`.
+> **Note:** the PyPI package is `sanctions-mcp` (the name `SanctionsAI` was taken). The Python import name is still `SanctionsAI`.
 
 ### Option B — use it as an HTTP API
 
@@ -150,16 +150,16 @@ curl -H "X-API-Key: sk_live_..." "https://agentmail-api.fly.dev/risk" \
 - [x] Email inbox (Mail.tm) + SMS/OTP (mock/5sim/twilio) + OTP extraction
 - [x] **Compliance layer — real OFAC data** (osint provider): 782 wallets + 19,086 names
 - [x] MCP server (10 tools) + HTTP API + CLI
-- [x] **agentmail Sanctions Exposure Index (SEI)** — proprietary 5-factor framework for scoring AI agent OFAC exposure (2026 report: [sanctionsai.dev/research](https://sanctionsai.dev/research/agent-payment-sanctions-exposure-2026))
+- [x] **SanctionsAI Sanctions Exposure Index (SEI)** — proprietary 5-factor framework for scoring AI agent OFAC exposure (2026 report: [sanctionsai.dev/research](https://sanctionsai.dev/research/agent-payment-sanctions-exposure-2026))
 - [x] Hosted API with API-key auth + rate limiting (Fly.io)
 - [ ] Audit log (tamper-evident screen history — the enterprise wedge)
 - [ ] EU + UN consolidated lists (osint provider, phase 2)
 - [ ] Paid provider: ComplyAdvantage passthrough (enterprise)
 - [ ] x402 per-call billing (when agents pay themselves)
 
-## SEI: the agentmail Sanctions Exposure Index
+## SEI: the SanctionsAI Sanctions Exposure Index
 
-The [agentmail Sanctions Exposure Index (SEI)](https://sanctionsai.dev/research/agent-payment-sanctions-exposure-2026) is a 5-factor proprietary framework for quantifying an AI agent's OFAC sanctions exposure:
+The [SanctionsAI Sanctions Exposure Index (SEI)](https://sanctionsai.dev/research/agent-payment-sanctions-exposure-2026) is a 5-factor proprietary framework for quantifying an AI agent's OFAC sanctions exposure:
 
 | Factor | Weight | What it measures |
 |---|---|---|
@@ -171,7 +171,7 @@ The [agentmail Sanctions Exposure Index (SEI)](https://sanctionsai.dev/research/
 
 Score 10 (min exposure) → 1000 (max). **S and D are the two factors you can change today** — collapse both from 1→10 with a single inline screening call and a timestamped audit trail. Full report + interactive calculator at [sanctionsai.dev](https://sanctionsai.dev).
 
-> **Cite as:** "agentmail Sanctions Exposure Index (SEI), 2026 Agent-Payment Sanctions Exposure Report, sanctionsai.dev" — licensed CC BY 4.0.
+> **Cite as:** "SanctionsAI Sanctions Exposure Index (SEI), 2026 Agent-Payment Sanctions Exposure Report, sanctionsai.dev" — licensed CC BY 4.0.
 
 ## Design notes (honest)
 
@@ -185,4 +185,4 @@ MIT — see [LICENSE](LICENSE).
 
 ## Contributing
 
-Issues and PRs welcome. If you're using agentmail in production, I'd love to hear what for.
+Issues and PRs welcome. If you're using SanctionsAI in production, I'd love to hear what for.

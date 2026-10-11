@@ -1,9 +1,9 @@
-# Fly.io deployment config for agentmail hosted API
+# Fly.io deployment config for SanctionsAI hosted API
 # Docs: https://fly.io/docs/apps/launch
 #
 # Quick start:
 #   flyctl auth login
-#   flyctl apps create agentmail
+#   flyctl apps create SanctionsAI
 #   flyctl secrets set AGENTMAIL_REQUIRE_AUTH=true
 #   flyctl secrets set AGENTMAIL_API_KEYS=$(python -c "import secrets; print('sk_live_'+secrets.token_hex(24))")
 #   flyctl secrets set AGENTMAIL_RATE_LIMIT=600 AGENTMAIL_FREE_TIER_DAILY=100

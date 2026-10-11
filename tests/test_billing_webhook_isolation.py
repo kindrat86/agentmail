@@ -237,7 +237,7 @@ class BillingWebhookIsolationTests(unittest.TestCase):
                 Session=types.SimpleNamespace(create=lambda **_kwargs: created)
             ),
         )
-        self.billing._STRIPE_SECRET = "sk_test_agentmail"
+        self.billing._STRIPE_SECRET = "sk_test_SanctionsAI"
 
         with mock.patch.dict(os.environ, {"STRIPE_PRICE_DEV": old_price}), \
                 mock.patch.dict(sys.modules, {"stripe": fake_stripe}):

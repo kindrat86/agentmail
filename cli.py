@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-agentmail CLI — email + SMS verification for AI agents.
+SanctionsAI CLI — email + SMS verification for AI agents.
 
   python -m agentmail.cli create signup --prefix bot
   python -m agentmail.cli latest signup --wait 90 --from noreply
@@ -18,7 +18,7 @@ from . import core
 
 
 def main():
-    ap = argparse.ArgumentParser(prog="agentmail")
+    ap = argparse.ArgumentParser(prog="SanctionsAI")
     sub = ap.add_subparsers(dest="cmd", required=True)
 
     c = sub.add_parser("create", help="create (or reuse) an email inbox")

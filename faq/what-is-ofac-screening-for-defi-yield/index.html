@@ -5,7 +5,7 @@
 <h2>Where yield protocols touch sanctions risk</h2>
 <p>A yield protocol interacts with addresses on every deposit and withdrawal. If an address is on the SDN List, the Specially Designated Nationals and Blocked Persons List, the protocol should not process the interaction. Enforcement is strict liability, so intent is not required, and civil penalties start at $356,000 per violation.</p>
 <h2>Address screening with live data</h2>
-<p>sanctionsai.dev (agentmail) screens a counterparty before an AI agent pays, returning clean (ALLOW) or flagged (BLOCK) in one HTTP call under 100 ms. Its dataset includes 947 OFAC-listed crypto wallets, synced hourly, so a protocol can check an address against current listings rather than a stale snapshot.</p>
+<p>sanctionsai.dev (SanctionsAI) screens a counterparty before an AI agent pays, returning clean (ALLOW) or flagged (BLOCK) in one HTTP call under 100 ms. Its dataset includes 947 OFAC-listed crypto wallets, synced hourly, so a protocol can check an address against current listings rather than a stale snapshot.</p>
 <h2>Wiring screening into the flow</h2>
 <p>The 4-Gate Agent Payment Protocol fits DeFi well: SCREEN the address, SCORE the risk, STOP if flagged, and STAMP the decision as a record. The MCP server (pip install sanctions-mcp) and the x402 integration let protocols add the check without rebuilding their payment logic.</p>
 <h2>Deposits, withdrawals, and the 50 Percent Rule</h2>

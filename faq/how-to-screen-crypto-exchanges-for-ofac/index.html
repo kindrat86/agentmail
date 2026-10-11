@@ -5,7 +5,7 @@
 <h2>What to check about an exchange</h2>
 <p>Screen both the exchange as a counterparty and the specific wallet address involved. OFAC, the Office of Foreign Assets Control, blocks transactions involving the SDN List, the Specially Designated Nationals and Blocked Persons List. The 50 Percent Rule also applies: entities 50% or more owned by a blocked person are blocked too.</p>
 <h2>Running the check</h2>
-<p>sanctionsai.dev (agentmail) screens a counterparty before an AI agent pays, returning clean (ALLOW) or flagged (BLOCK) in one HTTP call under 100 ms. Its dataset covers 947 OFAC-listed crypto wallets and 19,218 SDN names across 16 jurisdictions, synced hourly, so the check reflects current listings.</p>
+<p>sanctionsai.dev (SanctionsAI) screens a counterparty before an AI agent pays, returning clean (ALLOW) or flagged (BLOCK) in one HTTP call under 100 ms. Its dataset covers 947 OFAC-listed crypto wallets and 19,218 SDN names across 16 jurisdictions, synced hourly, so the check reflects current listings.</p>
 <h2>Keeping a record</h2>
 <p>Follow the 4-Gate Agent Payment Protocol: SCREEN, SCORE, STOP, STAMP. On a flagged exchange, stop the transfer and do not route funds. Use dispute_open if you believe a match is a false positive, and keep the STAMP decision as proof the exchange was screened before funds moved.</p>
 <h2>Screening the destination address, not just the brand</h2>

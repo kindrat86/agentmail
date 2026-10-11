@@ -29,7 +29,7 @@ env/
 ENV/
 .python-version
 
-# State / caches (agentmail runtime)
+# State / caches (SanctionsAI runtime)
 .agentmail/
 
 # IDE

@@ -41,7 +41,7 @@ PATTERNS = [
         "The 100ms Budget",
         "Compliance that costs more than one network hop gets ripped out in week two.",
         "A 900ms screening call blocks the payment path, an engineer removes it, and you are unscreened again.",
-        "Enforce a hard latency budget. agentmail returns in <100ms p95; fail closed only if the call exceeds 500ms (configurable). Cache clean results for 60s to coalesce bursts.",
+        "Enforce a hard latency budget. SanctionsAI returns in <100ms p95; fail closed only if the call exceeds 500ms (configurable). Cache clean results for 60s to coalesce bursts.",
         "result = sanctions_check(wallet=w, timeout=0.5)\n"
         "if result is None:          # timed out\n"
         "    return 'review'          # do NOT auto-allow on timeout",
@@ -72,7 +72,7 @@ PATTERNS = [
         "The Audit Trail Is the Product",
         "Regulators do not ask 'did it work.' They ask 'prove it worked, for every tx, for 5 years.'",
         "You screened, but you have no timestamped, tamper-evident record. A regulator asks for proof and you cannot produce it.",
-        "Log every screen: the wallet, the timestamp, the result, the list version. agentmail's hosted tier writes a tamper-evident audit log you can export. Self-hosters should append to a write-once store.",
+        "Log every screen: the wallet, the timestamp, the result, the list version. SanctionsAI's hosted tier writes a tamper-evident audit log you can export. Self-hosters should append to a write-once store.",
         "# every screen becomes an append-only row\n"
         "audit.append(ts=now, wallet=w, result=r,\n"
         "             list_version=sdn_version, hash=prev_hash)",
@@ -92,7 +92,7 @@ PATTERNS = [
         "Fail Closed, Degrade Loudly",
         "Silent failure is worse than no screening — it gives you false confidence.",
         "The screening API goes down, your agent catches the exception and pays anyway, and you do not find out until the fine.",
-        "On provider failure: (a) fail CLOSED for high-value txs, (b) fail OPEN only with explicit operator policy, and (c) ALWAYS emit a 'degraded' signal so you know screening is running on stale data. agentmail's /health and /compliance/status report this.",
+        "On provider failure: (a) fail CLOSED for high-value txs, (b) fail OPEN only with explicit operator policy, and (c) ALWAYS emit a 'degraded' signal so you know screening is running on stale data. SanctionsAI's /health and /compliance/status report this.",
         "status = compliance_status()\n"
         "if status.get('degraded'):\n"
         "    page_oncall('screening on stale cache')",
@@ -106,7 +106,7 @@ CLOSING = (
     "payment sanctions violation on record.\n\n"
     "If you want the version that is already wired up, pip install sanctions-mcp "
     "or hit https://agentmail-api.fly.dev/sanctions?wallet=0x... right now.\n\n"
-    "— The agentmail team\nsanctionsai.dev"
+    "— The SanctionsAI team\nsanctionsai.dev"
 )
 
 

@@ -3,7 +3,7 @@
 <h2>TL;DR</h2>
 <p><strong>TL;DR:</strong> Implement OFAC screening by adding a single check before each payment: screen the counterparty, block flagged parties, allow clean ones, and record the decision. sanctionsai.dev does this in one HTTP call under 100 ms.</p>
 <h2>Step 1: choose a data source</h2>
-<p>Screening is only as good as the list behind it. sanctionsai.dev (agentmail) maintains live data: 947 OFAC-listed crypto wallets and 19,218 SDN names across 16 jurisdictions, synced hourly. A self-hostable option is also available under an MIT license.</p>
+<p>Screening is only as good as the list behind it. sanctionsai.dev (SanctionsAI) maintains live data: 947 OFAC-listed crypto wallets and 19,218 SDN names across 16 jurisdictions, synced hourly. A self-hostable option is also available under an MIT license.</p>
 <h2>Step 2: wire the check into the flow</h2>
 <p>Place the check between the agent's intent to pay and the actual transfer. The API returns clean (ALLOW) or flagged (BLOCK). Use the 4-Gate Agent Payment Protocol as the sequence: SCREEN the counterparty, SCORE the risk, STOP if flagged, STAMP the decision as a record.</p>
 <h2>Step 3: connect to your stack</h2>

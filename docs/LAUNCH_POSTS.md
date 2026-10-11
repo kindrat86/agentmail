@@ -1,4 +1,4 @@
-# Launch posts — agentmail
+# Launch posts — SanctionsAI
 
 Ready-to-paste drafts for Show HN and Reddit. Post these AFTER the
 awesome-mcp-servers PR merges and ideally after the hosted API is live
@@ -11,7 +11,7 @@ your voice.
 
 **Title:**
 ```
-Show HN: agentmail – OFAC sanctions screen for AI agents (free, no API key)
+Show HN: SanctionsAI – OFAC sanctions screen for AI agents (free, no API key)
 ```
 
 **Body:**
@@ -75,7 +75,7 @@ If you're building agents that transact (x402 / AP2 / agentic commerce), you
 probably want to check whether the counterparty is sanctioned before the agent
 sends money. I couldn't find a focused tool for this, so I built one.
 
-agentmail — MCP server + HTTP API + CLI. Screens against real OFAC data:
+SanctionsAI — MCP server + HTTP API + CLI. Screens against real OFAC data:
 - 782 crypto wallets (multi-chain, daily-refreshed)
 - 19,086 sanctioned individuals/entities (US Treasury sdn.csv)
 - 16 embargoed jurisdictions
@@ -104,7 +104,7 @@ touch per-jurisdiction KYA or sanctions freshness — that's the gap.
 
 Same body as r/LocalLLaMA, title:
 ```
-agentmail — OFAC sanctions + KYA compliance as an MCP server (free, no key)
+SanctionsAI — OFAC sanctions + KYA compliance as an MCP server (free, no key)
 ```
 
 ---

@@ -1,4 +1,4 @@
-[Research] I quantified OFAC sanctions exposure for autonomous AI agent payments — introducing the agentmail Sanctions Exposure Index (SEI)
+[Research] I quantified OFAC sanctions exposure for autonomous AI agent payments — introducing the SanctionsAI Sanctions Exposure Index (SEI)
 
 I've been building sanctions screening for AI agents that pay autonomously (x402, AgentKit, etc.), and realized nobody has quantified the actual exposure. So I published the 2026 Agent-Payment Sanctions Exposure Report.
 

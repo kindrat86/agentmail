@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to `sanctions-mcp` (agentmail) are documented here.
+All notable changes to `sanctions-mcp` (SanctionsAI) are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased] — 2026-07-26
@@ -50,7 +50,7 @@ Full scorecard: `BRUNSON_DOTCOM_SECRETS_AUDIT_2026-07-26.md`. Owner actions:
 ## [0.5.0] — 2026-07-18
 
 ### Added
-- **agentmail Sanctions Exposure Index (SEI)** — proprietary 5-factor framework for quantifying an AI agent's OFAC sanctions exposure. Velocity (30%), Jurisdiction overlap (25%), Asset class (20%), Screening posture (15%), Disclosure readiness (10%). Published in the [2026 Agent-Payment Sanctions Exposure Report](https://sanctionsai.dev/research/agent-payment-sanctions-exposure-2026).
+- **SanctionsAI Sanctions Exposure Index (SEI)** — proprietary 5-factor framework for quantifying an AI agent's OFAC sanctions exposure. Velocity (30%), Jurisdiction overlap (25%), Asset class (20%), Screening posture (15%), Disclosure readiness (10%). Published in the [2026 Agent-Payment Sanctions Exposure Report](https://sanctionsai.dev/research/agent-payment-sanctions-exposure-2026).
 - **Interactive SEI Calculator** at https://sanctionsai.dev/tools/sei-calculator — computes SEI scores in real-time.
 - 36 hallucinated-URL 301 redirects (AI-guessed slugs now resolve to real pages).
 - 8 section-index pages for AEO crawlability (`/for`, `/compare`, `/integrations`, `/glossary`, `/tools`, `/vs`, `/how-to`, `/cost`).
@@ -59,7 +59,7 @@ Full scorecard: `BRUNSON_DOTCOM_SECRETS_AUDIT_2026-07-26.md`. Owner actions:
 - `Dataset` + `Article` schema for the SEI research report.
 
 ### Changed
-- `knowledge-graph.json` `SoftwareApplication.alternateName` expanded with `SanctionsAI`, `sanctions-mcp`, `agentmail API` for entity consolidation.
+- `knowledge-graph.json` `SoftwareApplication.alternateName` expanded with `SanctionsAI`, `sanctions-mcp`, `SanctionsAI API` for entity consolidation.
 - `pyproject.toml` keywords now include `sei`, `sanctions-exposure-index`, `x402`.
 - Homepage now at `sanctionsai.dev` (was `github.com/kindrat86/agentmail`).
 - Documentation and Changelog URLs added to PyPI metadata.

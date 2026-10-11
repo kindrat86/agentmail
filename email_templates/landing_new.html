@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>OFAC Sanctions Screening for AI Agents | agentmail</title>
+<title>OFAC Sanctions Screening for AI Agents | SanctionsAI</title>
 <meta name="description" content="Screen every counterparty against OFAC before your AI agent pays. 782 crypto wallets, 19,086 names. Free tier + x402 per-call USDC.">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <style>
@@ -171,13 +171,13 @@ document.getElementById("lp-email-capture").addEventListener("submit",function(e
 <div class="story-label">THE STORY</div>
 <h2>I was building an agent that pays invoices. Then test #47 sent USDC to a wallet I did not recognize.</h2>
 <div class="story-quote">"I checked the wallet against the OFAC SDN list. It was there. If that had been production, I would be looking at a $356,000 fine right now. The agent did not know what OFAC was. It just saw 'pay invoice #4021' and sent USDC. It would have done it at 3 AM, repeatedly, until someone noticed."</div>
-<p>The problem was not the agent. The problem was that <strong>nobody was checking</strong>. The big payment rails handle moving money. They do not screen recipients. That gap is why I built agentmail.</p>
+<p>The problem was not the agent. The problem was that <strong>nobody was checking</strong>. The big payment rails handle moving money. They do not screen recipients. That gap is why I built SanctionsAI.</p>
 <div class="callout"><strong>Your agent needs this check.</strong> Not next quarter. Not after the compliance notice. Before you deploy.</div>
 </div>
 <div class="testimonial">
 <div class="card">
 <div class="label">FROM A FINTECH DEVELOPER</div>
-<p class="quote">"Before agentmail, I was shipping agents hoping OFAC did not notice. Now I check every wallet before payments go out. It takes one curl call. The peace of mind is worth more than the API cost."</p>
+<p class="quote">"Before SanctionsAI, I was shipping agents hoping OFAC did not notice. Now I check every wallet before payments go out. It takes one curl call. The peace of mind is worth more than the API cost."</p>
 <div class="line"></div>
 <p class="author">Backend dev at a fintech startup (anonymous)</p>
 </div>
@@ -218,7 +218,7 @@ document.getElementById("lp-email-capture").addEventListener("submit",function(e
 <p style="color:#555;font-size:0.72em">Returns OFAC match data in under 100ms. Try it with any EVM wallet.</p>
 </div>
 <div class="pricing" id="pricing">
-<div class="risk-warning">OFAC penalties start at <strong>$356,000 per violation</strong>. agentmail starts at $0.</div>
+<div class="risk-warning">OFAC penalties start at <strong>$356,000 per violation</strong>. SanctionsAI starts at $0.</div>
 <h2>Pricing</h2>
 <p class="lead">Free to try. $0.01 per check if your agent pays. $19/mo if you want predictable billing.</p>
 <div class="price-cards">
@@ -270,11 +270,11 @@ document.getElementById("lp-email-capture").addEventListener("submit",function(e
 </div>
 <div class="faq-item">
 <h3>What if my agent uses x402?</h3>
-<p>agentmail accepts x402 payments for compliance checks. Your agent pays $0.01 USDC on Base, gets the sanctions result, proceeds only if clean. <a href="/agent">See the x402 flow.</a></p>
+<p>SanctionsAI accepts x402 payments for compliance checks. Your agent pays $0.01 USDC on Base, gets the sanctions result, proceeds only if clean. <a href="/agent">See the x402 flow.</a></p>
 </div>
 <div class="faq-item">
 <h3>How up to date is the OFAC data?</h3>
-<p>Synced hourly from the US Treasury SDN list. If the Treasury adds a wallet at 2:47 PM, agentmail catches it at 3:00 PM.</p>
+<p>Synced hourly from the US Treasury SDN list. If the Treasury adds a wallet at 2:47 PM, SanctionsAI catches it at 3:00 PM.</p>
 </div>
 <div class="faq-item">
 <h3>Can I self-host?</h3>
@@ -290,7 +290,7 @@ document.getElementById("lp-email-capture").addEventListener("submit",function(e
 <a href="https://github.com/kindrat86/agentmail">GitHub</a>
 <a href="https://pypi.org/project/sanctions-mcp/">PyPI</a>
 </div>
-<p>agentmail &mdash; OFAC sanctions screening for AI agents &mdash; MIT licensed</p>
+<p>SanctionsAI &mdash; OFAC sanctions screening for AI agents &mdash; MIT licensed</p>
 </footer>
 </body>
 </html>

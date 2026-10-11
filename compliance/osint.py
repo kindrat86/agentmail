@@ -97,7 +97,7 @@ _FALLBACK_NAMES = {
     "garantex",
 }
 
-_UA = "agentmail-osint/0.4 (compliance screen; +https://github.com/kindrat86)"
+_UA = "SanctionsAI-osint/0.4 (compliance screen; +https://github.com/kindrat86)"
 
 # Stopwords removed before token-subset name matching (reduce false negatives).
 _NAME_STOPWORDS = {
@@ -145,7 +145,7 @@ def _http_get(url: str, timeout: float = 45.0) -> bytes:
         ssl_errs = (ssl.SSLCertVerificationError, ssl.SSLError)
         if not isinstance(reason, ssl_errs):
             raise
-        print(f"[agentmail-osint] WARNING: SSL verification failed for {url} "
+        print(f"[SanctionsAI-osint] WARNING: SSL verification failed for {url} "
               f"({reason}); retrying with unverified context. Data integrity is "
               f"checked downstream.", file=sys.stderr)
         ctx = ssl.create_default_context()

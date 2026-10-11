@@ -6,7 +6,7 @@ import time
 import requests
 
 BASE = "https://api.mail.tm"
-UA = "agentmail-mvp/0.1"
+UA = "SanctionsAI-mvp/0.1"
 
 
 def _rand(n: int = 10) -> str:

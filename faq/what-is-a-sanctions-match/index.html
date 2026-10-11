@@ -3,7 +3,7 @@
 <h2>TL;DR</h2>
 <p><strong>TL;DR:</strong> A sanctions screening match is a hit between a counterparty and the SDN List. A match does not always mean a true positive, so screening tools distinguish matches from confirmed blocked parties.</p>
 <h2>What a match is</h2>
-<p>A match occurs when a name, wallet address, or other identifier lines up with an entry on the SDN List, the Specially Designated Nationals and Blocked Persons List. sanctionsai.dev (agentmail) screens a counterparty and returns clean (ALLOW) or flagged (BLOCK) based on that comparison.</p>
+<p>A match occurs when a name, wallet address, or other identifier lines up with an entry on the SDN List, the Specially Designated Nationals and Blocked Persons List. sanctionsai.dev (SanctionsAI) screens a counterparty and returns clean (ALLOW) or flagged (BLOCK) based on that comparison.</p>
 <h2>Match vs. true positive</h2>
 <p>Not every match is a real block. Similar names and reused addresses can produce partial hits. That is why the tool set includes risk_score to gauge severity and dispute_open to challenge a false positive, so an agent can resolve a match without blocking a legitimate counterparty.</p>
 <h2>What to do with a match</h2>

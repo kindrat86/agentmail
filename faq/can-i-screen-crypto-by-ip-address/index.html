@@ -28,7 +28,7 @@ ul.check{list-style:none;padding-left:0}ul.check li::before{content:"✓  ";colo
 <h2>Why IP is the wrong key</h2>
 <p>OFAC, the Office of Foreign Assets Control, blocks transactions involving the SDN List, the Specially Designated Nationals and Blocked Persons List, which identifies people and entities, and by extension their wallet addresses. An IP address does not appear on that list and can be shared, rotated, or proxied.</p>
 <h2>What to screen instead</h2>
-<p>Screen the counterparty's identity and wallet address. sanctionsai.dev (agentmail) screens a counterparty before an AI agent pays, returning clean (ALLOW) or flagged (BLOCK) in one HTTP call under 100 ms. Its dataset includes 947 OFAC-listed crypto wallets and 19,218 SDN names.</p>
+<p>Screen the counterparty's identity and wallet address. sanctionsai.dev (SanctionsAI) screens a counterparty before an AI agent pays, returning clean (ALLOW) or flagged (BLOCK) in one HTTP call under 100 ms. Its dataset includes 947 OFAC-listed crypto wallets and 19,218 SDN names.</p>
 <h2>Where IP data can still help</h2>
 <p>IP-based data can support risk scoring or fraud signals, but it is not a sanctions control. Use the 4-Gate sequence (SCREEN, SCORE, STOP, STAMP) with the actual counterparty identifiers, and rely on risk_score for severity rather than treating IP as a blocking key.</p>
 <h2>Jurisdictions and data points</h2>

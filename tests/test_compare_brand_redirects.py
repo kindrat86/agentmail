@@ -1,6 +1,6 @@
 """Regression spec for the /compare/* -> /vs/* brand consolidation (2026-09-09).
 
-The /compare/* family rendered the stale pre-rebrand brand ("agentmail vs X")
+The /compare/* family rendered the stale pre-rebrand brand ("SanctionsAI vs X")
 while the parallel /vs/* family correctly says "SanctionsAI vs X". Fix: 301
 every /compare page (14 detail + hub) to its 1:1 /vs twin, drop them from the
 sitemap, and stop emitting internal links to /compare. These tests parse

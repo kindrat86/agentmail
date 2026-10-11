@@ -1,8 +1,8 @@
-# agentmail
+# SanctionsAI
 
 > OFAC sanctions screening, transaction risk scoring, and Know-Your-Agent verification for AI agents that transact autonomously.
 
-agentmail lets any AI agent check whether a counterparty (wallet, name, or country) is on the OFAC Specially Designated Nationals list before paying them. It runs on real, free, public data with no API key required for the free tier.
+SanctionsAI lets any AI agent check whether a counterparty (wallet, name, or country) is on the OFAC Specially Designated Nationals list before paying them. It runs on real, free, public data with no API key required for the free tier.
 
 ## Quick start
 

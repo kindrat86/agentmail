@@ -28,7 +28,7 @@ ul.check{list-style:none;padding-left:0}ul.check li::before{content:"✓  ";colo
 <h2>What Stripe does and does not do</h2>
 <p>Stripe processes payments. It is not a sanctions screening service for your specific counterparties in the same way an OFAC-specific check is. Just as x402, AP2, ACP, and Coinbase AgentKit move money but do not screen, a payment processor does not replace a dedicated sanctions check.</p>
 <h2>How SanctionsAI fits</h2>
-<p>sanctionsai.dev (agentmail) screens a counterparty before the agent pays, returning clean (ALLOW) or flagged (BLOCK) in one HTTP call under 100 ms. You run the check before initiating a payment, then use Stripe or another processor to complete the transfer only if the result is clean.</p>
+<p>sanctionsai.dev (SanctionsAI) screens a counterparty before the agent pays, returning clean (ALLOW) or flagged (BLOCK) in one HTTP call under 100 ms. You run the check before initiating a payment, then use Stripe or another processor to complete the transfer only if the result is clean.</p>
 <h2>Pricing and integration</h2>
 <p>Because the check is a separate API call, it works alongside any processor. The free tier offers 5 checks per day with no signup and no key; Dev is $19/month (10,000 checks/month) and Pro is $99/month (100,000 checks/month). Follow the 4-Gate sequence: SCREEN, SCORE, STOP, STAMP.</p>
 <h2>Typical flow with a processor</h2>

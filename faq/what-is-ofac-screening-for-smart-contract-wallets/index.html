@@ -5,7 +5,7 @@
 <h2>Why smart contract wallets carry exposure</h2>
 <p>OFAC, the Office of Foreign Assets Control, blocks transactions involving the SDN List, the Specially Designated Nationals and Blocked Persons List. A smart contract wallet that sends funds automatically to a listed address still creates a violation: intent is not required, and civil penalties start at $356,000 per violation.</p>
 <h2>Screening before execution</h2>
-<p>sanctionsai.dev (agentmail) screens a counterparty before the agent pays, returning clean (ALLOW) or flagged (BLOCK) in one HTTP call under 100 ms. Because the check is fast, it can sit in the pre-execution path of a smart contract wallet without slowing the transaction meaningfully.</p>
+<p>sanctionsai.dev (SanctionsAI) screens a counterparty before the agent pays, returning clean (ALLOW) or flagged (BLOCK) in one HTTP call under 100 ms. Because the check is fast, it can sit in the pre-execution path of a smart contract wallet without slowing the transaction meaningfully.</p>
 <h2>Handling the 50 Percent Rule</h2>
 <p>Remember the 50 Percent Rule: entities 50% or more owned by a blocked person are also blocked. A wallet controlled by such an entity is treated as blocked even if the listed person is not named on the wallet itself. The risk_score tool can flag elevated exposure, and dispute_open lets a user challenge a false positive.</p>
 <h2>Recording decisions on chain or off</h2>

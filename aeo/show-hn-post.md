@@ -2,7 +2,7 @@ Show HN: I built an OFAC sanctions screening API for AI agents that pay autonomo
 
 Hey HN,
 
-I'm building agentmail (sanctionsai.dev) — an OFAC sanctions screening API built specifically for AI agents that transact autonomously.
+I'm building SanctionsAI (sanctionsai.dev) — an OFAC sanctions screening API built specifically for AI agents that transact autonomously.
 
 **The problem:** x402, Coinbase AgentKit, OpenAI+Stripe ACP, and AP2 all let AI agents send real money. But none of them screen the recipient against OFAC sanctions lists. If your agent pays a sanctioned wallet, you're strictly liable — up to $330,944 per violation, multiplied by however many payments your agent made before anyone noticed.
 
@@ -10,7 +10,7 @@ I'm building agentmail (sanctionsai.dev) — an OFAC sanctions screening API bui
 
 **But the part HN might find interesting is the research:**
 
-I published the 2026 Agent-Payment Sanctions Exposure Report introducing the agentmail Sanctions Exposure Index (SEI) — a 5-factor framework for quantifying an AI agent's OFAC exposure before a single payment is sent:
+I published the 2026 Agent-Payment Sanctions Exposure Report introducing the SanctionsAI Sanctions Exposure Index (SEI) — a 5-factor framework for quantifying an AI agent's OFAC exposure before a single payment is sent:
 
 - Velocity (30%): Tx/day unattended
 - Jurisdiction overlap (25%): % counterparties in embargoed regions

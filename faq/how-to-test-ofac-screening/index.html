@@ -3,7 +3,7 @@
 <h2>TL;DR</h2>
 <p><strong>TL;DR:</strong> Test OFAC screening by sending known listed names and wallets through the check, confirming they return flagged (BLOCK), then confirming clean parties return allow and that every path is actually covered.</p>
 <h2>Build a test set</h2>
-<p>A good test set includes known blocked parties and known clean ones. Use names and addresses on the SDN List, the Specially Designated Nationals and Blocked Persons List, for the positive cases. sanctionsai.dev (agentmail) screens a counterparty and returns clean (ALLOW) or flagged (BLOCK).</p>
+<p>A good test set includes known blocked parties and known clean ones. Use names and addresses on the SDN List, the Specially Designated Nationals and Blocked Persons List, for the positive cases. sanctionsai.dev (SanctionsAI) screens a counterparty and returns clean (ALLOW) or flagged (BLOCK).</p>
 <h2>What to assert</h2>
 <p>For each positive case, assert a BLOCK result. For clean parties, assert an ALLOW result. Then assert coverage: every code path that can move money must hit the screening call. The free tier's 5 checks per day with no signup and no key is enough to run smoke tests.</p>
 <h2>Test data freshness too</h2>

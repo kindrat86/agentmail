@@ -4,14 +4,14 @@
 # After committing this file, register the server at https://smithery.ai/new
 # (sign in with GitHub, paste the repo URL https://github.com/kindrat86/agentmail).
 
-name: agentmail
+name: sanctionsai
 description: Compliance & verification toolkit for AI agents — OFAC sanctions screen, Know-Your-Agent, transaction risk score, plus disposable email/SMS verification inboxes.
 
 # How Smithery launches the MCP server on stdio.
 startCommand:
   type: stdio
   configSchema:
-    # Optional runtime config. agentmail works with no config (osint provider
+    # Optional runtime config. SanctionsAI works with no config (osint provider
     # pulls free OFAC data, no key). These env knobs are surfaced to the user.
     type: object
     properties:

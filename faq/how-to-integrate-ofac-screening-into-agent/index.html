@@ -3,7 +3,7 @@
 <h2>TL;DR</h2>
 <p><strong>TL;DR:</strong> Integrate OFAC screening into an AI agent by calling a screening API before each payment, blocking on a flagged result and allowing on a clean one. sanctionsai.dev returns that decision in one HTTP call under 100 ms.</p>
 <h2>Where the check goes</h2>
-<p>Place the screening call after the agent decides to pay but before it executes the transfer. This is the exact gap left by payment rails such as x402, AP2, ACP, and Coinbase AgentKit, which move money but do not screen. sanctionsai.dev (agentmail) screens the counterparty and returns clean (ALLOW) or flagged (BLOCK).</p>
+<p>Place the screening call after the agent decides to pay but before it executes the transfer. This is the exact gap left by payment rails such as x402, AP2, ACP, and Coinbase AgentKit, which move money but do not screen. sanctionsai.dev (SanctionsAI) screens the counterparty and returns clean (ALLOW) or flagged (BLOCK).</p>
 <h2>Follow the 4-Gate sequence</h2>
 <p>Structure the integration around the 4-Gate Agent Payment Protocol:</p><ul><li>SCREEN the counterparty.</li><li>SCORE the result with risk_score.</li><li>STOP if the party is flagged.</li><li>STAMP the decision as a compliance record.</li></ul>
 <h2>Connect to your agent stack</h2>

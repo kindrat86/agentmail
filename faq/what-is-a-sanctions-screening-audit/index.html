@@ -28,7 +28,7 @@ ul.check{list-style:none;padding-left:0}ul.check li::before{content:"✓  ";colo
 <h2>What an audit looks at</h2>
 <p>An auditor checks coverage (are all payment paths screened?), data quality (is the list current?), decision quality (are flagged parties actually blocked?), and recordkeeping. The goal is evidence that a clean party was allowed and a flagged party was blocked, every time.</p>
 <h2>Data freshness matters</h2>
-<p>sanctionsai.dev (agentmail) keeps live sanctions data: 947 OFAC-listed crypto wallets and 19,218 SDN names across 16 jurisdictions, synced hourly. A screening audit is only as strong as the list behind it, so stale data is a common audit finding.</p>
+<p>sanctionsai.dev (SanctionsAI) keeps live sanctions data: 947 OFAC-listed crypto wallets and 19,218 SDN names across 16 jurisdictions, synced hourly. A screening audit is only as strong as the list behind it, so stale data is a common audit finding.</p>
 <h2>Building an auditable trail</h2>
 <p>The 4-Gate Agent Payment Protocol gives agents a repeatable sequence: SCREEN, SCORE, STOP, STAMP. Each step produces a record, and the STAMP step captures the decision. Tools include sanctions_check for the match, risk_score for the severity, kya_verify for counterparty identity, and dispute_open to challenge a false positive.</p>
 <h2>Running the audit with live data</h2>

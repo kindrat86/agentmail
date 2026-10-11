@@ -28,7 +28,7 @@ ul.check{list-style:none;padding-left:0}ul.check li::before{content:"✓  ";colo
 <h2>Start from the source</h2>
 <p>The authoritative source is OFAC, the Office of Foreign Assets Control, part of the US Treasury. Its SDN List, the Specially Designated Nationals and Blocked Persons List, is the reference for who is blocked. The 50 Percent Rule extends this: entities 50% or more owned by a blocked person are also blocked.</p>
 <h2>Keep it fresh</h2>
-<p>A list is only useful if it is current. sanctionsai.dev (agentmail) maintains its own live dataset: 947 OFAC-listed crypto wallets and 19,218 SDN names across 16 jurisdictions, synced hourly. Building the same thing in-house means repeatedly downloading, parsing, and reconciling changes.</p>
+<p>A list is only useful if it is current. sanctionsai.dev (SanctionsAI) maintains its own live dataset: 947 OFAC-listed crypto wallets and 19,218 SDN names across 16 jurisdictions, synced hourly. Building the same thing in-house means repeatedly downloading, parsing, and reconciling changes.</p>
 <h2>Using a maintained list</h2>
 <p>Rather than build and sync the list yourself, you can query a screening API. sanctionsai.dev screens a counterparty before the agent pays, returning clean (ALLOW) or flagged (BLOCK) in one HTTP call under 100 ms, backed by that hourly-synced data. It is MIT-licensed and self-hostable if you prefer to operate your own instance.</p>
 <h2>Covering both names and wallets</h2>

@@ -13,9 +13,9 @@ from http.server import ThreadingHTTPServer
 from unittest.mock import patch
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
-spec = importlib.util.spec_from_file_location('agentmail', ROOT / '__init__.py', submodule_search_locations=[str(ROOT)])
+spec = importlib.util.spec_from_file_location('SanctionsAI', ROOT / '__init__.py', submodule_search_locations=[str(ROOT)])
 pkg = importlib.util.module_from_spec(spec)
-sys.modules['agentmail'] = pkg
+sys.modules['SanctionsAI'] = pkg
 spec.loader.exec_module(pkg)
 from agentmail import api
 

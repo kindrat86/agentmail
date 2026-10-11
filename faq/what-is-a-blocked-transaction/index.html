@@ -28,7 +28,7 @@ ul.check{list-style:none;padding-left:0}ul.check li::before{content:"✓  ";colo
 <h2>Blocked vs. rejected</h2>
 <p>Both outcomes stop a payment, but they mean different things. A rejected transaction is declined before value moves, so nothing is held. A blocked transaction occurs when a sanctions match freezes the funds, meaning the property is now subject to OFAC's blocking rules rather than simply sent back to the sender.</p>
 <h2>How screening produces a block</h2>
-<p>sanctionsai.dev (agentmail) screens a counterparty before an AI agent pays. The result is clean or flagged: clean means ALLOW, and flagged means BLOCK. When the check returns flagged, the agent should not complete the transfer, which avoids creating a blocked transaction in the first place.</p>
+<p>sanctionsai.dev (SanctionsAI) screens a counterparty before an AI agent pays. The result is clean or flagged: clean means ALLOW, and flagged means BLOCK. When the check returns flagged, the agent should not complete the transfer, which avoids creating a blocked transaction in the first place.</p>
 <h2>Why the distinction matters</h2>
 <p>Under OFAC, sanctions enforcement is strict liability: intent is not required. Civil penalties start at $356,000 per violation. Because blocked funds carry a separate reporting duty, the best control is to catch the match before the money moves, using a single HTTP call that returns in under 100 ms.</p>
 <h2>Handling a blocked transaction correctly</h2>

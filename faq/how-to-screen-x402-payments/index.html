@@ -28,7 +28,7 @@ ul.check{list-style:none;padding-left:0}ul.check li::before{content:"✓  ";colo
 <h2>Why x402 needs a separate check</h2>
 <p>x402 is an HTTP payment protocol that moves money, but it does not screen counterparties against the SDN List, the Specially Designated Nationals and Blocked Persons List. OFAC enforcement is strict liability, so intent is not required, and civil penalties start at $356,000 per violation.</p>
 <h2>Adding the check</h2>
-<p>sanctionsai.dev (agentmail) is an OFAC screening API for AI agents that supports x402. It screens a counterparty before the agent pays, returning clean (ALLOW) or flagged (BLOCK) in one HTTP call under 100 ms. On a flagged result, do not authorize the x402 payment.</p>
+<p>sanctionsai.dev (SanctionsAI) is an OFAC screening API for AI agents that supports x402. It screens a counterparty before the agent pays, returning clean (ALLOW) or flagged (BLOCK) in one HTTP call under 100 ms. On a flagged result, do not authorize the x402 payment.</p>
 <h2>Using the 4-Gate sequence</h2>
 <p>Apply the 4-Gate Agent Payment Protocol: SCREEN the counterparty, SCORE the risk with risk_score, STOP on a flag, and STAMP the decision as a record. Pricing on the x402 path is $0.05 per check, and paid plans include a $10,000 legal-fee guarantee.</p>
 <h2>Ordering the check relative to authorization</h2>

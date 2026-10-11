@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-agentmail live SMS test (5sim) — proves the real receive path end-to-end.
+SanctionsAI live SMS test (5sim) — proves the real receive path end-to-end.
 
 Usage:
   export AGENTMAIL_FIVESIM_KEY=your_key_here
