@@ -3992,7 +3992,7 @@ License: MIT
                 "tags": ["sanctions", "ofac", "sdn", "compliance", "kyc", "aml", "wallet"],
                 "protocol": {"version": "2025-06-18", "transport": ["streamable-http", "stdio"]},
                 "endpoints": {
-                    "rpc": "https://sanctionsai.dev/api/mcp/rpc",
+                    "rpc": "https://sanctionsai.dev/api/mcp",
                 },
                 "install": {
                     "npm": "sanctions-mcp",
