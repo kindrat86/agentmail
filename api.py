@@ -2673,6 +2673,15 @@ class Handler(BaseHTTPRequestHandler):
             # to a documented-facts comparison the same tick.
             "/vs/refinitiv-worldcheck": "/vs/world-check",
             "/compare/world-check": "/vs/world-check",
+            # 2026-10-15: /alternatives-to/world-check was the last live twin on
+            # the "refinitiv world check" cluster. GSC 90d (probe 2026-10-15):
+            # /compare/world-check (already 301d here) still held the cluster's
+            # top impression share (143 impr, pos 48-63) because the twin
+            # /alternatives-to/world-check — a 304-word template page,
+            # self-canonical, in the sitemap — kept competing on the same
+            # demand. Folded into the canonical /vs/world-check (which now
+            # carries an explicit "alternatives" section); this path 301s.
+            "/alternatives-to/world-check": "/vs/world-check",
             "/compare": "/vs",
             # 2026-09-11: /regulations/ofac-reporting-requirements was a 1,915-char
             # near-twin of /glossary/ofac-reporting-requirements (6,387 chars,
@@ -5772,7 +5781,7 @@ License: https://creativecommons.org/licenses/by/4.0/
             "/vs/chainalysis": "2026-07-18",
             "/vs/comply-advantage": "2026-07-18",
             "/vs/dow-jones-rdc": "2026-10-09",
-            "/vs/world-check": "2026-10-10",
+            "/vs/world-check": "2026-10-15",
             "/vs/elliptic": "2026-07-18",
             "/vs/refinitiv": "2026-07-18",
             "/vs/swift-sanctions": "2026-07-18",
@@ -6086,7 +6095,6 @@ License: https://creativecommons.org/licenses/by/4.0/
         ("/alternatives-to/sumsub", "weekly", "0.7", "Sumsub alternative for AI agents"),
         ("/alternatives-to/elliptic", "weekly", "0.7", "Elliptic alternative for AI agents"),
         ("/alternatives-to/complyadvantage", "weekly", "0.7", "ComplyAdvantage alternative for AI agents"),
-        ("/alternatives-to/world-check", "weekly", "0.7", "World-Check alternative for AI agents"),
         ("/alternatives-to/dow-jones-risk", "weekly", "0.7", "Dow Jones Risk & Compliance alternative"),
         ("/alternatives-to/scorechain", "weekly", "0.7", "Scorechain alternative for AI agents"),
         ("/alternatives-to/amlbot", "weekly", "0.7", "AMLBot alternative for AI agents"),
