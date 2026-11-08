@@ -8283,6 +8283,7 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
       </ul>
       <a href="/checkout/dev" class="btn btn-primary">Get your API key &rarr;</a>
       <p class="guar">First month free. Cancel anytime. <b class="red">First 50 devs locked in at $19/mo forever.</b> If we miss a sanctioned wallet, we cover the first $10K of your legal fees.</p>
+      <p style="color:#e67e22;font-size:12px;margin-top:6px">⚡ Launch week: code <b>LAUNCH50</b> = 50% off your first month (enter at checkout)</p>
     </div>
     <div class="pcard reveal">
       <h3>Pro</h3>

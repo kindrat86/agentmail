@@ -264,6 +264,7 @@ def create_checkout_session(plan: str, bump: str | None = None) -> dict:
         line_items=line_items,
         success_url=f"{_PUBLIC_URL}/keys/{{CHECKOUT_SESSION_ID}}",
         cancel_url=f"{_PUBLIC_URL}/pricing?cancelled=1",
+        allow_promotion_codes=True,
         metadata={"plan": plan, "bump": bump if bump_added else ""},
     )
     # Record pending session so webhook can associate it
