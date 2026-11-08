@@ -7359,6 +7359,8 @@ curl "https://sanctionsai.dev/sanctions?wallet=0x098B716B8Aaf21512996dC57EB0615e
 
 Or pay per call with x402: beyond the free tier (5 checks/day), send the request with an `X-PAYMENT` header (x402 exact scheme, Base USDC, $0.05 per check, payTo `0xe30f9cf88d8Aa89b7265685318a7ab085D8e4b85`). A request past the free quota returns `402` with the payment `accepts` payload; signed `X-PAYMENT` returns the screening result.
 
+Dedicated always-paid x402 endpoint (no API key, no free tier, one $0.05 USDC payment per call): `GET https://sanctionsai.dev/x402/sanctions?wallet=<address>` - returns a protocol-standard 402 challenge first; pay it and the screening result comes back in the same request. Listed on 402index.io, x402dash.com and agent402.tools.
+
 ## Tools
 
 - sanctions_check(name, wallet, country): Screen against 947 OFAC crypto wallets + 19,218 names + 16 embargoed jurisdictions
