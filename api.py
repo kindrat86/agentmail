@@ -3438,6 +3438,8 @@ Sitemap: https://sanctionsai.dev/updates-sitemap.xml
                 "resources": ["https://sanctionsai.dev/x402/sanctions"],
                 "instructions": "GET the resource with a wallet query parameter. Pay $0.05 USDC on Base using x402 v2.",
             })
+        if p.path == "/.well-known/402index-verify.txt":
+            return self._serve_text("c36c1ca8c7b5358975f8c1ea814c63203375ab224f7f5e2ea47e8acb83a3c324", "text/plain")
         if p.path == "/87aaa199.txt":
             return self._serve_text("87aaa199", "text/plain")
         if p.path == "/87aaa199acaf7d14c812e974ce115e32.txt":
