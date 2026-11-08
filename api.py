@@ -14621,6 +14621,7 @@ def _send_welcome_email(email: str) -> dict:
     html += '<table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr><td style="padding:8px 0 32px;text-align:center">'
     html += '<table role="presentation" cellpadding="0" cellspacing="0" style="margin:0 auto"><tr><td style="border-radius:8px;background:#00d4aa;padding:0"><a href="https://sanctionsai.dev/checkout/dev" style="display:inline-block;padding:14px 40px;font-size:14px;font-weight:700;color:#0a0a0a;text-decoration:none;border-radius:8px">Upgrade to Dev &rarr;</a></td></tr></table>'
     html += '<p style="margin:8px 0 0;font-size:11px;color:#555">10,000 checks/month &middot; All 4 tools &middot; API key &middot; Audit log</p>'
+    html += '<p style="margin:12px 0 0;font-size:11px;color:#666">Also by the same builder: <a href="https://sipi.bot" style="color:#00d4aa;text-decoration:none">sipi.bot</a> - a pre-spend firewall so your agent never oversends. Launch week: <b>LAUNCH50</b> = 50% off.</p>'
     html += '</td></tr></table></td></tr>'
     html += '<tr><td style="padding:0"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-top:1px solid #1a1a1a;background:#0a0a0a"><tr><td style="padding:24px 32px;text-align:center">'
     html += '<p style="margin:0 0 10px;font-size:11px;color:#555;line-height:1.6">SanctionsAI &mdash; OFAC sanctions screening for AI agents<br>'
