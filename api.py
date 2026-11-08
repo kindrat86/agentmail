@@ -7355,7 +7355,7 @@ Or use the hosted API:
 curl "https://sanctionsai.dev/sanctions?wallet=0x098B716B8Aaf21512996dC57EB0615e2383E2f96"
 ```
 
-Or pay per call with x402: beyond the free tier (5 checks/day), send the request with an `X-PAYMENT` header (x402 exact scheme, Base USDC, $0.05 per check, payTo `0x904322bc54BAe297f34CFC25466a4cA360428c68`). A request past the free quota returns `402` with the payment `accepts` payload; signed `X-PAYMENT` returns the screening result.
+Or pay per call with x402: beyond the free tier (5 checks/day), send the request with an `X-PAYMENT` header (x402 exact scheme, Base USDC, $0.05 per check, payTo `0xe30f9cf88d8Aa89b7265685318a7ab085D8e4b85`). A request past the free quota returns `402` with the payment `accepts` payload; signed `X-PAYMENT` returns the screening result.
 
 ## Tools
 
