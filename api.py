@@ -9380,6 +9380,7 @@ document.addEventListener('click',function(e){var a=e.target.closest&&e.target.c
             '<a href="/checkout/dev/bump" class="btn btn-primary">Get Dev - $19/mo</a>'
             '<a href="/checkout/team" class="btn btn-ghost">Get Pro - $99/mo</a>'
             '</div>'
+            '<p style="text-align:center;color:#e67e22;font-size:.8rem;margin-top:12px">&#9889; Launch week: code <b>LAUNCH50</b> = 50% off your first month (enter at checkout)</p>'
             # ── Risk reversal (Dotcom Secrets Ch 6 "Offer" — remove the risk) ──
             # The feature table above tells you WHAT you get. This block tells
             # you what happens if it goes wrong — the single biggest lever on a
